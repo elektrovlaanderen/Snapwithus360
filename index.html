@@ -6,7 +6,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <style>
-    /* ===== RESET (index only) ===== */
     html, body {
       margin: 0;
       padding: 0;
@@ -16,7 +15,7 @@
       overflow: hidden;
     }
 
-    /* ===== CENTER WRAPPER ===== */
+    /* MAIN WRAPPER */
     .index-wrapper {
       height: 100%;
       display: flex;
@@ -26,23 +25,28 @@
       position: relative;
     }
 
-    /* ===== VIDEO ===== */
-    .intro-video {
+    /* VIDEO CONTAINER */
+    .video-wrapper {
       width: 70%;
       max-width: 900px;
+      margin-bottom: 40px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .video-wrapper video {
+      width: 100%;
       border-radius: 16px;
       box-shadow: 0 30px 80px rgba(0,0,0,0.7);
-      margin-bottom: 40px;
     }
 
     @media (max-width: 768px) {
-      .intro-video {
+      .video-wrapper {
         width: 90%;
-        margin-bottom: 30px;
       }
     }
 
-    /* ===== LANGUAGE FLAGS ===== */
+    /* FLAGS */
     .language-select {
       display: flex;
       gap: 80px;
@@ -58,16 +62,12 @@
     }
 
     .flag-link:nth-child(2) {
-      animation-delay: 1.6s;
+      animation-delay: 1.5s;
     }
 
     .flag-link:hover {
       transform: scale(1.12);
       filter: drop-shadow(0 0 18px rgba(82,171,152,0.9));
-    }
-
-    .flag-link:active {
-      transform: scale(1.05);
     }
 
     .flag-link img {
@@ -96,20 +96,16 @@
   <div class="index-wrapper">
 
     <!-- VIDEO -->
-    <video
-      class="intro-video"
-      autoplay
-      muted
-      loop
-      playsinline
-    >
-      <source src="Assets/Movies/267A6457-812F-42EC-8ACA-43AB001D1C7F.mp4" type="video/mp4">
-      Your browser does not support the video tag.
-    </video>
+    <div class="video-wrapper">
+      <video autoplay muted loop playsinline>
+        <source src="Assets/Movies/267A6457-812F-42EC-8ACA-43AB001D1C7F.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+    </div>
 
-    <!-- LANGUAGE FLAGS -->
+    <!-- FLAGS -->
     <div class="language-select">
-      <a href="/index.html" class="flag-link">
+      <a href="/3D.html" class="flag-link">
         <img src="Assets/flags/be.svg" alt="Belgium">
         <div class="flag-label">Belgium</div>
       </a>
