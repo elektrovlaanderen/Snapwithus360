@@ -5,29 +5,35 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Snapwithus360.com</title>
 
-  <!-- Jouw bestaande stylesheet -->
   <link rel="stylesheet" href="CSS/style.css" />
 
   <style>
-    /* Index hero fullscreen (zonder margin-top omdat er geen nav op index hoeft te staan) */
-    .lang-hero {
-      height: 100vh;
-      margin-top: 0;
+    /* Forceer correcte stacking op je bestaande hero */
+    .lang-hero { height: 100vh; margin-top: 0; position: relative; overflow: hidden; }
+
+    /* 1) Video altijd achteraan */
+    .lang-hero .hero-background{
+      position: absolute !important;
+      inset: 0 !important;
+      width: 100% !important;
+      height: 100% !important;
+      object-fit: cover !important;
+      z-index: 0 !important;
     }
 
-    /* Donkere overlay voor leesbaarheid */
+    /* 2) Donkere overlay voor contrast */
     .lang-overlay {
       position: absolute;
       inset: 0;
       background: rgba(0,0,0,0.35);
-      z-index: 2;
+      z-index: 1;
       pointer-events: none;
     }
 
-    /* Vlaggen boven de video */
+    /* 3) Content bovenop */
     .lang-content {
       position: relative;
-      z-index: 3;
+      z-index: 2;
       height: 100%;
       display: flex;
       align-items: center;
@@ -38,10 +44,15 @@
 
     .lang-box {
       display: flex;
-      gap: 60px;
+      gap: 50px;
       align-items: center;
       justify-content: center;
       flex-wrap: wrap;
+      padding: 18px 22px;
+      border-radius: 16px;
+      background: rgba(0,0,0,0.25);
+      border: 1px solid rgba(255,255,255,0.15);
+      backdrop-filter: blur(6px);
     }
 
     .lang-option {
@@ -50,32 +61,35 @@
       text-decoration: none;
       color: #fff;
       transition: transform .2s ease;
+      min-width: 160px;
     }
     .lang-option:hover { transform: translateY(-2px); }
 
     .lang-option img {
       width: 140px;
       height: auto;
-      border-radius: 8px;
+      border-radius: 10px;
       box-shadow: 0 12px 30px rgba(0,0,0,.35);
       display: block;
+      margin: 0 auto;
+      background: rgba(255,255,255,0.08);
     }
 
+    /* Fallback label (zie je altijd) */
     .lang-label {
       font-size: 1.05rem;
-      font-weight: 500;
+      font-weight: 600;
       letter-spacing: .3px;
     }
 
     @media (max-width: 768px) {
-      .lang-box { gap: 28px; }
+      .lang-box { gap: 22px; }
       .lang-option img { width: 120px; }
     }
   </style>
 </head>
 
 <body>
-  <!-- HERO met video achtergrond zoals je site al kent -->
   <section class="hero-section lang-hero" aria-label="Language selection">
     <video
       class="hero-background"
@@ -85,19 +99,52 @@
       playsinline
       webkit-playsinline
       preload="auto"
-      poster="Assets/Movies/placeholder.jpg"
+      poster="/Assets/Movies/placeholder.jpg"
     >
-      <source
-        src="Assets/Movies/267A6457-812F-42EC-8ACA-43AB001D1C7F.mp4"
-        type="video/mp4"
-      />
+      <source src="/Assets/Movies/267A6457-812F-42EC-8ACA-43AB001D1C7F.mp4" type="video/mp4" />
       Je browser ondersteunt deze video niet.
     </video>
 
     <div class="lang-overlay"></div>
 
-    <!-- Vlaggen bovenop -->
     <div class="lang-content">
       <div class="lang-box">
-        <a class="lang-option" href="3D.html" aria-label="Naar Nederlandse site">
-          <img src="As
+        <a class="lang-option" href="/3D.html" aria-label="Naar Nederlandse site">
+          <!-- PAS DIT PAD AAN ALS JE VLAGGEN ANDERS STAAN -->
+          <img src="/Assets/flags/belgium.png" alt="Belgium flag"
+               onerror="this.style.display='none';" />
+          <div class="lang-label">Belgium (NL)</div>
+        </a>
+
+        <a class="lang-option" href="/ENG/3D.html" aria-label="Go to English site">
+          <!-- PAS DIT PAD AAN ALS JE VLAGGEN ANDERS STAAN -->
+          <img src="/Assets/flags/usa.png" alt="United States flag"
+               onerror="this.style.display='none';" />
+          <div class="lang-label">United States (EN)</div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    (function () {
+      const v = document.querySelector(".hero-background");
+      if (!v) return;
+
+      v.muted = true;
+      v.setAttribute("muted", "");
+      v.setAttribute("playsinline", "");
+      v.setAttribute("webkit-playsinline", "");
+
+      const tryPlay = () => v.play().catch(() => {});
+      if (document.readyState === "complete" || document.readyState === "interactive") {
+        tryPlay();
+      } else {
+        document.addEventListener("DOMContentLoaded", tryPlay, { once: true });
+      }
+      window.addEventListener("touchstart", tryPlay, { once: true, passive: true });
+      document.addEventListener("visibilitychange", () => { if (!document.hidden) tryPlay(); });
+    })();
+  </script>
+</body>
+</html>
