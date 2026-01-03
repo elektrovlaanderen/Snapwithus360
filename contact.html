@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="nl-be">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snap360-snapwithus360.com</title>
+    <link rel="stylesheet" href="CSS/style.css">
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.8/css/line.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+  <header>
+    <nav class="nav">
+        <i class="uil uil-bars navOpenBtn"></i>
+        <a href="3D.html" class="logo">
+  <img src="Assets/logo.png" alt="Snap360 logo" class="logo-image">
+  
+</a>
+  <ul class="nav-links">
+    <i class="uil uil-times navCloseBtn"></i>
+    <li><a href="3D.html">Home</a></li>
+    
+    <!-- Services met submenu -->
+    <li class="has-submenu">
+      <a href="360.html">Services</a>
+      <ul class="submenu">
+            <li><a href="under-construction.html">Photography</a></li>
+            <li><a href="under-construction.html">Drone foto's &amp; Video's</a></li>
+            <li><a href="3d-scans.html">3D Matterport</a></li>
+            <li><a href="under-construction.html">Video Tours</a></li>
+            <li><a href="floorplans.html">Vloerplannen</a></li>
+            <li><a href="fpv.html">FPV Aerial Videos</a></li>
+      </ul>
+    </li>
+    
+    <li><a href="fotvi.html">Referenties</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+</nav>
+  </header>
+
+  <section class="contact-main-section">
+    <div class="contact-form-wrapper">
+        <h2>Stuur ons een bericht</h2>
+        <br><br>
+        <form class="modern-form" 
+              action="https://formspree.io/f/xanoyljw" 
+              method="POST"
+              onsubmit="return validateForm()">
+            
+            <!-- Formspree configuratievelden -->
+            <input type="hidden" name="_subject" value="Nieuw contactformulier - Elektro Vlaanderen">
+            <input type="hidden" name="_language" value="nl">
+            <input type="text" name="_gotcha" style="display:none">
+            
+            <!-- Formuliervelden -->
+            <div class="form-group">
+                <input type="text" id="name" name="name" required>
+                <label for="name">Volledige naam</label>
+            </div>
+            
+            <div class="form-group">
+                <input type="email" id="email" name="email" required>
+                <label for="email">E-mailadres</label>
+            </div>
+
+            <div class="form-group">
+                <input type="tel" id="phone" name="phone">
+                <label for="phone">Telefoonnummer (optioneel)</label>
+            </div>
+
+            <div class="form-group">
+                <textarea id="message" name="message" rows="5" required></textarea>
+                <label for="message">Jouw bericht</label>
+            </div>
+
+            <button type="submit" class="submit-btn">
+                <i class="uil uil-message"></i> Verstuur bericht
+            </button>
+        </form>
+        
+        <!-- Formspree disclaimer -->
+        <p class="form-disclaimer" style="margin-top:20px; font-size:0.9em; color:#666;">
+            Dit formulier wordt beveiligd door <a href="https://formspree.io" target="_blank" style="color:#666;">Formspree</a>
+        </p>
+    </div>
+    
+    <div class="contact-container">
+        <div class="contact-info-cards">
+            <div class="contact-info-card">
+                <i class="fas fa-phone"></i>
+                <h3>Telefoon</h3>
+                <p>+32 476 61 10 99</p>
+                <p>Bereikbaar: Ma-Vrij 9u-17u</p>
+            </div>
+            
+            <div class="contact-info-card">
+                <i class="fas fa-envelope"></i>
+                <h3>E-mail</h3>
+                <p>tom@snapwithus360.com</p>
+            </div>
+        </div>
+    </div>
+  </section>
+
+ <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-section">
+        <h4 class="footer-heading">Snap360-snapwithus360.com</h4>
+        <p class="footer-text">
+          De specialist in innovatieve beeldtechnologie voor vastgoed en
+          architectuur.
+        </p>
+        <div class="social-icons">
+          <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+          <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+          <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
+        </div>
+      </div>
+
+      <div class="footer-section">
+        <h4 class="footer-heading">Snelle links</h4>
+        <ul class="footer-links">
+          <li><a href="3D.html" class="footer-link">Home</a></li>
+          <li><a href="360.html" class="footer-link">Services</a></li>
+          <li><a href="fotvi.html" class="footer-link">Referenties</a></li>
+          <li><a href="contact.html" class="footer-link">Contact</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-section">
+        <h4 class="footer-heading">Contact</h4>
+        <div class="contact-info">
+          <p class="footer-text">
+            <i class="fas fa-map-marker-alt"></i> Vijfstraten 163, 9100
+            Sint-Niklaas
+          </p>
+          <p class="footer-text">
+            <i class="fas fa-phone"></i> +32 476 61 10 99
+          </p>
+          <p class="footer-text">
+            <i class="fas fa-envelope"></i> tom@snapwithus360.com
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>
+        &copy; 2025 SNAPWITHUS360.com - DE BACKER LLC. Alle rechten
+        voorbehouden.
+      </p>
+      <div class="legal-links">
+        <a href="#">Privacybeleid</a>
+        <a href="#">Algemene voorwaarden</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Burger menu script -->
+  <script>
+      // Burger menu functionaliteit
+      const nav = document.querySelector(".nav");
+      const navOpenBtn = document.querySelector(".navOpenBtn");
+      const navCloseBtn = document.querySelector(".navCloseBtn");
+      
+      navOpenBtn.addEventListener("click", () => {
+          nav.classList.add("openNav");
+          nav.classList.remove("openSearch");
+      });
+    
+      navCloseBtn.addEventListener("click", () => {
+          nav.classList.remove("openNav");
+      });
+    
+      window.addEventListener("scroll", () => {
+          if(nav.classList.contains("openNav")) {
+              nav.classList.remove("openNav");
+          }
+      });
+
+      // Eenvoudige validatie
+      function validateForm() {
+          const email = document.getElementById("email").value;
+          if (!email.includes("@")) {
+              alert("Gelieve een geldig e-mailadres in te vullen");
+              return false;
+          }
+          return true;
+      }
+ <script src="script.js" defer></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
