@@ -1,21 +1,86 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="nl">
 <head>
   <meta charset="UTF-8">
   <title>Snapwithus360</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Immediate redirect to internal 3D page -->
-  <meta http-equiv="refresh" content="0; url=3D.html">
+  <!-- Optioneel: je bestaande CSS -->
+  <link rel="stylesheet" href="/css/style.css">
 
-  <!-- SEO hint -->
-  <link rel="canonical" href="https://snapwithus360.com/3D.html">
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #000; /* pas aan indien gewenst */
+      font-family: Arial, sans-serif;
+    }
+
+    .language-selector {
+      display: flex;
+      gap: 80px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .language-selector a {
+      text-decoration: none;
+      text-align: center;
+      color: #fff;
+    }
+
+    .language-selector img {
+      width: 140px;
+      height: auto;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      cursor: pointer;
+      border-radius: 8px;
+    }
+
+    .language-selector img:hover {
+      transform: scale(1.1);
+      box-shadow: 0 10px 30px rgba(255,255,255,0.3);
+    }
+
+    .label {
+      margin-top: 12px;
+      font-size: 16px;
+      letter-spacing: 1px;
+    }
+
+    @media (max-width: 600px) {
+      .language-selector {
+        flex-direction: column;
+        gap: 50px;
+      }
+
+      .language-selector img {
+        width: 120px;
+      }
+    }
+  </style>
 </head>
+
 <body>
-  <noscript>
-    <p>
-      This page redirects to
-      <a href="3D.html">https://snapwithus360.com/3D.html</a>
-    </p>
-  </noscript>
+
+  <main class="language-selector">
+
+    <!-- Nederlands -->
+    <a href="/3D.html" aria-label="Nederlands">
+      <img src="/Assets/flags/be.svg" alt="Nederlands">
+      <div class="label">NEDERLANDS</div>
+    </a>
+
+    <!-- English -->
+    <a href="/en/3D.html" aria-label="English">
+      <img src="/Assets/flags/us.svg" alt="English">
+      <div class="label">ENGLISH</div>
+    </a>
+
+  </main>
+
 </body>
 </html>
