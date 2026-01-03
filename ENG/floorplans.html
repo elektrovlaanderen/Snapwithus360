@@ -1,1 +1,310 @@
+<!-- Save this as: /ENG/floorplans.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Floor Plans | Snap360</title>
+
+  <!-- Optional EN-only SEO tags -->
+  <link rel="alternate" hreflang="en" href="https://snapwithus360.com/ENG/floorplans.html">
+  <link rel="alternate" hreflang="nl" href="https://snapwithus360.com/floorplans.html">
+
+  <!-- Styles (IMPORTANT: root-relative so it works from /ENG/) -->
+  <link rel="stylesheet" href="/CSS/style.css" />
+  <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.8/css/line.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"/>
+
+  <style>
+    /* Hero GIF (double size) */
+    .hero-gif {
+      position: absolute;
+      z-index: 1;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      height: 200%;
+      width: auto;
+      object-fit: contain;
+      opacity: 0.95;
+      pointer-events: none;
+    }
+    @media (max-width: 768px) { .hero-gif { height: 150%; } }
+    @media (max-width: 480px) { .hero-gif { height: 120%; } }
+
+    /* Ensure the 'Popular' badge doesn't overlap the title */
+    .pricing-badge {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      left: auto;
+      z-index: 3;
+      pointer-events: none;
+    }
+    .pricing-tile--featured { padding-top: 56px !important; }
+    @media (max-width: 480px) {
+      .pricing-tile--featured { padding-top: 48px !important; }
+      .pricing-badge { top: 10px; right: 10px; }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- NAV -->
+  <nav class="nav">
+    <i class="uil uil-bars navOpenBtn" aria-label="Open menu"></i>
+    <a href="/ENG/3D.html" class="logo">
+      <img src="/Assets/logo.png" alt="Snap360 logo" class="logo-image">
+    </a>
+    <ul class="nav-links">
+      <i class="uil uil-times navCloseBtn" aria-label="Close menu"></i>
+      <li><a href="/ENG/3D.html">Home</a></li>
+
+      <li class="has-submenu">
+        <a href="/ENG/360.html">Services</a>
+        <ul class="submenu">
+          <li><a href="/ENG/3d-scans.html">3D Matterport</a></li>
+          <li><a href="/ENG/floorplans.html">Floor Plans</a></li>
+          <li><a href="/ENG/under-construction.html">Photography</a></li>
+          <li><a href="/ENG/under-construction.html">Drone Photos &amp; Videos</a></li>
+          <li><a href="/ENG/under-construction.html">Video Tours</a></li>
+          <li><a href="/ENG/fpv.html">FPV Aerial Videos</a></li>
+        </ul>
+      </li>
+
+      <li><a href="/ENG/fotvi.html">References</a></li>
+      <li><a href="/ENG/contact.html">Contact</a></li>
+
+      <!-- Language switch -->
+      <li><a href="/floorplans.html">NL</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <!-- HERO with GIF -->
+    <section class="hero-section" aria-label="Floor plans">
+      <div class="hero-content">
+        <h1>Floor Plans</h1>
+        <p>
+          Clear 2D and 3D floor plans based on your Matterport Pro3 3D scan.
+          <strong>Available as an add-on service after purchasing a 3D scan.</strong>
+        </p>
+      </div>
+      <div class="hero-background" style="background:#000;"></div>
+      <img
+        class="hero-gif"
+        src="/Assets/floorplans/Commercialfloor.gif"
+        alt="Floor plan animation"
+      />
+    </section>
+
+    <!-- USP’s -->
+    <section class="pro3-section">
+      <div class="pro3-header">
+        <h2>Why floor plans through Snap360?</h2>
+        <p>
+          Professional plans that present your space clearly.
+          <strong>They can only be ordered in combination with a Matterport Pro3 3D scan</strong>,
+          ensuring reliable measurements and accuracy.
+        </p>
+      </div>
+
+      <div class="pro3-features">
+        <div class="pro3-feature">
+          <i class="fas fa-ruler-combined"></i>
+          <h3>Accurate measurements</h3>
+          <p>Dimensions and surface areas based on your Pro3 scan.</p>
+        </div>
+        <div class="pro3-feature">
+          <i class="fas fa-file-export"></i>
+          <h3>Convenient exports</h3>
+          <p>2D (PNG/PDF) and optional CAD/DXF exports upon request.</p>
+        </div>
+        <div class="pro3-feature">
+          <i class="fas fa-bolt"></i>
+          <h3>Fast delivery</h3>
+          <p>Short turnaround time and clear deliverables.</p>
+        </div>
+        <div class="pro3-feature">
+          <i class="fas fa-home"></i>
+          <h3>For homes & businesses</h3>
+          <p>From residential to industrial real estate.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- EXAMPLE -->
+    <section class="tours-section">
+      <div class="tours-header">
+        <h2>Example</h2>
+        <p>An example floor plan generated from a Matterport Pro3 3D scan.</p>
+      </div>
+
+      <div class="tours-grid" style="grid-template-columns: 1fr; max-width: 900px;">
+        <article class="tour-card">
+          <a class="tour-thumb"
+             href="/Assets/floorplans/voorbeeld-vloerplan-large.jpg"
+             target="_blank" rel="noopener noreferrer">
+            <img
+              src="/Assets/floorplans/voorbeeld-vloerplan-large.jpg"
+              alt="Example floor plan"
+              loading="lazy">
+            <span class="play-badge"><i class="fas fa-search-plus"></i></span>
+          </a>
+          <div class="tour-body">
+            <h3 class="tour-title">Home — ground floor</h3>
+            <p class="tour-meta">2D floor plan (with dimensions) • PDF/PNG</p>
+            <a class="tour-cta"
+               href="/Assets/floorplans/voorbeeld-vloerplan-large.jpg"
+               target="_blank" rel="noopener noreferrer">Open example →</a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- PROCESS -->
+    <section class="steps-section">
+      <div class="steps-header">
+        <h2>Process</h2>
+        <p>From scan to floor plan in three steps.</p>
+      </div>
+      <ol class="steps">
+        <li>
+          <h3>1. Scan &amp; input</h3>
+          <p>We use your Matterport Pro3 3D scan (or schedule a scan).</p>
+        </li>
+        <li>
+          <h3>2. Production</h3>
+          <p>We generate and verify the floor plan, including dimensions.</p>
+        </li>
+        <li>
+          <h3>3. Delivery</h3>
+          <p>You receive the plan in the agreed format (PNG/PDF, optional DXF/CAD).</p>
+        </li>
+      </ol>
+    </section>
+
+    <!-- PRICING -->
+    <section class="pricing-section">
+      <div class="pricing-header">
+        <h2>Floor plan starting prices</h2>
+        <p>
+          Indicative pricing for floor plans.
+          <strong>Available only as an add-on to a Pro3 scan</strong>.
+          Can be combined with your virtual tour.
+        </p>
+      </div>
+
+      <div class="pricing-tiles">
+        <!-- Tile 1 -->
+        <article class="pricing-tile">
+          <div class="pricing-tile-head">
+            <h3 class="pricing-tile-title">
+              2D Floor Plan
+              <span class="pricing-tile-sub">(1 floor, up to 185&nbsp;m²)</span>
+            </h3>
+          </div>
+          <div class="pricing-tile-body">
+            <p class="pricing-tile-price"><span>from</span> <strong>€&nbsp;141.57 VAT incl.</strong></p>
+            <ul class="pricing-tile-list">
+              <li>PNG/PDF export</li>
+              <li>Basic dimensions &amp; areas</li>
+              <li>Color or black-and-white</li>
+            </ul>
+            <a class="pricing-tile-cta" href="/ENG/contact.html">Request a quote</a>
+          </div>
+        </article>
+
+        <!-- Tile 2 (featured) -->
+        <article class="pricing-tile pricing-tile--featured">
+          <div class="pricing-badge">Popular</div>
+          <div class="pricing-tile-head">
+            <h3 class="pricing-tile-title">
+              2D Floor Plan
+              <span class="pricing-tile-sub">(multiple floors, up to 370&nbsp;m²)</span>
+            </h3>
+          </div>
+          <div class="pricing-tile-body">
+            <p class="pricing-tile-price"><span>from</span> <strong>€&nbsp;419.87 VAT incl.</strong></p>
+            <ul class="pricing-tile-list">
+              <li>PNG/PDF export</li>
+              <li>Dimensions &amp; layers</li>
+              <li>Color or black-and-white</li>
+            </ul>
+            <a class="pricing-tile-cta" href="/ENG/contact.html">Request a quote</a>
+          </div>
+        </article>
+
+        <!-- Tile 3 -->
+        <article class="pricing-tile">
+          <div class="pricing-tile-head">
+            <h3 class="pricing-tile-title">
+              2D/3D Floor Plan
+              <span class="pricing-tile-sub">(from approx. &plusmn;&nbsp;560&nbsp;m²)</span>
+            </h3>
+          </div>
+          <div class="pricing-tile-body">
+            <p class="pricing-tile-price"><span>from</span> <strong>€&nbsp;275.15 VAT incl.</strong></p>
+            <ul class="pricing-tile-list">
+              <li>2D + optional 3D view</li>
+              <li>PNG/PDF, optional DXF/CAD</li>
+              <li>Project-specific annotations</li>
+            </ul>
+            <a class="pricing-tile-cta" href="/ENG/contact.html">Request a quote</a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-final">
+      <h2>Ready for clear floor plans?</h2>
+      <a href="/ENG/contact.html" class="cta-button">Request your floor plan →</a>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-section">
+        <h4 class="footer-heading">Snap360-snapwithus360.com</h4>
+        <p class="footer-text">Specialists in innovative imaging technology for real estate and architecture.</p>
+        <div class="social-icons">
+          <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+          <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+          <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
+        </div>
+      </div>
+      <div class="footer-section">
+        <h4 class="footer-heading">Quick links</h4>
+        <ul class="footer-links">
+          <li><a href="/ENG/3D.html" class="footer-link">Home</a></li>
+          <li><a href="/ENG/360.html" class="footer-link">Services</a></li>
+          <li><a href="/ENG/fotvi.html" class="footer-link">References</a></li>
+          <li><a href="/ENG/contact.html" class="footer-link">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h4 class="footer-heading">Contact</h4>
+        <div class="contact-info">
+          <p class="footer-text"><i class="fas fa-map-marker-alt"></i> Vijfstraten 163, 9100 Sint-Niklaas</p>
+          <p class="footer-text"><i class="fas fa-phone"></i> +32 476 61 10 99</p>
+          <p class="footer-text"><i class="fas fa-envelope"></i> tom@snapwithus360.com</p>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2025 SNAPWITHUS360.com - DE BACKER LLC. All rights reserved.</p>
+      <div class="legal-links">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms &amp; Conditions</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts (IMPORTANT: root-relative so it works from /ENG/) -->
+  <script src="/script.js" defer></script>
+</body>
+</html>
 
