@@ -1,121 +1,103 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="nl-be">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Snapwithus360</title>
+  <title>Snapwithus360.com</title>
 
-  <link rel="stylesheet" href="/CSS/style.css" />
+  <!-- Jouw bestaande stylesheet -->
+  <link rel="stylesheet" href="CSS/style.css" />
 
   <style>
-    /* RESET */
-    body, html {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      overflow: hidden;
-      font-family: inherit;
-    }
-
-    /* VIDEO BACKGROUND */
-    .video-bg {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      z-index: 0;
-    }
-
-    /* DARK OVERLAY (leesbaarheid) */
-    .overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.45);
-      z-index: 1;
-    }
-
-    /* CONTENT */
-    .language-wrapper {
-      position: relative;
-      z-index: 2;
+    /* Index hero fullscreen (zonder margin-top omdat er geen nav op index hoeft te staan) */
+    .lang-hero {
       height: 100vh;
+      margin-top: 0;
+    }
+
+    /* Donkere overlay voor leesbaarheid */
+    .lang-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.35);
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    /* Vlaggen boven de video */
+    .lang-content {
+      position: relative;
+      z-index: 3;
+      height: 100%;
       display: flex;
       align-items: center;
       justify-content: center;
-    }
-
-    .language-box {
-      display: flex;
-      gap: 60px;
+      padding: 20px;
       text-align: center;
     }
 
+    .lang-box {
+      display: flex;
+      gap: 60px;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
     .lang-option {
+      display: grid;
+      gap: 10px;
       text-decoration: none;
       color: #fff;
       transition: transform .2s ease;
     }
-
-    .lang-option:hover {
-      transform: scale(1.05);
-    }
+    .lang-option:hover { transform: translateY(-2px); }
 
     .lang-option img {
       width: 140px;
       height: auto;
-      border-radius: 6px;
-      box-shadow: 0 12px 30px rgba(0,0,0,.4);
+      border-radius: 8px;
+      box-shadow: 0 12px 30px rgba(0,0,0,.35);
+      display: block;
     }
 
     .lang-label {
-      margin-top: 12px;
-      font-size: 1.1rem;
-      letter-spacing: 0.5px;
+      font-size: 1.05rem;
+      font-weight: 500;
+      letter-spacing: .3px;
     }
 
     @media (max-width: 768px) {
-      .language-box {
-        flex-direction: column;
-        gap: 40px;
-      }
-      .lang-option img {
-        width: 120px;
-      }
+      .lang-box { gap: 28px; }
+      .lang-option img { width: 120px; }
     }
   </style>
 </head>
 
 <body>
+  <!-- HERO met video achtergrond zoals je site al kent -->
+  <section class="hero-section lang-hero" aria-label="Language selection">
+    <video
+      class="hero-background"
+      autoplay
+      loop
+      muted
+      playsinline
+      webkit-playsinline
+      preload="auto"
+      poster="Assets/Movies/placeholder.jpg"
+    >
+      <source
+        src="Assets/Movies/267A6457-812F-42EC-8ACA-43AB001D1C7F.mp4"
+        type="video/mp4"
+      />
+      Je browser ondersteunt deze video niet.
+    </video>
 
-  <!-- VIDEO -->
-  <video class="video-bg" autoplay muted loop playsinline>
-    <source src="/Assets/Movies/13489710_3840_2160_30fps.mp4" type="video/mp4">
-    Your browser does not support the video tag.
-  </video>
+    <div class="lang-overlay"></div>
 
-  <!-- OVERLAY -->
-  <div class="overlay"></div>
-
-  <!-- FLAGS -->
-  <div class="language-wrapper">
-    <div class="language-box">
-
-      <!-- NL -->
-      <a href="/3D.html" class="lang-option">
-        <img src="/Assets/flags/belgium.png" alt="Belgium flag">
-        <div class="lang-label">Belgium</div>
-      </a>
-
-      <!-- EN -->
-      <a href="/ENG/3D.html" class="lang-option">
-        <img src="/Assets/flags/usa.png" alt="United States flag">
-        <div class="lang-label">United States</div>
-      </a>
-
-    </div>
-  </div>
-
-</body>
-</html>
+    <!-- Vlaggen bovenop -->
+    <div class="lang-content">
+      <div class="lang-box">
+        <a class="lang-option" href="3D.html" aria-label="Naar Nederlandse site">
+          <img src="As
