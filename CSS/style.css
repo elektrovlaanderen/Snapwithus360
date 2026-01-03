@@ -480,3 +480,68 @@ a { color: #000; text-decoration: none; }
 .nav .nav-links .navCloseBtn { position: absolute; top: 16px; right: 16px; }
 .nav .nav-links .submenu { display: none; }
 .nav .nav-links li.has-submenu.open > .submenu { display: block; }
+
+/* ========== LANGUAGE / FLAGS INDEX (toegevoegd) ========== */
+/* Gebruik op index.html: <body class="lang-landing"> ... </body> */
+
+body.lang-landing {
+  background: #000;               /* zwarte achtergrond zoals je screenshot */
+  color: #fff;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lang-landing a { color: #fff; }
+
+.lang-landing .language-selector {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 80px;
+}
+
+.lang-landing .lang-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+}
+
+.lang-landing .lang-option img {
+  width: 140px;
+  height: 90px;                  /* dwingt exact gelijke grootte */
+  object-fit: cover;             /* gelijke kadermaat, geen vervorming */
+  border-radius: 10px;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.lang-landing .lang-option img:hover {
+  transform: scale(1.08);
+  box-shadow: 0 10px 30px rgba(255, 255, 255, 0.35);
+}
+
+.lang-landing .label {
+  margin-top: 14px;
+  font-size: 14px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  opacity: 0.9;
+}
+
+@media (max-width: 600px) {
+  body.lang-landing {
+    padding: 40px 0;
+  }
+
+  .lang-landing .language-selector {
+    flex-direction: column;
+    gap: 50px;
+  }
+
+  .lang-landing .lang-option img {
+    width: 120px;
+    height: 78px;
+  }
+}
