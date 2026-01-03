@@ -1,1 +1,170 @@
+<!-- Save this as: /ENG/under-construction.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Page Under Construction | Snap360</title>
+
+  <!-- Search engines: do not index -->
+  <meta name="robots" content="noindex,nofollow" />
+
+  <!-- Optional EN-only SEO tags -->
+  <link rel="alternate" hreflang="en" href="https://snapwithus360.com/ENG/under-construction.html">
+  <link rel="alternate" hreflang="nl" href="https://snapwithus360.com/under-construction.html">
+
+  <!-- Styles (IMPORTANT: root-relative so it works from /ENG/) -->
+  <link rel="stylesheet" href="/CSS/style.css" />
+  <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.8/css/line.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"/>
+
+  <style>
+    /* Same look/feel as your normal hero */
+    .uc-hero{
+      height:500px;               /* matches .hero-section height */
+      margin-top:60px;            /* space for fixed navbar */
+      padding:0 20px;
+      background:#000;            /* black bar */
+      position:relative;
+      overflow:hidden;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .uc-card{
+      background:rgba(255,255,255,0.06);
+      border:1px solid rgba(255,255,255,0.12);
+      border-radius:16px;
+      padding:28px 24px;
+      max-width:720px;
+      width:92vw;
+      text-align:center;
+      color:#fff;
+      backdrop-filter:blur(6px);
+    }
+    @media (max-width:480px){ .uc-hero{ height:400px; } }
+
+    .uc-emoji{
+      font-size:3rem;
+      display:inline-block;
+      margin-bottom:10px;
+      animation:bob 2.2s ease-in-out infinite;
+    }
+    .uc-title{ font-size:2rem; margin:6px 0 10px; color:#fff; }
+    .uc-text{ color:#dfe7f1; line-height:1.8; margin:0 auto 18px; }
+    .uc-actions{ display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-top:8px; }
+
+    .btn{
+      display:inline-block; padding:12px 22px; border-radius:8px; text-decoration:none;
+      transition:transform .15s ease, box-shadow .15s ease, background .2s ease;
+      border:2px solid transparent; font-weight:500;
+    }
+    .btn-primary{ background:#2B6777; color:#fff; }
+    .btn-primary:hover{ background:#52ab98; transform:translateY(-2px); box-shadow:0 6px 18px rgba(43,103,119,.25); }
+    .btn-ghost{ background:transparent; color:#fff; border-color:rgba(255,255,255,0.35); }
+    .btn-ghost:hover{ background:rgba(255,255,255,0.08); transform:translateY(-2px); }
+
+    .uc-note{ margin-top:14px; font-size:.95rem; color:#c9d6e2; opacity:.9; }
+
+    @keyframes bob{ 0%,100%{ transform:translateY(0) } 50%{ transform:translateY(-6px) } }
+  </style>
+</head>
+
+<body>
+  <!-- NAV -->
+  <nav class="nav">
+    <i class="uil uil-bars navOpenBtn" aria-label="Open menu"></i>
+    <a href="/ENG/3D.html" class="logo">
+      <img src="/Assets/logo.png" alt="Snap360 logo" class="logo-image">
+    </a>
+    <ul class="nav-links">
+      <i class="uil uil-times navCloseBtn" aria-label="Close menu"></i>
+      <li><a href="/ENG/3D.html">Home</a></li>
+
+      <!-- Services with submenu -->
+      <li class="has-submenu">
+        <a href="/ENG/360.html">Services</a>
+        <ul class="submenu">
+          <li><a href="/ENG/under-construction.html">Photography</a></li>
+          <li><a href="/ENG/under-construction.html">Drone Photos &amp; Videos</a></li>
+          <li><a href="/ENG/3d-scans.html">3D Matterport</a></li>
+          <li><a href="/ENG/under-construction.html">Video Tours</a></li>
+          <li><a href="/ENG/floorplans.html">Floor Plans</a></li>
+          <li><a href="/ENG/fpv.html">FPV Aerial Videos</a></li>
+        </ul>
+      </li>
+
+      <li><a href="/ENG/fotvi.html">References</a></li>
+      <li><a href="/ENG/contact.html">Contact</a></li>
+
+      <!-- Language switch -->
+      <li><a href="/under-construction.html">NL</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <section class="uc-hero">
+      <div class="uc-card">
+        <div class="uc-emoji">🚧</div>
+        <h1 class="uc-title">This page is under construction</h1>
+        <p class="uc-text">
+          We’re working behind the scenes on something great. You’ll find all information here soon.
+          In the meantime, feel free to browse our existing pages or contact us directly.
+        </p>
+        <div class="uc-actions">
+          <a class="btn btn-primary" href="/ENG/3D.html">Back to Home</a>
+          <a class="btn btn-ghost" href="/ENG/contact.html">Contact us</a>
+        </div>
+        <p class="uc-note">Active in Belgium and the United States (based in Los Angeles).</p>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-section">
+        <h4 class="footer-heading">Snap360-snapwithus360.com</h4>
+        <p class="footer-text">Specialists in innovative imaging technology for real estate and architecture.</p>
+        <div class="social-icons">
+          <a href="#" class="social-link" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" class="social-link" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+          <a href="#" class="social-link" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="#" class="social-link" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+        </div>
+      </div>
+
+      <div class="footer-section">
+        <h4 class="footer-heading">Quick links</h4>
+        <ul class="footer-links">
+          <li><a href="/ENG/3D.html" class="footer-link">Home</a></li>
+          <li><a href="/ENG/360.html" class="footer-link">Services</a></li>
+          <li><a href="/ENG/fotvi.html" class="footer-link">References</a></li>
+          <li><a href="/ENG/contact.html" class="footer-link">Contact</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-section">
+        <h4 class="footer-heading">Contact</h4>
+        <div class="contact-info">
+          <p class="footer-text"><i class="fas fa-map-marker-alt"></i> Vijfstraten 163, 9100 Sint-Niklaas</p>
+          <p class="footer-text"><i class="fas fa-phone"></i> +32 476 61 10 99</p>
+          <p class="footer-text"><i class="fas fa-envelope"></i> tom@snapwithus360.com</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>&copy; 2025 SNAPWITHUS360.com - DE BACKER LLC. All rights reserved.</p>
+      <div class="legal-links">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms &amp; Conditions</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Central nav/submenu script (root-relative so it works from /ENG/) -->
+  <script src="/script.js" defer></script>
+</body>
+</html>
 
