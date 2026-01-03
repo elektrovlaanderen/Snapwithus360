@@ -1,1 +1,209 @@
+<!-- Save this as: /ENG/contact.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Snap360-snapwithus360.com</title>
 
+  <!-- Optional EN-only SEO tags -->
+  <link rel="alternate" hreflang="en" href="https://snapwithus360.com/ENG/contact.html">
+  <link rel="alternate" hreflang="nl" href="https://snapwithus360.com/contact.html">
+
+  <!-- IMPORTANT: root-relative so it works from /ENG/ -->
+  <link rel="stylesheet" href="/CSS/style.css">
+  <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.8/css/line.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+
+<body>
+  <header>
+    <nav class="nav">
+      <i class="uil uil-bars navOpenBtn" aria-label="Open menu"></i>
+
+      <a href="/ENG/3D.html" class="logo">
+        <img src="/Assets/logo.png" alt="Snap360 logo" class="logo-image">
+      </a>
+
+      <ul class="nav-links">
+        <i class="uil uil-times navCloseBtn" aria-label="Close menu"></i>
+
+        <li><a href="/ENG/3D.html">Home</a></li>
+
+        <!-- Services with submenu -->
+        <li class="has-submenu">
+          <a href="/ENG/360.html">Services</a>
+          <ul class="submenu">
+            <li><a href="/ENG/under-construction.html">Photography</a></li>
+            <li><a href="/ENG/under-construction.html">Drone Photos &amp; Videos</a></li>
+            <li><a href="/ENG/3d-scans.html">3D Matterport</a></li>
+            <li><a href="/ENG/under-construction.html">Video Tours</a></li>
+            <li><a href="/ENG/floorplans.html">Floor Plans</a></li>
+            <li><a href="/ENG/fpv.html">FPV Aerial Videos</a></li>
+          </ul>
+        </li>
+
+        <li><a href="/ENG/fotvi.html">References</a></li>
+        <li><a href="/ENG/contact.html">Contact</a></li>
+
+        <!-- Language switch -->
+        <li><a href="/contact.html">NL</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section class="contact-main-section">
+    <div class="contact-form-wrapper">
+      <h2>Send us a message</h2>
+      <br><br>
+
+      <form class="modern-form"
+            action="https://formspree.io/f/xanoyljw"
+            method="POST"
+            onsubmit="return validateForm()">
+
+        <!-- Formspree configuration fields -->
+        <input type="hidden" name="_subject" value="New contact form - Snapwithus360">
+        <input type="hidden" name="_language" value="en">
+        <input type="text" name="_gotcha" style="display:none">
+
+        <!-- Form fields -->
+        <div class="form-group">
+          <input type="text" id="name" name="name" required>
+          <label for="name">Full name</label>
+        </div>
+
+        <div class="form-group">
+          <input type="email" id="email" name="email" required>
+          <label for="email">Email address</label>
+        </div>
+
+        <div class="form-group">
+          <input type="tel" id="phone" name="phone">
+          <label for="phone">Phone number (optional)</label>
+        </div>
+
+        <div class="form-group">
+          <textarea id="message" name="message" rows="5" required></textarea>
+          <label for="message">Your message</label>
+        </div>
+
+        <button type="submit" class="submit-btn">
+          <i class="uil uil-message"></i> Send message
+        </button>
+      </form>
+
+      <!-- Formspree disclaimer -->
+      <p class="form-disclaimer" style="margin-top:20px; font-size:0.9em; color:#666;">
+        This form is secured by <a href="https://formspree.io" target="_blank" style="color:#666;">Formspree</a>
+      </p>
+    </div>
+
+    <div class="contact-container">
+      <div class="contact-info-cards">
+        <div class="contact-info-card">
+          <i class="fas fa-phone"></i>
+          <h3>Phone</h3>
+          <p>+32 476 61 10 99</p>
+          <p>Available: Mon–Fri 9am–5pm</p>
+        </div>
+
+        <div class="contact-info-card">
+          <i class="fas fa-envelope"></i>
+          <h3>Email</h3>
+          <p>tom@snapwithus360.com</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-section">
+        <h4 class="footer-heading">Snap360-snapwithus360.com</h4>
+        <p class="footer-text">
+          Specialists in innovative imaging technology for real estate and architecture.
+        </p>
+        <div class="social-icons">
+          <a href="#" class="social-link" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" class="social-link" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+          <a href="#" class="social-link" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="#" class="social-link" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+        </div>
+      </div>
+
+      <div class="footer-section">
+        <h4 class="footer-heading">Quick links</h4>
+        <ul class="footer-links">
+          <li><a href="/ENG/3D.html" class="footer-link">Home</a></li>
+          <li><a href="/ENG/360.html" class="footer-link">Services</a></li>
+          <li><a href="/ENG/fotvi.html" class="footer-link">References</a></li>
+          <li><a href="/ENG/contact.html" class="footer-link">Contact</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-section">
+        <h4 class="footer-heading">Contact</h4>
+        <div class="contact-info">
+          <p class="footer-text">
+            <i class="fas fa-map-marker-alt"></i> Vijfstraten 163, 9100 Sint-Niklaas
+          </p>
+          <p class="footer-text">
+            <i class="fas fa-phone"></i> +32 476 61 10 99
+          </p>
+          <p class="footer-text">
+            <i class="fas fa-envelope"></i> tom@snapwithus360.com
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>
+        &copy; 2025 SNAPWITHUS360.com - DE BACKER LLC. All rights reserved.
+      </p>
+      <div class="legal-links">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms &amp; Conditions</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Burger menu + basic validation -->
+  <script>
+    // Burger menu functionality
+    const nav = document.querySelector(".nav");
+    const navOpenBtn = document.querySelector(".navOpenBtn");
+    const navCloseBtn = document.querySelector(".navCloseBtn");
+
+    navOpenBtn.addEventListener("click", () => {
+      nav.classList.add("openNav");
+      nav.classList.remove("openSearch");
+    });
+
+    navCloseBtn.addEventListener("click", () => {
+      nav.classList.remove("openNav");
+    });
+
+    window.addEventListener("scroll", () => {
+      if (nav.classList.contains("openNav")) {
+        nav.classList.remove("openNav");
+      }
+    });
+
+    // Simple validation
+    function validateForm() {
+      const email = document.getElementById("email").value;
+      if (!email.includes("@")) {
+        alert("Please enter a valid email address");
+        return false;
+      }
+      return true;
+    }
+  </script>
+
+  <!-- Central script (root) -->
+  <script src="/script.js" defer></script>
+</body>
+</html>
