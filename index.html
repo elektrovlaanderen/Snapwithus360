@@ -5,18 +5,15 @@
   <title>Snapwithus360</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Optioneel: je bestaande CSS -->
-  <link rel="stylesheet" href="/css/style.css">
-
   <style>
     body {
       margin: 0;
       height: 100vh;
       display: flex;
-      align-items: center;
       justify-content: center;
-      background: #000; /* pas aan indien gewenst */
-      font-family: Arial, sans-serif;
+      align-items: center;
+      background: #000;
+      font-family: Arial, Helvetica, sans-serif;
     }
 
     .language-selector {
@@ -26,29 +23,34 @@
       justify-content: center;
     }
 
-    .language-selector a {
+    .lang-option {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       text-decoration: none;
-      text-align: center;
       color: #fff;
     }
 
-    .language-selector img {
+    .lang-option img {
       width: 140px;
-      height: auto;
-      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      height: 90px;
+      object-fit: cover;
+      border-radius: 10px;
       cursor: pointer;
-      border-radius: 8px;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
     }
 
-    .language-selector img:hover {
-      transform: scale(1.1);
-      box-shadow: 0 10px 30px rgba(255,255,255,0.3);
+    .lang-option img:hover {
+      transform: scale(1.08);
+      box-shadow: 0 10px 30px rgba(255, 255, 255, 0.35);
     }
 
     .label {
-      margin-top: 12px;
-      font-size: 16px;
-      letter-spacing: 1px;
+      margin-top: 14px;
+      font-size: 14px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      opacity: 0.9;
     }
 
     @media (max-width: 600px) {
@@ -57,8 +59,9 @@
         gap: 50px;
       }
 
-      .language-selector img {
+      .lang-option img {
         width: 120px;
+        height: 78px;
       }
     }
   </style>
@@ -68,16 +71,16 @@
 
   <main class="language-selector">
 
-    <!-- Nederlands -->
-    <a href="/3D.html" aria-label="Nederlands">
-      <img src="/Assets/flags/be.svg" alt="Nederlands">
-      <div class="label">NEDERLANDS</div>
+    <!-- België / Nederlands -->
+    <a href="/3D.html" class="lang-option" aria-label="Belgium - Dutch">
+      <img src="/Assets/flags/be.svg" alt="Belgium">
+      <div class="label">BELGIË</div>
     </a>
 
-    <!-- English -->
-    <a href="/en/3D.html" aria-label="English">
-      <img src="/Assets/flags/us.svg" alt="English">
-      <div class="label">ENGLISH</div>
+    <!-- United States / English -->
+    <a href="/en/3D.html" class="lang-option" aria-label="United States - English">
+      <img src="/Assets/flags/us.svg" alt="United States">
+      <div class="label">UNITED STATES</div>
     </a>
 
   </main>
