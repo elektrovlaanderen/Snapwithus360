@@ -48,6 +48,9 @@
         width: 92%;
         max-height: 40vh;
       }
+      .video-wrapper video {
+        max-height: 40vh;
+      }
     }
 
     /* FLAGS */
@@ -102,8 +105,9 @@
 
     <!-- VIDEO -->
     <div class="video-wrapper">
-      <video autoplay muted loop playsinline>
-        <source src="Assets/Movies/267A6457-812F-42EC-8ACA-43AB001D1C7F.mp4" type="video/mp4">
+      <video autoplay muted loop playsinline preload="metadata" poster="Assets/Movies/sportportretten-poster.jpg">
+        <source src="Assets/Movies/sportportretten-rook.mp4" type="video/mp4">
+        Your browser does not support the video tag.
       </video>
     </div>
 
