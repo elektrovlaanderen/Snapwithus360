@@ -545,3 +545,35 @@ body.lang-landing {
     height: 78px;
   }
 }
+.secondary-button{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding: 12px 18px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.35);
+  color:#fff;
+  text-decoration:none;
+  transition: transform .2s ease, border-color .2s ease;
+}
+.secondary-button:hover{
+  transform: translateY(-1px);
+  border-color: rgba(255,255,255,0.7);
+}
+
+.brochure-link{
+  display:inline-block;
+  margin-top: 10px;
+  text-decoration:none;
+}
+.brochure-link:hover{
+  text-decoration: underline;
+}
+
+.sports-cta-row{
+  display:flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+}
+
