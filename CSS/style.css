@@ -592,3 +592,27 @@ body.lang-landing {
 .brochure-link:hover{
   text-decoration: underline;
 }
+
+/* FORCE OVERRIDE: secondary button altijd zichtbaar (laatste in CSS!) */
+a.secondary-button,
+.secondary-button{
+  background: #2B6777 !important;   /* gevuld (niet transparant) */
+  color: #fff !important;           /* witte tekst */
+  border: 2px solid #2B6777 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 12px 18px !important;
+  border-radius: 10px !important;
+  text-decoration: none !important;
+  font-weight: 600 !important;
+  transition: transform .2s ease, background-color .2s ease, box-shadow .2s ease !important;
+}
+
+a.secondary-button:hover,
+.secondary-button:hover{
+  background: #52ab98 !important;
+  border-color: #52ab98 !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 8px 20px rgba(43,103,119,.18) !important;
+}
