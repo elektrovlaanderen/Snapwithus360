@@ -21,8 +21,12 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: flex-start;
-      padding-top: 6vh;
+
+      /* Keep video + flags closer together on all screens */
+      justify-content: center;
+      gap: 28px;
+
+      padding: 4vh 0 4vh;
       box-sizing: border-box;
     }
 
@@ -30,35 +34,26 @@
     .video-wrapper {
       width: 72%;
       max-width: 900px;
-      max-height: 45vh;
-      margin-bottom: 4vh;
     }
 
     .video-wrapper video {
       width: 100%;
-      height: auto;
-      max-height: 45vh;
-      object-fit: contain;
+
+      /* Make vertical promo videos look good on desktop too */
+      height: 52vh;
+      object-fit: cover;           /* cinematic look; change to contain if you hate cropping */
+
       border-radius: 16px;
       box-shadow: 0 30px 80px rgba(0,0,0,0.7);
-    }
-
-    @media (max-width: 768px) {
-      .video-wrapper {
-        width: 92%;
-        max-height: 40vh;
-      }
-      .video-wrapper video {
-        max-height: 40vh;
-      }
+      display: block;
     }
 
     /* FLAGS */
     .language-select {
       display: flex;
       gap: 80px;
-      margin-top: auto;
-      padding-bottom: 6vh;
+      margin-top: 0;      /* IMPORTANT: prevents huge spacing */
+      padding-bottom: 0;
     }
 
     .flag-link {
@@ -97,6 +92,33 @@
       50%  { transform: translateY(-10px); }
       100% { transform: translateY(0); }
     }
+
+    /* MOBILE */
+    @media (max-width: 768px) {
+      .index-wrapper{
+        padding: 2vh 0 4vh;
+        gap: 18px;
+      }
+
+      .video-wrapper{
+        width: 96%;
+        max-width: none;
+      }
+
+      .video-wrapper video{
+        height: 58vh;             /* bigger on mobile */
+        border-radius: 14px;
+      }
+
+      .language-select{
+        gap: 36px;
+      }
+
+      .flag-link img{
+        width: 120px;
+        height: 78px;
+      }
+    }
   </style>
 </head>
 
@@ -106,7 +128,7 @@
     <!-- VIDEO -->
     <div class="video-wrapper">
       <video autoplay muted loop playsinline preload="metadata" poster="Assets/Movies/sportportretten-poster.jpg">
-        <source src="Assets/Movies/sportportretten-rook.mp4" type="video/mp4">
+        <source src="Assets/Movies/sportportretten-rook.mp4?v=2" type="video/mp4">
         Your browser does not support the video tag.
       </video>
     </div>
@@ -127,4 +149,3 @@
   </div>
 </body>
 </html>
-
