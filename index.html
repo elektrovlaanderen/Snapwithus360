@@ -21,11 +21,8 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-
-      /* Keep video + flags closer together on all screens */
       justify-content: center;
       gap: 28px;
-
       padding: 4vh 0 4vh;
       box-sizing: border-box;
     }
@@ -38,11 +35,9 @@
 
     .video-wrapper video {
       width: 100%;
-
-      /* Make vertical promo videos look good on desktop too */
-      height: 52vh;
-      object-fit: cover;           /* cinematic look; change to contain if you hate cropping */
-
+      height: 52vh;              /* size on desktop */
+      object-fit: contain;       /* OPTION A: show the full video (no cropping) */
+      background: #000;          /* clean letterbox/pillarbox */
       border-radius: 16px;
       box-shadow: 0 30px 80px rgba(0,0,0,0.7);
       display: block;
@@ -52,7 +47,7 @@
     .language-select {
       display: flex;
       gap: 80px;
-      margin-top: 0;      /* IMPORTANT: prevents huge spacing */
+      margin-top: 0;
       padding-bottom: 0;
     }
 
@@ -106,7 +101,8 @@
       }
 
       .video-wrapper video{
-        height: 58vh;             /* bigger on mobile */
+        height: 60vh;            /* bigger on mobile */
+        object-fit: contain;     /* keep full video visible */
         border-radius: 14px;
       }
 
@@ -128,7 +124,7 @@
     <!-- VIDEO -->
     <div class="video-wrapper">
       <video autoplay muted loop playsinline preload="metadata" poster="Assets/Movies/sportportretten-poster.jpg">
-        <source src="Assets/Movies/sportportretten-rook.mp4?v=2" type="video/mp4">
+        <source src="Assets/Movies/sportportretten-rook.mp4?v=3" type="video/mp4">
         Your browser does not support the video tag.
       </video>
     </div>
