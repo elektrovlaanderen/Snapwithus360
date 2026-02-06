@@ -9,99 +9,244 @@
   <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.8/css/line.css"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"/>
 
-  <!-- Kleine extra styling, zodat prijzen/knoppen netjes staan zonder je hoofd-CSS te breken -->
+  <!-- Page-specific CSS: pricing layout zoals jouw screenshots -->
   <style>
-    .page-title-wrap{
-      padding: 70px 0 20px;
+    :root{
+      --acc: #f05a28; /* oranje accent zoals voorbeeld */
+      --paper: #f6f1eb;
+      --paper2: #fbf7f2;
+      --ink: #2b2b2b;
+      --muted: #6a6a6a;
+      --line: rgba(0,0,0,0.12);
+      --card: #ffffff;
+      --radius: 18px;
     }
-    .page-container{
+
+    .re-page-wrap{
+      background: #000; /* sluit aan bij je site */
+    }
+
+    .re-container{
       width: min(1200px, 92%);
       margin: 0 auto;
+      padding: 70px 0;
     }
-    .note-box{
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.10);
-      border-radius: 16px;
-      padding: 18px;
-    }
-    .pricing-grid{
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
-      margin-top: 18px;
-    }
-    .pricing-card{
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.10);
-      border-radius: 16px;
-      padding: 20px;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.35);
-    }
-    .pricing-card h3{ margin: 0 0 8px; }
-    .price{
+
+    .re-title{
+      color:#fff;
+      margin: 0 0 10px;
       font-size: 34px;
+      line-height: 1.15;
+    }
+    .re-sub{
+      color: rgba(255,255,255,0.9);
+      line-height: 1.65;
+      max-width: 900px;
+      margin: 0 0 18px;
+    }
+
+    /* Pricing section (light block) */
+    .pricing-section{
+      background: var(--paper);
+      border-radius: 26px;
+      padding: 22px;
+      margin-top: 26px;
+    }
+
+    .pricing-grid{
+      display:grid;
+      grid-template-columns: 1.6fr 0.9fr;
+      gap: 18px;
+      align-items:start;
+    }
+
+    .price-table-card{
+      background: var(--card);
+      border-radius: 22px;
+      padding: 22px;
+      box-shadow: 0 18px 55px rgba(0,0,0,0.12);
+    }
+
+    .price-table-title{
+      font-weight: 800;
+      color: var(--acc);
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      font-size: 14px;
+      margin: 0 0 14px;
+    }
+
+    table.pricing-table{
+      width:100%;
+      border-collapse: collapse;
+      color: var(--ink);
+      font-size: 15px;
+    }
+
+    .pricing-table tr{
+      border-bottom: 1px solid var(--line);
+    }
+
+    .pricing-table tr:last-child{
+      border-bottom: none;
+    }
+
+    .pricing-table td{
+      padding: 12px 0;
+      vertical-align: top;
+    }
+
+    .pricing-table td:last-child{
+      text-align:right;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .accordion-col{
+      display:flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .acc-card{
+      border-radius: 18px;
+      overflow:hidden;
+      background: rgba(255,255,255,0.55);
+      border: 1px solid rgba(0,0,0,0.06);
+    }
+
+    details.acc{
+      background: transparent;
+    }
+
+    details.acc summary{
+      cursor: pointer;
+      padding: 16px 16px;
+      font-weight: 800;
+      color: #3a3a3a;
+      list-style: none;
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    details.acc summary::-webkit-details-marker{ display:none; }
+
+    .acc-chevron{
+      color: rgba(0,0,0,0.45);
+      font-size: 16px;
+    }
+
+    .order-box{
+      background: var(--acc);
+      border-radius: 18px;
+      padding: 18px;
+      color: #fff;
+      display:flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .order-box-title{
+      display:flex;
+      align-items:center;
+      gap: 10px;
       font-weight: 800;
       letter-spacing: 0.2px;
-      margin: 8px 0 10px;
     }
-    .price small{
-      font-size: 13px;
-      opacity: 0.85;
-      font-weight: 500;
-    }
-    .mini-muted{ opacity: 0.9; line-height: 1.6; }
-    .addon-grid{
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
-      margin-top: 18px;
-    }
-    .addon-card{
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.10);
-      border-radius: 16px;
-      padding: 18px;
-    }
-    .secondary-button{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      padding: 12px 18px;
-      border-radius: 10px;
-      border: 1px solid rgba(255,255,255,0.35);
-      color:#fff;
-      text-decoration:none;
-      transition: transform .2s ease, border-color .2s ease;
-      gap: 8px;
-    }
-    .secondary-button:hover{
-      transform: translateY(-1px);
-      border-color: rgba(255,255,255,0.7);
-    }
-    .cta-row{
-      display:flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-top: 14px;
-    }
-    .faq-wrap details{
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.10);
-      border-radius: 14px;
-      padding: 14px 16px;
-      margin-bottom: 10px;
-    }
-    .faq-wrap summary{
-      cursor: pointer;
-      font-weight: 700;
-      list-style: none;
-    }
-    .faq-wrap summary::-webkit-details-marker{ display:none; }
-    .faq-wrap p{ margin: 10px 0 0; line-height: 1.65; opacity: 0.92; }
 
-    @media (max-width: 900px){
+    .order-btn{
+      display:inline-flex;
+      width: fit-content;
+      background: #fff;
+      color: #2c2c2c;
+      text-decoration:none;
+      padding: 12px 18px;
+      border-radius: 999px;
+      font-weight: 800;
+      letter-spacing: 0.2px;
+      transition: transform .2s ease;
+    }
+    .order-btn:hover{ transform: translateY(-1px); }
+
+    /* 24h section */
+    .how-section{
+      background: var(--paper2);
+      border-radius: 26px;
+      padding: 34px 22px;
+      margin-top: 22px;
+    }
+
+    .how-kicker{
+      color: var(--acc);
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
+      font-weight: 800;
+      font-size: 13px;
+      margin: 0 0 10px;
+    }
+
+    .how-title{
+      margin: 0 0 18px;
+      font-size: 44px;
+      line-height: 1.05;
+      color: #2f2f2f;
+    }
+
+    .how-title .underline{
+      border-bottom: 6px solid var(--acc);
+      display:inline-block;
+      padding-bottom: 4px;
+    }
+
+    .steps-grid{
+      display:grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+      margin-top: 10px;
+    }
+
+    .step-card{
+      background: #fff;
+      border-radius: 22px;
+      padding: 22px;
+      border: 1px solid rgba(0,0,0,0.06);
+      box-shadow: 0 18px 55px rgba(0,0,0,0.08);
+      min-height: 170px;
+    }
+
+    .step-icon{
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: var(--acc);
+      color: #fff;
+      display:grid;
+      place-items:center;
+      font-size: 22px;
+      margin-bottom: 14px;
+    }
+
+    .step-label{
+      color: rgba(0,0,0,0.35);
+      font-weight: 800;
+      letter-spacing: 0.3px;
+      margin: 0 0 8px;
+    }
+
+    .step-text{
+      margin: 0;
+      color: #3b3b3b;
+      line-height: 1.55;
+      font-size: 14.5px;
+    }
+
+    /* Responsive */
+    @media (max-width: 980px){
       .pricing-grid{ grid-template-columns: 1fr; }
-      .addon-grid{ grid-template-columns: 1fr; }
+      .steps-grid{ grid-template-columns: 1fr; }
+      .how-title{ font-size: 36px; }
     }
   </style>
 </head>
@@ -132,11 +277,6 @@
             <li><a href="3d-scans.html">Matterport 3D Scans</a></li>
             <li><a href="floorplans.html">Vloerplannen</a></li>
             <li><a href="3D.html#sportportretten">Sportportretten</a></li>
-            <li>
-              <a href="/brochure/Sportfotografie_SNAP360_V2.0_compressed.pdf" target="_blank" rel="noopener">
-                Brochure Sportfotografie (PDF)
-              </a>
-            </li>
           </ul>
         </li>
 
@@ -146,9 +286,9 @@
     </nav>
   </header>
 
-  <main>
+  <main class="re-page-wrap">
 
-    <!-- HERO: kies foto of video -->
+    <!-- HERO (gebruik je eigen real-estate video of laat dit leeg en zet een poster) -->
     <section class="hero-section">
       <video
         class="hero-background"
@@ -160,241 +300,153 @@
         preload="auto"
         poster="Assets/Movies/placeholder.jpg"
       >
-        <!-- vervang door je beste real estate montage -->
-        <source src="Assets/Movies/real-estate-hero.mp4?v=1" type="video/mp4" />
+        <source src="Assets/Movies/267A6457-812F-42EC-8ACA-43AB001D1C7F.mp4?v=4" type="video/mp4" />
         Je browser ondersteunt deze video niet.
       </video>
     </section>
 
-    <!-- TITEL + INTRO -->
-    <section class="welcome-section page-title-wrap">
-      <div class="welcome-content page-container">
-        <h2>Real Estate Photography</h2>
-        <p>
-          Professionele vastgoedfotografie die je listing laat opvallen: strakke lijnen, natuurlijk licht,
-          en een premium afwerking — klaar voor Immo-sites, makelaarswebsites en social media.
-        </p>
+    <section class="re-container">
+      <h1 class="re-title">Real Estate Photography</h1>
+      <p class="re-sub">
+        Transparante pricing, snelle levering en consistente kwaliteit voor makelaars, ontwikkelaars en short-stay.
+        Hieronder vind je dezelfde prijslogica als in je voorbeeld, maar omgerekend naar euro met koers
+        <strong>€1 = $1,20</strong>.
+      </p>
 
-        <div class="note-box">
-          <h3 style="margin:0 0 10px;">All-inclusive aanpak (geen verrassingen)</h3>
-          <p class="mini-muted" style="margin:0;">
-            Bij elke interieurshoot leveren we standaard een complete set beelden met consistente nabewerking.
-            Denk aan: <strong>blue-sky</strong> waar nodig, <strong>TV-screen cleanup</strong>, <strong>heldere ramen</strong>
-            en <strong>gras/tuin optimalisatie</strong>. Daarnaast kan je (optioneel) een <strong>2D floor plan</strong>
-            toevoegen of bundelen met <strong>Matterport</strong> en <strong>FPV</strong> voor maximale impact.
-          </p>
-        </div>
-
-        <div class="cta-row">
-          <a href="contact.html" class="cta-button">Offerte aanvragen →</a>
-          <a href="#prijzen" class="secondary-button"><i class="fas fa-euro-sign"></i> Prijzen bekijken</a>
-        </div>
-      </div>
-    </section>
-
-    <!-- 3 BLOKKEN (jouw stijl) -->
-    <section class="below-video-section">
-      <div class="below-content">
-        <div class="square-section">
-
-          <div class="square">
-            <div class="square-content">
-              <h3 class="square-title">Interieur &amp; Exterieur</h3>
-              <p class="square-text">
-                Heldere ruimtes, correcte verticalen en sterke composities.
-                Ideaal voor appartementen, woningen, nieuwbouw en commerciële panden.
-              </p>
-              <a href="#wat-krijg-je" class="read-more">Lees Meer <span>→</span></a>
-            </div>
-          </div>
-
-          <div class="square">
-            <div class="square-content">
-              <h3 class="square-title">Snel geleverd</h3>
-              <p class="square-text">
-                Tijd is belangrijk in vastgoed. Standaard leveren we snel en voorspelbaar,
-                zodat je listing zonder vertraging online kan.
-              </p>
-              <a href="#workflow" class="read-more">Hoe werkt het? <span>→</span></a>
-            </div>
-          </div>
-
-          <div class="square">
-            <div class="square-content">
-              <h3 class="square-title">Perfect te combineren</h3>
-              <p class="square-text">
-                Combineer foto’s met <strong>Matterport 3D</strong>, <strong>vloerplannen</strong> en
-                <strong>FPV video</strong> voor een totaalpakket dat converteert.
-              </p>
-              <a href="contact.html" class="read-more">Combineer services <span>→</span></a>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </section>
-
-    <!-- WAT KRIJG JE -->
-    <section class="video-frame-section" id="wat-krijg-je">
-      <div class="video-frame-container">
-        <div class="video-content">
-          <h2>Wat je krijgt</h2>
-          <p>
-            Een complete fotoset die je pand groter, lichter en aantrekkelijker presenteert — zonder onnatuurlijke HDR.
-            Klaar voor web/MLS en bruikbaar voor socials.
-          </p>
-          <ul class="feature-list">
-            <li><i class="fas fa-check-circle"></i> Correcte verticalen (rechte muren / lijnen)</li>
-            <li><i class="fas fa-check-circle"></i> Consistente, premium nabewerking</li>
-            <li><i class="fas fa-check-circle"></i> Web-ready &amp; high-res exports</li>
-          </ul>
-          <a href="#prijzen" class="cta-button">Bekijk prijzen →</a>
-        </div>
-
-        <div class="video-wrapper">
-          <!-- Optioneel: vervang door een korte real-estate highlight video of een image -->
-          <video class="feature-video" autoplay loop muted playsinline preload="metadata"
-                 poster="Assets/RealEstate/realestate-poster.jpg">
-            <source src="Assets/Movies/real-estate-teaser.mp4?v=1" type="video/mp4" />
-          </video>
-        </div>
-      </div>
-    </section>
-
-    <!-- PRIJZEN -->
-    <section class="welcome-section" id="prijzen">
-      <div class="welcome-content page-container">
-        <h2>Prijzen Real Estate Photography</h2>
-        <p class="mini-muted">
-          Transparante pakketten op basis van grootte. (Je kan deze bedragen uiteraard aanpassen aan jouw markt/strategie.)
-        </p>
-
+      <!-- PRICING BLOCK (accordion rechts) -->
+      <section class="pricing-section" id="prijzen">
         <div class="pricing-grid">
-          <div class="pricing-card">
-            <h3>Basic</h3>
-            <div class="price">€189 <small>incl. btw</small></div>
-            <p class="mini-muted">
-              Voor kleinere panden / appartementen.
-            </p>
-            <ul class="feature-list">
-              <li><i class="fas fa-check-circle"></i> Interieur + exterieur</li>
-              <li><i class="fas fa-check-circle"></i> ± 20–25 foto’s</li>
-              <li><i class="fas fa-check-circle"></i> Snelle levering</li>
-            </ul>
-            <div class="cta-row">
-              <a href="contact.html" class="cta-button">Boek Basic →</a>
+
+          <!-- LEFT: default table (Real Estate open by default via JS beneden) -->
+          <div class="price-table-card" id="pricingTableHost">
+            <div class="price-table-title" id="pricingTitle">Real Estate Photography Pricing</div>
+
+            <!-- Real Estate table -->
+            <div id="table-realestate">
+              <table class="pricing-table" aria-label="Real Estate Photography Pricing">
+                <tbody>
+                  <tr><td>0 – 999 sq ft (15–20 foto’s)</td><td>€121</td></tr>
+                  <tr><td>1,000 – 1,999 sq ft (25–30 foto’s)</td><td>€163</td></tr>
+                  <tr><td>2,000 – 2,999 sq ft (35–40 foto’s)</td><td>€205</td></tr>
+                  <tr><td>3,000 – 3,999 sq ft (45–50 foto’s)</td><td>€246</td></tr>
+                  <tr><td>4,000 – 4,999 sq ft (55–60 foto’s)</td><td>€288</td></tr>
+                  <tr><td>+1,000 sq ft (+5 foto’s)</td><td>+€42</td></tr>
+
+                  <tr><td style="padding-top:16px;">Twilight shoot (6 foto’s)</td><td style="padding-top:16px;">€163</td></tr>
+                  <tr><td>Extended twilight – blue hour (9 foto’s)</td><td>€246</td></tr>
+                  <tr><td>Additional photo pack (5 foto’s)</td><td>€42</td></tr>
+                  <tr><td>Virtual staging &amp; renovations (per image)</td><td>€42</td></tr>
+                  <tr><td>Virtual twilight (per image)</td><td>€42</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Vacation Rental table -->
+            <div id="table-vacation" style="display:none;">
+              <table class="pricing-table" aria-label="Vacation Rental Photography Pricing">
+                <tbody>
+                  <tr><td>1 – 2 bedrooms (15–20 foto’s)</td><td>€183</td></tr>
+                  <tr><td>3 – 4 bedrooms (25–35 foto’s)</td><td>€225</td></tr>
+                  <tr><td>5 – 6 bedrooms (35–45 foto’s)</td><td>€288</td></tr>
+                  <tr><td>7 – 8 bedrooms (45–55 foto’s)</td><td>€350</td></tr>
+                  <tr><td>9 – 10 bedrooms (55–60 foto’s)</td><td>€413</td></tr>
+                  <tr><td>11 – 12 bedrooms (60–65 foto’s)</td><td>€475</td></tr>
+                  <tr><td>13 – 14 bedrooms (65–70 foto’s)</td><td>€538</td></tr>
+                  <tr><td>15 – 16 bedrooms (70–80 foto’s)</td><td>€600</td></tr>
+
+                  <tr><td style="padding-top:16px;">Twilight shoot (6 foto’s)</td><td style="padding-top:16px;">€163</td></tr>
+                  <tr><td>Extended twilight – blue hour (9 foto’s)</td><td>€246</td></tr>
+                  <tr><td>Additional photo (per image)</td><td>€8</td></tr>
+                  <tr><td>Virtual staging &amp; renovations (per image)</td><td>€42</td></tr>
+                  <tr><td>Virtual twilight (per image)</td><td>€42</td></tr>
+                </tbody>
+              </table>
             </div>
           </div>
 
-          <div class="pricing-card">
-            <h3>Standard</h3>
-            <div class="price">€239 <small>incl. btw</small></div>
-            <p class="mini-muted">
-              Meest gekozen voor woningen.
-            </p>
-            <ul class="feature-list">
-              <li><i class="fas fa-check-circle"></i> Interieur + exterieur</li>
-              <li><i class="fas fa-check-circle"></i> ± 30–40 foto’s</li>
-              <li><i class="fas fa-check-circle"></i> Detailshots (keuken/badkamer/afwerking)</li>
-            </ul>
-            <div class="cta-row">
-              <a href="contact.html" class="cta-button">Boek Standard →</a>
-            </div>
-          </div>
+          <!-- RIGHT: accordion + order buttons -->
+          <div class="accordion-col">
 
-          <div class="pricing-card">
-            <h3>Premium</h3>
-            <div class="price">€319 <small>incl. btw</small></div>
-            <p class="mini-muted">
-              Voor grotere panden / high-end presentatie.
-            </p>
-            <ul class="feature-list">
-              <li><i class="fas fa-check-circle"></i> Interieur + exterieur</li>
-              <li><i class="fas fa-check-circle"></i> ± 45–60 foto’s</li>
-              <li><i class="fas fa-check-circle"></i> Extra aandacht voor lifestyle/branding</li>
-            </ul>
-            <div class="cta-row">
-              <a href="contact.html" class="cta-button">Boek Premium →</a>
+            <div class="order-box">
+              <div class="order-box-title">
+                <i class="fas fa-chevron-right"></i>
+                <span id="orderBoxLabel">Real Estate Photography Pricing</span>
+              </div>
+              <a class="order-btn" href="contact.html">ORDER HERE</a>
             </div>
+
+            <div class="acc-card">
+              <details class="acc" open id="acc-realestate">
+                <summary>
+                  <span>Real Estate Photography Pricing</span>
+                  <i class="fas fa-chevron-down acc-chevron"></i>
+                </summary>
+              </details>
+            </div>
+
+            <div class="acc-card">
+              <details class="acc" id="acc-vacation">
+                <summary>
+                  <span>Vacation Rental Photography Pricing</span>
+                  <i class="fas fa-chevron-down acc-chevron"></i>
+                </summary>
+              </details>
+            </div>
+
           </div>
         </div>
+      </section>
 
-        <div style="height:18px;"></div>
+      <!-- HOW TO PLACE AN ORDER -->
+      <section class="how-section" id="how">
+        <p class="how-kicker">How to place an order</p>
+        <h2 class="how-title"><span class="underline">24-hour</span> delivery or it’s FREE!</h2>
 
-        <div class="note-box">
-          <h3 style="margin:0 0 10px;">Add-ons</h3>
-          <div class="addon-grid">
-            <div class="addon-card">
-              <h4 style="margin:0 0 8px;">Drone foto’s</h4>
-              <p class="mini-muted" style="margin:0 0 10px;">Ideaal voor ligging, perceel, tuin en omgeving.</p>
-              <strong>+ €79</strong>
-            </div>
-
-            <div class="addon-card">
-              <h4 style="margin:0 0 8px;">2D Vloerplan</h4>
-              <p class="mini-muted" style="margin:0 0 10px;">Handig voor listings, brochures en kopers.</p>
-              <strong>+ €59</strong>
-            </div>
-
-            <div class="addon-card">
-              <h4 style="margin:0 0 8px;">Bundel: Foto + Matterport</h4>
-              <p class="mini-muted" style="margin:0 0 10px;">Eén afspraak, één stijl, maximale conversie.</p>
-              <strong>vanaf €399</strong>
-            </div>
+        <div class="steps-grid">
+          <div class="step-card">
+            <div class="step-icon"><i class="far fa-id-card"></i></div>
+            <p class="step-label">STEP 1</p>
+            <p class="step-text">
+              Vraag je shoot aan via contact of plan meteen een slot. Voeg eventueel extra’s toe (twilight, drone, staging).
+            </p>
           </div>
 
-          <div class="cta-row">
-            <a href="contact.html" class="cta-button">Vraag bundelprijs →</a>
-            <a href="3d-scans.html" class="secondary-button"><i class="fas fa-cube"></i> Matterport bekijken</a>
-            <a href="fpv.html" class="secondary-button"><i class="fas fa-film"></i> FPV bekijken</a>
+          <div class="step-card">
+            <div class="step-icon"><i class="far fa-calendar-check"></i></div>
+            <p class="step-label">STEP 2</p>
+            <p class="step-text">
+              We bevestigen snel je afspraak en stemmen alles af: locatie, grootte, gewenste look en deadline.
+            </p>
+          </div>
+
+          <div class="step-card">
+            <div class="step-icon"><i class="fas fa-camera"></i></div>
+            <p class="step-label">STEP 3</p>
+            <p class="step-text">
+              Jij ontspant. Wij doen de shoot efficiënt en leveren beelden die klaar zijn voor listing en socials.
+            </p>
+          </div>
+
+          <div class="step-card">
+            <div class="step-icon"><i class="far fa-envelope"></i></div>
+            <p class="step-label">STEP 4</p>
+            <p class="step-text">
+              Levering binnen 24 uur (afhankelijk van planning). Niet gehaald? Dan is de delivery gratis.
+            </p>
           </div>
         </div>
-      </div>
+      </section>
+
     </section>
 
-    <!-- WORKFLOW -->
-    <section class="welcome-section" id="workflow">
-      <div class="welcome-content page-container">
-        <h2>Workflow</h2>
-        <ul class="feature-list">
-          <li><i class="fas fa-check-circle"></i> 1) Afspraak + korte briefing (doel, timing, type pand)</li>
-          <li><i class="fas fa-check-circle"></i> 2) Shoot on-site (efficiënt, met oog voor best mogelijke angles)</li>
-          <li><i class="fas fa-check-circle"></i> 3) Nabewerking + kwaliteitscontrole</li>
-          <li><i class="fas fa-check-circle"></i> 4) Levering via downloadlink</li>
-        </ul>
-      </div>
-    </section>
-
-    <!-- FAQ -->
-    <section class="welcome-section">
-      <div class="welcome-content page-container">
-        <h2>FAQ</h2>
-        <div class="faq-wrap">
-          <details>
-            <summary>Hoe lang duurt een fotoshoot?</summary>
-            <p>Meestal 45–90 minuten, afhankelijk van grootte en aantal ruimtes.</p>
-          </details>
-
-          <details>
-            <summary>Wanneer ontvang ik de foto’s?</summary>
-            <p>Standaard snelle levering. Bij grote projecten spreken we een vaste deadline af.</p>
-          </details>
-
-          <details>
-            <summary>Doen jullie ook drone en video?</summary>
-            <p>Ja. Drone foto’s zijn een populaire add-on. Voor video bieden we FPV en klassieke real-estate video’s.</p>
-          </details>
-
-          <details>
-            <summary>Kan ik dit combineren met Matterport?</summary>
-            <p>Zeker. Foto + Matterport (en eventueel vloerplan) is een sterk totaalpakket voor verkoop en verhuur.</p>
-          </details>
-        </div>
-
-        <div class="cta-row">
-          <a href="contact.html" class="cta-button">Plan een shoot →</a>
-          <a href="3D.html" class="secondary-button"><i class="fas fa-arrow-left"></i> Terug naar Home</a>
-        </div>
+    <!-- Contact CTA (optioneel) -->
+    <section class="welcome-section" style="padding: 0 0 70px;">
+      <div class="welcome-content" style="max-width: 1200px; margin: 0 auto;">
+        <h2>Boek je shoot</h2>
+        <p>
+          Stuur ons het adres + type pand + gewenste timing. We reageren snel met bevestiging en planning.
+        </p>
+        <a href="contact.html" class="cta-button">Contacteer ons →</a>
       </div>
     </section>
 
@@ -428,15 +480,9 @@
       <div class="footer-section">
         <h4 class="footer-heading">Contact</h4>
         <div class="contact-info">
-          <p class="footer-text">
-            <i class="fas fa-map-marker-alt"></i> Vijfstraten 163, 9100 Sint-Niklaas
-          </p>
-          <p class="footer-text">
-            <i class="fas fa-phone"></i> +32 476 61 10 99
-          </p>
-          <p class="footer-text">
-            <i class="fas fa-envelope"></i> tom@snapwithus360.com
-          </p>
+          <p class="footer-text"><i class="fas fa-map-marker-alt"></i> Vijfstraten 163, 9100 Sint-Niklaas</p>
+          <p class="footer-text"><i class="fas fa-phone"></i> +32 476 61 10 99</p>
+          <p class="footer-text"><i class="fas fa-envelope"></i> tom@snapwithus360.com</p>
         </div>
       </div>
     </div>
@@ -452,7 +498,44 @@
 
   <script src="script.js"></script>
 
-  <!-- iOS autoplay helper voor hero video -->
+  <!-- Switch tables when accordion changes -->
+  <script>
+    (function(){
+      const accRE = document.getElementById('acc-realestate');
+      const accVR = document.getElementById('acc-vacation');
+      const tRE = document.getElementById('table-realestate');
+      const tVR = document.getElementById('table-vacation');
+      const title = document.getElementById('pricingTitle');
+      const orderLabel = document.getElementById('orderBoxLabel');
+
+      function showRE(){
+        accRE.open = true;
+        accVR.open = false;
+        tRE.style.display = '';
+        tVR.style.display = 'none';
+        title.textContent = 'Real Estate Photography Pricing';
+        orderLabel.textContent = 'Real Estate Photography Pricing';
+      }
+
+      function showVR(){
+        accVR.open = true;
+        accRE.open = false;
+        tVR.style.display = '';
+        tRE.style.display = 'none';
+        title.textContent = 'Vacation Rental Photography Pricing';
+        orderLabel.textContent = 'Vacation Rental Photography Pricing';
+      }
+
+      // clicking summary toggles open; we intercept to switch cleanly
+      accRE.addEventListener('toggle', () => { if(accRE.open) showRE(); });
+      accVR.addEventListener('toggle', () => { if(accVR.open) showVR(); });
+
+      // default
+      showRE();
+    })();
+  </script>
+
+  <!-- iOS autoplay helper for hero video -->
   <script>
     (function () {
       const v = document.querySelector(".hero-background");
