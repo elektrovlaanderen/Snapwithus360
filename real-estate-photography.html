@@ -5,223 +5,181 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Vastgoedfotografie | Snapwithus360.com</title>
 
-  <!-- JOUW SITE CSS -->
   <link rel="stylesheet" href="CSS/style.css" />
-
-  <!-- Icons (zoals je al gebruikt) -->
   <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.8/css/line.css"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"/>
 
-  <!-- PAGE-SCOPED CSS (verandert je globale stijl NIET) -->
+  <!-- Mini aanvullingen: alleen pricing + extras grid (scoped) -->
   <style>
-    .re-page { padding: 40px 0 70px; }
     .re-wrap { width: min(1200px, 92%); margin: 0 auto; }
 
-    .re-top { margin: 10px 0 18px; }
-    .re-top h1 { margin: 0 0 8px; }
-    .re-top p { margin: 0; max-width: 900px; }
-
-    .re-actions {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin: 18px 0 26px;
-    }
-    .re-actions a { text-decoration: none; }
-
-    /* Fallback: als je geen secondary button class hebt */
-    .re-secondary {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 12px 16px;
-      border-radius: 12px;
-      border: 1px solid rgba(0,0,0,0.15);
-      font-weight: 800;
-    }
-
-    .re-section { margin: 28px 0; }
-    .re-card {
-      border-radius: 18px;
-      padding: 24px;
-      background: rgba(255,255,255,0.03);
-    }
-
-    .re-hero-grid {
-      display: grid;
-      grid-template-columns: 1.2fr 0.8fr;
-      gap: 22px;
-      align-items: start;
-    }
-
-    .re-kicker {
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      font-weight: 900;
-      opacity: 0.75;
-      margin: 0 0 10px;
-      font-size: 12px;
-    }
-
-    .re-headline {
-      margin: 0;
-      line-height: 1.05;
-      font-size: clamp(30px, 4vw, 52px);
-    }
-
-    .re-underline {
-      border-bottom: 6px solid currentColor;
-      display: inline-block;
-      padding-bottom: 4px;
-    }
-
-    .re-benefits {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 16px;
-      margin-top: 22px;
-    }
-
-    .re-benefit {
-      border-radius: 18px;
-      padding: 18px;
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.08);
-    }
-
-    .re-iconbox {
-      width: 54px;
-      height: 54px;
-      border-radius: 14px;
+    /* Hero tekst overlay zoals op fpv.html */
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
       display: grid;
       place-items: center;
-      margin-bottom: 12px;
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.10);
-      font-size: 22px;
+      text-align: center;
+      padding: 0 18px;
+      z-index: 2;
     }
-
-    .re-benefit h4 { margin: 0 0 8px; font-weight: 900; }
-    .re-benefit p { margin: 0; opacity: 0.9; line-height: 1.6; }
-
-    .re-split {
-      display: grid;
-      grid-template-columns: 1.15fr 0.85fr;
-      gap: 22px;
-      align-items: center;
+    .hero-overlay .hero-inner {
+      width: min(1000px, 92%);
+      color: #fff;
+      text-shadow: 0 14px 40px rgba(0,0,0,0.55);
     }
-
-    .re-split.reverse { grid-template-columns: 0.85fr 1.15fr; }
-
-    .re-media {
-      border-radius: 18px;
-      overflow: hidden;
-      background: rgba(0,0,0,0.15);
-      border: 1px solid rgba(255,255,255,0.10);
-      min-height: 280px;
-    }
-
-    .re-media img {
-      width: 100%;
-      height: 100%;
-      display:block;
-      object-fit: cover;
-    }
-
-    /* Pricing layout */
-    .re-pricing {
-      display: grid;
-      grid-template-columns: 1.6fr 0.9fr;
-      gap: 18px;
-      align-items: start;
-    }
-
-    .re-table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-
-    .re-table tr { border-bottom: 1px solid rgba(255,255,255,0.10); }
-    .re-table tr:last-child { border-bottom: none; }
-    .re-table td { padding: 10px 0; vertical-align: top; }
-    .re-table td:last-child { text-align: right; font-weight: 900; white-space: nowrap; }
-
-    .re-note { opacity: 0.85; font-weight: 800; margin: 6px 0 0; font-size: 13px; }
-
-    .re-sidebox {
-      border-radius: 18px;
-      padding: 18px;
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.10);
-    }
-
-    details.re-acc {
-      border-radius: 14px;
-      overflow: hidden;
-      border: 1px solid rgba(255,255,255,0.10);
-      background: rgba(255,255,255,0.06);
-      margin-top: 14px;
-    }
-
-    details.re-acc summary {
-      cursor: pointer;
-      list-style: none;
-      padding: 14px 14px;
+    .hero-overlay h1 {
+      margin: 0 0 10px;
+      font-size: clamp(28px, 4vw, 52px);
+      line-height: 1.1;
       font-weight: 900;
-      display:flex;
-      align-items:center;
-      justify-content: space-between;
-      gap: 10px;
+    }
+    .hero-overlay p {
+      margin: 0;
+      opacity: 0.95;
+      line-height: 1.6;
+      font-size: clamp(14px, 1.6vw, 18px);
     }
 
-    details.re-acc summary::-webkit-details-marker { display:none; }
-
-    /* Extras cards */
-    .re-extras {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 16px;
-      margin-top: 16px;
-    }
-
-    .re-extra {
-      position: relative;
-      border-radius: 18px;
-      overflow: hidden;
-      min-height: 170px;
-      border: 1px solid rgba(255,255,255,0.10);
-      text-decoration: none;
-    }
-
-    .re-extra img { position:absolute; inset:0; width:100%; height:100%; object-fit: cover; }
-
-    .re-extra::after {
+    /* Zorg dat hero video onder overlay zit */
+    .hero-section { position: relative; overflow: hidden; }
+    .hero-section::after{
       content:"";
       position:absolute;
       inset:0;
-      background: linear-gradient(180deg, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.70) 100%);
+      background: linear-gradient(180deg, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.65) 75%, rgba(0,0,0,0.75) 100%);
+      z-index:1;
+    }
+    .hero-background { position: relative; z-index: 0; }
+
+    /* Action buttons rij (gebruikt je bestaande .cta-button look) */
+    .re-actions{
+      display:flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 18px;
+    }
+    .re-actions a{ text-decoration:none; }
+    .re-actions .ghost-btn{
+      display:inline-flex;
+      align-items:center;
+      gap: 8px;
+      padding: 12px 16px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.30);
+      color:#fff;
+      font-weight: 800;
+      background: rgba(0,0,0,0.15);
+      backdrop-filter: blur(6px);
     }
 
-    .re-extra-text {
+    /* Pricing block in dezelfde “kaart” vibe */
+    .pricing-shell{
+      background: #fff;
+      border-radius: 18px;
+      padding: 22px;
+      box-shadow: 0 18px 55px rgba(0,0,0,0.10);
+    }
+    .pricing-head{
+      display:flex;
+      align-items:flex-end;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+    .pricing-head h2{ margin:0; }
+    .pricing-note{
+      margin:0;
+      color: rgba(0,0,0,0.55);
+      font-weight: 800;
+      font-size: 12.5px;
+    }
+    table.re-table{
+      width:100%;
+      border-collapse: collapse;
+    }
+    .re-table tr{ border-bottom: 1px solid rgba(0,0,0,0.10); }
+    .re-table tr:last-child{ border-bottom:none; }
+    .re-table td{ padding: 11px 0; vertical-align: top; }
+    .re-table td:last-child{
+      text-align:right;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    /* Toggle buttons */
+    .pricing-toggle{
+      display:flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin: 16px 0 0;
+    }
+    .toggle-btn{
+      padding: 10px 14px;
+      border-radius: 12px;
+      border: 1px solid rgba(0,0,0,0.14);
+      background: #fff;
+      font-weight: 900;
+      cursor: pointer;
+    }
+    .toggle-btn.active{
+      border-color: rgba(0,0,0,0.25);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.10);
+    }
+
+    /* Extras cards */
+    .extras-grid{
+      display:grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 18px;
+    }
+    .extra-card{
+      position:relative;
+      border-radius: 18px;
+      overflow:hidden;
+      min-height: 180px;
+      box-shadow: 0 18px 55px rgba(0,0,0,0.10);
+      text-decoration:none;
+      color:#fff;
+    }
+    .extra-card img{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      object-fit: cover;
+    }
+    .extra-card::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background: linear-gradient(180deg, rgba(0,0,0,0.10) 0%, rgba(0,0,0,0.70) 100%);
+    }
+    .extra-text{
       position:absolute;
       left: 14px;
       right: 14px;
       bottom: 12px;
-      z-index: 2;
+      z-index:2;
     }
-
-    .re-extra-text h4 { margin:0 0 6px; font-weight: 900; line-height: 1.05; }
-    .re-extra-text .re-start { font-weight: 900; opacity: 0.95; }
+    .extra-text h3{
+      margin:0 0 6px;
+      font-size: 20px;
+      line-height: 1.05;
+      font-weight: 900;
+    }
+    .extra-text .start{
+      font-weight: 900;
+      opacity: 0.95;
+    }
 
     @media (max-width: 1100px){
-      .re-benefits { grid-template-columns: repeat(2, 1fr); }
-      .re-extras { grid-template-columns: repeat(2, 1fr); }
+      .extras-grid{ grid-template-columns: repeat(2, 1fr); }
     }
-
-    @media (max-width: 980px){
-      .re-hero-grid { grid-template-columns: 1fr; }
-      .re-split, .re-split.reverse { grid-template-columns: 1fr; }
-      .re-pricing { grid-template-columns: 1fr; }
+    @media (max-width: 768px){
+      .extras-grid{ grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -261,234 +219,259 @@
     </nav>
   </header>
 
-  <main class="re-page">
-    <div class="re-wrap">
+  <main>
 
-      <div class="re-top">
-        <h1>Vastgoedfotografie</h1>
+    <!-- HERO (zelfde idee als fpv.html: video + titel/ondertitel) -->
+    <section class="hero-section">
+      <video
+        class="hero-background"
+        autoplay
+        loop
+        muted
+        playsinline
+        webkit-playsinline
+        preload="auto"
+        poster="Assets/Movies/placeholder.jpg"
+      >
+        <!-- Je mag dit vervangen door een vastgoed-hero video -->
+        <source src="Assets/Movies/267A6457-812F-42EC-8ACA-43AB001D1C7F.mp4?v=11" type="video/mp4" />
+        Je browser ondersteunt deze video niet.
+      </video>
+
+      <div class="hero-overlay">
+        <div class="hero-inner">
+          <h1>Vastgoedfotografie</h1>
+          <p>
+            Premium beelden die zorgen voor meer aandacht, meer bezichtigingen en een sterkere eerste indruk.
+            <br />
+            <strong>Alle prijzen zijn € incl. btw.</strong>
+          </p>
+
+          <div class="re-actions">
+            <a href="#info" class="ghost-btn"><i class="fas fa-info-circle"></i> Info</a>
+            <a href="#prijzen" class="ghost-btn"><i class="fas fa-euro-sign"></i> Prijzen</a>
+            <a href="#extras" class="ghost-btn"><i class="fas fa-plus-circle"></i> Extra’s</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- INFO sectie (zelfde “why” vibe als fpv.html) -->
+    <section class="welcome-section" id="info">
+      <div class="welcome-content re-wrap">
+        <h2>Waarom vastgoedfotografie?</h2>
         <p>
-          Premium vastgoedfoto’s die zorgen voor meer clicks, meer bezichtigingen en een sterkere eerste indruk.
-          <strong>België:</strong> alle prijzen hieronder zijn <strong>€ incl. btw</strong>.
+          Sterke foto’s maken het verschil tussen “scrollen” en “klikken”.
+          Wij tonen ruimtes correct, laten het pand groter en helderder aanvoelen (zonder te overdrijven),
+          en leveren beelden die direct klaar zijn voor je listing en social media.
         </p>
       </div>
+    </section>
 
-      <div class="re-actions">
-        <a href="#info" class="cta-button">Info →</a>
-        <a href="#prijzen" class="re-secondary"><i class="fas fa-euro-sign"></i> Prijzen</a>
-        <a href="#extras" class="re-secondary"><i class="fas fa-plus-circle"></i> Extra’s</a>
-      </div>
+    <!-- 4 kaarten (zelfde als je FPV pagina met icon cards) -->
+    <section class="below-video-section">
+      <div class="below-content re-wrap">
+        <div class="square-section">
 
-      <!-- 1) INFO -->
-      <section id="info" class="re-section">
-        <div class="re-card">
-          <div class="re-hero-grid">
-            <div>
-              <p class="re-kicker">STERKE LISTINGS</p>
-              <h2 class="re-headline">
-                Maak van elke woning een <span class="re-underline">showstopper</span><br />
-                en boost je verkoop
-              </h2>
-            </div>
-            <p style="margin:0; opacity:.9; line-height:1.7;">
-              Wij zetten je pand neer als een sterk product. Met beelden die vertrouwen opwekken,
-              de ruimte correct tonen en je listing laten opvallen.
-            </p>
-          </div>
-
-          <div class="re-benefits">
-            <div class="re-benefit">
-              <div class="re-iconbox"><i class="fas fa-chart-line"></i></div>
-              <h4>Meer aantrekkingskracht, meer waarde</h4>
-              <p>
+          <div class="square">
+            <div class="square-content">
+              <h3 class="square-title">Meer aantrekkingskracht,<br/>meer waarde</h3>
+              <p class="square-text">
                 Sterke beelden verhogen de interesse en maken je listing aantrekkelijker.
                 Resultaat: meer clicks, meer bezichtigingen en vaak een betere prijsperceptie.
               </p>
             </div>
+          </div>
 
-            <div class="re-benefit">
-              <div class="re-iconbox"><i class="fas fa-piggy-bank"></i></div>
-              <h4>All-inclusive, geen extra kosten</h4>
-              <p>
+          <div class="square">
+            <div class="square-content">
+              <h3 class="square-title">All-inclusive,<br/>geen extra kosten</h3>
+              <p class="square-text">
                 Standaard inbegrepen: consistente nabewerking, correcte lijnen en een professionele look.
                 Geen verborgen kosten, wel een complete set listing-ready beelden.
               </p>
             </div>
+          </div>
 
-            <div class="re-benefit">
-              <!-- FIX: fa-sparkles bestaat niet in FA5 -> nu fa-magic -->
-              <div class="re-iconbox"><i class="fas fa-magic"></i></div>
-              <h4>Editing tot in de puntjes</h4>
-              <p>
+          <div class="square">
+            <div class="square-content">
+              <h3 class="square-title">Editing tot in<br/>de puntjes</h3>
+              <p class="square-text">
                 Elke foto wordt zorgvuldig afgewerkt: natuurlijke kleuren, helder beeld en correcte verticalen.
                 Premium, maar realistisch.
               </p>
             </div>
+          </div>
 
-            <div class="re-benefit">
-              <div class="re-iconbox"><i class="fas fa-clock"></i></div>
-              <h4>Levering binnen 24 uur of GRATIS!</h4>
-              <p>
+          <div class="square">
+            <div class="square-content">
+              <h3 class="square-title">Levering binnen<br/>24 uur of GRATIS!</h3>
+              <p class="square-text">
                 Tijd is cruciaal in vastgoed. We leveren snel en houden van duidelijke afspraken.
               </p>
             </div>
           </div>
+
         </div>
-      </section>
+      </div>
+    </section>
 
-      <section class="re-section">
-        <div class="re-card re-split">
-          <div class="re-media">
-            <img src="Assets/RealEstate/community.jpg" alt="Buurtfoto’s">
+    <!-- CONTENT blokken (zelfde “twee kolommen” gevoel als je site) -->
+    <section class="video-frame-section">
+      <div class="video-frame-container re-wrap">
+        <div class="video-content">
+          <h2>Buurtfoto’s die het verhaal compleet maken</h2>
+          <p>
+            Voor projecten, verkavelingen of vakantiewoningen is de omgeving vaak een beslissende factor.
+            Wij maken gerichte buurtfoto’s die kopers helpen het leven ter plaatse te visualiseren.
+          </p>
+          <ul class="feature-list">
+            <li><i class="fas fa-check-circle"></i> Parken, scholen, shopping, …</li>
+            <li><i class="fas fa-check-circle"></i> Uitzichten &amp; landmarks</li>
+            <li><i class="fas fa-check-circle"></i> Perfect voor projectmarketing</li>
+          </ul>
+          <a href="contact.html" class="cta-button">Buurtfoto’s aanvragen →</a>
+        </div>
+
+        <div class="video-wrapper">
+          <!-- Hier geen video nodig: jij kan dit ook als image doen, maar ik laat het als video-wrapper zodat je style identiek blijft -->
+          <img src="Assets/RealEstate/community.jpg" alt="Buurtfoto’s" style="width:100%; border-radius:16px; display:block;" />
+        </div>
+      </div>
+    </section>
+
+    <section class="video-frame-section">
+      <div class="video-frame-container re-wrap">
+        <div class="video-wrapper">
+          <img src="Assets/RealEstate/lifestyle.jpg" alt="Lifestylefoto’s" style="width:100%; border-radius:16px; display:block;" />
+        </div>
+
+        <div class="video-content">
+          <h2>Lifestylefoto’s voor high-end en socials</h2>
+          <p>
+            Detailbeelden en sfeer maken je advertentie warmer en menselijker.
+            Ideaal om je listing te laten opvallen in een drukke markt.
+          </p>
+          <ul class="feature-list">
+            <li><i class="fas fa-check-circle"></i> Details &amp; materialen</li>
+            <li><i class="fas fa-check-circle"></i> Sfeerbeelden die “gevoel” geven</li>
+            <li><i class="fas fa-check-circle"></i> Klaar voor social media</li>
+          </ul>
+          <a href="contact.html" class="cta-button">Lifestyle aanvragen →</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRIJZEN -->
+    <section class="welcome-section" id="prijzen">
+      <div class="welcome-content re-wrap">
+        <h2>Prijzen</h2>
+        <p>
+          Transparant en eenvoudig: bedragen zijn <strong>€ incl. btw</strong>.
+          Oppervlakte is in <strong>m²</strong>.
+        </p>
+      </div>
+
+      <div class="re-wrap" style="margin-top:18px;">
+        <div class="pricing-shell">
+          <div class="pricing-head">
+            <h2 id="pricingTitle" style="margin:0;">Vastgoedfotografie</h2>
+            <p class="pricing-note">Alle prijzen in € incl. btw</p>
           </div>
-          <div>
-            <p class="re-kicker">BUURT IN DE KIJKER</p>
-            <h2 style="margin:0 0 10px;">Toon de omgeving die elk pand onweerstaanbaar maakt</h2>
-            <p style="margin:0 0 14px; opacity:.9; line-height:1.7;">
-              Buurtfoto’s (park, zwembad, uitzicht, shopping, …) helpen kopers zich het leven ter plaatse voor te stellen.
-              Ideaal voor projecten en panden waar “location” het verschil maakt.
-            </p>
-            <a class="cta-button" href="contact.html">Buurtfoto’s aanvragen →</a>
+
+          <div id="table-realestate">
+            <table class="re-table" aria-label="Prijzen vastgoedfotografie">
+              <tbody>
+                <tr><td>0 – 93 m² (15–20 foto’s)</td><td>€145</td></tr>
+                <tr><td>93 – 186 m² (25–30 foto’s)</td><td>€195</td></tr>
+                <tr><td>186 – 279 m² (35–40 foto’s)</td><td>€245</td></tr>
+                <tr><td>279 – 371 m² (45–50 foto’s)</td><td>€295</td></tr>
+                <tr><td>371 – 464 m² (55–60 foto’s)</td><td>€345</td></tr>
+                <tr><td>+93 m² (+5 foto’s)</td><td>+€50</td></tr>
+
+                <tr><td style="padding-top:14px;">Twilight-shoot (6 foto’s)</td><td style="padding-top:14px;">€195</td></tr>
+                <tr><td>Extended twilight – blue hour (9 foto’s)</td><td>€295</td></tr>
+                <tr><td>Extra fotopack (5 foto’s)</td><td>€50</td></tr>
+                <tr><td>Virtuele staging &amp; renovatie (per beeld)</td><td>€50</td></tr>
+                <tr><td>Virtuele twilight (per beeld)</td><td>€50</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div id="table-vacation" style="display:none;">
+            <table class="re-table" aria-label="Prijzen vakantiewoningen">
+              <tbody>
+                <tr><td>1 – 2 slaapkamers (15–20 foto’s)</td><td>€220</td></tr>
+                <tr><td>3 – 4 slaapkamers (25–35 foto’s)</td><td>€270</td></tr>
+                <tr><td>5 – 6 slaapkamers (35–45 foto’s)</td><td>€345</td></tr>
+                <tr><td>7 – 8 slaapkamers (45–55 foto’s)</td><td>€420</td></tr>
+                <tr><td>9 – 10 slaapkamers (55–60 foto’s)</td><td>€495</td></tr>
+                <tr><td>11 – 12 slaapkamers (60–65 foto’s)</td><td>€570</td></tr>
+                <tr><td>13 – 14 slaapkamers (65–70 foto’s)</td><td>€645</td></tr>
+                <tr><td>15 – 16 slaapkamers (70–80 foto’s)</td><td>€720</td></tr>
+
+                <tr><td style="padding-top:14px;">Twilight-shoot (6 foto’s)</td><td style="padding-top:14px;">€195</td></tr>
+                <tr><td>Extended twilight – blue hour (9 foto’s)</td><td>€295</td></tr>
+                <tr><td>Extra foto (per beeld)</td><td>€9</td></tr>
+                <tr><td>Virtuele staging &amp; renovatie (per beeld)</td><td>€50</td></tr>
+                <tr><td>Virtuele twilight (per beeld)</td><td>€50</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="pricing-toggle">
+            <button class="toggle-btn active" id="btnRE" type="button">Vastgoedfotografie</button>
+            <button class="toggle-btn" id="btnVR" type="button">Vakantiewoningen</button>
+            <a href="contact.html" class="cta-button" style="margin-left:auto;">Aanvragen →</a>
           </div>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <section class="re-section">
-        <div class="re-card re-split reverse">
-          <div>
-            <p class="re-kicker">LIFESTYLE</p>
-            <h2 style="margin:0 0 10px;">Lifestyle-foto’s die je listing warmer maken</h2>
-            <p style="margin:0 0 14px; opacity:.9; line-height:1.7;">
-              Detailbeelden en sfeer maken je advertentie menselijker. Perfect voor high-end en social media.
-            </p>
-            <a class="cta-button" href="contact.html">Lifestyle aanvragen →</a>
-          </div>
-          <div class="re-media">
-            <img src="Assets/RealEstate/lifestyle.jpg" alt="Lifestylefoto’s">
-          </div>
-        </div>
-      </section>
+    <!-- EXTRA’S -->
+    <section class="welcome-section" id="extras">
+      <div class="welcome-content re-wrap">
+        <h2>Extra’s</h2>
+        <p>
+          Combineer je fotoshoot met onderstaande extra’s voor een complete vastgoedpresentatie.
+        </p>
 
-      <!-- 2) PRIJZEN -->
-      <section id="prijzen" class="re-section">
-        <div class="re-card">
-          <div class="re-pricing">
-            <div>
-              <p class="re-kicker">PRIJZEN</p>
-              <h2 style="margin:0 0 6px;">Prijzen vastgoedfotografie</h2>
-              <p class="re-note">Alle prijzen zijn in € en <strong>incl. btw</strong>. Oppervlakte is in <strong>m²</strong>.</p>
-
-              <div style="margin-top: 16px;">
-                <div id="table-realestate">
-                  <table class="re-table" aria-label="Prijzen vastgoedfotografie">
-                    <tbody>
-                      <tr><td>0 – 93 m² (15–20 foto’s)</td><td>€145</td></tr>
-                      <tr><td>93 – 186 m² (25–30 foto’s)</td><td>€195</td></tr>
-                      <tr><td>186 – 279 m² (35–40 foto’s)</td><td>€245</td></tr>
-                      <tr><td>279 – 371 m² (45–50 foto’s)</td><td>€295</td></tr>
-                      <tr><td>371 – 464 m² (55–60 foto’s)</td><td>€345</td></tr>
-                      <tr><td>+93 m² (+5 foto’s)</td><td>+€50</td></tr>
-
-                      <tr><td style="padding-top:16px;">Twilight-shoot (6 foto’s)</td><td style="padding-top:16px;">€195</td></tr>
-                      <tr><td>Extended twilight – blue hour (9 foto’s)</td><td>€295</td></tr>
-                      <tr><td>Extra fotopack (5 foto’s)</td><td>€50</td></tr>
-                      <tr><td>Virtuele staging &amp; renovatie (per beeld)</td><td>€50</td></tr>
-                      <tr><td>Virtuele twilight (per beeld)</td><td>€50</td></tr>
-                    </tbody>
-                  </table>
-                </div>
-
-                <div id="table-vacation" style="display:none;">
-                  <table class="re-table" aria-label="Prijzen vakantiewoningen">
-                    <tbody>
-                      <tr><td>1 – 2 slaapkamers (15–20 foto’s)</td><td>€220</td></tr>
-                      <tr><td>3 – 4 slaapkamers (25–35 foto’s)</td><td>€270</td></tr>
-                      <tr><td>5 – 6 slaapkamers (35–45 foto’s)</td><td>€345</td></tr>
-                      <tr><td>7 – 8 slaapkamers (45–55 foto’s)</td><td>€420</td></tr>
-                      <tr><td>9 – 10 slaapkamers (55–60 foto’s)</td><td>€495</td></tr>
-                      <tr><td>11 – 12 slaapkamers (60–65 foto’s)</td><td>€570</td></tr>
-                      <tr><td>13 – 14 slaapkamers (65–70 foto’s)</td><td>€645</td></tr>
-                      <tr><td>15 – 16 slaapkamers (70–80 foto’s)</td><td>€720</td></tr>
-
-                      <tr><td style="padding-top:16px;">Twilight-shoot (6 foto’s)</td><td style="padding-top:16px;">€195</td></tr>
-                      <tr><td>Extended twilight – blue hour (9 foto’s)</td><td>€295</td></tr>
-                      <tr><td>Extra foto (per beeld)</td><td>€9</td></tr>
-                      <tr><td>Virtuele staging &amp; renovatie (per beeld)</td><td>€50</td></tr>
-                      <tr><td>Virtuele twilight (per beeld)</td><td>€50</td></tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
+        <div class="extras-grid">
+          <a class="extra-card" href="3d-scans.html">
+            <img src="Assets/RealEstate/addons-matterport.jpg" alt="Matterport 3D Tours">
+            <div class="extra-text">
+              <h3>Matterport 3D Tours</h3>
+              <div class="start">vanaf €250</div>
             </div>
+          </a>
 
-            <div class="re-sidebox">
-              <p class="re-kicker" style="margin-bottom:8px;">AANVRAGEN</p>
-              <p style="margin:0 0 12px; opacity:.9; line-height:1.6;">
-                Stuur adres + type pand + gewenste datum. We bevestigen snel met een duidelijk voorstel.
-              </p>
-              <a class="cta-button" href="contact.html">Contact →</a>
-
-              <details class="re-acc" open id="acc-realestate">
-                <summary>
-                  <span>Vastgoedfotografie</span>
-                  <i class="fas fa-chevron-down" aria-hidden="true"></i>
-                </summary>
-              </details>
-
-              <details class="re-acc" id="acc-vacation">
-                <summary>
-                  <span>Vakantiewoningen</span>
-                  <i class="fas fa-chevron-down" aria-hidden="true"></i>
-                </summary>
-              </details>
+          <a class="extra-card" href="contact.html">
+            <img src="Assets/RealEstate/addons-aerial.jpg" alt="Drone foto’s & video">
+            <div class="extra-text">
+              <h3>Drone foto’s &amp; video</h3>
+              <div class="start">vanaf €195</div>
             </div>
-          </div>
+          </a>
+
+          <a class="extra-card" href="contact.html">
+            <img src="Assets/RealEstate/addons-twilight.jpg" alt="Twilight extra’s">
+            <div class="extra-text">
+              <h3>Twilight extra’s</h3>
+              <div class="start">vanaf €50</div>
+            </div>
+          </a>
+
+          <a class="extra-card" href="fpv.html">
+            <img src="Assets/RealEstate/addons-video.jpg" alt="Cinematische videotours">
+            <div class="extra-text">
+              <h3>Cinematische videotours</h3>
+              <div class="start">vanaf €250</div>
+            </div>
+          </a>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <!-- 3) EXTRA'S -->
-      <section id="extras" class="re-section">
-        <div class="re-card">
-          <p class="re-kicker">EXTRA’S</p>
-          <h2 style="margin:0 0 6px;">Populaire extra’s</h2>
-          <p class="re-note">Combineer met je fotoshoot voor een complete vastgoedpresentatie.</p>
-
-          <div class="re-extras">
-            <a class="re-extra" href="3d-scans.html">
-              <img src="Assets/RealEstate/addons-matterport.jpg" alt="Matterport 3D tours">
-              <div class="re-extra-text">
-                <h4>Matterport 3D<br/>Tours</h4>
-                <div class="re-start">vanaf €250</div>
-              </div>
-            </a>
-
-            <a class="re-extra" href="contact.html">
-              <img src="Assets/RealEstate/addons-aerial.jpg" alt="Drone foto & video">
-              <div class="re-extra-text">
-                <h4>Drone foto’s<br/>&amp; video</h4>
-                <div class="re-start">vanaf €195</div>
-              </div>
-            </a>
-
-            <a class="re-extra" href="contact.html">
-              <img src="Assets/RealEstate/addons-twilight.jpg" alt="Twilight extra’s">
-              <div class="re-extra-text">
-                <h4>Twilight<br/>extra’s</h4>
-                <div class="re-start">vanaf €50</div>
-              </div>
-            </a>
-
-            <a class="re-extra" href="fpv.html">
-              <img src="Assets/RealEstate/addons-video.jpg" alt="Cinematische videotours">
-              <div class="re-extra-text">
-                <h4>Cinematische<br/>videotours</h4>
-                <div class="re-start">vanaf €250</div>
-              </div>
-            </a>
-          </div>
-        </div>
-      </section>
-
-    </div>
   </main>
 
   <footer class="footer">
@@ -535,33 +518,61 @@
     </div>
   </footer>
 
-  <!-- jouw centrale nav/submenu script -->
   <script src="script.js"></script>
 
-  <!-- Switch tussen prijstabellen -->
+  <!-- iOS video autoplay helper (zoals je al gebruikt) -->
+  <script>
+    (function () {
+      const v = document.querySelector(".hero-background");
+      if (!v) return;
+
+      v.muted = true;
+      v.setAttribute("muted", "");
+      v.setAttribute("playsinline", "");
+      v.setAttribute("webkit-playsinline", "");
+
+      const tryPlay = () => v.play().catch(() => {});
+
+      if (document.readyState === "complete" || document.readyState === "interactive") {
+        tryPlay();
+      } else {
+        document.addEventListener("DOMContentLoaded", tryPlay, { once: true });
+      }
+
+      window.addEventListener("touchstart", tryPlay, { once: true, passive: true });
+
+      document.addEventListener("visibilitychange", () => {
+        if (!document.hidden) tryPlay();
+      });
+    })();
+  </script>
+
+  <!-- Pricing toggles -->
   <script>
     (function(){
-      const accRE = document.getElementById('acc-realestate');
-      const accVR = document.getElementById('acc-vacation');
+      const btnRE = document.getElementById('btnRE');
+      const btnVR = document.getElementById('btnVR');
       const tRE = document.getElementById('table-realestate');
       const tVR = document.getElementById('table-vacation');
+      const title = document.getElementById('pricingTitle');
 
       function showRE(){
-        accRE.open = true;
-        accVR.open = false;
+        btnRE.classList.add('active');
+        btnVR.classList.remove('active');
         tRE.style.display = '';
         tVR.style.display = 'none';
+        title.textContent = 'Vastgoedfotografie';
       }
-
       function showVR(){
-        accVR.open = true;
-        accRE.open = false;
+        btnVR.classList.add('active');
+        btnRE.classList.remove('active');
         tVR.style.display = '';
         tRE.style.display = 'none';
+        title.textContent = 'Vakantiewoningen';
       }
 
-      accRE.addEventListener('toggle', () => { if (accRE.open) showRE(); });
-      accVR.addEventListener('toggle', () => { if (accVR.open) showVR(); });
+      btnRE.addEventListener('click', showRE);
+      btnVR.addEventListener('click', showVR);
 
       showRE();
     })();
