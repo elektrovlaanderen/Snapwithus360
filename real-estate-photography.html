@@ -5,461 +5,223 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Vastgoedfotografie | Snapwithus360.com</title>
 
+  <!-- JOUW SITE CSS -->
   <link rel="stylesheet" href="CSS/style.css" />
+
+  <!-- Icons (zoals je al gebruikt) -->
   <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.8/css/line.css"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"/>
 
+  <!-- PAGE-SCOPED CSS (verandert je globale stijl NIET) -->
   <style>
-    :root{
-      --acc: #f05a28;
-      --paper: #f6f1eb;
-      --ink: #2b2b2b;
-      --line: rgba(0,0,0,0.12);
-      --card: #ffffff;
-    }
+    .re-page { padding: 40px 0 70px; }
+    .re-wrap { width: min(1200px, 92%); margin: 0 auto; }
 
-    .re-page-wrap{ background:#000; }
+    .re-top { margin: 10px 0 18px; }
+    .re-top h1 { margin: 0 0 8px; }
+    .re-top p { margin: 0; max-width: 900px; }
 
-    .re-container{
-      width: min(1200px, 92%);
-      margin: 0 auto;
-      padding: 70px 0;
-    }
-
-    .re-title{
-      color:#fff;
-      margin: 0 0 10px;
-      font-size: 34px;
-      line-height: 1.15;
-    }
-
-    .re-sub{
-      color: rgba(255,255,255,0.9);
-      line-height: 1.65;
-      max-width: 980px;
-      margin: 0 0 18px;
-    }
-
-    .re-cta-row{
-      display:flex;
+    .re-actions {
+      display: flex;
       gap: 12px;
       flex-wrap: wrap;
-      margin-top: 14px;
+      margin: 18px 0 26px;
     }
+    .re-actions a { text-decoration: none; }
 
-    .secondary-button{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      padding: 12px 18px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.35);
-      color:#fff;
-      text-decoration:none;
-      transition: transform .2s ease, border-color .2s ease;
+    /* Fallback: als je geen secondary button class hebt */
+    .re-secondary {
+      display: inline-flex;
+      align-items: center;
       gap: 8px;
-      font-weight: 800;
-      letter-spacing: 0.2px;
-    }
-    .secondary-button:hover{
-      transform: translateY(-1px);
-      border-color: rgba(255,255,255,0.7);
-    }
-
-    .light-block{
-      background: var(--paper);
-      border-radius: 26px;
-      padding: 22px;
-      margin-top: 22px;
-    }
-
-    /* ====== 1) ALLE INFO ====== */
-    .boss-grid{
-      display:grid;
-      grid-template-columns: 1.2fr 0.8fr;
-      gap: 22px;
-      align-items:start;
-    }
-
-    .kicker{
-      color: var(--acc);
-      text-transform: uppercase;
-      letter-spacing: 0.7px;
-      font-weight: 900;
-      font-size: 13px;
-      margin: 0 0 10px;
-    }
-
-    .headline{
-      margin: 0 0 12px;
-      color: #2f2f2f;
-      font-size: 48px;
-      line-height: 1.05;
-    }
-
-    .underline-accent{
-      border-bottom: 6px solid var(--acc);
-      display:inline-block;
-      padding-bottom: 4px;
-    }
-
-    .body{
-      color:#3b3b3b;
-      line-height: 1.7;
-      font-size: 15px;
-      opacity: 0.95;
-      margin: 0;
-    }
-
-    .benefit-cards{
-      margin-top: 18px;
-      display:grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 16px;
-    }
-
-    .benefit-card{
-      background: #fff;
-      border-radius: 22px;
-      padding: 20px;
-      border: 1px solid rgba(0,0,0,0.06);
-      box-shadow: 0 18px 55px rgba(0,0,0,0.08);
-      min-height: 220px;
-    }
-
-    .benefit-icon{
-      width: 62px;
-      height: 62px;
-      border-radius: 14px;
-      display:grid;
-      place-items:center;
-      color: var(--acc);
-      border: 1px solid rgba(240,90,40,0.25);
-      background: rgba(240,90,40,0.05);
-      font-size: 26px;
-      margin-bottom: 14px;
-    }
-
-    .benefit-card h4{
-      margin: 0 0 10px;
-      color: #3a3a3a;
-      font-size: 16px;
-      font-weight: 900;
-    }
-    .benefit-card p{
-      margin: 0;
-      color: rgba(0,0,0,0.62);
-      line-height: 1.6;
-      font-size: 13.8px;
-    }
-
-    .feature-split{
-      display:grid;
-      grid-template-columns: 1.2fr 0.8fr;
-      gap: 22px;
-      align-items:center;
-    }
-    .feature-split.reverse{ grid-template-columns: 0.8fr 1.2fr; }
-
-    .feature-media{
-      border-radius: 26px;
-      overflow:hidden;
-      background:#000;
-      border: 1px solid rgba(0,0,0,0.06);
-      box-shadow: 0 18px 55px rgba(0,0,0,0.08);
-      position: relative;
-      min-height: 320px;
-    }
-    .feature-media img{
-      width:100%;
-      height:100%;
-      object-fit: cover;
-      display:block;
-    }
-
-    .badge-circle{
-      position:absolute;
-      top: 18px;
-      right: 18px;
-      width: 140px;
-      height: 140px;
-      border-radius: 50%;
-      background: var(--acc);
-      color:#fff;
-      display:grid;
-      place-items:center;
-      text-align:center;
-      font-weight: 900;
-      line-height: 1.05;
-      box-shadow: 0 18px 45px rgba(0,0,0,0.28);
-      transform: rotate(-10deg);
-    }
-    .badge-circle small{
-      display:block;
-      font-weight: 800;
-      opacity: 0.95;
-    }
-
-    .feature-title{
-      margin: 0 0 12px;
-      color: #2f2f2f;
-      font-size: 42px;
-      line-height: 1.08;
-    }
-    .feature-text{
-      margin: 0 0 16px;
-      color: rgba(0,0,0,0.62);
-      line-height: 1.7;
-      font-size: 14.8px;
-    }
-    .feature-btn{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      padding: 14px 20px;
+      padding: 12px 16px;
       border-radius: 12px;
-      background: var(--acc);
-      color:#fff;
-      text-decoration:none;
-      font-weight: 900;
-      letter-spacing: 0.2px;
-      min-width: 280px;
+      border: 1px solid rgba(0,0,0,0.15);
+      font-weight: 800;
     }
 
-    /* ====== Hoe bestel je ====== */
-    .how-title{
-      margin: 0 0 18px;
-      font-size: 44px;
-      line-height: 1.05;
-      color: #2f2f2f;
+    .re-section { margin: 28px 0; }
+    .re-card {
+      border-radius: 18px;
+      padding: 24px;
+      background: rgba(255,255,255,0.03);
     }
 
-    .steps-grid{
-      display:grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 18px;
-      margin-top: 10px;
+    .re-hero-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 22px;
+      align-items: start;
     }
 
-    .step-card{
-      background: #fff;
-      border-radius: 22px;
-      padding: 22px;
-      border: 1px solid rgba(0,0,0,0.06);
-      box-shadow: 0 18px 55px rgba(0,0,0,0.08);
-      min-height: 170px;
-    }
-
-    .step-icon{
-      width: 56px;
-      height: 56px;
-      border-radius: 50%;
-      background: var(--acc);
-      color: #fff;
-      display:grid;
-      place-items:center;
-      font-size: 22px;
-      margin-bottom: 14px;
-    }
-
-    .step-label{
-      color: rgba(0,0,0,0.35);
-      font-weight: 900;
-      letter-spacing: 0.3px;
-      margin: 0 0 8px;
+    .re-kicker {
+      letter-spacing: 0.08em;
       text-transform: uppercase;
+      font-weight: 900;
+      opacity: 0.75;
+      margin: 0 0 10px;
       font-size: 12px;
     }
 
-    .step-text{
+    .re-headline {
       margin: 0;
-      color: #3b3b3b;
-      line-height: 1.55;
-      font-size: 14.5px;
+      line-height: 1.05;
+      font-size: clamp(30px, 4vw, 52px);
     }
 
-    /* ====== 2) PRIJZEN ====== */
-    .pricing-grid{
-      display:grid;
-      grid-template-columns: 1.6fr 0.9fr;
-      gap: 18px;
-      align-items:start;
+    .re-underline {
+      border-bottom: 6px solid currentColor;
+      display: inline-block;
+      padding-bottom: 4px;
     }
 
-    .price-table-card{
-      background: var(--card);
-      border-radius: 22px;
-      padding: 22px;
-      box-shadow: 0 18px 55px rgba(0,0,0,0.12);
+    .re-benefits {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 22px;
     }
 
-    .price-table-title{
-      font-weight: 900;
-      color: var(--acc);
-      letter-spacing: 0.6px;
-      text-transform: uppercase;
-      font-size: 14px;
-      margin: 0 0 6px;
-    }
-
-    .vat-note{
-      font-size: 12.5px;
-      color: rgba(0,0,0,0.55);
-      margin: 0 0 14px;
-      font-weight: 800;
-    }
-
-    table.pricing-table{
-      width:100%;
-      border-collapse: collapse;
-      color: var(--ink);
-      font-size: 15px;
-    }
-    .pricing-table tr{ border-bottom: 1px solid var(--line); }
-    .pricing-table tr:last-child{ border-bottom:none; }
-    .pricing-table td{ padding: 12px 0; vertical-align: top; }
-    .pricing-table td:last-child{
-      text-align:right;
-      font-weight: 900;
-      white-space: nowrap;
-    }
-
-    .accordion-col{
-      display:flex;
-      flex-direction: column;
-      gap: 14px;
-    }
-
-    .order-box{
-      background: var(--acc);
+    .re-benefit {
       border-radius: 18px;
       padding: 18px;
-      color: #fff;
-      display:flex;
-      flex-direction: column;
-      gap: 12px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.08);
     }
-    .order-box-title{
-      display:flex;
-      align-items:center;
-      gap: 10px;
-      font-weight: 900;
-      letter-spacing: 0.2px;
-    }
-    .order-btn{
-      display:inline-flex;
-      width: fit-content;
-      background: #fff;
-      color: #2c2c2c;
-      text-decoration:none;
-      padding: 12px 18px;
-      border-radius: 999px;
-      font-weight: 900;
-      letter-spacing: 0.2px;
-      transition: transform .2s ease;
-    }
-    .order-btn:hover{ transform: translateY(-1px); }
 
-    .acc-card{
-      border-radius: 18px;
-      overflow:hidden;
-      background: rgba(255,255,255,0.55);
-      border: 1px solid rgba(0,0,0,0.06);
+    .re-iconbox {
+      width: 54px;
+      height: 54px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      margin-bottom: 12px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.10);
+      font-size: 22px;
     }
-    details.acc summary{
+
+    .re-benefit h4 { margin: 0 0 8px; font-weight: 900; }
+    .re-benefit p { margin: 0; opacity: 0.9; line-height: 1.6; }
+
+    .re-split {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 22px;
+      align-items: center;
+    }
+
+    .re-split.reverse { grid-template-columns: 0.85fr 1.15fr; }
+
+    .re-media {
+      border-radius: 18px;
+      overflow: hidden;
+      background: rgba(0,0,0,0.15);
+      border: 1px solid rgba(255,255,255,0.10);
+      min-height: 280px;
+    }
+
+    .re-media img {
+      width: 100%;
+      height: 100%;
+      display:block;
+      object-fit: cover;
+    }
+
+    /* Pricing layout */
+    .re-pricing {
+      display: grid;
+      grid-template-columns: 1.6fr 0.9fr;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .re-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .re-table tr { border-bottom: 1px solid rgba(255,255,255,0.10); }
+    .re-table tr:last-child { border-bottom: none; }
+    .re-table td { padding: 10px 0; vertical-align: top; }
+    .re-table td:last-child { text-align: right; font-weight: 900; white-space: nowrap; }
+
+    .re-note { opacity: 0.85; font-weight: 800; margin: 6px 0 0; font-size: 13px; }
+
+    .re-sidebox {
+      border-radius: 18px;
+      padding: 18px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.10);
+    }
+
+    details.re-acc {
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.06);
+      margin-top: 14px;
+    }
+
+    details.re-acc summary {
       cursor: pointer;
-      padding: 16px 16px;
-      font-weight: 900;
-      color: #3a3a3a;
       list-style: none;
+      padding: 14px 14px;
+      font-weight: 900;
       display:flex;
       align-items:center;
       justify-content: space-between;
-      gap: 12px;
-    }
-    details.acc summary::-webkit-details-marker{ display:none; }
-    .acc-chevron{ color: rgba(0,0,0,0.45); font-size: 16px; }
-
-    /* ====== 3) EXTRA'S (ADD-ONS) ====== */
-    .addons-title{
-      margin: 0;
-      font-size: 46px;
-      line-height: 1.1;
-      color: #2f2f2f;
+      gap: 10px;
     }
 
-    .addon-cards{
-      display:grid;
+    details.re-acc summary::-webkit-details-marker { display:none; }
+
+    /* Extras cards */
+    .re-extras {
+      display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 16px;
-      margin-top: 18px;
+      margin-top: 16px;
     }
 
-    .addon-card{
+    .re-extra {
       position: relative;
-      border-radius: 22px;
+      border-radius: 18px;
       overflow: hidden;
-      min-height: 185px;
-      border: 1px solid rgba(0,0,0,0.06);
-      box-shadow: 0 18px 55px rgba(0,0,0,0.08);
-      background: #000;
-      text-decoration:none;
+      min-height: 170px;
+      border: 1px solid rgba(255,255,255,0.10);
+      text-decoration: none;
     }
 
-    .addon-card img{
-      position:absolute;
-      inset:0;
-      width:100%;
-      height:100%;
-      object-fit: cover;
-      transform: scale(1.02);
-      opacity: 0.92;
-    }
+    .re-extra img { position:absolute; inset:0; width:100%; height:100%; object-fit: cover; }
 
-    .addon-card::after{
+    .re-extra::after {
       content:"";
       position:absolute;
       inset:0;
-      background: linear-gradient(180deg, rgba(0,0,0,0.10) 0%, rgba(0,0,0,0.65) 70%, rgba(0,0,0,0.80) 100%);
+      background: linear-gradient(180deg, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.70) 100%);
     }
 
-    .addon-text{
+    .re-extra-text {
       position:absolute;
-      left: 16px;
-      bottom: 14px;
-      right: 16px;
+      left: 14px;
+      right: 14px;
+      bottom: 12px;
       z-index: 2;
-      color:#fff;
     }
 
-    .addon-text h4{
-      margin:0 0 6px;
-      font-size: 22px;
-      line-height: 1.05;
-      font-weight: 900;
-    }
-    .addon-text .starting{
-      color: rgba(240,90,40,0.98);
-      font-weight: 900;
-      letter-spacing: 0.2px;
-    }
+    .re-extra-text h4 { margin:0 0 6px; font-weight: 900; line-height: 1.05; }
+    .re-extra-text .re-start { font-weight: 900; opacity: 0.95; }
 
-    /* Responsive */
     @media (max-width: 1100px){
-      .benefit-cards{ grid-template-columns: repeat(2, 1fr); }
-      .addon-cards{ grid-template-columns: repeat(2, 1fr); }
+      .re-benefits { grid-template-columns: repeat(2, 1fr); }
+      .re-extras { grid-template-columns: repeat(2, 1fr); }
     }
 
     @media (max-width: 980px){
-      .pricing-grid{ grid-template-columns: 1fr; }
-      .feature-split, .feature-split.reverse{ grid-template-columns: 1fr; }
-      .steps-grid{ grid-template-columns: 1fr; }
-      .boss-grid{ grid-template-columns: 1fr; }
-      .headline{ font-size: 38px; }
-      .addons-title{ font-size: 36px; }
-      .feature-title{ font-size: 34px; }
-      .how-title{ font-size: 34px; }
-      .badge-circle{ width: 120px; height: 120px; }
+      .re-hero-grid { grid-template-columns: 1fr; }
+      .re-split, .re-split.reverse { grid-template-columns: 1fr; }
+      .re-pricing { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -499,255 +261,183 @@
     </nav>
   </header>
 
-  <main class="re-page-wrap">
-    <!-- HERO -->
-    <section class="hero-section">
-      <video
-        class="hero-background"
-        autoplay
-        loop
-        muted
-        playsinline
-        webkit-playsinline
-        preload="auto"
-        poster="Assets/Movies/placeholder.jpg"
-      >
-        <source src="Assets/Movies/267A6457-812F-42EC-8ACA-43AB001D1C7F.mp4?v=8" type="video/mp4" />
-        Je browser ondersteunt deze video niet.
-      </video>
-    </section>
+  <main class="re-page">
+    <div class="re-wrap">
 
-    <section class="re-container">
-      <h1 class="re-title">Vastgoedfotografie</h1>
-      <p class="re-sub">
-        Premium vastgoedfoto’s die zorgen voor meer clicks, meer bezichtigingen en een sterkere first impression.
-        <strong>België:</strong> alle prijzen hieronder zijn <strong>€ incl. btw</strong>.
-      </p>
+      <div class="re-top">
+        <h1>Vastgoedfotografie</h1>
+        <p>
+          Premium vastgoedfoto’s die zorgen voor meer clicks, meer bezichtigingen en een sterkere eerste indruk.
+          <strong>België:</strong> alle prijzen hieronder zijn <strong>€ incl. btw</strong>.
+        </p>
+      </div>
 
-      <div class="re-cta-row">
-        <a href="#dingen" class="cta-button">Info →</a>
-        <a href="#prijzen" class="secondary-button"><i class="fas fa-euro-sign"></i> Prijzen</a>
-        <a href="#extras" class="secondary-button"><i class="fas fa-plus-circle"></i> Extra’s</a>
+      <div class="re-actions">
+        <a href="#info" class="cta-button">Info →</a>
+        <a href="#prijzen" class="re-secondary"><i class="fas fa-euro-sign"></i> Prijzen</a>
+        <a href="#extras" class="re-secondary"><i class="fas fa-plus-circle"></i> Extra’s</a>
       </div>
 
       <!-- 1) INFO -->
-      <section class="light-block" id="dingen">
-        <div class="boss-grid">
-          <div>
-            <p class="kicker">LOOK LIKE A BOSS</p>
-            <h2 class="headline">
-              Maak van elke woning een <span class="underline-accent">showstopper</span><br />
-              en boost je verkoop
-            </h2>
-          </div>
-          <div class="body">
-            Wij zijn meer dan “gewoon fotografen” — we zetten je pand neer als een sterk product.
-            Met beelden die vertrouwen opwekken, de ruimte correct tonen en je listing laten opvallen.
-          </div>
-        </div>
-
-        <div class="benefit-cards">
-          <div class="benefit-card">
-            <div class="benefit-icon"><i class="fas fa-chart-line"></i></div>
-            <h4>Meer aantrekkingskracht, meer waarde</h4>
-            <p>
-              Sterke beelden verhogen de interesse en maken je listing aantrekkelijker.
-              Resultaat: meer clicks, meer bezichtigingen en vaak een betere prijsperceptie.
+      <section id="info" class="re-section">
+        <div class="re-card">
+          <div class="re-hero-grid">
+            <div>
+              <p class="re-kicker">STERKE LISTINGS</p>
+              <h2 class="re-headline">
+                Maak van elke woning een <span class="re-underline">showstopper</span><br />
+                en boost je verkoop
+              </h2>
+            </div>
+            <p style="margin:0; opacity:.9; line-height:1.7;">
+              Wij zetten je pand neer als een sterk product. Met beelden die vertrouwen opwekken,
+              de ruimte correct tonen en je listing laten opvallen.
             </p>
           </div>
 
-          <div class="benefit-card">
-            <div class="benefit-icon"><i class="fas fa-piggy-bank"></i></div>
-            <h4>All-inclusive, geen extra kosten</h4>
-            <p>
-              Standaard inbegrepen: consistente nabewerking, correcte lijnen en een professionele look.
-              Geen verborgen kosten, wel een complete set listing-ready beelden.
-            </p>
-          </div>
+          <div class="re-benefits">
+            <div class="re-benefit">
+              <div class="re-iconbox"><i class="fas fa-chart-line"></i></div>
+              <h4>Meer aantrekkingskracht, meer waarde</h4>
+              <p>
+                Sterke beelden verhogen de interesse en maken je listing aantrekkelijker.
+                Resultaat: meer clicks, meer bezichtigingen en vaak een betere prijsperceptie.
+              </p>
+            </div>
 
-          <div class="benefit-card">
-            <!-- FIX: fa-sparkles bestaat niet in FA5, daarom was icoon 3 onzichtbaar -->
-            <div class="benefit-icon"><i class="fas fa-magic"></i></div>
-            <h4>Editing tot in de puntjes</h4>
-            <p>
-              Elke foto wordt zorgvuldig afgewerkt: natuurlijke kleuren, helder beeld en correcte verticalen.
-              Premium, maar realistisch.
-            </p>
-          </div>
+            <div class="re-benefit">
+              <div class="re-iconbox"><i class="fas fa-piggy-bank"></i></div>
+              <h4>All-inclusive, geen extra kosten</h4>
+              <p>
+                Standaard inbegrepen: consistente nabewerking, correcte lijnen en een professionele look.
+                Geen verborgen kosten, wel een complete set listing-ready beelden.
+              </p>
+            </div>
 
-          <div class="benefit-card">
-            <div class="benefit-icon"><i class="fas fa-clock"></i></div>
-            <h4>24-hour delivery or it’s FREE!</h4>
-            <p>
-              Tijd is cruciaal in vastgoed. We leveren snel en houden van duidelijke afspraken.
-            </p>
+            <div class="re-benefit">
+              <!-- FIX: fa-sparkles bestaat niet in FA5 -> nu fa-magic -->
+              <div class="re-iconbox"><i class="fas fa-magic"></i></div>
+              <h4>Editing tot in de puntjes</h4>
+              <p>
+                Elke foto wordt zorgvuldig afgewerkt: natuurlijke kleuren, helder beeld en correcte verticalen.
+                Premium, maar realistisch.
+              </p>
+            </div>
+
+            <div class="re-benefit">
+              <div class="re-iconbox"><i class="fas fa-clock"></i></div>
+              <h4>Levering binnen 24 uur of GRATIS!</h4>
+              <p>
+                Tijd is cruciaal in vastgoed. We leveren snel en houden van duidelijke afspraken.
+              </p>
+            </div>
           </div>
         </div>
       </section>
 
-      <section class="light-block" id="community">
-        <div class="feature-split">
-          <div class="feature-media">
+      <section class="re-section">
+        <div class="re-card re-split">
+          <div class="re-media">
             <img src="Assets/RealEstate/community.jpg" alt="Buurtfoto’s">
           </div>
-
           <div>
-            <p class="kicker">BUURT IN DE KIJKER</p>
-            <h2 class="feature-title">
-              Toon de omgeving die elk pand <span class="underline-accent">onweerstaanbaar</span> maakt
-            </h2>
-            <p class="feature-text">
+            <p class="re-kicker">BUURT IN DE KIJKER</p>
+            <h2 style="margin:0 0 10px;">Toon de omgeving die elk pand onweerstaanbaar maakt</h2>
+            <p style="margin:0 0 14px; opacity:.9; line-height:1.7;">
               Buurtfoto’s (park, zwembad, uitzicht, shopping, …) helpen kopers zich het leven ter plaatse voor te stellen.
               Ideaal voor projecten en panden waar “location” het verschil maakt.
             </p>
-            <a class="feature-btn" href="contact.html">Buurtfoto’s aanvragen</a>
+            <a class="cta-button" href="contact.html">Buurtfoto’s aanvragen →</a>
           </div>
         </div>
       </section>
 
-      <section class="light-block" id="lifestyle">
-        <div class="feature-split reverse">
+      <section class="re-section">
+        <div class="re-card re-split reverse">
           <div>
-            <p class="kicker">LIFESTYLE</p>
-            <h2 class="feature-title">
-              Lifestyle-foto’s: een kleine <span class="underline-accent">revolutie</span> voor je listing
-            </h2>
-            <p class="feature-text">
-              Detailbeelden en sfeer maken je advertentie warmer en menselijker. Perfect voor high-end en socials.
+            <p class="re-kicker">LIFESTYLE</p>
+            <h2 style="margin:0 0 10px;">Lifestyle-foto’s die je listing warmer maken</h2>
+            <p style="margin:0 0 14px; opacity:.9; line-height:1.7;">
+              Detailbeelden en sfeer maken je advertentie menselijker. Perfect voor high-end en social media.
             </p>
-            <a class="feature-btn" href="contact.html">Lifestyle-foto’s aanvragen</a>
+            <a class="cta-button" href="contact.html">Lifestyle aanvragen →</a>
           </div>
-
-          <div class="feature-media">
+          <div class="re-media">
             <img src="Assets/RealEstate/lifestyle.jpg" alt="Lifestylefoto’s">
           </div>
         </div>
       </section>
 
-      <section class="light-block" id="boost">
-        <div class="feature-split">
-          <div class="feature-media">
-            <img src="Assets/RealEstate/livingroom.jpg" alt="Interieur">
-            <div class="badge-circle">
-              24-HOUR<br/><small>delivery or it’s</small>FREE!
-            </div>
-          </div>
+      <!-- 2) PRIJZEN -->
+      <section id="prijzen" class="re-section">
+        <div class="re-card">
+          <div class="re-pricing">
+            <div>
+              <p class="re-kicker">PRIJZEN</p>
+              <h2 style="margin:0 0 6px;">Prijzen vastgoedfotografie</h2>
+              <p class="re-note">Alle prijzen zijn in € en <strong>incl. btw</strong>. Oppervlakte is in <strong>m²</strong>.</p>
 
-          <div>
-            <p class="kicker">KWALITEIT DIE OPVALT</p>
-            <h2 class="feature-title">
-              Val op en <span class="underline-accent">boost clicks</span> met sterke vastgoedfoto’s
-            </h2>
-            <p class="feature-text">
-              De eerste seconden bepalen alles. Premium beelden trekken de aandacht en verhogen de geloofwaardigheid.
-            </p>
-            <a class="feature-btn" href="contact.html">Fotografie aanvragen</a>
-          </div>
-        </div>
-      </section>
+              <div style="margin-top: 16px;">
+                <div id="table-realestate">
+                  <table class="re-table" aria-label="Prijzen vastgoedfotografie">
+                    <tbody>
+                      <tr><td>0 – 93 m² (15–20 foto’s)</td><td>€145</td></tr>
+                      <tr><td>93 – 186 m² (25–30 foto’s)</td><td>€195</td></tr>
+                      <tr><td>186 – 279 m² (35–40 foto’s)</td><td>€245</td></tr>
+                      <tr><td>279 – 371 m² (45–50 foto’s)</td><td>€295</td></tr>
+                      <tr><td>371 – 464 m² (55–60 foto’s)</td><td>€345</td></tr>
+                      <tr><td>+93 m² (+5 foto’s)</td><td>+€50</td></tr>
 
-      <section class="light-block" id="how">
-        <p class="kicker">Hoe bestel je</p>
-        <h2 class="how-title"><span class="underline-accent">Snelle</span> levering, duidelijke flow</h2>
+                      <tr><td style="padding-top:16px;">Twilight-shoot (6 foto’s)</td><td style="padding-top:16px;">€195</td></tr>
+                      <tr><td>Extended twilight – blue hour (9 foto’s)</td><td>€295</td></tr>
+                      <tr><td>Extra fotopack (5 foto’s)</td><td>€50</td></tr>
+                      <tr><td>Virtuele staging &amp; renovatie (per beeld)</td><td>€50</td></tr>
+                      <tr><td>Virtuele twilight (per beeld)</td><td>€50</td></tr>
+                    </tbody>
+                  </table>
+                </div>
 
-        <div class="steps-grid">
-          <div class="step-card">
-            <div class="step-icon"><i class="far fa-id-card"></i></div>
-            <p class="step-label">Stap 1</p>
-            <p class="step-text">Vraag je shoot aan (adres + type pand + timing).</p>
-          </div>
+                <div id="table-vacation" style="display:none;">
+                  <table class="re-table" aria-label="Prijzen vakantiewoningen">
+                    <tbody>
+                      <tr><td>1 – 2 slaapkamers (15–20 foto’s)</td><td>€220</td></tr>
+                      <tr><td>3 – 4 slaapkamers (25–35 foto’s)</td><td>€270</td></tr>
+                      <tr><td>5 – 6 slaapkamers (35–45 foto’s)</td><td>€345</td></tr>
+                      <tr><td>7 – 8 slaapkamers (45–55 foto’s)</td><td>€420</td></tr>
+                      <tr><td>9 – 10 slaapkamers (55–60 foto’s)</td><td>€495</td></tr>
+                      <tr><td>11 – 12 slaapkamers (60–65 foto’s)</td><td>€570</td></tr>
+                      <tr><td>13 – 14 slaapkamers (65–70 foto’s)</td><td>€645</td></tr>
+                      <tr><td>15 – 16 slaapkamers (70–80 foto’s)</td><td>€720</td></tr>
 
-          <div class="step-card">
-            <div class="step-icon"><i class="far fa-calendar-check"></i></div>
-            <p class="step-label">Stap 2</p>
-            <p class="step-text">We bevestigen je afspraak en stemmen alles af.</p>
-          </div>
-
-          <div class="step-card">
-            <div class="step-icon"><i class="fas fa-camera"></i></div>
-            <p class="step-label">Stap 3</p>
-            <p class="step-text">Wij shooten efficiënt met focus op licht en beste angles.</p>
-          </div>
-
-          <div class="step-card">
-            <div class="step-icon"><i class="far fa-envelope"></i></div>
-            <p class="step-label">Stap 4</p>
-            <p class="step-text">Levering via downloadlink — klaar voor listing en socials.</p>
-          </div>
-        </div>
-      </section>
-
-      <!-- 2) PRIJZEN (sqft -> m²) -->
-      <section class="light-block" id="prijzen">
-        <div class="pricing-grid">
-          <div class="price-table-card">
-            <div class="price-table-title" id="pricingTitle">Prijzen vastgoedfotografie</div>
-            <p class="vat-note">Alle prijzen zijn in € en <strong>incl. btw</strong>. Oppervlakte is in <strong>m²</strong>.</p>
-
-            <div id="table-realestate">
-              <table class="pricing-table" aria-label="Prijzen vastgoedfotografie">
-                <tbody>
-                  <tr><td>0 – 93 m² (15–20 foto’s)</td><td>€145</td></tr>
-                  <tr><td>93 – 186 m² (25–30 foto’s)</td><td>€195</td></tr>
-                  <tr><td>186 – 279 m² (35–40 foto’s)</td><td>€245</td></tr>
-                  <tr><td>279 – 371 m² (45–50 foto’s)</td><td>€295</td></tr>
-                  <tr><td>371 – 464 m² (55–60 foto’s)</td><td>€345</td></tr>
-                  <tr><td>+93 m² (+5 foto’s)</td><td>+€50</td></tr>
-
-                  <tr><td style="padding-top:16px;">Twilight-shoot (6 foto’s)</td><td style="padding-top:16px;">€195</td></tr>
-                  <tr><td>Extended twilight – blue hour (9 foto’s)</td><td>€295</td></tr>
-                  <tr><td>Extra fotopack (5 foto’s)</td><td>€50</td></tr>
-                  <tr><td>Virtuele staging &amp; renovatie (per beeld)</td><td>€50</td></tr>
-                  <tr><td>Virtuele twilight (per beeld)</td><td>€50</td></tr>
-                </tbody>
-              </table>
-            </div>
-
-            <div id="table-vacation" style="display:none;">
-              <table class="pricing-table" aria-label="Prijzen vakantiewoningen">
-                <tbody>
-                  <tr><td>1 – 2 slaapkamers (15–20 foto’s)</td><td>€220</td></tr>
-                  <tr><td>3 – 4 slaapkamers (25–35 foto’s)</td><td>€270</td></tr>
-                  <tr><td>5 – 6 slaapkamers (35–45 foto’s)</td><td>€345</td></tr>
-                  <tr><td>7 – 8 slaapkamers (45–55 foto’s)</td><td>€420</td></tr>
-                  <tr><td>9 – 10 slaapkamers (55–60 foto’s)</td><td>€495</td></tr>
-                  <tr><td>11 – 12 slaapkamers (60–65 foto’s)</td><td>€570</td></tr>
-                  <tr><td>13 – 14 slaapkamers (65–70 foto’s)</td><td>€645</td></tr>
-                  <tr><td>15 – 16 slaapkamers (70–80 foto’s)</td><td>€720</td></tr>
-
-                  <tr><td style="padding-top:16px;">Twilight-shoot (6 foto’s)</td><td style="padding-top:16px;">€195</td></tr>
-                  <tr><td>Extended twilight – blue hour (9 foto’s)</td><td>€295</td></tr>
-                  <tr><td>Extra foto (per beeld)</td><td>€9</td></tr>
-                  <tr><td>Virtuele staging &amp; renovatie (per beeld)</td><td>€50</td></tr>
-                  <tr><td>Virtuele twilight (per beeld)</td><td>€50</td></tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          <div class="accordion-col">
-            <div class="order-box">
-              <div class="order-box-title">
-                <i class="fas fa-chevron-right"></i>
-                <span id="orderBoxLabel">Prijzen vastgoedfotografie</span>
+                      <tr><td style="padding-top:16px;">Twilight-shoot (6 foto’s)</td><td style="padding-top:16px;">€195</td></tr>
+                      <tr><td>Extended twilight – blue hour (9 foto’s)</td><td>€295</td></tr>
+                      <tr><td>Extra foto (per beeld)</td><td>€9</td></tr>
+                      <tr><td>Virtuele staging &amp; renovatie (per beeld)</td><td>€50</td></tr>
+                      <tr><td>Virtuele twilight (per beeld)</td><td>€50</td></tr>
+                    </tbody>
+                  </table>
+                </div>
               </div>
-              <a class="order-btn" href="contact.html">Aanvragen</a>
             </div>
 
-            <div class="acc-card">
-              <details class="acc" open id="acc-realestate">
+            <div class="re-sidebox">
+              <p class="re-kicker" style="margin-bottom:8px;">AANVRAGEN</p>
+              <p style="margin:0 0 12px; opacity:.9; line-height:1.6;">
+                Stuur adres + type pand + gewenste datum. We bevestigen snel met een duidelijk voorstel.
+              </p>
+              <a class="cta-button" href="contact.html">Contact →</a>
+
+              <details class="re-acc" open id="acc-realestate">
                 <summary>
                   <span>Vastgoedfotografie</span>
-                  <i class="fas fa-chevron-down acc-chevron"></i>
+                  <i class="fas fa-chevron-down" aria-hidden="true"></i>
                 </summary>
               </details>
-            </div>
 
-            <div class="acc-card">
-              <details class="acc" id="acc-vacation">
+              <details class="re-acc" id="acc-vacation">
                 <summary>
                   <span>Vakantiewoningen</span>
-                  <i class="fas fa-chevron-down acc-chevron"></i>
+                  <i class="fas fa-chevron-down" aria-hidden="true"></i>
                 </summary>
               </details>
             </div>
@@ -756,46 +446,49 @@
       </section>
 
       <!-- 3) EXTRA'S -->
-      <section class="light-block" id="extras">
-        <p class="kicker">EXTRA’S</p>
-        <h2 class="addons-title">Populaire <span class="underline-accent">extra’s</span></h2>
+      <section id="extras" class="re-section">
+        <div class="re-card">
+          <p class="re-kicker">EXTRA’S</p>
+          <h2 style="margin:0 0 6px;">Populaire extra’s</h2>
+          <p class="re-note">Combineer met je fotoshoot voor een complete vastgoedpresentatie.</p>
 
-        <div class="addon-cards">
-          <a class="addon-card" href="3d-scans.html">
-            <img src="Assets/RealEstate/addons-matterport.jpg" alt="Matterport 3D tours">
-            <div class="addon-text">
-              <h4>Matterport 3D<br/>Tours</h4>
-              <div class="starting">vanaf €250</div>
-            </div>
-          </a>
+          <div class="re-extras">
+            <a class="re-extra" href="3d-scans.html">
+              <img src="Assets/RealEstate/addons-matterport.jpg" alt="Matterport 3D tours">
+              <div class="re-extra-text">
+                <h4>Matterport 3D<br/>Tours</h4>
+                <div class="re-start">vanaf €250</div>
+              </div>
+            </a>
 
-          <a class="addon-card" href="contact.html">
-            <img src="Assets/RealEstate/addons-aerial.jpg" alt="Drone foto & video">
-            <div class="addon-text">
-              <h4>Drone foto’s<br/>&amp; video</h4>
-              <div class="starting">vanaf €195</div>
-            </div>
-          </a>
+            <a class="re-extra" href="contact.html">
+              <img src="Assets/RealEstate/addons-aerial.jpg" alt="Drone foto & video">
+              <div class="re-extra-text">
+                <h4>Drone foto’s<br/>&amp; video</h4>
+                <div class="re-start">vanaf €195</div>
+              </div>
+            </a>
 
-          <a class="addon-card" href="contact.html">
-            <img src="Assets/RealEstate/addons-twilight.jpg" alt="Twilight">
-            <div class="addon-text">
-              <h4>Twilight<br/>Extra’s</h4>
-              <div class="starting">vanaf €50</div>
-            </div>
-          </a>
+            <a class="re-extra" href="contact.html">
+              <img src="Assets/RealEstate/addons-twilight.jpg" alt="Twilight extra’s">
+              <div class="re-extra-text">
+                <h4>Twilight<br/>extra’s</h4>
+                <div class="re-start">vanaf €50</div>
+              </div>
+            </a>
 
-          <a class="addon-card" href="fpv.html">
-            <img src="Assets/RealEstate/addons-video.jpg" alt="Cinematische video tours">
-            <div class="addon-text">
-              <h4>Cinematische<br/>videotours</h4>
-              <div class="starting">vanaf €250</div>
-            </div>
-          </a>
+            <a class="re-extra" href="fpv.html">
+              <img src="Assets/RealEstate/addons-video.jpg" alt="Cinematische videotours">
+              <div class="re-extra-text">
+                <h4>Cinematische<br/>videotours</h4>
+                <div class="re-start">vanaf €250</div>
+              </div>
+            </a>
+          </div>
         </div>
       </section>
 
-    </section>
+    </div>
   </main>
 
   <footer class="footer">
@@ -842,25 +535,22 @@
     </div>
   </footer>
 
+  <!-- jouw centrale nav/submenu script -->
   <script src="script.js"></script>
 
-  <!-- Accordion switch for prices -->
+  <!-- Switch tussen prijstabellen -->
   <script>
     (function(){
       const accRE = document.getElementById('acc-realestate');
       const accVR = document.getElementById('acc-vacation');
       const tRE = document.getElementById('table-realestate');
       const tVR = document.getElementById('table-vacation');
-      const title = document.getElementById('pricingTitle');
-      const orderLabel = document.getElementById('orderBoxLabel');
 
       function showRE(){
         accRE.open = true;
         accVR.open = false;
         tRE.style.display = '';
         tVR.style.display = 'none';
-        title.textContent = 'Prijzen vastgoedfotografie';
-        orderLabel.textContent = 'Prijzen vastgoedfotografie';
       }
 
       function showVR(){
@@ -868,36 +558,12 @@
         accRE.open = false;
         tVR.style.display = '';
         tRE.style.display = 'none';
-        title.textContent = 'Prijzen vakantiewoningen';
-        orderLabel.textContent = 'Prijzen vakantiewoningen';
       }
 
-      accRE.addEventListener('toggle', () => { if(accRE.open) showRE(); });
-      accVR.addEventListener('toggle', () => { if(accVR.open) showVR(); });
+      accRE.addEventListener('toggle', () => { if (accRE.open) showRE(); });
+      accVR.addEventListener('toggle', () => { if (accVR.open) showVR(); });
 
       showRE();
-    })();
-  </script>
-
-  <!-- iOS autoplay helper for hero video -->
-  <script>
-    (function () {
-      const v = document.querySelector(".hero-background");
-      if (!v) return;
-
-      v.muted = true;
-      v.setAttribute("muted", "");
-      v.setAttribute("playsinline", "");
-      v.setAttribute("webkit-playsinline", "");
-
-      const tryPlay = () => v.play().catch(() => {});
-      if (document.readyState === "complete" || document.readyState === "interactive") {
-        tryPlay();
-      } else {
-        document.addEventListener("DOMContentLoaded", tryPlay, { once: true });
-      }
-      window.addEventListener("touchstart", tryPlay, { once: true, passive: true });
-      document.addEventListener("visibilitychange", () => { if (!document.hidden) tryPlay(); });
     })();
   </script>
 </body>
