@@ -3,14 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>FPV Aerial Video | Snap360</title>
+  <title>Vastgoedfotografie | Snap360</title>
+
   <link rel="stylesheet" href="CSS/style.css" />
   <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.8/css/line.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"/>
 
   <style>
-    /* Hero FPV GIF */
-    .hero-fpv {
+    /* Hero image zoals fpv (zelfde techniek als hero-fpv) */
+    .hero-re {
       position: absolute;
       z-index: 1;
       top: 50%;
@@ -19,15 +20,106 @@
       height: 175%;
       width: auto;
       object-fit: cover;
-      opacity: 0.9;
+      opacity: 0.92;
       pointer-events: none;
     }
-    @media (max-width: 768px) { .hero-fpv { height: 130%; } }
-    @media (max-width: 480px) { .hero-fpv { height: 110%; } }
+    @media (max-width: 768px) { .hero-re { height: 130%; } }
+    @media (max-width: 480px) { .hero-re { height: 110%; } }
+
+    /* Prijzen tabel in fpv-stijl (tiles bestaan al, tabel is extra) */
+    .re-price-table{
+      width:100%;
+      border-collapse: collapse;
+    }
+    .re-price-table tr{
+      border-bottom: 1px solid rgba(0,0,0,0.12);
+    }
+    .re-price-table tr:last-child{ border-bottom:none; }
+    .re-price-table td{
+      padding: 10px 0;
+      vertical-align: top;
+    }
+    .re-price-table td:last-child{
+      text-align:right;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    /* Add-ons grid in dezelfde vibe als tours-grid */
+    .addons-grid{
+      display:grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+    }
+    @media (max-width: 1000px){ .addons-grid{ grid-template-columns: repeat(2, 1fr);} }
+    @media (max-width: 600px){ .addons-grid{ grid-template-columns: 1fr;} }
+
+    .addon-card{
+      border-radius: 18px;
+      overflow: hidden;
+      position: relative;
+      min-height: 170px;
+      background:#000;
+      text-decoration:none;
+      color:#fff;
+    }
+    .addon-card img{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      object-fit: cover;
+      opacity: 0.92;
+    }
+    .addon-card::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background: linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.78) 100%);
+    }
+    .addon-body{
+      position:absolute;
+      left: 14px;
+      right: 14px;
+      bottom: 12px;
+      z-index: 2;
+    }
+    .addon-body h3{
+      margin: 0 0 6px;
+      font-size: 20px;
+      line-height: 1.05;
+      font-weight: 900;
+    }
+    .addon-price{
+      font-weight: 900;
+      opacity: 0.95;
+    }
+
+    /* Kleine toggles, consistent met pricing-cta look */
+    .re-toggle-row{
+      display:flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+      align-items:center;
+    }
+    .re-toggle-btn{
+      padding: 10px 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(0,0,0,0.15);
+      background: #fff;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    .re-toggle-btn.active{
+      border-color: rgba(0,0,0,0.30);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.10);
+    }
   </style>
 </head>
+
 <body>
-  <!-- NAV -->
+  <!-- NAV (identiek aan fpv.html) -->
   <nav class="nav">
     <i class="uil uil-bars navOpenBtn"></i>
     <a href="3D.html" class="logo">
@@ -42,7 +134,7 @@
         <ul class="submenu">
           <li><a href="3d-scans.html">3D Matterport</a></li>
           <li><a href="floorplans.html">Vloerplannen</a></li>
-          <li><a href="under-construction.html">Photography</a></li>
+          <li><a href="real-estate-photography.html">Vastgoedfotografie</a></li>
           <li><a href="under-construction.html">Drone foto's &amp; Video's</a></li>
           <li><a href="fpv.html">FPV Aerial Videos</a></li>
         </ul>
@@ -54,157 +146,230 @@
   </nav>
 
   <main>
-    <!-- HERO -->
-    <section class="hero-section" aria-label="FPV Aerial Video">
+    <!-- HERO (zelfde structuur als fpv) -->
+    <section class="hero-section" aria-label="Vastgoedfotografie">
       <div class="hero-content">
-        <h1>FPV Aerial Video</h1>
-        <p>Beleef unieke en meeslepende dronevluchten met FPV-technologie. Perfect voor promoties, evenementen en krachtige visuele verhalen.</p>
+        <h1>Vastgoedfotografie</h1>
+        <p>Premium beelden die zorgen voor meer clicks, meer bezichtigingen en een sterkere eerste indruk. Alle prijzen zijn € incl. btw.</p>
       </div>
       <div class="hero-background" style="background:#000;"></div>
-      <img class="hero-fpv" src="Assets/Movies/fpvdronerealestate.gif" alt="FPV drone animatie">
+
+      <!-- Gebruik hier een mooie real-estate foto -->
+      <img class="hero-re" src="Assets/RealEstate/hero-realestate.jpg" alt="Vastgoedfotografie hero">
     </section>
 
-    <!-- USP’s -->
-    <section class="pro3-section">
+    <!-- INFO / USP’s (zelfde component als fpv: pro3-section) -->
+    <section class="pro3-section" id="info">
       <div class="pro3-header">
-        <h2>Waarom FPV-video?</h2>
-        <p>FPV-video brengt je publiek in het hart van de actie. Dynamische vluchten, spectaculaire beelden en creatieve invalshoeken die met klassieke drones onmogelijk zijn.</p>
+        <h2>Waarom professionele vastgoedfoto’s?</h2>
+        <p>Sterke beelden maken het verschil tussen “scrollen” en “klikken”. Wij leveren foto’s die natuurlijk ogen, ruimtes correct tonen en je listing laten opvallen.</p>
       </div>
 
       <div class="pro3-features">
         <div class="pro3-feature">
-          <i class="fas fa-bolt"></i>
-          <h3>Adrenaline shots</h3>
-          <p>Snel en dynamisch, ideaal voor promoties en aftermovies.</p>
+          <i class="fas fa-chart-line"></i>
+          <h3>Meer aantrekkingskracht</h3>
+          <p>Meer interesse, meer bezichtigingen en vaak een betere prijsperceptie.</p>
         </div>
+
         <div class="pro3-feature">
-          <i class="fas fa-film"></i>
-          <h3>Cinematische kwaliteit</h3>
-          <p>Professionele beelden met vloeiende stabilisatie.</p>
+          <i class="fas fa-piggy-bank"></i>
+          <h3>All-inclusive</h3>
+          <p>Consistente nabewerking en professionele look, zonder verborgen kosten.</p>
         </div>
+
         <div class="pro3-feature">
-          <i class="fas fa-map-marked-alt"></i>
-          <h3>Unieke perspectieven</h3>
-          <p>Vlieg door ramen, gebouwen of over mensenmassa’s.</p>
+          <!-- FIX: zichtbaar in FA5 -->
+          <i class="fas fa-magic"></i>
+          <h3>Editing tot in de puntjes</h3>
+          <p>Natuurlijke kleuren, helder beeld en correcte verticalen. Listing-ready.</p>
         </div>
+
         <div class="pro3-feature">
-          <i class="fas fa-rocket"></i>
-          <h3>Flexibel inzetbaar</h3>
-          <p>Voor vastgoed, bedrijven, sport en events.</p>
+          <i class="fas fa-clock"></i>
+          <h3>24 uur levering</h3>
+          <p>Levering binnen 24 uur of GRATIS (conform afspraak).</p>
         </div>
       </div>
     </section>
 
-    <!-- VOORBEELD VIDEO -->
+    <!-- “Voorbeeld”-sectie in dezelfde stijl als tours-section -->
     <section class="tours-section">
       <div class="tours-header">
-        <h2>Voorbeeld FPV-video</h2>
-        <p>Bekijk hoe FPV een totaal nieuwe dimensie geeft aan een video.</p>
+        <h2>Voorbeelden</h2>
+        <p>Een paar sfeerbeelden (of vervang dit door je eigen gallery / embeds).</p>
       </div>
 
-      <div class="tours-grid" style="grid-template-columns: 1fr; max-width: 900px;">
+      <div class="tours-grid" style="grid-template-columns: repeat(3, 1fr);">
         <article class="tour-card">
-          <div class="tour-thumb" style="aspect-ratio:16/9;">
-            <!-- Embed YouTube/Vimeo -->
-            <iframe width="100%" height="100%" src="https://www.youtube.com/embed/z2HtVnzD160?si=Jd4QzVc47nAoHqnZ" 
-              title="Voorbeeld FPV Video"
-              frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-              allowfullscreen></iframe>
+          <div class="tour-thumb" style="aspect-ratio:16/10;">
+            <img src="Assets/RealEstate/sample-1.jpg" alt="Voorbeeld 1" style="width:100%;height:100%;object-fit:cover;display:block;">
           </div>
           <div class="tour-body">
-            <h3 class="tour-title">FPV Drone Experience</h3>
-            <p class="tour-meta">FPV-dronebeelden</p>
+            <h3 class="tour-title">Interieur</h3>
+            <p class="tour-meta">Heldere ruimtes, correcte lijnen</p>
+          </div>
+        </article>
+
+        <article class="tour-card">
+          <div class="tour-thumb" style="aspect-ratio:16/10;">
+            <img src="Assets/RealEstate/sample-2.jpg" alt="Voorbeeld 2" style="width:100%;height:100%;object-fit:cover;display:block;">
+          </div>
+          <div class="tour-body">
+            <h3 class="tour-title">Exterieur</h3>
+            <p class="tour-meta">Sterke composities, natuurlijke kleuren</p>
+          </div>
+        </article>
+
+        <article class="tour-card">
+          <div class="tour-thumb" style="aspect-ratio:16/10;">
+            <img src="Assets/RealEstate/sample-3.jpg" alt="Voorbeeld 3" style="width:100%;height:100%;object-fit:cover;display:block;">
+          </div>
+          <div class="tour-body">
+            <h3 class="tour-title">Detail & sfeer</h3>
+            <p class="tour-meta">Perfect voor high-end en socials</p>
           </div>
         </article>
       </div>
     </section>
 
-    <!-- WERKWIJZE -->
+    <!-- WERKWIJZE (zelfde steps-section) -->
     <section class="steps-section">
       <div class="steps-header">
         <h2>Werkwijze</h2>
-        <p>Zo verloopt een FPV-project bij Snap360.</p>
+        <p>Zo verloopt een fotoshoot bij Snap360.</p>
       </div>
       <ol class="steps">
         <li>
-          <h3>1. Concept & script</h3>
-          <p>We bespreken het doel, locatie en gewenste shots.</p>
+          <h3>1. Afspraak & voorbereiding</h3>
+          <p>We bespreken het pand, de timing en wat belangrijk is voor je listing.</p>
         </li>
         <li>
-          <h3>2. Shootdag</h3>
-          <p>FPV-dronevluchten op locatie met alle veiligheidsmaatregelen.</p>
+          <h3>2. Fotoshoot op locatie</h3>
+          <p>Efficiënt shooten met focus op licht, ruimtegevoel en beste invalshoeken.</p>
         </li>
         <li>
-          <h3>3. Montage & oplevering</h3>
-          <p>Wij leveren een afgewerkte video op in hoge kwaliteit.</p>
+          <h3>3. Nabewerking & oplevering</h3>
+          <p>Professionele afwerking en levering via downloadlink binnen 24 uur (conform afspraak).</p>
         </li>
       </ol>
     </section>
 
-    <!-- PRIJZEN -->
-    <section class="pricing-section">
+    <!-- PRIJZEN (zelfde pricing-section) -->
+    <section class="pricing-section" id="prijzen">
       <div class="pricing-header">
-        <h2>Startprijzen FPV-video</h2>
-        <p>Indicatieve prijzen voor FPV-projecten. Voor grotere of complexe opdrachten maken we een voorstel op maat.</p>
+        <h2>Prijzen vastgoedfotografie</h2>
+        <p>Alle prijzen zijn € incl. btw. Oppervlakte is in m².</p>
       </div>
 
-      <div class="pricing-tiles">
-        <article class="pricing-tile">
-          <div class="pricing-tile-head">
-            <h3 class="pricing-tile-title">Short FPV Clip <span class="pricing-tile-sub">(tot 60 sec)</span></h3>
-          </div>
-          <div class="pricing-tile-body">
-            <p class="pricing-tile-price"><span>vanaf</span> <strong>€299 Incl. BTW</strong></p>
-            <ul class="pricing-tile-list">
-              <li>1 locatie</li>
-              <li>1 FPV-pilot + camera-operator</li>
-              <li>Afgewerkte korte video</li>
-            </ul>
-            <a class="pricing-tile-cta" href="contact.html">Offerte aanvragen</a>
-          </div>
-        </article>
-
+      <div class="pricing-tiles" style="grid-template-columns: 1fr;">
         <article class="pricing-tile pricing-tile--featured">
           <div class="pricing-badge">Populair</div>
           <div class="pricing-tile-head">
-            <h3 class="pricing-tile-title">Corporate FPV Video <span class="pricing-tile-sub">(1-3 min)</span></h3>
+            <h3 class="pricing-tile-title" id="rePriceTitle">Vastgoedfotografie (per m²-range)</h3>
           </div>
-          <div class="pricing-tile-body">
-            <p class="pricing-tile-price"><span>vanaf</span> <strong>€749 Incl. BTW</strong></p>
-            <ul class="pricing-tile-list">
-              <li>1-2 locaties</li>
-              <li>In overleg script + montage</li>
-              <li>Professionele nabewerking</li>
-            </ul>
-            <a class="pricing-tile-cta" href="contact.html">Offerte aanvragen</a>
-          </div>
-        </article>
 
-        <article class="pricing-tile">
-          <div class="pricing-tile-head">
-            <h3 class="pricing-tile-title">Event FPV Coverage <span class="pricing-tile-sub">(tot 1 dag)</span></h3>
-          </div>
           <div class="pricing-tile-body">
-            <p class="pricing-tile-price"><span>vanaf</span> <strong>€1199 Incl. BTW</strong></p>
-            <ul class="pricing-tile-list">
-              <li>Meerdere vluchten</li>
-              <li>Highlight aftermovie</li>
-              <li>Incl. montage & muziek</li>
-            </ul>
-            <a class="pricing-tile-cta" href="contact.html">Offerte aanvragen</a>
+            <div id="reTableRealEstate">
+              <table class="re-price-table" aria-label="Prijzen vastgoedfotografie">
+                <tbody>
+                  <tr><td>0 – 93 m² (15–20 foto’s)</td><td>€145</td></tr>
+                  <tr><td>93 – 186 m² (25–30 foto’s)</td><td>€195</td></tr>
+                  <tr><td>186 – 279 m² (35–40 foto’s)</td><td>€245</td></tr>
+                  <tr><td>279 – 371 m² (45–50 foto’s)</td><td>€295</td></tr>
+                  <tr><td>371 – 464 m² (55–60 foto’s)</td><td>€345</td></tr>
+                  <tr><td>+93 m² (+5 foto’s)</td><td>+€50</td></tr>
+
+                  <tr><td style="padding-top:12px;">Twilight-shoot (6 foto’s)</td><td style="padding-top:12px;">€195</td></tr>
+                  <tr><td>Extended twilight – blue hour (9 foto’s)</td><td>€295</td></tr>
+                  <tr><td>Extra fotopack (5 foto’s)</td><td>€50</td></tr>
+                  <tr><td>Virtuele staging &amp; renovatie (per beeld)</td><td>€50</td></tr>
+                  <tr><td>Virtuele twilight (per beeld)</td><td>€50</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div id="reTableVacation" style="display:none;">
+              <table class="re-price-table" aria-label="Prijzen vakantiewoningen">
+                <tbody>
+                  <tr><td>1 – 2 slaapkamers (15–20 foto’s)</td><td>€220</td></tr>
+                  <tr><td>3 – 4 slaapkamers (25–35 foto’s)</td><td>€270</td></tr>
+                  <tr><td>5 – 6 slaapkamers (35–45 foto’s)</td><td>€345</td></tr>
+                  <tr><td>7 – 8 slaapkamers (45–55 foto’s)</td><td>€420</td></tr>
+                  <tr><td>9 – 10 slaapkamers (55–60 foto’s)</td><td>€495</td></tr>
+                  <tr><td>11 – 12 slaapkamers (60–65 foto’s)</td><td>€570</td></tr>
+                  <tr><td>13 – 14 slaapkamers (65–70 foto’s)</td><td>€645</td></tr>
+                  <tr><td>15 – 16 slaapkamers (70–80 foto’s)</td><td>€720</td></tr>
+
+                  <tr><td style="padding-top:12px;">Twilight-shoot (6 foto’s)</td><td style="padding-top:12px;">€195</td></tr>
+                  <tr><td>Extended twilight – blue hour (9 foto’s)</td><td>€295</td></tr>
+                  <tr><td>Extra foto (per beeld)</td><td>€9</td></tr>
+                  <tr><td>Virtuele staging &amp; renovatie (per beeld)</td><td>€50</td></tr>
+                  <tr><td>Virtuele twilight (per beeld)</td><td>€50</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="re-toggle-row">
+              <button class="re-toggle-btn active" id="reBtnRE" type="button">Vastgoed</button>
+              <button class="re-toggle-btn" id="reBtnVR" type="button">Vakantiewoningen</button>
+              <a class="pricing-tile-cta" href="contact.html" style="margin-left:auto;">Offerte aanvragen</a>
+            </div>
           </div>
         </article>
       </div>
     </section>
 
-    <!-- CTA -->
+    <!-- ADD-ONS (laatste) -->
+    <section class="tours-section" id="addons">
+      <div class="tours-header">
+        <h2>Extra’s (add-ons)</h2>
+        <p>Maak je presentatie compleet met deze populaire extra’s.</p>
+      </div>
+
+      <div class="addons-grid">
+        <a class="addon-card" href="3d-scans.html">
+          <img src="Assets/RealEstate/addons-matterport.jpg" alt="Matterport 3D tours">
+          <div class="addon-body">
+            <h3>Matterport 3D Tours</h3>
+            <div class="addon-price">vanaf €250</div>
+          </div>
+        </a>
+
+        <a class="addon-card" href="contact.html">
+          <img src="Assets/RealEstate/addons-aerial.jpg" alt="Drone foto’s & video">
+          <div class="addon-body">
+            <h3>Drone foto’s &amp; video</h3>
+            <div class="addon-price">vanaf €195</div>
+          </div>
+        </a>
+
+        <a class="addon-card" href="contact.html">
+          <img src="Assets/RealEstate/addons-twilight.jpg" alt="Twilight extra’s">
+          <div class="addon-body">
+            <h3>Twilight extra’s</h3>
+            <div class="addon-price">vanaf €50</div>
+          </div>
+        </a>
+
+        <a class="addon-card" href="fpv.html">
+          <img src="Assets/RealEstate/addons-video.jpg" alt="Cinematische videotours">
+          <div class="addon-body">
+            <h3>Cinematische videotours</h3>
+            <div class="addon-price">vanaf €250</div>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <!-- CTA (zelfde cta-final) -->
     <section class="cta-final">
-      <h2>Klaar om jouw verhaal te vertellen met FPV?</h2>
-      <a href="contact.html" class="cta-button">Plan jouw FPV-video →</a>
+      <h2>Klaar om je pand sterker te presenteren?</h2>
+      <a href="contact.html" class="cta-button">Plan je fotoshoot →</a>
     </section>
   </main>
 
-  <!-- FOOTER -->
+  <!-- FOOTER (identiek aan fpv.html) -->
   <footer class="footer">
     <div class="footer-container">
       <div class="footer-section">
@@ -245,5 +410,36 @@
   </footer>
 
   <script src="script.js" defer></script>
+
+  <script>
+    (function(){
+      const btnRE = document.getElementById('reBtnRE');
+      const btnVR = document.getElementById('reBtnVR');
+      const tRE = document.getElementById('reTableRealEstate');
+      const tVR = document.getElementById('reTableVacation');
+      const title = document.getElementById('rePriceTitle');
+
+      function showRE(){
+        btnRE.classList.add('active');
+        btnVR.classList.remove('active');
+        tRE.style.display = '';
+        tVR.style.display = 'none';
+        title.textContent = 'Vastgoedfotografie (per m²-range)';
+      }
+
+      function showVR(){
+        btnVR.classList.add('active');
+        btnRE.classList.remove('active');
+        tVR.style.display = '';
+        tRE.style.display = 'none';
+        title.textContent = 'Vakantiewoningen (per aantal slaapkamers)';
+      }
+
+      btnRE.addEventListener('click', showRE);
+      btnVR.addEventListener('click', showVR);
+
+      showRE();
+    })();
+  </script>
 </body>
 </html>
