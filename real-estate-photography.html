@@ -13,7 +13,6 @@
     :root{
       --acc: #f05a28;
       --paper: #f6f1eb;
-      --paper2: #fbf7f2;
       --ink: #2b2b2b;
       --line: rgba(0,0,0,0.12);
       --card: #ffffff;
@@ -74,7 +73,7 @@
       margin-top: 22px;
     }
 
-    /* ====== ORDER: Eerst “alle dingen” (why + feature blocks) ====== */
+    /* ====== 1) ALLE DINGEN ====== */
     .boss-grid{
       display:grid;
       grid-template-columns: 1.2fr 0.8fr;
@@ -227,7 +226,57 @@
       min-width: 280px;
     }
 
-    /* ====== Daarna: PRIJZEN ====== */
+    /* ====== How to order ====== */
+    .how-title{
+      margin: 0 0 18px;
+      font-size: 44px;
+      line-height: 1.05;
+      color: #2f2f2f;
+    }
+
+    .steps-grid{
+      display:grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+      margin-top: 10px;
+    }
+
+    .step-card{
+      background: #fff;
+      border-radius: 22px;
+      padding: 22px;
+      border: 1px solid rgba(0,0,0,0.06);
+      box-shadow: 0 18px 55px rgba(0,0,0,0.08);
+      min-height: 170px;
+    }
+
+    .step-icon{
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: var(--acc);
+      color: #fff;
+      display:grid;
+      place-items:center;
+      font-size: 22px;
+      margin-bottom: 14px;
+    }
+
+    .step-label{
+      color: rgba(0,0,0,0.35);
+      font-weight: 900;
+      letter-spacing: 0.3px;
+      margin: 0 0 8px;
+    }
+
+    .step-text{
+      margin: 0;
+      color: #3b3b3b;
+      line-height: 1.55;
+      font-size: 14.5px;
+    }
+
+    /* ====== 2) PRIJZEN ====== */
     .pricing-grid{
       display:grid;
       grid-template-columns: 1.6fr 0.9fr;
@@ -248,7 +297,14 @@
       letter-spacing: 0.6px;
       text-transform: uppercase;
       font-size: 14px;
+      margin: 0 0 6px;
+    }
+
+    .vat-note{
+      font-size: 12.5px;
+      color: rgba(0,0,0,0.55);
       margin: 0 0 14px;
+      font-weight: 700;
     }
 
     table.pricing-table{
@@ -322,7 +378,7 @@
     details.acc summary::-webkit-details-marker{ display:none; }
     .acc-chevron{ color: rgba(0,0,0,0.45); font-size: 16px; }
 
-    /* ====== Als laatste: ADD-ONS ====== */
+    /* ====== 3) ADD-ONS (LAST) ====== */
     .addons-title{
       margin: 0;
       font-size: 46px;
@@ -386,56 +442,6 @@
       letter-spacing: 0.2px;
     }
 
-    /* ====== 24h steps (part of “dingen”) ====== */
-    .how-title{
-      margin: 0 0 18px;
-      font-size: 44px;
-      line-height: 1.05;
-      color: #2f2f2f;
-    }
-
-    .steps-grid{
-      display:grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 18px;
-      margin-top: 10px;
-    }
-
-    .step-card{
-      background: #fff;
-      border-radius: 22px;
-      padding: 22px;
-      border: 1px solid rgba(0,0,0,0.06);
-      box-shadow: 0 18px 55px rgba(0,0,0,0.08);
-      min-height: 170px;
-    }
-
-    .step-icon{
-      width: 56px;
-      height: 56px;
-      border-radius: 50%;
-      background: var(--acc);
-      color: #fff;
-      display:grid;
-      place-items:center;
-      font-size: 22px;
-      margin-bottom: 14px;
-    }
-
-    .step-label{
-      color: rgba(0,0,0,0.35);
-      font-weight: 900;
-      letter-spacing: 0.3px;
-      margin: 0 0 8px;
-    }
-
-    .step-text{
-      margin: 0;
-      color: #3b3b3b;
-      line-height: 1.55;
-      font-size: 14.5px;
-    }
-
     /* Responsive */
     @media (max-width: 1100px){
       .benefit-cards{ grid-template-columns: repeat(2, 1fr); }
@@ -492,7 +498,6 @@
   </header>
 
   <main class="re-page-wrap">
-
     <!-- HERO -->
     <section class="hero-section">
       <video
@@ -505,7 +510,7 @@
         preload="auto"
         poster="Assets/Movies/placeholder.jpg"
       >
-        <source src="Assets/Movies/267A6457-812F-42EC-8ACA-43AB001D1C7F.mp4?v=6" type="video/mp4" />
+        <source src="Assets/Movies/267A6457-812F-42EC-8ACA-43AB001D1C7F.mp4?v=7" type="video/mp4" />
         Je browser ondersteunt deze video niet.
       </video>
     </section>
@@ -514,18 +519,16 @@
       <h1 class="re-title">Real Estate Photography</h1>
       <p class="re-sub">
         Premium vastgoedfoto’s die zorgen voor meer clicks, meer bezichtigingen en een sterkere first impression.
-        Snelle levering, consistente nabewerking en duidelijke afspraken.
+        <strong>België:</strong> alle prijzen hieronder zijn <strong>€ incl. btw</strong>.
       </p>
 
       <div class="re-cta-row">
-        <a href="#dingen" class="cta-button">Bekijk info →</a>
+        <a href="#dingen" class="cta-button">Info →</a>
         <a href="#prijzen" class="secondary-button"><i class="fas fa-euro-sign"></i> Prijzen</a>
         <a href="#addons" class="secondary-button"><i class="fas fa-plus-circle"></i> Add-ons</a>
       </div>
 
-      <!-- ========================================================= -->
-      <!-- 1) ALLE DINGEN (value + feature blocks + how to order)    -->
-      <!-- ========================================================= -->
+      <!-- 1) ALLE DINGEN -->
       <section class="light-block" id="dingen">
         <div class="boss-grid">
           <div>
@@ -537,8 +540,7 @@
           </div>
           <div class="body">
             Wij zijn meer dan “gewoon fotografen” — we zetten je pand neer als een sterk product.
-            Met beelden die vertrouwen opwekken, de ruimte correct tonen en je listing laten opvallen
-            tussen honderden advertenties.
+            Met beelden die vertrouwen opwekken, de ruimte correct tonen en je listing laten opvallen.
           </div>
         </div>
 
@@ -575,7 +577,6 @@
             <h4>24-hour delivery or it’s FREE!</h4>
             <p>
               Tijd is cruciaal in vastgoed. We leveren snel en houden van duidelijke afspraken.
-              (Deze belofte kan je later finetunen volgens je planning.)
             </p>
           </div>
         </div>
@@ -594,8 +595,7 @@
             </h2>
             <p class="feature-text">
               Omgeving-foto’s (park, zwembad, clubhouse, uitzicht, shopping, …) helpen kopers zich
-              het leven ter plaatse voor te stellen. Ideaal voor projecten, short-stay en panden waar
-              “location” het verschil maakt.
+              het leven ter plaatse voor te stellen.
             </p>
             <a class="feature-btn" href="contact.html">ORDER COMMUNITY PHOTOS</a>
           </div>
@@ -610,9 +610,7 @@
               Lifestyle-fotografie: een kleine <span class="underline-accent">revolution</span> voor je listing
             </h2>
             <p class="feature-text">
-              Naast de klassieke “ruimte-shots” kan lifestyle content je advertentie menselijker en warmer maken.
-              Denk aan detailbeelden, sfeer, materialen en momenten die een woning “thuis” laten aanvoelen.
-              Perfect voor het hogere segment en voor branding op social media.
+              Detailbeelden en sfeer maken je advertentie warmer en menselijker. Perfect voor high-end en socials.
             </p>
             <a class="feature-btn" href="contact.html">ORDER LIFESTYLE PHOTOS</a>
           </div>
@@ -638,8 +636,7 @@
               Val op en <span class="underline-accent">boost clicks</span> met sterke vastgoedfoto’s
             </h2>
             <p class="feature-text">
-              De eerste seconden bepalen alles. Premium beelden trekken de aandacht, verhogen de geloofwaardigheid
-              en zorgen voor meer interesse. Wij leveren een consistente stijl die je merk als makelaar versterkt.
+              De eerste seconden bepalen alles. Premium beelden trekken de aandacht en verhogen de geloofwaardigheid.
             </p>
             <a class="feature-btn" href="contact.html">ORDER PHOTOGRAPHY</a>
           </div>
@@ -654,60 +651,51 @@
           <div class="step-card">
             <div class="step-icon"><i class="far fa-id-card"></i></div>
             <p class="step-label">STEP 1</p>
-            <p class="step-text">
-              Vraag je shoot aan (adres + type pand + timing). Voeg optionele extra’s toe indien nodig.
-            </p>
+            <p class="step-text">Vraag je shoot aan (adres + type pand + timing).</p>
           </div>
 
           <div class="step-card">
             <div class="step-icon"><i class="far fa-calendar-check"></i></div>
             <p class="step-label">STEP 2</p>
-            <p class="step-text">
-              We bevestigen je afspraak en stemmen alles af zodat de shoot vlot en efficiënt verloopt.
-            </p>
+            <p class="step-text">We bevestigen je afspraak en stemmen alles af.</p>
           </div>
 
           <div class="step-card">
             <div class="step-icon"><i class="fas fa-camera"></i></div>
             <p class="step-label">STEP 3</p>
-            <p class="step-text">
-              Wij komen shooten. Jij focust op je verkoop/verhuur. We zorgen voor de perfecte angles en licht.
-            </p>
+            <p class="step-text">Wij shooten efficiënt met focus op licht en beste angles.</p>
           </div>
 
           <div class="step-card">
             <div class="step-icon"><i class="far fa-envelope"></i></div>
             <p class="step-label">STEP 4</p>
-            <p class="step-text">
-              Je ontvangt je afgewerkte beelden snel via downloadlink — listing-ready en klaar voor socials.
-            </p>
+            <p class="step-text">Levering via downloadlink — listing-ready en klaar voor socials.</p>
           </div>
         </div>
       </section>
 
-      <!-- ========================================================= -->
-      <!-- 2) PRIJZEN                                                -->
-      <!-- ========================================================= -->
+      <!-- 2) PRIJZEN (integral overnemen, maar € incl. btw) -->
       <section class="light-block" id="prijzen">
         <div class="pricing-grid">
           <div class="price-table-card">
             <div class="price-table-title" id="pricingTitle">Real Estate Photography Pricing</div>
+            <p class="vat-note">Alle prijzen zijn in € en <strong>incl. btw</strong>.</p>
 
             <div id="table-realestate">
               <table class="pricing-table" aria-label="Real Estate Photography Pricing">
                 <tbody>
-                  <tr><td>0 – 999 sq ft (15–20 foto’s)</td><td>€121</td></tr>
-                  <tr><td>1,000 – 1,999 sq ft (25–30 foto’s)</td><td>€163</td></tr>
-                  <tr><td>2,000 – 2,999 sq ft (35–40 foto’s)</td><td>€205</td></tr>
-                  <tr><td>3,000 – 3,999 sq ft (45–50 foto’s)</td><td>€246</td></tr>
-                  <tr><td>4,000 – 4,999 sq ft (55–60 foto’s)</td><td>€288</td></tr>
-                  <tr><td>+1,000 sq ft (+5 foto’s)</td><td>+€42</td></tr>
+                  <tr><td>0 – 999 sq ft (15–20 foto’s)</td><td>€145</td></tr>
+                  <tr><td>1,000 – 1,999 sq ft (25–30 foto’s)</td><td>€195</td></tr>
+                  <tr><td>2,000 – 2,999 sq ft (35–40 foto’s)</td><td>€245</td></tr>
+                  <tr><td>3,000 – 3,999 sq ft (45–50 foto’s)</td><td>€295</td></tr>
+                  <tr><td>4,000 – 4,999 sq ft (55–60 foto’s)</td><td>€345</td></tr>
+                  <tr><td>+1,000 sq ft (+5 foto’s)</td><td>+€50</td></tr>
 
-                  <tr><td style="padding-top:16px;">Twilight shoot (6 foto’s)</td><td style="padding-top:16px;">€163</td></tr>
-                  <tr><td>Extended twilight – blue hour (9 foto’s)</td><td>€246</td></tr>
-                  <tr><td>Additional photo pack (5 foto’s)</td><td>€42</td></tr>
-                  <tr><td>Virtual staging &amp; renovations (per image)</td><td>€42</td></tr>
-                  <tr><td>Virtual twilight (per image)</td><td>€42</td></tr>
+                  <tr><td style="padding-top:16px;">Twilight shoot (6 foto’s)</td><td style="padding-top:16px;">€195</td></tr>
+                  <tr><td>Extended twilight – blue light (9 foto’s)</td><td>€295</td></tr>
+                  <tr><td>Additional photo pack (5 foto’s)</td><td>€50</td></tr>
+                  <tr><td>Virtual staging &amp; renovations (per image)</td><td>€50</td></tr>
+                  <tr><td>Virtual twilight (per image)</td><td>€50</td></tr>
                 </tbody>
               </table>
             </div>
@@ -715,20 +703,20 @@
             <div id="table-vacation" style="display:none;">
               <table class="pricing-table" aria-label="Vacation Rental Photography Pricing">
                 <tbody>
-                  <tr><td>1 – 2 bedrooms (15–20 foto’s)</td><td>€183</td></tr>
-                  <tr><td>3 – 4 bedrooms (25–35 foto’s)</td><td>€225</td></tr>
-                  <tr><td>5 – 6 bedrooms (35–45 foto’s)</td><td>€288</td></tr>
-                  <tr><td>7 – 8 bedrooms (45–55 foto’s)</td><td>€350</td></tr>
-                  <tr><td>9 – 10 bedrooms (55–60 foto’s)</td><td>€413</td></tr>
-                  <tr><td>11 – 12 bedrooms (60–65 foto’s)</td><td>€475</td></tr>
-                  <tr><td>13 – 14 bedrooms (65–70 foto’s)</td><td>€538</td></tr>
-                  <tr><td>15 – 16 bedrooms (70–80 foto’s)</td><td>€600</td></tr>
+                  <tr><td>1 – 2 bedrooms (15–20 foto’s)</td><td>€220</td></tr>
+                  <tr><td>3 – 4 bedrooms (25–35 foto’s)</td><td>€270</td></tr>
+                  <tr><td>5 – 6 bedrooms (35–45 foto’s)</td><td>€345</td></tr>
+                  <tr><td>7 – 8 bedrooms (45–55 foto’s)</td><td>€420</td></tr>
+                  <tr><td>9 – 10 bedrooms (55–60 foto’s)</td><td>€495</td></tr>
+                  <tr><td>11 – 12 bedrooms (60–65 foto’s)</td><td>€570</td></tr>
+                  <tr><td>13 – 14 bedrooms (65–70 foto’s)</td><td>€645</td></tr>
+                  <tr><td>15 – 16 bedrooms (70–80 foto’s)</td><td>€720</td></tr>
 
-                  <tr><td style="padding-top:16px;">Twilight shoot (6 foto’s)</td><td style="padding-top:16px;">€163</td></tr>
-                  <tr><td>Extended twilight – blue hour (9 foto’s)</td><td>€246</td></tr>
-                  <tr><td>Additional photo (per image)</td><td>€8</td></tr>
-                  <tr><td>Virtual staging &amp; renovations (per image)</td><td>€42</td></tr>
-                  <tr><td>Virtual twilight (per image)</td><td>€42</td></tr>
+                  <tr><td style="padding-top:16px;">Twilight shoot (6 foto’s)</td><td style="padding-top:16px;">€195</td></tr>
+                  <tr><td>Extended twilight – blue light (9 foto’s)</td><td>€295</td></tr>
+                  <tr><td>Additional photo (per image)</td><td>€9</td></tr>
+                  <tr><td>Virtual staging &amp; renovations (per image)</td><td>€50</td></tr>
+                  <tr><td>Virtual twilight (per image)</td><td>€50</td></tr>
                 </tbody>
               </table>
             </div>
@@ -764,20 +752,17 @@
         </div>
       </section>
 
-      <!-- ========================================================= -->
-      <!-- 3) ALS LAATSTE: ADD-ONS                                   -->
-      <!-- ========================================================= -->
+      <!-- 3) ADD-ONS (laatste) -->
       <section class="light-block" id="addons">
         <p class="kicker">OUR SERVICES</p>
         <h2 class="addons-title">Favorite <span class="underline-accent">add-ons</span></h2>
 
         <div class="addon-cards">
-          <!-- Alleen structuur, prijzen komen later -->
           <a class="addon-card" href="3d-scans.html">
             <img src="Assets/RealEstate/addons-matterport.jpg" alt="Matterport 3D Virtual Tours">
             <div class="addon-text">
               <h4>Matterport 3D<br/>Virtual Tours</h4>
-              <div class="starting">starting at …</div>
+              <div class="starting">€250 starting</div>
             </div>
           </a>
 
@@ -785,7 +770,7 @@
             <img src="Assets/RealEstate/addons-aerial.jpg" alt="Aerial Photos & Video">
             <div class="addon-text">
               <h4>Aerial Photos<br/>&amp; Video</h4>
-              <div class="starting">starting at …</div>
+              <div class="starting">€195 starting</div>
             </div>
           </a>
 
@@ -793,7 +778,7 @@
             <img src="Assets/RealEstate/addons-twilight.jpg" alt="Virtual Twilight & Twilight">
             <div class="addon-text">
               <h4>Virtual Twilight<br/>&amp; Twilight</h4>
-              <div class="starting">starting at …</div>
+              <div class="starting">€50 starting</div>
             </div>
           </a>
 
@@ -801,7 +786,7 @@
             <img src="Assets/RealEstate/addons-video.jpg" alt="Cinematic Video Tours">
             <div class="addon-text">
               <h4>Cinematic<br/>Video Tours</h4>
-              <div class="starting">starting at …</div>
+              <div class="starting">€250 starting</div>
             </div>
           </a>
         </div>
