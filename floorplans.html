@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Vloerplannen (Floorplans) | Snap360</title>
+
   <link rel="stylesheet" href="CSS/style.css" />
   <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.8/css/line.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"/>
@@ -16,7 +17,7 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      height: 200%;   /* dubbel */
+      height: 200%;
       width: auto;
       object-fit: contain;
       opacity: 0.95;
@@ -34,48 +35,64 @@
       z-index: 3;
       pointer-events: none;
     }
-    .pricing-tile--featured { padding-top: 56px !important; } /* ruimte boven titel */
+    .pricing-tile--featured { padding-top: 56px !important; }
     @media (max-width: 480px) {
       .pricing-tile--featured { padding-top: 48px !important; }
       .pricing-badge { top: 10px; right: 10px; }
     }
   </style>
 </head>
+
 <body>
-  <!-- NAV -->
-  <nav class="nav">
-    <i class="uil uil-bars navOpenBtn"></i>
-    <a href="3D.html" class="logo">
-      <img src="Assets/logo.png" alt="Snap360 logo" class="logo-image">
-    </a>
-    <ul class="nav-links">
-      <i class="uil uil-times navCloseBtn"></i>
-      <li><a href="3D.html">Home</a></li>
+  <!-- NAV (zelfde als index) -->
+  <header>
+    <nav class="nav">
+      <button class="navOpenBtn" aria-label="Menu openen" type="button">
+        <i class="uil uil-bars" aria-hidden="true"></i>
+      </button>
 
-      <li class="has-submenu">
-        <a href="360.html">Services</a>
-        <ul class="submenu">
-          <li><a href="3d-scans.html">3D Matterport</a></li>
-          <li><a href="floorplans.html">Vloerplannen</a></li>
-          <li><a href="under-construction.html">Photography</a></li>
-          <li><a href="under-construction.html">Drone foto's &amp; Video's</a></li>
-          <li><a href="under-construction.html">Video Tours</a></li>
-          <li><a href="fpv.html">FPV Aerial Videos</a></li>
-        </ul>
-      </li>
+      <a href="3D.html" class="logo">
+        <img src="Assets/logo.png" alt="Snap360 logo" class="logo-image" />
+      </a>
 
-      <li><a href="fotvi.html">Referenties</a></li>
-      <li><a href="contact.html">Contact</a></li>
-    </ul>
-  </nav>
+      <ul class="nav-links">
+        <button class="navCloseBtn" aria-label="Menu sluiten" type="button">
+          <i class="uil uil-times" aria-hidden="true"></i>
+        </button>
+
+        <li><a href="3D.html">Home</a></li>
+
+        <li class="has-submenu">
+          <a href="360.html">Services</a>
+          <ul class="submenu">
+            <li><a href="real-estate-photography.html">Real Estate Photography</a></li>
+            <li><a href="fpv.html">FPV Real Estate Movies</a></li>
+            <li><a href="3d-scans.html">Matterport 3D Scans</a></li>
+            <li><a href="floorplans.html">Vloerplannen</a></li>
+            <li><a href="3D.html#sportportretten">Sportportretten</a></li>
+            <li>
+              <a href="/brochure/Sportfotografie_SNAP360_V2.0_compressed.pdf" target="_blank" rel="noopener">
+                Brochure Sportfotografie (PDF)
+              </a>
+            </li>
+          </ul>
+        </li>
+
+        <li><a href="fotvi.html">Referenties</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
 
   <main>
     <!-- HERO met GIF -->
     <section class="hero-section" aria-label="Vloerplannen">
       <div class="hero-content">
         <h1>Vloerplannen (Floorplans)</h1>
-        <p>Heldere 2D- en 3D-vloerplannen op basis van je Matterport Pro3 3D-scan. 
-           <strong>Beschikbaar als extra service na aankoop van een 3D-scan.</strong></p>
+        <p>
+          Heldere 2D- en 3D-vloerplannen op basis van je Matterport Pro3 3D-scan.
+          <strong>Beschikbaar als extra service na aankoop van een 3D-scan.</strong>
+        </p>
       </div>
       <div class="hero-background" style="background:#000;"></div>
       <img
@@ -89,9 +106,11 @@
     <section class="pro3-section">
       <div class="pro3-header">
         <h2>Waarom vloerplannen via Snap360?</h2>
-        <p>Professionele plannen die je ruimte duidelijk presenteren. 
-           <strong>Ze kunnen enkel besteld worden in combinatie met een Matterport Pro3 3D-scan</strong>, 
-           zodat maatvoering en nauwkeurigheid gegarandeerd zijn.</p>
+        <p>
+          Professionele plannen die je ruimte duidelijk presenteren.
+          <strong>Ze kunnen enkel besteld worden in combinatie met een Matterport Pro3 3D-scan</strong>,
+          zodat maatvoering en nauwkeurigheid gegarandeerd zijn.
+        </p>
       </div>
 
       <div class="pro3-features">
@@ -112,7 +131,7 @@
         </div>
         <div class="pro3-feature">
           <i class="fas fa-home"></i>
-          <h3>Voor woning & bedrijf</h3>
+          <h3>Voor woning &amp; bedrijf</h3>
           <p>Van residentieel tot industrieel vastgoed.</p>
         </div>
       </div>
@@ -155,7 +174,7 @@
       </div>
       <ol class="steps">
         <li>
-          <h3>1. Scan & input</h3>
+          <h3>1. Scan &amp; input</h3>
           <p>We gebruiken je Matterport Pro3 3D-scan (of plannen een scan in).</p>
         </li>
         <li>
@@ -173,9 +192,11 @@
     <section class="pricing-section">
       <div class="pricing-header">
         <h2>Startprijzen vloerplannen</h2>
-        <p>Indicatieve prijzen voor vloerplannen. 
-           <strong>Alleen beschikbaar als uitbreiding op een Pro3-scan</strong>. 
-           Combineerbaar met je virtuele tour.</p>
+        <p>
+          Indicatieve prijzen voor vloerplannen.
+          <strong>Alleen beschikbaar als uitbreiding op een Pro3-scan</strong>.
+          Combineerbaar met je virtuele tour.
+        </p>
       </div>
 
       <div class="pricing-tiles">
@@ -188,10 +209,10 @@
             </h3>
           </div>
           <div class="pricing-tile-body">
-            <p class="pricing-tile-price"><span>vanaf</span> <strong>€&nbsp;141,57 Incl. BTW</strong></p>
+            <p class="pricing-tile-price"><span>vanaf</span> <strong>€&nbsp;141,57 incl. btw</strong></p>
             <ul class="pricing-tile-list">
               <li>PNG/PDF export</li>
-              <li>Basismaten & oppervlaktes</li>
+              <li>Basismaten &amp; oppervlaktes</li>
               <li>Kleur of zwart-wit</li>
             </ul>
             <a class="pricing-tile-cta" href="contact.html">Offerte aanvragen</a>
@@ -208,10 +229,10 @@
             </h3>
           </div>
           <div class="pricing-tile-body">
-            <p class="pricing-tile-price"><span>vanaf</span> <strong>€&nbsp;419,87 Incl. BTW</strong></p>
+            <p class="pricing-tile-price"><span>vanaf</span> <strong>€&nbsp;419,87 incl. btw</strong></p>
             <ul class="pricing-tile-list">
               <li>PNG/PDF export</li>
-              <li>Maatvoering & lagen</li>
+              <li>Maatvoering &amp; lagen</li>
               <li>Kleur of zwart-wit</li>
             </ul>
             <a class="pricing-tile-cta" href="contact.html">Offerte aanvragen</a>
@@ -227,7 +248,7 @@
             </h3>
           </div>
           <div class="pricing-tile-body">
-            <p class="pricing-tile-price"><span>vanaf</span> <strong>€&nbsp;275,15 Incl. BTW</strong></p>
+            <p class="pricing-tile-price"><span>vanaf</span> <strong>€&nbsp;275,15 incl. btw</strong></p>
             <ul class="pricing-tile-list">
               <li>2D + optioneel 3D weergave</li>
               <li>PNG/PDF, optioneel DXF/CAD</li>
@@ -286,6 +307,6 @@
     </div>
   </footer>
 
-  <script src="script.js" defer></script>
+  <script src="script.js"></script>
 </body>
 </html>
