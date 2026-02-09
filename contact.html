@@ -9,21 +9,56 @@
   <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.8/css/line.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
 
-  <!-- Enkel page-level fixes, zonder style.css te wijzigen -->
+  <!-- Page-only fix: centreren zonder je globale CSS aan te passen -->
   <style>
-    /* Zorg dat deze pagina exact dezelfde “container” logica volgt als je index-contact sectie */
-    .contact-section { padding-top: 60px; padding-bottom: 60px; }
-    /* Geen layout override (geen grid/flex hier), we laten je bestaande CSS het werk doen */
-    .contact-form .modern-form { margin-top: 10px; }
+    /* Zorg dat de contactlayout op deze pagina gecentreerd is */
+    .contact-main-section{
+      padding: 70px 16px;
+    }
 
-    /* Klein: als je CSS de contact-container als grid zet met 3 kolommen (form+map+info),
-       dan houdt dit het netjes door de map te verbergen zonder lege kolom te forceren. */
-    .contact-map.is-hidden { display: none !important; }
+    /* Container centreren + nette 2-koloms layout (form links, info rechts) */
+    .contact-main-section{
+      display: flex;
+      justify-content: center;
+    }
+
+    .contact-main-section > .contact-wrap{
+      width: 100%;
+      max-width: 1100px;
+      display: grid;
+      grid-template-columns: minmax(340px, 560px) minmax(260px, 360px);
+      gap: 28px;
+      justify-content: center;
+      align-items: start;
+    }
+
+    /* Form netjes in het midden van z’n kolom */
+    .contact-form-wrapper{
+      width: 100%;
+      justify-self: center;
+    }
+
+    /* Info kolom */
+    .contact-container{
+      width: 100%;
+      justify-self: center;
+    }
+
+    /* Mobiel: alles onder elkaar en gecentreerd */
+    @media (max-width: 900px){
+      .contact-main-section > .contact-wrap{
+        grid-template-columns: 1fr;
+      }
+      .contact-form-wrapper,
+      .contact-container{
+        max-width: 560px;
+        margin: 0 auto;
+      }
+    }
   </style>
 </head>
 
 <body>
-  <!-- NAV (zelfde als index) -->
   <header>
     <nav class="nav">
       <button class="navOpenBtn" aria-label="Menu openen" type="button">
@@ -63,86 +98,88 @@
     </nav>
   </header>
 
-  <main>
-    <!-- Gebruik exact dezelfde layout-structuur als je index "contact-section" -->
-    <section class="contact-section" aria-label="Contact">
-      <div class="contact-container">
-        <!-- FORM (zelfde classnaam als index: contact-form) -->
-        <div class="contact-form">
-          <h2>Neem contact op</h2>
-          <p>We antwoorden meestal binnen 24 uur.</p>
+  <!-- CONTENT -->
+  <section class="contact-main-section">
+    <!-- extra wrapper zodat we 1 plek hebben om te centreren -->
+    <div class="contact-wrap">
 
-          <form class="modern-form"
-                action="https://formspree.io/f/xanoyljw"
-                method="POST"
-                onsubmit="return validateForm()">
+      <!-- FORM -->
+      <div class="contact-form-wrapper">
+        <h2>Stuur ons een bericht</h2>
+        <p style="margin-top:8px; opacity:.8;">We antwoorden meestal binnen 24 uur.</p>
 
-            <input type="hidden" name="_subject" value="Nieuw contactformulier - Snap360" />
-            <input type="hidden" name="_language" value="nl" />
-            <input type="text" name="_gotcha" style="display:none" />
+        <form class="modern-form"
+              action="https://formspree.io/f/xanoyljw"
+              method="POST"
+              onsubmit="return validateForm()"
+              style="margin-top:18px;">
 
-            <div class="form-group">
-              <input type="text" id="name" name="name" required />
-              <label for="name">Volledige naam</label>
-              <span class="underline"></span>
-            </div>
+          <!-- Formspree config -->
+          <input type="hidden" name="_subject" value="Nieuw contactformulier - Snap360" />
+          <input type="hidden" name="_language" value="nl" />
+          <input type="text" name="_gotcha" style="display:none" />
 
-            <div class="form-group">
-              <input type="email" id="email" name="email" required />
-              <label for="email">E-mailadres</label>
-              <span class="underline"></span>
-            </div>
+          <div class="form-group">
+            <input type="text" id="name" name="name" required />
+            <label for="name">Volledige naam</label>
+            <span class="underline"></span>
+          </div>
 
-            <div class="form-group">
-              <input type="tel" id="phone" name="phone" />
-              <label for="phone">Telefoonnummer (optioneel)</label>
-              <span class="underline"></span>
-            </div>
+          <div class="form-group">
+            <input type="email" id="email" name="email" required />
+            <label for="email">E-mailadres</label>
+            <span class="underline"></span>
+          </div>
 
-            <div class="form-group">
-              <textarea id="message" name="message" rows="5" required></textarea>
-              <label for="message">Jouw bericht</label>
-              <span class="underline"></span>
-            </div>
+          <div class="form-group">
+            <input type="tel" id="phone" name="phone" />
+            <label for="phone">Telefoonnummer (optioneel)</label>
+            <span class="underline"></span>
+          </div>
 
-            <button type="submit" class="submit-btn">
-              Verstuur bericht <i class="fas fa-paper-plane"></i>
-            </button>
-          </form>
+          <div class="form-group">
+            <textarea id="message" name="message" rows="5" required></textarea>
+            <label for="message">Jouw bericht</label>
+            <span class="underline"></span>
+          </div>
+
+          <button type="submit" class="submit-btn">
+            <i class="uil uil-message"></i> Verstuur bericht
+          </button>
 
           <p class="form-disclaimer" style="margin-top:14px; font-size:0.9em; color:#666;">
             Dit formulier wordt beveiligd door
             <a href="https://formspree.io" target="_blank" rel="noopener" style="color:#666;">Formspree</a>.
           </p>
-        </div>
+        </form>
+      </div>
 
-        <!-- MAP: houden we in de DOM voor compat met je bestaande grid CSS, maar verbergen -->
-        <div class="contact-map is-hidden" id="map" aria-hidden="true"></div>
-
-        <!-- INFO (zelfde classnaam als index: contact-info + info-card) -->
-        <div class="contact-info">
-          <div class="info-card">
-            <i class="fas fa-map-marker-alt"></i>
-            <h3>Adres</h3>
-            <p>Vijfstraten 163<br />9100 Sint-Niklaas</p>
-          </div>
-
-          <div class="info-card">
+      <!-- INFO -->
+      <div class="contact-container">
+        <div class="contact-info-cards">
+          <div class="contact-info-card">
             <i class="fas fa-phone"></i>
             <h3>Telefoon</h3>
             <p>+32 476 61 10 99</p>
             <p>Bereikbaar: Ma–Vrij 9u–17u</p>
           </div>
 
-          <div class="info-card">
+          <div class="contact-info-card">
             <i class="fas fa-envelope"></i>
             <h3>E-mail</h3>
             <p>tom@snapwithus360.com</p>
           </div>
+
+          <div class="contact-info-card">
+            <i class="fas fa-map-marker-alt"></i>
+            <h3>Adres</h3>
+            <p>Vijfstraten 163<br />9100 Sint-Niklaas</p>
+          </div>
         </div>
       </div>
-    </section>
-  </main>
+
+    </div>
+  </section>
 
   <!-- Footer -->
   <footer class="footer">
@@ -173,15 +210,23 @@
       <div class="footer-section">
         <h4 class="footer-heading">Contact</h4>
         <div class="contact-info">
-          <p class="footer-text"><i class="fas fa-map-marker-alt"></i> Vijfstraten 163, 9100 Sint-Niklaas</p>
-          <p class="footer-text"><i class="fas fa-phone"></i> +32 476 61 10 99</p>
-          <p class="footer-text"><i class="fas fa-envelope"></i> tom@snapwithus360.com</p>
+          <p class="footer-text">
+            <i class="fas fa-map-marker-alt"></i> Vijfstraten 163, 9100 Sint-Niklaas
+          </p>
+          <p class="footer-text">
+            <i class="fas fa-phone"></i> +32 476 61 10 99
+          </p>
+          <p class="footer-text">
+            <i class="fas fa-envelope"></i> tom@snapwithus360.com
+          </p>
         </div>
       </div>
     </div>
 
     <div class="footer-bottom">
-      <p>&copy; 2025 SNAPWITHUS360.com - DE BACKER LLC. Alle rechten voorbehouden.</p>
+      <p>
+        &copy; 2025 SNAPWITHUS360.com - DE BACKER LLC. Alle rechten voorbehouden.
+      </p>
       <div class="legal-links">
         <a href="#">Privacybeleid</a>
         <a href="#">Algemene voorwaarden</a>
@@ -189,9 +234,10 @@
     </div>
   </footer>
 
+  <!-- Validatie -->
   <script>
     function validateForm() {
-      const email = (document.getElementById("email").value || "").trim();
+      const email = document.getElementById("email").value || "";
       if (!email.includes("@")) {
         alert("Gelieve een geldig e-mailadres in te vullen");
         return false;
@@ -200,7 +246,7 @@
     }
   </script>
 
-  <!-- Belangrijk: enkel je centrale script gebruiken (geen extra burger-menu code) -->
-  <script src="script.js" defer></script>
+  <!-- Centrale nav/submenu script -->
+  <script src="script.js"></script>
 </body>
 </html>
