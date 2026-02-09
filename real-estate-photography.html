@@ -1,170 +1,423 @@
 <!DOCTYPE html>
 <html lang="nl-be">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Real Estate Photography | Snap360</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Vastgoedfotografie | Snap360</title>
 
-  <link rel="stylesheet" href="CSS/style.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <link rel="stylesheet" href="CSS/style.css" />
+  <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.8/css/line.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"/>
+
+  <style>
+    /* Hero image zoals fpv (zelfde techniek als hero-fpv) */
+    .hero-re {
+      position: absolute;
+      z-index: 1;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      height: 175%;
+      width: auto;
+      object-fit: cover;
+      opacity: 0.92;
+      pointer-events: none;
+    }
+    @media (max-width: 768px) { .hero-re { height: 130%; } }
+    @media (max-width: 480px) { .hero-re { height: 110%; } }
+
+    /* Prijzen tabel in fpv-stijl (tiles bestaan al, tabel is extra) */
+    .re-price-table{
+      width:100%;
+      border-collapse: collapse;
+    }
+    .re-price-table tr{
+      border-bottom: 1px solid rgba(0,0,0,0.12);
+    }
+    .re-price-table tr:last-child{ border-bottom:none; }
+    .re-price-table td{
+      padding: 10px 0;
+      vertical-align: top;
+    }
+    .re-price-table td:last-child{
+      text-align:right;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    /* Kleine toggles, consistent met pricing-cta look */
+    .re-toggle-row{
+      display:flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+      align-items:center;
+    }
+    .re-toggle-btn{
+      padding: 10px 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(0,0,0,0.15);
+      background: #fff;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    .re-toggle-btn.active{
+      border-color: rgba(0,0,0,0.30);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.10);
+    }
+  </style>
 </head>
 
 <body>
+  <!-- NAV (identiek aan fpv.html) -->
+  <nav class="nav">
+    <i class="uil uil-bars navOpenBtn"></i>
+    <a href="3D.html" class="logo">
+      <img src="Assets/logo.png" alt="Snap360 logo" class="logo-image">
+    </a>
+    <ul class="nav-links">
+      <i class="uil uil-times navCloseBtn"></i>
+      <li><a href="3D.html">Home</a></li>
 
-<!-- NAV -->
-<nav class="nav">
-  <i class="uil uil-bars navOpenBtn"></i>
-  <a href="3D.html" class="logo">
-    <img src="Assets/logo.png" alt="Snap360 logo" class="logo-image">
-  </a>
-
-  <ul class="nav-links">
-    <i class="uil uil-times navCloseBtn"></i>
-    <li><a href="3D.html">Home</a></li>
-    <li><a href="360.html">Services</a></li>
-    <li><a href="fotvi.html">Referenties</a></li>
-    <li><a href="contact.html">Contact</a></li>
-  </ul>
-</nav>
-
-<main>
-
-<!-- HERO -->
-<section class="hero-section">
-  <div class="hero-content">
-    <h1>Real Estate Photography</h1>
-    <p>Professionele vastgoedfotografie die sneller verkoopt en meer vertrouwen creëert.</p>
-  </div>
-  <div class="hero-background"></div>
-</section>
-
-<!-- INTRO -->
-<section class="pro3-section">
-  <div class="pro3-header">
-    <h2>Waarom professionele vastgoedfotografie?</h2>
-    <p>Hoogwaardige beelden zorgen voor meer klikken, meer bezichtigingen en een snellere verkoop of verhuur.</p>
-  </div>
-
-  <div class="pro3-features">
-    <div class="pro3-feature">
-      <i class="fas fa-camera"></i>
-      <h3>Strakke composities</h3>
-      <p>Correcte perspectieven en natuurlijke belichting.</p>
-    </div>
-    <div class="pro3-feature">
-      <i class="fas fa-bolt"></i>
-      <h3>Snelle oplevering</h3>
-      <p>Ideaal voor makelaars en projectontwikkelaars.</p>
-    </div>
-    <div class="pro3-feature">
-      <i class="fas fa-home"></i>
-      <h3>Meer impact</h3>
-      <p>Meer interesse online en offline.</p>
-    </div>
-  </div>
-</section>
-
-<!-- PRIJZEN (ZELFDE STIJL ALS JE SCREENSHOT) -->
-<section class="pricing-section">
-  <div class="pricing-header">
-    <h2>Vastgoedfotografie pakketten</h2>
-    <p>Transparante prijzen – inclusief BTW – zonder verrassingen.</p>
-  </div>
-
-  <div class="pricing-tiles">
-
-    <!-- Appartement -->
-    <article class="pricing-tile">
-      <div class="pricing-tile-head">
-        <h3 class="pricing-tile-title">
-          Appartement
-          <span class="pricing-tile-sub">(tot 185 m²)</span>
-        </h3>
-      </div>
-
-      <div class="pricing-tile-body">
-        <p class="pricing-tile-price">
-          <span>vanaf</span> <strong>€308,00 (Incl. BTW)</strong>
-        </p>
-
-        <ul class="pricing-tile-list">
-          <li>Professionele vastgoedfoto’s</li>
-          <li>Basis nabewerking</li>
-          <li>Online levering</li>
+      <li class="has-submenu">
+        <a href="360.html">Services</a>
+        <ul class="submenu">
+          <li><a href="3d-scans.html">3D Matterport</a></li>
+          <li><a href="floorplans.html">Vloerplannen</a></li>
+          <li><a href="real-estate-photography.html">Vastgoedfotografie</a></li>
+          <li><a href="under-construction.html">Drone foto's &amp; Video's</a></li>
+          <li><a href="fpv.html">FPV Aerial Videos</a></li>
         </ul>
+      </li>
 
-        <a href="contact.html" class="pricing-tile-cta">Offerte aanvragen</a>
+      <li><a href="fotvi.html">Referenties</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <!-- HERO (zelfde structuur als fpv) -->
+    <section class="hero-section" aria-label="Vastgoedfotografie">
+      <div class="hero-content">
+        <h1>Vastgoedfotografie</h1>
+        <p>Premium beelden die zorgen voor meer clicks, meer bezichtigingen en een sterkere eerste indruk. Alle prijzen zijn € incl. btw.</p>
       </div>
-    </article>
+      <div class="hero-background" style="background:#000;"></div>
 
-    <!-- Woning -->
-    <article class="pricing-tile pricing-tile--featured">
-      <div class="pricing-badge">Populair</div>
+      <!-- Gebruik hier een mooie real-estate foto -->
+      <img class="hero-re" src="Assets/RealEstate/hero-realestate.jpg" alt="Vastgoedfotografie hero">
+    </section>
 
-      <div class="pricing-tile-head">
-        <h3 class="pricing-tile-title">
-          Woning
-          <span class="pricing-tile-sub">(tot 370 m²)</span>
-        </h3>
+    <!-- INFO / USP’s (zelfde component als fpv: pro3-section) -->
+    <section class="pro3-section" id="info">
+      <div class="pro3-header">
+        <h2>Waarom professionele vastgoedfoto’s?</h2>
+        <p>Sterke beelden maken het verschil tussen “scrollen” en “klikken”. Wij leveren foto’s die natuurlijk ogen, ruimtes correct tonen en je listing laten opvallen.</p>
       </div>
 
-      <div class="pricing-tile-body">
-        <p class="pricing-tile-price">
-          <span>vanaf</span> <strong>€419,87 (Incl. BTW)</strong>
-        </p>
+      <div class="pro3-features">
+        <div class="pro3-feature">
+          <i class="fas fa-chart-line"></i>
+          <h3>Meer aantrekkingskracht</h3>
+          <p>Meer interesse, meer bezichtigingen en vaak een betere prijsperceptie.</p>
+        </div>
 
-        <ul class="pricing-tile-list">
-          <li>Uitgebreide fotoshoot</li>
-          <li>Professionele nabewerking</li>
-          <li>Meerdere ruimtes & details</li>
+        <div class="pro3-feature">
+          <i class="fas fa-piggy-bank"></i>
+          <h3>All-inclusive</h3>
+          <p>Consistente nabewerking en professionele look, zonder verborgen kosten.</p>
+        </div>
+
+        <div class="pro3-feature">
+          <i class="fas fa-magic"></i>
+          <h3>Editing tot in de puntjes</h3>
+          <p>Natuurlijke kleuren, helder beeld en correcte verticalen. Listing-ready.</p>
+        </div>
+
+        <div class="pro3-feature">
+          <i class="fas fa-clock"></i>
+          <h3>24 uur levering</h3>
+          <p>Levering binnen 24 uur of GRATIS (conform afspraak).</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- “Voorbeeld”-sectie in dezelfde stijl als tours-section -->
+    <section class="tours-section">
+      <div class="tours-header">
+        <h2>Voorbeelden</h2>
+        <p>Een paar sfeerbeelden (of vervang dit door je eigen gallery / embeds).</p>
+      </div>
+
+      <div class="tours-grid" style="grid-template-columns: repeat(3, 1fr);">
+        <article class="tour-card">
+          <div class="tour-thumb" style="aspect-ratio:16/10;">
+            <img src="Assets/RealEstate/sample-1.jpg" alt="Voorbeeld 1" style="width:100%;height:100%;object-fit:cover;display:block;">
+          </div>
+          <div class="tour-body">
+            <h3 class="tour-title">Interieur</h3>
+            <p class="tour-meta">Heldere ruimtes, correcte lijnen</p>
+          </div>
+        </article>
+
+        <article class="tour-card">
+          <div class="tour-thumb" style="aspect-ratio:16/10;">
+            <img src="Assets/RealEstate/sample-2.jpg" alt="Voorbeeld 2" style="width:100%;height:100%;object-fit:cover;display:block;">
+          </div>
+          <div class="tour-body">
+            <h3 class="tour-title">Exterieur</h3>
+            <p class="tour-meta">Sterke composities, natuurlijke kleuren</p>
+          </div>
+        </article>
+
+        <article class="tour-card">
+          <div class="tour-thumb" style="aspect-ratio:16/10;">
+            <img src="Assets/RealEstate/sample-3.jpg" alt="Voorbeeld 3" style="width:100%;height:100%;object-fit:cover;display:block;">
+          </div>
+          <div class="tour-body">
+            <h3 class="tour-title">Detail & sfeer</h3>
+            <p class="tour-meta">Perfect voor high-end en socials</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- WERKWIJZE (zelfde steps-section) -->
+    <section class="steps-section">
+      <div class="steps-header">
+        <h2>Werkwijze</h2>
+        <p>Zo verloopt een fotoshoot bij Snap360.</p>
+      </div>
+      <ol class="steps">
+        <li>
+          <h3>1. Afspraak & voorbereiding</h3>
+          <p>We bespreken het pand, de timing en wat belangrijk is voor je listing.</p>
+        </li>
+        <li>
+          <h3>2. Fotoshoot op locatie</h3>
+          <p>Efficiënt shooten met focus op licht, ruimtegevoel en beste invalshoeken.</p>
+        </li>
+        <li>
+          <h3>3. Nabewerking & oplevering</h3>
+          <p>Professionele afwerking en levering via downloadlink binnen 24 uur (conform afspraak).</p>
+        </li>
+      </ol>
+    </section>
+
+    <!-- PRIJZEN (zelfde pricing-section) -->
+    <section class="pricing-section" id="prijzen">
+      <div class="pricing-header">
+        <h2>Prijzen vastgoedfotografie</h2>
+        <p>Alle prijzen zijn € incl. btw. Oppervlakte is in m².</p>
+      </div>
+
+      <div class="pricing-tiles" style="grid-template-columns: 1fr;">
+        <article class="pricing-tile pricing-tile--featured">
+          <div class="pricing-badge">Populair</div>
+          <div class="pricing-tile-head">
+            <h3 class="pricing-tile-title" id="rePriceTitle">Vastgoedfotografie (per m²-range)</h3>
+          </div>
+
+          <div class="pricing-tile-body">
+            <div id="reTableRealEstate">
+              <table class="re-price-table" aria-label="Prijzen vastgoedfotografie">
+                <tbody>
+                  <tr><td>0 – 93 m² (15–20 foto’s)</td><td>€145</td></tr>
+                  <tr><td>93 – 186 m² (25–30 foto’s)</td><td>€195</td></tr>
+                  <tr><td>186 – 279 m² (35–40 foto’s)</td><td>€245</td></tr>
+                  <tr><td>279 – 371 m² (45–50 foto’s)</td><td>€295</td></tr>
+                  <tr><td>371 – 464 m² (55–60 foto’s)</td><td>€345</td></tr>
+                  <tr><td>+93 m² (+5 foto’s)</td><td>+€50</td></tr>
+
+                  <tr><td style="padding-top:12px;">Twilight-shoot (6 foto’s)</td><td style="padding-top:12px;">€195</td></tr>
+                  <tr><td>Extended twilight – blue hour (9 foto’s)</td><td>€295</td></tr>
+                  <tr><td>Extra fotopack (5 foto’s)</td><td>€50</td></tr>
+                  <tr><td>Virtuele staging &amp; renovatie (per beeld)</td><td>€50</td></tr>
+                  <tr><td>Virtuele twilight (per beeld)</td><td>€50</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div id="reTableVacation" style="display:none;">
+              <table class="re-price-table" aria-label="Prijzen vakantiewoningen">
+                <tbody>
+                  <tr><td>1 – 2 slaapkamers (15–20 foto’s)</td><td>€220</td></tr>
+                  <tr><td>3 – 4 slaapkamers (25–35 foto’s)</td><td>€270</td></tr>
+                  <tr><td>5 – 6 slaapkamers (35–45 foto’s)</td><td>€345</td></tr>
+                  <tr><td>7 – 8 slaapkamers (45–55 foto’s)</td><td>€420</td></tr>
+                  <tr><td>9 – 10 slaapkamers (55–60 foto’s)</td><td>€495</td></tr>
+                  <tr><td>11 – 12 slaapkamers (60–65 foto’s)</td><td>€570</td></tr>
+                  <tr><td>13 – 14 slaapkamers (65–70 foto’s)</td><td>€645</td></tr>
+                  <tr><td>15 – 16 slaapkamers (70–80 foto’s)</td><td>€720</td></tr>
+
+                  <tr><td style="padding-top:12px;">Twilight-shoot (6 foto’s)</td><td style="padding-top:12px;">€195</td></tr>
+                  <tr><td>Extended twilight – blue hour (9 foto’s)</td><td>€295</td></tr>
+                  <tr><td>Extra foto (per beeld)</td><td>€9</td></tr>
+                  <tr><td>Virtuele staging &amp; renovatie (per beeld)</td><td>€50</td></tr>
+                  <tr><td>Virtuele twilight (per beeld)</td><td>€50</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="re-toggle-row">
+              <button class="re-toggle-btn active" id="reBtnRE" type="button">Vastgoed</button>
+              <button class="re-toggle-btn" id="reBtnVR" type="button">Vakantiewoningen</button>
+              <a class="pricing-tile-cta" href="contact.html" style="margin-left:auto;">Offerte aanvragen</a>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- ADD-ONS (vensters zoals je screenshot — GEEN afbeeldingen) -->
+    <section class="pricing-section" id="addons">
+      <div class="pricing-header">
+        <h2>Extra’s (add-ons)</h2>
+        <p>Maak je presentatie compleet met deze populaire extra’s.</p>
+      </div>
+
+      <div class="pricing-tiles" style="grid-template-columns: repeat(4, 1fr);">
+        <article class="pricing-tile">
+          <div class="pricing-tile-head">
+            <h3 class="pricing-tile-title">Matterport 3D Tours</h3>
+          </div>
+          <div class="pricing-tile-body">
+            <p class="pricing-tile-price"><span>vanaf</span> <strong>€250</strong></p>
+            <ul class="pricing-tile-list">
+              <li>3D scan + virtuele tour</li>
+              <li>Perfect voor listings</li>
+              <li>Link om te delen</li>
+            </ul>
+            <a class="pricing-tile-cta" href="3d-scans.html">Bekijk 3D →</a>
+          </div>
+        </article>
+
+        <article class="pricing-tile pricing-tile--featured">
+          <div class="pricing-badge">Populair</div>
+          <div class="pricing-tile-head">
+            <h3 class="pricing-tile-title">Drone foto’s &amp; video</h3>
+          </div>
+          <div class="pricing-tile-body">
+            <p class="pricing-tile-price"><span>vanaf</span> <strong>€195</strong></p>
+            <ul class="pricing-tile-list">
+              <li>Ligging & omgeving</li>
+              <li>Ideaal voor grote percelen</li>
+              <li>Extra visuele impact</li>
+            </ul>
+            <a class="pricing-tile-cta" href="contact.html">Offerte aanvragen</a>
+          </div>
+        </article>
+
+        <article class="pricing-tile">
+          <div class="pricing-tile-head">
+            <h3 class="pricing-tile-title">Twilight extra’s</h3>
+          </div>
+          <div class="pricing-tile-body">
+            <p class="pricing-tile-price"><span>vanaf</span> <strong>€50</strong></p>
+            <ul class="pricing-tile-list">
+              <li>Virtuele twilight mogelijk</li>
+              <li>Warmere sfeer & luxe look</li>
+              <li>Ideaal voor premium panden</li>
+            </ul>
+            <a class="pricing-tile-cta" href="contact.html">Offerte aanvragen</a>
+          </div>
+        </article>
+
+        <article class="pricing-tile">
+          <div class="pricing-tile-head">
+            <h3 class="pricing-tile-title">Cinematische videotours</h3>
+          </div>
+          <div class="pricing-tile-body">
+            <p class="pricing-tile-price"><span>vanaf</span> <strong>€250</strong></p>
+            <ul class="pricing-tile-list">
+              <li>Professionele montage</li>
+              <li>Perfect voor socials</li>
+              <li>Combineerbaar met FPV</li>
+            </ul>
+            <a class="pricing-tile-cta" href="fpv.html">Bekijk FPV →</a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- CTA (zelfde cta-final) -->
+    <section class="cta-final">
+      <h2>Klaar om je pand sterker te presenteren?</h2>
+      <a href="contact.html" class="cta-button">Plan je fotoshoot →</a>
+    </section>
+  </main>
+
+  <!-- FOOTER (identiek aan fpv.html) -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-section">
+        <h4 class="footer-heading">Snap360-snapwithus360.com</h4>
+        <p class="footer-text">De specialist in innovatieve beeldtechnologie voor vastgoed en architectuur.</p>
+        <div class="social-icons">
+          <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+          <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+          <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
+        </div>
+      </div>
+      <div class="footer-section">
+        <h4 class="footer-heading">Snelle links</h4>
+        <ul class="footer-links">
+          <li><a href="3D.html" class="footer-link">Home</a></li>
+          <li><a href="360.html" class="footer-link">Services</a></li>
+          <li><a href="fotvi.html" class="footer-link">Referenties</a></li>
+          <li><a href="contact.html" class="footer-link">Contact</a></li>
         </ul>
-
-        <a href="contact.html" class="pricing-tile-cta">Offerte aanvragen</a>
       </div>
-    </article>
-
-    <!-- Bedrijfspand -->
-    <article class="pricing-tile">
-      <div class="pricing-tile-head">
-        <h3 class="pricing-tile-title">
-          Bedrijfspand
-          <span class="pricing-tile-sub">(vanaf 465 m²)</span>
-        </h3>
+      <div class="footer-section">
+        <h4 class="footer-heading">Contact</h4>
+        <div class="contact-info">
+          <p class="footer-text"><i class="fas fa-map-marker-alt"></i> Vijfstraten 163, 9100 Sint-Niklaas</p>
+          <p class="footer-text"><i class="fas fa-phone"></i> +32 476 61 10 99</p>
+          <p class="footer-text"><i class="fas fa-envelope"></i> tom@snapwithus360.com</p>
+        </div>
       </div>
-
-      <div class="pricing-tile-body">
-        <p class="pricing-tile-price">
-          <span>vanaf</span> <strong>€475,53 (Incl. BTW)</strong>
-        </p>
-
-        <ul class="pricing-tile-list">
-          <li>Grote ruimtes & exterieur</li>
-          <li>Geschikt voor commerciële panden</li>
-          <li>Afgestemd op marketingdoel</li>
-        </ul>
-
-        <a href="contact.html" class="pricing-tile-cta">Offerte aanvragen</a>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2025 SNAPWITHUS360.com - DE BACKER LLC. Alle rechten voorbehouden.</p>
+      <div class="legal-links">
+        <a href="#">Privacybeleid</a>
+        <a href="#">Algemene voorwaarden</a>
       </div>
-    </article>
+    </div>
+  </footer>
 
-  </div>
-</section>
+  <script src="script.js" defer></script>
 
-<!-- CTA -->
-<section class="cta-final">
-  <h2>Klaar om je vastgoed professioneel te presenteren?</h2>
-  <a href="contact.html" class="cta-button">Vraag je offerte aan →</a>
-</section>
+  <script>
+    (function(){
+      const btnRE = document.getElementById('reBtnRE');
+      const btnVR = document.getElementById('reBtnVR');
+      const tRE = document.getElementById('reTableRealEstate');
+      const tVR = document.getElementById('reTableVacation');
+      const title = document.getElementById('rePriceTitle');
 
-</main>
+      function showRE(){
+        btnRE.classList.add('active');
+        btnVR.classList.remove('active');
+        tRE.style.display = '';
+        tVR.style.display = 'none';
+        title.textContent = 'Vastgoedfotografie (per m²-range)';
+      }
 
-<!-- FOOTER -->
-<footer class="footer">
-  <div class="footer-bottom">
-    <p>&copy; 2025 SNAPWITHUS360.com – DE BACKER LLC</p>
-  </div>
-</footer>
+      function showVR(){
+        btnVR.classList.add('active');
+        btnRE.classList.remove('active');
+        tVR.style.display = '';
+        tRE.style.display = 'none';
+        title.textContent = 'Vakantiewoningen (per aantal slaapkamers)';
+      }
 
-<script src="script.js" defer></script>
+      btnRE.addEventListener('click', showRE);
+      btnVR.addEventListener('click', showVR);
+
+      showRE();
+    })();
+  </script>
 </body>
 </html>
