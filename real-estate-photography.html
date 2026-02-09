@@ -65,50 +65,76 @@
       border-color: rgba(0,0,0,0.30);
       box-shadow: 0 10px 25px rgba(0,0,0,0.10);
     }
+
+    /* Add-ons vensters: forceer 4 kolommen op desktop, netjes responsive */
+    .addons-tiles{
+      display:grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+    }
+    @media (max-width: 1100px){
+      .addons-tiles{ grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 650px){
+      .addons-tiles{ grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 
 <body>
-  <!-- NAV (identiek aan fpv.html) -->
-  <nav class="nav">
-    <i class="uil uil-bars navOpenBtn"></i>
-    <a href="3D.html" class="logo">
-      <img src="Assets/logo.png" alt="Snap360 logo" class="logo-image">
-    </a>
-    <ul class="nav-links">
-      <i class="uil uil-times navCloseBtn"></i>
-      <li><a href="3D.html">Home</a></li>
 
-      <li class="has-submenu">
-        <a href="360.html">Services</a>
-        <ul class="submenu">
-          <li><a href="3d-scans.html">3D Matterport</a></li>
-          <li><a href="floorplans.html">Vloerplannen</a></li>
-          <li><a href="real-estate-photography.html">Vastgoedfotografie</a></li>
-          <li><a href="under-construction.html">Drone foto's &amp; Video's</a></li>
-          <li><a href="fpv.html">FPV Aerial Videos</a></li>
-        </ul>
-      </li>
+  <!-- NAV = IDENTIEK AAN INDEX -->
+  <header>
+    <nav class="nav">
+      <button class="navOpenBtn" aria-label="Menu openen" type="button">
+        <i class="uil uil-bars" aria-hidden="true"></i>
+      </button>
 
-      <li><a href="fotvi.html">Referenties</a></li>
-      <li><a href="contact.html">Contact</a></li>
-    </ul>
-  </nav>
+      <a href="3D.html" class="logo">
+        <img src="Assets/logo.png" alt="Snap360 logo" class="logo-image" />
+      </a>
+
+      <ul class="nav-links">
+        <button class="navCloseBtn" aria-label="Menu sluiten" type="button">
+          <i class="uil uil-times" aria-hidden="true"></i>
+        </button>
+
+        <li><a href="3D.html">Home</a></li>
+
+        <li class="has-submenu">
+          <a href="360.html">Services</a>
+          <ul class="submenu">
+            <li><a href="real-estate-photography.html">Real Estate Photography</a></li>
+            <li><a href="fpv.html">FPV Real Estate Movies</a></li>
+            <li><a href="3d-scans.html">Matterport 3D Scans</a></li>
+            <li><a href="floorplans.html">Vloerplannen</a></li>
+            <li><a href="3D.html#sportportretten">Sportportretten</a></li>
+            <li>
+              <a href="/brochure/Sportfotografie_SNAP360_V2.0_compressed.pdf" target="_blank" rel="noopener">
+                Brochure Sportfotografie (PDF)
+              </a>
+            </li>
+          </ul>
+        </li>
+
+        <li><a href="fotvi.html">Referenties</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
 
   <main>
-    <!-- HERO (zelfde structuur als fpv) -->
+    <!-- HERO -->
     <section class="hero-section" aria-label="Vastgoedfotografie">
       <div class="hero-content">
         <h1>Vastgoedfotografie</h1>
         <p>Premium beelden die zorgen voor meer clicks, meer bezichtigingen en een sterkere eerste indruk. Alle prijzen zijn € incl. btw.</p>
       </div>
       <div class="hero-background" style="background:#000;"></div>
-
-      <!-- Gebruik hier een mooie real-estate foto -->
       <img class="hero-re" src="Assets/RealEstate/hero-realestate.jpg" alt="Vastgoedfotografie hero">
     </section>
 
-    <!-- INFO / USP’s (zelfde component als fpv: pro3-section) -->
+    <!-- INFO -->
     <section class="pro3-section" id="info">
       <div class="pro3-header">
         <h2>Waarom professionele vastgoedfoto’s?</h2>
@@ -142,7 +168,7 @@
       </div>
     </section>
 
-    <!-- “Voorbeeld”-sectie in dezelfde stijl als tours-section -->
+    <!-- VOORBEELDEN -->
     <section class="tours-section">
       <div class="tours-header">
         <h2>Voorbeelden</h2>
@@ -182,7 +208,7 @@
       </div>
     </section>
 
-    <!-- WERKWIJZE (zelfde steps-section) -->
+    <!-- WERKWIJZE -->
     <section class="steps-section">
       <div class="steps-header">
         <h2>Werkwijze</h2>
@@ -204,7 +230,7 @@
       </ol>
     </section>
 
-    <!-- PRIJZEN (zelfde pricing-section) -->
+    <!-- PRIJZEN -->
     <section class="pricing-section" id="prijzen">
       <div class="pricing-header">
         <h2>Prijzen vastgoedfotografie</h2>
@@ -269,14 +295,14 @@
       </div>
     </section>
 
-    <!-- ADD-ONS (vensters zoals je screenshot — GEEN afbeeldingen) -->
+    <!-- ADD-ONS als vensters (zonder afbeeldingen) -->
     <section class="pricing-section" id="addons">
       <div class="pricing-header">
         <h2>Extra’s (add-ons)</h2>
         <p>Maak je presentatie compleet met deze populaire extra’s.</p>
       </div>
 
-      <div class="pricing-tiles" style="grid-template-columns: repeat(4, 1fr);">
+      <div class="addons-tiles">
         <article class="pricing-tile">
           <div class="pricing-tile-head">
             <h3 class="pricing-tile-title">Matterport 3D Tours</h3>
@@ -285,8 +311,8 @@
             <p class="pricing-tile-price"><span>vanaf</span> <strong>€250</strong></p>
             <ul class="pricing-tile-list">
               <li>3D scan + virtuele tour</li>
-              <li>Perfect voor listings</li>
-              <li>Link om te delen</li>
+              <li>Ideaal voor listings</li>
+              <li>Deelbare link</li>
             </ul>
             <a class="pricing-tile-cta" href="3d-scans.html">Bekijk 3D →</a>
           </div>
@@ -301,8 +327,8 @@
             <p class="pricing-tile-price"><span>vanaf</span> <strong>€195</strong></p>
             <ul class="pricing-tile-list">
               <li>Ligging & omgeving</li>
-              <li>Ideaal voor grote percelen</li>
-              <li>Extra visuele impact</li>
+              <li>Extra impact op listings</li>
+              <li>Ideaal bij grote percelen</li>
             </ul>
             <a class="pricing-tile-cta" href="contact.html">Offerte aanvragen</a>
           </div>
@@ -316,8 +342,8 @@
             <p class="pricing-tile-price"><span>vanaf</span> <strong>€50</strong></p>
             <ul class="pricing-tile-list">
               <li>Virtuele twilight mogelijk</li>
-              <li>Warmere sfeer & luxe look</li>
-              <li>Ideaal voor premium panden</li>
+              <li>Luxere uitstraling</li>
+              <li>Perfect voor premium panden</li>
             </ul>
             <a class="pricing-tile-cta" href="contact.html">Offerte aanvragen</a>
           </div>
@@ -330,8 +356,8 @@
           <div class="pricing-tile-body">
             <p class="pricing-tile-price"><span>vanaf</span> <strong>€250</strong></p>
             <ul class="pricing-tile-list">
+              <li>Video voor socials & listing</li>
               <li>Professionele montage</li>
-              <li>Perfect voor socials</li>
               <li>Combineerbaar met FPV</li>
             </ul>
             <a class="pricing-tile-cta" href="fpv.html">Bekijk FPV →</a>
@@ -340,14 +366,15 @@
       </div>
     </section>
 
-    <!-- CTA (zelfde cta-final) -->
+    <!-- CTA -->
     <section class="cta-final">
       <h2>Klaar om je pand sterker te presenteren?</h2>
       <a href="contact.html" class="cta-button">Plan je fotoshoot →</a>
     </section>
+
   </main>
 
-  <!-- FOOTER (identiek aan fpv.html) -->
+  <!-- FOOTER -->
   <footer class="footer">
     <div class="footer-container">
       <div class="footer-section">
@@ -387,7 +414,7 @@
     </div>
   </footer>
 
-  <script src="script.js" defer></script>
+  <script src="script.js"></script>
 
   <script>
     (function(){
@@ -419,5 +446,6 @@
       showRE();
     })();
   </script>
+
 </body>
 </html>
