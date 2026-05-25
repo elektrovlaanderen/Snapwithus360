@@ -352,7 +352,7 @@ footer{background:var(--gold);padding:56px 5% 32px}
   <div class="hero-vline"></div>
   <div class="hero-inner">
     <p class="hero-eyebrow">Belgium &amp; USA</p>
-    <h1 class="ht">Premium<br><span class="g">Visuals.</span><br><span class="o">Premium Results.</span></h1>
+    <h1 class="ht">Premium<br><span class="g">Visuals.</span><br><span class="o">Meer resultaat.</span></h1>
     <p class="hero-desc">Real estate visuals, sport portraits and social media content for businesses — filmed with Sony A7 IV, FX3 &amp; FX6.</p>
     <div class="hero-btns">
       <a href="#realestate" class="btn btn-gold">Real Estate</a>
@@ -498,19 +498,19 @@ footer{background:var(--gold);padding:56px 5% 32px}
         <div style="font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:16px">Individual downloads</div>
         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--border-d)">
           <div style="background:var(--dark);padding:22px 18px;text-align:center">
-            <div style="font-family:'Bebas Neue',sans-serif;font-size:36px;color:var(--white);line-height:1">$24<span style="font-size:20px;color:var(--gold)">.99</span></div>
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:36px;color:var(--white);line-height:1">$19<span style="font-size:20px;color:var(--gold)">.99</span></div>
             <div style="font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-top:6px">incl. tax</div>
-            <div style="font-size:12px;color:rgba(255,255,255,.6);margin-top:8px;line-height:1.5">1 Photograph<br> 1Player</div>
+            <div style="font-size:12px;color:rgba(255,255,255,.6);margin-top:8px;line-height:1.5">1 foto<br>per speler</div>
           </div>
           <div style="background:var(--dark);padding:22px 18px;text-align:center;border-top:2px solid var(--gold)">
-            <div style="font-family:'Bebas Neue',sans-serif;font-size:36px;color:var(--gold);line-height:1">$19<span style="font-size:20px">.99</span></div>
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:36px;color:var(--gold);line-height:1">$17<span style="font-size:20px">.50</span></div>
             <div style="font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-top:6px">incl. tax / foto</div>
-            <div style="font-size:12px;color:rgba(255,255,255,.6);margin-top:8px;line-height:1.5">2 Photographs<br>1Player</div>
+            <div style="font-size:12px;color:rgba(255,255,255,.6);margin-top:8px;line-height:1.5">2 foto's<br>per speler</div>
           </div>
           <div style="background:var(--dark);padding:22px 18px;text-align:center">
-            <div style="font-family:'Bebas Neue',sans-serif;font-size:36px;color:var(--white);line-height:1">$49<span style="font-size:20px;color:var(--gold)">.99</span></div>
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:36px;color:var(--white);line-height:1">$44<span style="font-size:20px;color:var(--gold)">.99</span></div>
             <div style="font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-top:6px">incl. tax</div>
-            <div style="font-size:12px;color:rgba(255,255,255,.6);margin-top:8px;line-height:1.5">3+ Photo´s<br> 1Player Full package</div>
+            <div style="font-size:12px;color:rgba(255,255,255,.6);margin-top:8px;line-height:1.5">3+ foto's<br>volledig pakket</div>
           </div>
         </div>
         <p style="font-size:11px;color:rgba(255,255,255,.3);margin-top:10px;line-height:1.7">Every participant downloads individually via a personal link. No subscription, no obligations.</p>
@@ -824,21 +824,22 @@ Henderson, NV 89012, USA</div></div></div>
     <div class="rv d2">
       <form class="form" onsubmit="handleSubmit(event)">
         <div class="frow">
-          <div class="fg"><label>Name</label><input type="text" placeholder="Your name" required></div>
-          <div class="fg"><label>E-mail</label><input type="email" placeholder="your@email.com" required></div>
+          <div class="fg"><label>Name</label><input type="text" name="name" placeholder="Your name" required></div>
+          <div class="fg"><label>E-mail</label><input type="email" name="email" placeholder="your@email.com" required></div>
         </div>
         <div class="frow">
-          <div class="fg"><label>Phone</label><input type="tel" placeholder="+32 ..."></div>
+          <div class="fg"><label>Phone</label><input type="tel" name="telefoon" placeholder="+32 ..."></div>
           <div class="fg"><label>Category</label>
-            <select>
+            <select name="service">
               <option value="">Choose a service...</option>
               <optgroup label="Real Estate"><option>Starter – Essentials ($150)</option><option>Basic – Comfort ($299)</option><option>Pro – Visibility ($499)</option><option>Full – All-In ($799)</option><option>Custom / quote</option></optgroup>
               <optgroup label="Sport & Media"><option>Sport Portraits</option><option>Social Media Production</option><option>Monthly Content Package</option></optgroup>
             </select>
           </div>
         </div>
-        <div class="fg"><label>Message</label><textarea placeholder="Tell us about your project, property or business..."></textarea></div>
+        <div class="fg"><label>Message</label><textarea name="message" placeholder="Tell us about your project, property or business..."></textarea></div>
         <button type="submit" class="fsub">Send message →</button>
+        <p id="form-err" style="display:none;color:#e05a5a;font-size:13px;text-align:center;padding:8px;font-weight:600"></p>
         <p id="form-ok">✓ Message verzonden! We nemen snel contact op.</p>
       </form>
     </div>
@@ -868,10 +869,42 @@ const obs = new IntersectionObserver(entries => {
 }, {threshold: 0.1})
 document.querySelectorAll('.rv,.rvl,.rvr').forEach(el => obs.observe(el))
 
-function handleSubmit(e) {
+async function handleSubmit(e) {
   e.preventDefault()
-  document.getElementById('form-ok').style.display = 'block'
-  e.target.reset()
+  const form = e.target
+  const btn  = form.querySelector('.fsub')
+  const ok   = document.getElementById('form-ok')
+  const err  = document.getElementById('form-err')
+
+  btn.disabled = true
+  btn.textContent = '⏳ Versturen...'
+  ok.style.display  = 'none'
+  err.style.display = 'none'
+
+  try {
+    const res = await fetch('https://formspree.io/f/mdajlrde', {
+      method: 'POST',
+      body: new FormData(form),
+      headers: { 'Accept': 'application/json' }
+    })
+
+    if (res.ok) {
+      ok.style.display = 'block'
+      form.reset()
+      btn.textContent = 'Stuur bericht →'
+    } else {
+      const data = await res.json()
+      err.style.display = 'block'
+      err.textContent = data.errors ? data.errors.map(x => x.message).join(', ') : 'Er liep iets mis. Probeer opnieuw.'
+      btn.textContent = 'Stuur bericht →'
+    }
+  } catch(ex) {
+    err.style.display = 'block'
+    err.textContent = 'Geen verbinding. Probeer opnieuw of contacteer ons via WhatsApp.'
+    btn.textContent = 'Stuur bericht →'
+  }
+
+  btn.disabled = false
 }
 function toggleMobileNav() {
   const mn = document.getElementById('mobile-nav')

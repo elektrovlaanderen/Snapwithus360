@@ -823,21 +823,22 @@ footer{background:var(--gold);padding:56px 5% 32px}
     <div class="rv d2">
       <form class="form" onsubmit="handleSubmit(event)">
         <div class="frow">
-          <div class="fg"><label>Naam</label><input type="text" placeholder="Jouw naam" required></div>
-          <div class="fg"><label>E-mail</label><input type="email" placeholder="jouw@email.com" required></div>
+          <div class="fg"><label>Naam</label><input type="text" name="naam" placeholder="Jouw naam" required></div>
+          <div class="fg"><label>E-mail</label><input type="email" name="email" placeholder="jouw@email.com" required></div>
         </div>
         <div class="frow">
-          <div class="fg"><label>Telefoon</label><input type="tel" placeholder="+32 ..."></div>
+          <div class="fg"><label>Telefoon</label><input type="tel" name="telefoon" placeholder="+32 ..."></div>
           <div class="fg"><label>Categorie</label>
-            <select>
+            <select name="service">
               <option value="">Kies een service...</option>
               <optgroup label="Vastgoed"><option>Starter – Essentials (€150)</option><option>Basic – Comfort (€299)</option><option>Pro – Visibility (€499)</option><option>Full – All-In (€799)</option><option>Op maat / offerte</option></optgroup>
               <optgroup label="Sport & Media"><option>Sportportretten</option><option>Social Media Production</option><option>Monthly Content Pakket</option></optgroup>
             </select>
           </div>
         </div>
-        <div class="fg"><label>Bericht</label><textarea placeholder="Vertel ons over jouw project, pand of zaak..."></textarea></div>
+        <div class="fg"><label>Bericht</label><textarea name="bericht" placeholder="Vertel ons over jouw project, pand of zaak..."></textarea></div>
         <button type="submit" class="fsub">Stuur bericht →</button>
+        <p id="form-err" style="display:none;color:#e05a5a;font-size:13px;text-align:center;padding:8px;font-weight:600"></p>
         <p id="form-ok">✓ Bericht verzonden! We nemen snel contact op.</p>
       </form>
     </div>
@@ -867,10 +868,42 @@ const obs = new IntersectionObserver(entries => {
 }, {threshold: 0.1})
 document.querySelectorAll('.rv,.rvl,.rvr').forEach(el => obs.observe(el))
 
-function handleSubmit(e) {
+async function handleSubmit(e) {
   e.preventDefault()
-  document.getElementById('form-ok').style.display = 'block'
-  e.target.reset()
+  const form = e.target
+  const btn  = form.querySelector('.fsub')
+  const ok   = document.getElementById('form-ok')
+  const err  = document.getElementById('form-err')
+
+  btn.disabled = true
+  btn.textContent = '⏳ Versturen...'
+  ok.style.display  = 'none'
+  err.style.display = 'none'
+
+  try {
+    const res = await fetch('https://formspree.io/f/mdajlrde', {
+      method: 'POST',
+      body: new FormData(form),
+      headers: { 'Accept': 'application/json' }
+    })
+
+    if (res.ok) {
+      ok.style.display = 'block'
+      form.reset()
+      btn.textContent = 'Stuur bericht →'
+    } else {
+      const data = await res.json()
+      err.style.display = 'block'
+      err.textContent = data.errors ? data.errors.map(x => x.message).join(', ') : 'Er liep iets mis. Probeer opnieuw.'
+      btn.textContent = 'Stuur bericht →'
+    }
+  } catch(ex) {
+    err.style.display = 'block'
+    err.textContent = 'Geen verbinding. Probeer opnieuw of contacteer ons via WhatsApp.'
+    btn.textContent = 'Stuur bericht →'
+  }
+
+  btn.disabled = false
 }
 function toggleMobileNav() {
   const mn = document.getElementById('mobile-nav')
