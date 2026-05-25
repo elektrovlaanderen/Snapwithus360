@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="nl-be">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Real Estate Packages – Snapwithus360</title>
+  <link rel="icon" type="image/png" href="FAVICON.png"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="stylesheet" href="_snap360.css"/>
+  <style>
+    /* Anchor tabs */
+    .service-tabs {
+      display: flex; gap: 0;
+      border-bottom: 1px solid var(--border);
+      overflow-x: auto;
+    }
+    .service-tab {
+      font-size: 0.72rem; font-weight: 500;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--muted); text-decoration: none;
+      padding: 1.1rem 2rem; white-space: nowrap;
+      border-bottom: 2px solid transparent;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .service-tab:hover,
+    .service-tab.active { color: var(--white); border-bottom-color: var(--gold); }
+
+    /* Service intro block */
+    .service-intro {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center;
+      padding: 5rem 0;
+    }
+    .service-media { aspect-ratio: 16/9; background: var(--dark2); overflow: hidden; position: relative; }
+    .service-media video,
+    .service-media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+    /* Packages highlight */
+    .packages-label {
+      font-size: 0.6rem; font-weight: 700;
+      letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 2rem; display: block;
+    }
+
+    @media(max-width:1024px){
+      .service-intro { grid-template-columns: 1fr; gap: 2.5rem; padding: 3rem 0; }
+      .service-tabs { padding: 0 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="index.html" class="nav-logo"><img src="SITE_BRANDLOGO_WIT.png" alt="Snap360"/></a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="real-estate.html" class="active">Real Estate</a></li>
+    <li><a href="sport.html">Sportportretten</a></li>
+    <li><a href="contact.html" class="nav-cta">Contact</a></li>
+  </ul>
+  <button class="nav-burger" id="burger" aria-label="Menu"><i class="fas fa-bars" id="bIcon"></i></button>
+</nav>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <div class="container">
+    <span class="eyebrow">Service</span>
+    <h1 class="h-xl" style="margin-bottom:1.2rem;">Real<br><span class="outline-text">Estate</span></h1>
+    <p style="font-size:0.95rem;color:var(--muted);max-width:500px;line-height:1.8;">
+      Alles wat je nodig hebt om je pand sterk te presenteren — van foto tot 3D-tour, gebundeld in duidelijke packages.
+    </p>
+  </div>
+</div>
+
+<!-- TABS -->
+<div class="service-tabs container">
+  <a href="#packages"   class="service-tab active">Packages</a>
+  <a href="#fotografie" class="service-tab">Fotografie</a>
+  <a href="#fpv"        class="service-tab">FPV &amp; Drone</a>
+  <a href="#3d"         class="service-tab">Matterport 3D</a>
+  <a href="#floorplans" class="service-tab">Vloerplannen</a>
+</div>
+
+<!-- ══════════════════════════════
+     PACKAGES
+══════════════════════════════ -->
+<section class="section" id="packages">
+  <div class="container">
+    <span class="eyebrow">Pakketten</span>
+    <h2 class="h-lg" style="margin-bottom:0.8rem;">Kies je pakket</h2>
+    <p class="body" style="max-width:560px;margin-bottom:0;">Combineer meerdere services in één boek — voordelig geprijsd, professioneel geleverd. Op maat aanpasbaar.</p>
+
+    <div class="pkg-grid">
+
+      <!-- STARTER -->
+      <div class="pkg">
+        <div class="pkg-name">Starter</div>
+        <div class="pkg-sub">Professionele basisopname</div>
+        <div class="pkg-from">Vanaf</div>
+        <div class="pkg-price">€145 <small>incl. btw</small></div>
+        <ul class="pkg-features">
+          <li>Vastgoedfotografie (interieur &amp; exterieur)</li>
+          <li>Tot 60 m² — schaalbaar op aanvraag</li>
+          <li>Professionele nabewerking</li>
+          <li>Levering binnen 24u</li>
+          <li class="extra">Drone foto's (+ €165)</li>
+          <li class="extra">Twilight shoot (+ €95)</li>
+          <li class="extra">Vloerplan 2D (+ €147)</li>
+        </ul>
+        <a href="contact.html" class="btn btn-o" style="margin-top:auto;">Offerte aanvragen</a>
+      </div>
+
+      <!-- PRO -->
+      <div class="pkg featured">
+        <span class="pkg-badge">Meest gekozen</span>
+        <div class="pkg-name">Pro</div>
+        <div class="pkg-sub">Foto + 3D tour + vloerplan</div>
+        <div class="pkg-from">Vanaf</div>
+        <div class="pkg-price">€599 <small>incl. btw</small></div>
+        <ul class="pkg-features">
+          <li>Vastgoedfotografie (interieur &amp; exterieur)</li>
+          <li>Matterport 3D scan — virtual tour link</li>
+          <li>2D vloerplan inclusief</li>
+          <li>Hosting 12 maanden</li>
+          <li>Levering binnen 48u</li>
+          <li class="extra">FPV drone video (+ €245)</li>
+          <li class="extra">Twilight shoot (+ €95)</li>
+        </ul>
+        <a href="contact.html" class="btn btn-w" style="margin-top:auto;">Offerte aanvragen</a>
+      </div>
+
+      <!-- PREMIUM -->
+      <div class="pkg">
+        <div class="pkg-name">Premium</div>
+        <div class="pkg-sub">De volledige presentatie</div>
+        <div class="pkg-from">Vanaf</div>
+        <div class="pkg-price">€895 <small>incl. btw</small></div>
+        <ul class="pkg-features">
+          <li>Vastgoedfotografie (interieur &amp; exterieur)</li>
+          <li>Matterport 3D scan — virtual tour</li>
+          <li>FPV drone video (3 min. cinematic)</li>
+          <li>2D + 3D vloerplan</li>
+          <li>Hosting 12 maanden</li>
+          <li>Levering binnen 48u</li>
+          <li>Prioriteit planning</li>
+        </ul>
+        <a href="contact.html" class="btn btn-o" style="margin-top:auto;">Offerte aanvragen</a>
+      </div>
+
+    </div>
+
+    <p style="font-size:0.72rem;color:rgba(255,255,255,0.25);margin-top:1.2rem;">
+      Prijzen zijn indicatief en afhankelijk van oppervlakte en locatie. Exacte prijs op aanvraag.
+    </p>
+
+    <!-- ADD-ONS -->
+    <h3 class="h-sm" style="margin-top:4rem;margin-bottom:0.5rem;">Extra opties — à la carte</h3>
+    <p class="body" style="margin-bottom:0;">Voeg individuele services toe aan elk pakket.</p>
+    <div class="addon-grid">
+      <div class="addon">
+        <div class="addon-name">Drone foto's</div>
+        <div class="addon-price">€165</div>
+        <div class="addon-desc">5 luchtfoto's, professioneel nabewerkt</div>
+      </div>
+      <div class="addon">
+        <div class="addon-name">Twilight shoot</div>
+        <div class="addon-price">€95</div>
+        <div class="addon-desc">Schemerfoto's voor premium sfeer</div>
+      </div>
+      <div class="addon">
+        <div class="addon-name">Virtuele twilight</div>
+        <div class="addon-price">€50 <small style="font-size:0.72rem;font-weight:300;color:var(--muted);">/ foto</small></div>
+        <div class="addon-desc">Blue hour effect via nabewerking</div>
+      </div>
+      <div class="addon">
+        <div class="addon-name">Agent interview</div>
+        <div class="addon-price">€290</div>
+        <div class="addon-desc">Makelaar in beeld voor branding</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════
+     FOTOGRAFIE
+══════════════════════════════ -->
+<section class="section bg-dark border-t border-b" id="fotografie">
+  <div class="container">
+    <div class="service-intro">
+      <div>
+        <span class="eyebrow">Service 01</span>
+        <h2 class="h-md" style="margin-bottom:1.1rem;">Vastgoed­fotografie</h2>
+        <p class="body" style="margin-bottom:1rem;">Professionele interieur- en exterieurfoto's met oog voor licht, compositie en detail. Optioneel met drone voor maximale impact.</p>
+        <ul class="checklist">
+          <li>Interieur &amp; exterieur</li>
+          <li>Professionele belichting op locatie</li>
+          <li>Nabewerking met kleurbalans &amp; lichtcorrectie</li>
+          <li>Levering binnen 24u</li>
+          <li>Hoge resolutie voor print &amp; portals</li>
+        </ul>
+        <div style="margin-top:1.5rem;">
+          <p style="font-size:0.68rem;font-weight:500;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin-bottom:0.6rem;">Prijzen per m²</p>
+          <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--border);max-width:400px;">
+            <div style="background:var(--dark2);padding:0.8rem 1rem;"><div style="font-size:0.72rem;color:var(--muted);">0–60 m²</div><div style="font-weight:700;">€145</div></div>
+            <div style="background:var(--dark2);padding:0.8rem 1rem;"><div style="font-size:0.72rem;color:var(--muted);">60–120 m²</div><div style="font-weight:700;">€195</div></div>
+            <div style="background:var(--dark2);padding:0.8rem 1rem;"><div style="font-size:0.72rem;color:var(--muted);">120–250 m²</div><div style="font-weight:700;">€245</div></div>
+            <div style="background:var(--dark2);padding:0.8rem 1rem;"><div style="font-size:0.72rem;color:var(--muted);">&gt;250 m²</div><div style="font-weight:700;">€345</div></div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <!-- Gallery placeholder — vervang door eigen foto's -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);">
+          <div class="gallery-item" style="aspect-ratio:1;">Interieur</div>
+          <div class="gallery-item" style="aspect-ratio:1;">Exterieur</div>
+          <div class="gallery-item" style="aspect-ratio:1;grid-column:1/-1;aspect-ratio:16/7;">Drone</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════
+     FPV & DRONE
+══════════════════════════════ -->
+<section class="section border-b" id="fpv">
+  <div class="container">
+    <div class="service-intro" style="direction:rtl;">
+      <div style="direction:ltr;">
+        <span class="eyebrow">Service 02</span>
+        <h2 class="h-md" style="margin-bottom:1.1rem;">FPV &amp; Drone Video</h2>
+        <p class="body" style="margin-bottom:1rem;">Vloeiende FPV-beelden die indoor én outdoor door je pand vliegen — cinematische kwaliteit voor listings en sociale media.</p>
+        <ul class="checklist">
+          <li>Indoor FPV — vloeiende doorkijk shots</li>
+          <li>Outdoor drone — luchtbeelden &amp; omgeving</li>
+          <li>Professionele montage &amp; kleurgrading</li>
+          <li>Muzieklicentie inbegrepen</li>
+          <li>Verticaal (Reels) + horizontaal formaat</li>
+        </ul>
+        <div style="margin-top:1.5rem;">
+          <p style="font-size:0.68rem;font-weight:500;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin-bottom:0.6rem;">Tarieven</p>
+          <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--border);max-width:400px;">
+            <div style="background:var(--dark);padding:0.8rem 1rem;"><div style="font-size:0.72rem;color:var(--muted);">Aerial foto's (5)</div><div style="font-weight:700;">€165</div></div>
+            <div style="background:var(--dark);padding:0.8rem 1rem;"><div style="font-size:0.72rem;color:var(--muted);">Aerial foto's (10)</div><div style="font-weight:700;">€195</div></div>
+            <div style="background:var(--dark);padding:0.8rem 1rem;"><div style="font-size:0.72rem;color:var(--muted);">Drone video 3 min.</div><div style="font-weight:700;">€245</div></div>
+            <div style="background:var(--dark);padding:0.8rem 1rem;"><div style="font-size:0.72rem;color:var(--muted);">Highlight 60 sec.</div><div style="font-weight:700;">€145</div></div>
+          </div>
+        </div>
+      </div>
+      <div style="direction:ltr;">
+        <div class="service-media">
+          <video autoplay loop muted playsinline preload="metadata">
+            <source src="Assets/Movies/fpv-sample.mp4" type="video/mp4"/>
+          </video>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════
+     MATTERPORT 3D
+══════════════════════════════ -->
+<section class="section bg-dark border-b" id="3d">
+  <div class="container">
+    <div class="service-intro">
+      <div>
+        <span class="eyebrow">Service 03</span>
+        <h2 class="h-md" style="margin-bottom:1.1rem;">Matterport<br>3D Scans</h2>
+        <p class="body" style="margin-bottom:1rem;">Laat kopers zelf door je pand navigeren — 24/7, vanuit elke locatie. Meer serieuze leads, minder onnodige bezoeken.</p>
+        <ul class="checklist">
+          <li>Interactieve virtual tour link</li>
+          <li>Dollhouse, walkthrough &amp; vloerplan weergave</li>
+          <li>Embed op website &amp; vastgoedportals</li>
+          <li>VR-compatibel</li>
+          <li>Hosting 6–12 maanden inbegrepen</li>
+        </ul>
+        <div style="margin-top:1.5rem;">
+          <p style="font-size:0.68rem;font-weight:500;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin-bottom:0.6rem;">Startprijzen</p>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);max-width:480px;">
+            <div style="background:var(--dark2);padding:0.8rem 1rem;"><div style="font-size:0.72rem;color:var(--muted);">Appartement</div><div style="font-weight:700;">€309</div></div>
+            <div style="background:var(--dark2);padding:0.8rem 1rem;"><div style="font-size:0.72rem;color:var(--muted);">Woning</div><div style="font-weight:700;">€419</div></div>
+            <div style="background:var(--dark2);padding:0.8rem 1rem;"><div style="font-size:0.72rem;color:var(--muted);">B&amp;B / Commercieel</div><div style="font-weight:700;">€479</div></div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="matterport-wrap">
+          <iframe title="Matterport 3D Tour demo"
+            src="https://my.matterport.com/show/?m=jm5WwEA3HUN&log=0&help=0&play=1&brand=1&tour=1&vr=1"
+            allowfullscreen allow="xr-spatial-tracking"></iframe>
+        </div>
+        <p style="font-size:0.72rem;color:var(--muted);margin-top:0.8rem;">↑ Klik en sleep om te navigeren — dit is een echte Matterport tour.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════
+     VLOERPLANNEN
+══════════════════════════════ -->
+<section class="section border-b" id="floorplans">
+  <div class="container">
+    <div class="service-intro" style="direction:rtl;">
+      <div style="direction:ltr;">
+        <span class="eyebrow">Service 04</span>
+        <h2 class="h-md" style="margin-bottom:1.1rem;">Vloerplannen</h2>
+        <p class="body" style="margin-bottom:1rem;">Heldere 2D en 3D vloerplannen, automatisch gegenereerd via Matterport of op maat gemaakt. Nauwkeurig tot op de centimeter.</p>
+        <ul class="checklist">
+          <li>Automatisch via Matterport Pro3 scan</li>
+          <li>2D birdseye &amp; 3D vloerplan beschikbaar</li>
+          <li>Export in PDF, PNG of DXF/CAD</li>
+          <li>Compatibel met Immoweb, Zimmo &amp; meer</li>
+          <li>Snel beschikbaar na de scan</li>
+        </ul>
+        <div style="margin-top:1.5rem;">
+          <p style="font-size:0.68rem;font-weight:500;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin-bottom:0.6rem;">Prijzen</p>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);max-width:480px;">
+            <div style="background:var(--dark);padding:0.8rem 1rem;"><div style="font-size:0.72rem;color:var(--muted);">2D — 1 verd.</div><div style="font-weight:700;">€147</div></div>
+            <div style="background:var(--dark);padding:0.8rem 1rem;"><div style="font-size:0.72rem;color:var(--muted);">2D — meerdere</div><div style="font-weight:700;">€420</div></div>
+            <div style="background:var(--dark);padding:0.8rem 1rem;"><div style="font-size:0.72rem;color:var(--muted);">2D + 3D</div><div style="font-weight:700;">€276</div></div>
+          </div>
+        </div>
+      </div>
+      <div style="direction:ltr;">
+        <div class="gallery-item gallery-tall" style="aspect-ratio:1;width:100%;">Vloerplan voorbeeld</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════
+     WERKWIJZE
+══════════════════════════════ -->
+<section class="section bg-dark border-b">
+  <div class="container">
+    <div class="grid-2">
+      <div>
+        <span class="eyebrow">Werkwijze</span>
+        <h2 class="h-md" style="margin-bottom:1.5rem;">Hoe werken<br>we samen?</h2>
+        <div class="steps">
+          <div class="step"><div class="step-n">01</div><div><div class="step-t">Intake &amp; offerte</div><div class="step-d">Je neemt contact op. We bespreken het pand, gewenste services en timing. Offerte volgt snel.</div></div></div>
+          <div class="step"><div class="step-n">02</div><div><div class="step-t">Planning &amp; shoot</div><div class="step-d">We plannen de datum en komen op locatie met al onze apparatuur. Jij hoeft niets te voorzien.</div></div></div>
+          <div class="step"><div class="step-n">03</div><div><div class="step-t">Nabewerking</div><div class="step-d">Professionele editing, kleurgrading en kwaliteitscontrole voor elk geleverd bestand.</div></div></div>
+          <div class="step"><div class="step-n">04</div><div><div class="step-t">Levering</div><div class="step-d">Digitale bestanden via download, tour-link en embedcodes — klaar voor gebruik.</div></div></div>
+        </div>
+      </div>
+      <div>
+        <span class="eyebrow">FAQ</span>
+        <h2 class="h-md" style="margin-bottom:1.5rem;">Veelgestelde<br>vragen</h2>
+        <div>
+          <div class="faq-item open">
+            <div class="faq-q">Kan ik meerdere services combineren? <span class="faq-icon"><i class="fas fa-plus"></i></span></div>
+            <div class="faq-a">Ja, dat is zelfs voordeliger. Onze packages bundelen de meest gevraagde combinaties. Op maat samenstellen kan altijd.</div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q">Hoe snel krijg ik de beelden? <span class="faq-icon"><i class="fas fa-plus"></i></span></div>
+            <div class="faq-a">Foto's worden binnen 24u geleverd. Video's en 3D-tours binnen 48u. Spoedlevering is mogelijk op aanvraag.</div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q">Werken jullie ook buiten Sint-Niklaas? <span class="faq-icon"><i class="fas fa-plus"></i></span></div>
+            <div class="faq-a">Ja, we werken in heel België en zijn ook actief in de VS (Los Angeles). Verplaatsingskosten kunnen van toepassing zijn.</div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q">Is een Matterport-scan ook in te bedden op Immoweb? <span class="faq-icon"><i class="fas fa-plus"></i></span></div>
+            <div class="faq-a">Ja, Matterport integreert met de meeste vastgoedportals in België en Nederland, inclusief Immoweb en Zimmo.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="section">
+  <div class="container" style="text-align:center;">
+    <span class="eyebrow" style="display:flex;justify-content:center;">Klaar om je pand sterker te presenteren?</span>
+    <h2 class="h-lg" style="margin-bottom:1rem;">Plan je shoot</h2>
+    <p class="body" style="max-width:380px;margin:0 auto 2rem;">Neem contact op voor een vrijblijvende offerte op maat.</p>
+    <div class="btn-row" style="justify-content:center;">
+      <a href="contact.html" class="btn btn-w">Offerte aanvragen</a>
+      <a href="sport.html" class="btn btn-o">Bekijk sportportretten →</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-top">
+      <div><div class="footer-logo"><img src="SITE_BRANDLOGO_WIT.png" alt="Snap360"/></div><p class="footer-tag">Real estate visuals &amp; sportfotografie op topniveau.</p><div class="socials"><a href="https://www.instagram.com/snapwithus360" class="soc-a" target="_blank" rel="noopener" aria-label="Instagram"><i class="fab fa-instagram"></i></a><a href="#" class="soc-a" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a><a href="#" class="soc-a" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a></div></div>
+      <div><p class="footer-hdg">Services</p><ul class="footer-ul"><li><a href="real-estate.html#packages">Packages</a></li><li><a href="real-estate.html#fotografie">Fotografie</a></li><li><a href="real-estate.html#fpv">FPV &amp; Drone</a></li><li><a href="real-estate.html#3d">Matterport 3D</a></li><li><a href="real-estate.html#floorplans">Vloerplannen</a></li><li><a href="sport.html">Sportportretten</a></li></ul></div>
+      <div><p class="footer-hdg">Navigatie</p><ul class="footer-ul"><li><a href="index.html">Home</a></li><li><a href="contact.html">Contact</a></li><li><a href="/brochure/Sportfotografie_SNAP360_V2.0_compressed.pdf" target="_blank">Brochure PDF</a></li></ul></div>
+    </div>
+    <div class="footer-bot"><p class="footer-copy">© 2025 SNAPWITHUS360.com – DE BACKER LLC. Alle rechten voorbehouden.</p><div class="footer-legal"><a href="#">Privacybeleid</a><a href="#">Voorwaarden</a></div></div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var b=document.getElementById('burger'),n=document.getElementById('navLinks'),i=document.getElementById('bIcon');
+  b.addEventListener('click',function(){n.classList.toggle('open');i.className=n.classList.contains('open')?'fas fa-times':'fas fa-bars';});
+  n.querySelectorAll('a').forEach(function(a){a.addEventListener('click',function(){n.classList.remove('open');i.className='fas fa-bars';});});
+  document.querySelectorAll('video').forEach(function(v){v.muted=true;v.play().catch(function(){});});
+  window.addEventListener('touchstart',function(){document.querySelectorAll('video').forEach(function(v){v.play().catch(function(){});});},{once:true,passive:true});
+  document.querySelectorAll('.faq-item .faq-q').forEach(function(q){q.addEventListener('click',function(){q.parentElement.classList.toggle('open');});});
+  // Highlight active tab on scroll
+  var tabs=document.querySelectorAll('.service-tab');
+  var sections=['packages','fotografie','fpv','3d','floorplans'];
+  window.addEventListener('scroll',function(){
+    var scrollY=window.scrollY+120;
+    sections.forEach(function(id,idx){
+      var el=document.getElementById(id);
+      if(el&&scrollY>=el.offsetTop){tabs.forEach(function(t){t.classList.remove('active');});if(tabs[idx])tabs[idx].classList.add('active');}
+    });
+  });
+})();
+</script>
+</body>
+</html>
