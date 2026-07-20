@@ -387,7 +387,21 @@ async function refreshAdmin(){
 
 function updateNewSessionField(field, value){
   state.newSession[field] = value;
-  render();
+  if(field === 'startTime' || field === 'endTime'){ updateSlotPreview(); }
+}
+
+function slotPreviewText(){
+  const ns = state.newSession;
+  if(ns.startTime && ns.endTime && timeToMinutes(ns.endTime) > timeToMinutes(ns.startTime)){
+    const n = Math.floor((timeToMinutes(ns.endTime)-timeToMinutes(ns.startTime))/3);
+    return '→ genereert ' + n + ' sloten van 3 min';
+  }
+  return '';
+}
+
+function updateSlotPreview(){
+  const el = document.getElementById('slot-preview');
+  if(el) el.textContent = slotPreviewText();
 }
 
 async function addSession(e){
@@ -551,11 +565,6 @@ function renderAdminPinGate(){
 
 function renderAdminPanel(){
   const ns = state.newSession;
-  let preview = '';
-  if(ns.startTime && ns.endTime && timeToMinutes(ns.endTime) > timeToMinutes(ns.startTime)){
-    const n = Math.floor((timeToMinutes(ns.endTime)-timeToMinutes(ns.startTime))/3);
-    preview = `<div class="hint">→ genereert ${n} sloten van 3 min</div>`;
-  }
   const sorted = [...state.sessions].sort((a,b)=> (b.date+b.startTime).localeCompare(a.date+a.startTime));
   return `
     <div class="card">
@@ -569,7 +578,7 @@ function renderAdminPanel(){
         <input type="time" value="${esc(ns.startTime)}" oninput="updateNewSessionField('startTime', this.value)">
         <label>Einduur</label>
         <input type="time" value="${esc(ns.endTime)}" oninput="updateNewSessionField('endTime', this.value)">
-        ${preview}
+        <div class="hint" id="slot-preview">${slotPreviewText()}</div>
         ${state.newSessionError ? `<div class="error-text">${esc(state.newSessionError)}</div>` : ''}
         <div class="btn-row"><button class="btn" type="submit" ${state.adminBusy?'disabled':''}>${state.adminBusy?'Bezig…':'Sessie toevoegen'}</button></div>
       </form>
