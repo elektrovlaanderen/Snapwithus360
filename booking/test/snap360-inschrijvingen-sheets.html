@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SNAP360 — Shoot inschrijvingen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Work+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#17140f;
+    --bg-card:#211c15;
+    --bg-card-hover:#2a2318;
+    --line:#332c20;
+    --gold:#D5943B;
+    --gold-soft:#e8b370;
+    --text:#f1ede4;
+    --text-dim:#a89e8c;
+    --taken:#463f33;
+    --taken-text:#7a7264;
+    --free:#3c5c46;
+    --free-hover:#4a7156;
+    --danger:#a6553f;
+    --danger-hover:#bd6248;
+    --radius:10px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Work Sans',sans-serif;
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+  }
+  .mono{font-family:'JetBrains Mono',monospace;}
+  .display{font-family:'Oswald',sans-serif;text-transform:uppercase;letter-spacing:0.02em;}
+
+  #app{max-width:640px;margin:0 auto;padding:0 18px 60px;}
+
+  header.top{
+    position:relative;
+    padding:28px 0 22px;
+    overflow:hidden;
+  }
+  header.top::before{
+    content:"";
+    position:absolute;
+    top:-40px; right:-60px;
+    width:220px;height:140px;
+    background:linear-gradient(115deg, transparent 40%, var(--gold) 41%, var(--gold) 46%, transparent 47%,
+                                transparent 60%, var(--gold-soft) 61%, var(--gold-soft) 63%, transparent 64%);
+    opacity:0.18;
+    transform:rotate(8deg);
+    pointer-events:none;
+  }
+  .brand{
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+    position:relative; z-index:1;
+  }
+  .brand-name{
+    font-family:'Oswald',sans-serif; font-weight:700; font-size:22px;
+    letter-spacing:0.06em; color:var(--text);
+  }
+  .brand-name span{color:var(--gold);}
+
+  .nav-toggle{
+    display:flex; background:var(--bg-card); border:1px solid var(--line);
+    border-radius:999px; padding:3px; gap:2px;
+  }
+  .nav-toggle button{
+    border:none; background:transparent; color:var(--text-dim);
+    font-family:'Oswald',sans-serif; font-size:12px; letter-spacing:0.05em;
+    text-transform:uppercase; padding:7px 14px; border-radius:999px; cursor:pointer;
+  }
+  .nav-toggle button.active{background:var(--gold); color:#1b1508; font-weight:600;}
+
+  .hero{margin-top:6px;}
+  .hero h1{
+    font-size:34px; line-height:1.05; margin:0 0 8px; font-weight:700;
+  }
+  .hero p{color:var(--text-dim); margin:0; font-size:15px; line-height:1.5;}
+
+  .card{
+    background:var(--bg-card); border:1px solid var(--line);
+    border-radius:var(--radius); padding:16px 18px; margin-top:14px;
+  }
+  .card:hover{border-color:#453c2c;}
+
+  .session-card{cursor:pointer; transition:background .15s, border-color .15s;}
+  .session-card:hover{background:var(--bg-card-hover);}
+  .session-row{display:flex; justify-content:space-between; align-items:flex-start; gap:12px;}
+  .session-label{font-family:'Oswald',sans-serif; font-size:18px; font-weight:600; margin:0 0 4px;}
+  .session-date{color:var(--gold-soft); font-size:13px; text-transform:capitalize;}
+  .session-meta{color:var(--text-dim); font-size:12px; margin-top:6px;}
+  .badge{
+    font-family:'JetBrains Mono',monospace; font-size:11px; padding:4px 9px;
+    border-radius:999px; white-space:nowrap; height:fit-content;
+  }
+  .badge.open{background:rgba(92,140,110,0.18); color:#8fd3a8; border:1px solid #3c5c46;}
+  .badge.closed{background:rgba(166,85,63,0.15); color:#e2a794; border:1px solid #5c3c33;}
+
+  .empty{color:var(--text-dim); font-size:14px; padding:30px 0; text-align:center;}
+
+  .backlink{
+    background:none; border:none; color:var(--gold-soft); font-family:'Oswald',sans-serif;
+    font-size:13px; letter-spacing:0.04em; text-transform:uppercase; cursor:pointer; padding:0;
+    margin-bottom:16px; display:flex; align-items:center; gap:6px;
+  }
+
+  .slot-grid{
+    display:grid; grid-template-columns:repeat(auto-fill, minmax(64px,1fr));
+    gap:8px; margin-top:16px;
+  }
+  .slot{
+    font-family:'JetBrains Mono',monospace; font-size:13px;
+    background:var(--free); color:var(--text); border:1px solid transparent;
+    border-radius:7px; padding:10px 4px; text-align:center; cursor:pointer;
+    transition:background .12s, transform .08s;
+  }
+  .slot:hover{background:var(--free-hover); transform:translateY(-1px);}
+  .slot.taken{
+    background:var(--taken); color:var(--taken-text); cursor:not-allowed;
+  }
+  .slot.taken:hover{transform:none;}
+  .slot.selected{outline:2px solid var(--gold); background:var(--free-hover);}
+
+  .legend{display:flex; gap:16px; margin-top:12px; font-size:12px; color:var(--text-dim);}
+  .legend-dot{display:inline-block; width:9px; height:9px; border-radius:3px; margin-right:5px; vertical-align:middle;}
+
+  label{display:block; font-size:12px; color:var(--text-dim); margin:14px 0 6px; text-transform:uppercase; letter-spacing:0.04em; font-family:'Oswald',sans-serif;}
+  label:first-child{margin-top:0;}
+  input, select{
+    width:100%; background:#141109; border:1px solid var(--line); color:var(--text);
+    padding:11px 12px; border-radius:7px; font-size:15px; font-family:'Work Sans',sans-serif;
+  }
+  input:focus, select:focus{outline:none; border-color:var(--gold);}
+  .hint{font-size:12px; color:var(--text-dim); margin-top:4px;}
+
+  .btn{
+    font-family:'Oswald',sans-serif; text-transform:uppercase; letter-spacing:0.04em;
+    font-size:13px; font-weight:600; border:none; border-radius:7px; padding:12px 18px;
+    cursor:pointer; background:var(--gold); color:#1b1508;
+  }
+  .btn:hover{background:var(--gold-soft);}
+  .btn:disabled{opacity:0.4; cursor:not-allowed;}
+  .btn.secondary{background:transparent; border:1px solid var(--line); color:var(--text);}
+  .btn.secondary:hover{border-color:var(--gold);}
+  .btn.danger{background:var(--danger); color:#fff;}
+  .btn.danger:hover{background:var(--danger-hover);}
+  .btn.small{padding:7px 12px; font-size:11px;}
+  .btn-row{display:flex; gap:10px; margin-top:18px; flex-wrap:wrap;}
+
+  .error-text{color:#e2a794; font-size:13px; margin-top:8px;}
+  .success-icon{
+    width:44px; height:44px; border-radius:50%; background:var(--free);
+    display:flex; align-items:center; justify-content:center; margin-bottom:14px;
+    font-size:22px;
+  }
+
+  .pin-box{max-width:280px;}
+  .divider{border:none; border-top:1px solid var(--line); margin:22px 0;}
+  .admin-session{padding:14px 16px;}
+  .admin-session-top{display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap;}
+  .count{font-family:'JetBrains Mono',monospace; font-size:13px; color:var(--gold-soft);}
+  .loading{color:var(--text-dim); font-size:13px; padding:20px 0;}
+  footer{text-align:center; color:var(--text-dim); font-size:11px; margin-top:40px; letter-spacing:0.03em;}
+  .config-warning{
+    background:rgba(166,85,63,0.15); border:1px solid #5c3c33; color:#e2a794;
+    font-size:13px; border-radius:8px; padding:12px 14px; margin-bottom:8px; line-height:1.6;
+  }
+  .config-warning code{font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--gold-soft);}
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script>
+// ================================================================
+// CONFIGURATIE — plak hier de URL van je Apps Script web-app
+// (die krijg je na "Implementeren → Nieuwe implementatie → Web-app")
+// De URL eindigt op /exec
+// ================================================================
+const SCRIPT_URL = "PLAK_HIER_JE_WEBAPP_URL";
+
+const AGE_SUGGESTIONS = ["U6","U7","U8","U9","U10","U11","U12","U13","U14","U15","U16","U17","U18","U21","Dames","Heren","Seniors","Andere"];
+
+let state = {
+  view: 'signup',
+  sessions: [],
+  loadingSessions: true,
+  loadError: '',
+  selectedSessionId: null,
+  bookings: {},
+  loadingBookings: false,
+  selectedSlot: null,
+  formError: '',
+  submitting: false,
+  confirmedBooking: null,
+  adminUnlocked: false,
+  adminPin: '',
+  pinInput: '',
+  pinError: '',
+  pinChecking: false,
+  adminBookingCounts: {},
+  adminBusy: false,
+  newSession: { label:'', date:'', startTime:'', endTime:'' },
+  newSessionError: ''
+};
+
+const configured = SCRIPT_URL.startsWith('https://');
+
+// ---------- API ----------
+async function apiGet(params){
+  const url = SCRIPT_URL + '?' + new URLSearchParams(params).toString();
+  const r = await fetch(url);
+  if(!r.ok) throw new Error('Netwerkfout ('+r.status+')');
+  const data = await r.json();
+  if(data && data.error) throw new Error(data.error);
+  return data;
+}
+async function apiPost(body){
+  // Content-Type text/plain vermijdt een CORS-preflight die Apps Script niet ondersteunt
+  const r = await fetch(SCRIPT_URL, {
+    method:'POST',
+    headers:{'Content-Type':'text/plain;charset=utf-8'},
+    body: JSON.stringify(body)
+  });
+  if(!r.ok) throw new Error('Netwerkfout ('+r.status+')');
+  const data = await r.json();
+  return data;
+}
+
+// ---------- Helpers ----------
+function timeToMinutes(t){ const [h,m] = t.split(':').map(Number); return h*60+m; }
+function minutesToTime(mins){ const h=String(Math.floor(mins/60)).padStart(2,'0'); const m=String(mins%60).padStart(2,'0'); return h+':'+m; }
+function generateSlots(session){
+  const slots=[];
+  let start = timeToMinutes(session.startTime);
+  const end = timeToMinutes(session.endTime);
+  while(start+3 <= end){ slots.push(minutesToTime(start)); start += 3; }
+  return slots;
+}
+function formatDate(dateStr){
+  const d = new Date(dateStr+'T00:00:00');
+  if(isNaN(d)) return dateStr;
+  return d.toLocaleDateString('nl-BE', {weekday:'long', day:'numeric', month:'long', year:'numeric'});
+}
+function esc(s){ const d=document.createElement('div'); d.textContent=s==null?'':s; return d.innerHTML; }
+
+// ---------- Data ----------
+async function loadSessions(){
+  if(!configured){ state.loadingSessions=false; render(); return; }
+  state.loadingSessions = true; state.loadError=''; render();
+  try{
+    state.sessions = await apiGet({action:'sessions'});
+  } catch(e){
+    state.sessions = [];
+    state.loadError = 'Kon de sessies niet laden. Controleer je internetverbinding en probeer opnieuw.';
+  }
+  state.loadingSessions = false;
+  render();
+}
+
+async function loadBookings(sessionId){
+  return await apiGet({action:'bookings', sessionId: sessionId});
+}
+
+async function openSession(id){
+  state.selectedSessionId = id;
+  state.selectedSlot = null;
+  state.confirmedBooking = null;
+  state.loadingBookings = true;
+  state.formError = '';
+  render();
+  try{ state.bookings = await loadBookings(id); }
+  catch(e){ state.bookings = {}; state.formError = 'Kon de bezetting niet laden. Vernieuw de pagina.'; }
+  state.loadingBookings = false;
+  render();
+}
+
+function backToList(){
+  state.selectedSessionId = null;
+  state.selectedSlot = null;
+  state.confirmedBooking = null;
+  state.formError = '';
+  loadSessions();
+}
+
+async function pickSlot(slot){
+  if(state.bookings[slot]) return;
+  state.selectedSlot = slot;
+  state.formError = '';
+  render();
+}
+
+async function submitBooking(e){
+  e.preventDefault();
+  const form = e.target;
+  const achternaam = form.achternaam.value.trim();
+  const voornaam = form.voornaam.value.trim();
+  const leeftijd = form.leeftijd.value.trim();
+  const email = form.email.value.trim();
+  const ouderVan = form.ouderVan.value.trim();
+
+  if(!achternaam || !voornaam || !leeftijd || !email){
+    state.formError = 'Vul alle verplichte velden in.';
+    render(); return;
+  }
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
+    state.formError = 'Vul een geldig e-mailadres in.';
+    render(); return;
+  }
+
+  state.submitting = true; render();
+  try{
+    const res = await apiPost({
+      action:'book',
+      sessionId: state.selectedSessionId,
+      slot: state.selectedSlot,
+      achternaam, voornaam, leeftijd, email, ouderVan
+    });
+    if(res.error === 'taken'){
+      state.bookings = await loadBookings(state.selectedSessionId);
+      state.selectedSlot = null;
+      state.formError = 'Dat tijdslot werd net door iemand anders ingenomen. Kies een ander slot.';
+    } else if(res.error){
+      state.formError = 'Er ging iets mis: ' + res.error;
+    } else {
+      state.confirmedBooking = { achternaam, voornaam, leeftijd, slot: state.selectedSlot };
+      state.bookings[state.selectedSlot] = true;
+      state.selectedSlot = null;
+    }
+  } catch(err){
+    state.formError = 'Inschrijven mislukt door een netwerkprobleem. Probeer opnieuw.';
+  }
+  state.submitting = false;
+  render();
+}
+
+function bookAnother(){
+  state.confirmedBooking = null;
+  openSession(state.selectedSessionId);
+}
+
+// ---------- Navigatie ----------
+function switchView(v){
+  state.view = v;
+  state.formError = '';
+  if(v === 'admin' && state.adminUnlocked){ refreshAdmin(); }
+  render();
+}
+
+// ---------- Admin ----------
+async function tryUnlock(e){
+  e.preventDefault();
+  state.pinChecking = true; state.pinError=''; render();
+  try{
+    const res = await apiPost({action:'verifyPin', pin: state.pinInput.trim()});
+    if(res.ok){
+      state.adminUnlocked = true;
+      state.adminPin = state.pinInput.trim();
+      state.pinError = '';
+      refreshAdmin();
+    } else {
+      state.pinError = 'Onjuiste pincode.';
+    }
+  } catch(err){
+    state.pinError = 'Kon de pincode niet controleren (netwerkprobleem).';
+  }
+  state.pinChecking = false;
+  render();
+}
+
+async function refreshAdmin(){
+  try{
+    const [sessions, counts] = await Promise.all([
+      apiGet({action:'sessions'}),
+      apiGet({action:'counts'})
+    ]);
+    state.sessions = sessions;
+    state.adminBookingCounts = counts;
+  } catch(e){}
+  render();
+}
+
+function updateNewSessionField(field, value){
+  state.newSession[field] = value;
+  render();
+}
+
+async function addSession(e){
+  e.preventDefault();
+  const ns = state.newSession;
+  if(!ns.label.trim() || !ns.date || !ns.startTime || !ns.endTime){
+    state.newSessionError = 'Vul alle velden in.';
+    render(); return;
+  }
+  if(timeToMinutes(ns.endTime) <= timeToMinutes(ns.startTime)){
+    state.newSessionError = 'Eindtijd moet na de starttijd liggen.';
+    render(); return;
+  }
+  state.adminBusy = true; state.newSessionError=''; render();
+  try{
+    const res = await apiPost({action:'addSession', pin: state.adminPin, label: ns.label.trim(), date: ns.date, startTime: ns.startTime, endTime: ns.endTime});
+    if(res.error){ state.newSessionError = res.error; }
+    else {
+      state.newSession = { label:'', date:'', startTime:'', endTime:'' };
+      await refreshAdmin();
+    }
+  } catch(err){
+    state.newSessionError = 'Toevoegen mislukt door een netwerkprobleem. Probeer opnieuw.';
+  }
+  state.adminBusy = false;
+  render();
+}
+
+async function toggleOpen(id){
+  state.adminBusy = true; render();
+  try{
+    await apiPost({action:'toggleSession', pin: state.adminPin, id: id});
+    await refreshAdmin();
+  } catch(e){}
+  state.adminBusy = false;
+  render();
+}
+
+async function deleteSession(id){
+  if(!confirm('Deze sessie verwijderen? De inschrijvingen blijven wel in je Google Sheet staan.')) return;
+  state.adminBusy = true; render();
+  try{
+    await apiPost({action:'deleteSession', pin: state.adminPin, id: id});
+    await refreshAdmin();
+  } catch(e){}
+  state.adminBusy = false;
+  render();
+}
+
+// ---------- Render ----------
+function renderNav(){
+  return `<div class="nav-toggle">
+    <button class="${state.view==='signup'?'active':''}" onclick="switchView('signup')">Inschrijven</button>
+    <button class="${state.view==='admin'?'active':''}" onclick="switchView('admin')">Beheer</button>
+  </div>`;
+}
+
+function renderSignupList(){
+  if(state.loadingSessions) return `<div class="loading">Sessies laden…</div>`;
+  if(state.loadError) return `<div class="error-text">${esc(state.loadError)}</div><div class="btn-row"><button class="btn secondary" onclick="loadSessions()">Opnieuw proberen</button></div>`;
+  const open = state.sessions.filter(s => s.open).sort((a,b)=> (a.date+a.startTime).localeCompare(b.date+b.startTime));
+  if(open.length === 0){
+    return `<div class="empty">Er staan momenteel geen shoots open voor inschrijving.<br>Kom later nog eens terug.</div>`;
+  }
+  return open.map(s => `
+    <div class="card session-card" onclick="openSession('${s.id}')">
+      <div class="session-row">
+        <div>
+          <p class="session-label">${esc(s.label)}</p>
+          <div class="session-date">${esc(formatDate(s.date))}</div>
+          <div class="session-meta">${esc(s.startTime)} – ${esc(s.endTime)} · sloten van 3 min</div>
+        </div>
+        <span class="badge open">OPEN</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderSlotGrid(){
+  const s = state.sessions.find(x => x.id === state.selectedSessionId);
+  if(!s) return '';
+  const slots = generateSlots(s);
+  return `
+    <button class="backlink" onclick="backToList()">← Terug naar overzicht</button>
+    <h2 class="display" style="font-size:22px;margin:0 0 2px;">${esc(s.label)}</h2>
+    <div class="session-date" style="margin-bottom:4px;">${esc(formatDate(s.date))}</div>
+    <div class="session-meta">Kies je vrij tijdslot hieronder.</div>
+    <div class="slot-grid">
+      ${slots.map(slot => {
+        const taken = !!state.bookings[slot];
+        const sel = state.selectedSlot === slot;
+        return `<button class="slot ${taken?'taken':''} ${sel?'selected':''}" ${taken?'disabled':''} onclick="pickSlot('${slot}')">${slot}</button>`;
+      }).join('')}
+    </div>
+    <div class="legend">
+      <div><span class="legend-dot" style="background:var(--free)"></span>Vrij</div>
+      <div><span class="legend-dot" style="background:var(--taken)"></span>Bezet</div>
+    </div>
+    ${state.loadingBookings ? '<div class="loading">Bezetting laden…</div>' : ''}
+    ${state.formError && !state.selectedSlot ? `<div class="error-text">${esc(state.formError)}</div>` : ''}
+    ${state.selectedSlot ? renderBookingForm(s) : ''}
+  `;
+}
+
+function renderBookingForm(session){
+  return `
+    <div class="card" style="margin-top:20px;">
+      <div class="session-meta" style="margin-bottom:10px;">Je schrijft je in voor <span class="mono" style="color:var(--gold-soft)">${esc(state.selectedSlot)}</span></div>
+      <form onsubmit="submitBooking(event)">
+        <label>Voornaam *</label>
+        <input name="voornaam" type="text" required autocomplete="given-name">
+        <label>Achternaam *</label>
+        <input name="achternaam" type="text" required autocomplete="family-name">
+        <label>Leeftijdscategorie *</label>
+        <input name="leeftijd" type="text" list="age-list" placeholder="bv. U12" required>
+        <datalist id="age-list">${AGE_SUGGESTIONS.map(a=>`<option value="${a}">`).join('')}</datalist>
+        <label>E-mail *</label>
+        <input name="email" type="email" required autocomplete="email">
+        <label>Ouder van … (optioneel)</label>
+        <input name="ouderVan" type="text" placeholder="enkel invullen indien je inschrijft namens een minderjarige">
+        ${state.formError ? `<div class="error-text">${esc(state.formError)}</div>` : ''}
+        <div class="btn-row">
+          <button type="submit" class="btn" ${state.submitting?'disabled':''}>${state.submitting?'Bezig…':'Inschrijving bevestigen'}</button>
+          <button type="button" class="btn secondary" onclick="state.selectedSlot=null;state.formError='';render();">Annuleren</button>
+        </div>
+      </form>
+    </div>
+  `;
+}
+
+function renderConfirmation(){
+  const b = state.confirmedBooking;
+  return `
+    <div class="card">
+      <div class="success-icon">✓</div>
+      <p class="session-label" style="margin-bottom:6px;">Je bent ingeschreven!</p>
+      <div class="session-meta">
+        ${esc(b.voornaam)} ${esc(b.achternaam)} (${esc(b.leeftijd)})<br>
+        Tijdslot: <span class="mono" style="color:var(--gold-soft)">${esc(b.slot)}</span>
+      </div>
+      <div class="btn-row">
+        <button class="btn secondary" onclick="bookAnother()">Nog iemand inschrijven</button>
+        <button class="btn secondary" onclick="backToList()">Naar overzicht</button>
+      </div>
+    </div>
+  `;
+}
+
+function renderAdminPinGate(){
+  return `
+    <div class="card pin-box">
+      <p class="session-meta" style="margin-bottom:10px;">Voer de beheerderscode in om sessies te beheren.</p>
+      <form onsubmit="tryUnlock(event)">
+        <input type="password" placeholder="Pincode" oninput="state.pinInput=this.value" autofocus>
+        ${state.pinError ? `<div class="error-text">${esc(state.pinError)}</div>` : ''}
+        <div class="btn-row"><button class="btn" type="submit" ${state.pinChecking?'disabled':''}>${state.pinChecking?'Bezig…':'Ontgrendel'}</button></div>
+      </form>
+    </div>
+  `;
+}
+
+function renderAdminPanel(){
+  const ns = state.newSession;
+  let preview = '';
+  if(ns.startTime && ns.endTime && timeToMinutes(ns.endTime) > timeToMinutes(ns.startTime)){
+    const n = Math.floor((timeToMinutes(ns.endTime)-timeToMinutes(ns.startTime))/3);
+    preview = `<div class="hint">→ genereert ${n} sloten van 3 min</div>`;
+  }
+  const sorted = [...state.sessions].sort((a,b)=> (b.date+b.startTime).localeCompare(a.date+a.startTime));
+  return `
+    <div class="card">
+      <p class="session-label" style="margin-bottom:2px;">Nieuwe sessie openzetten</p>
+      <form onsubmit="addSession(event)">
+        <label>Naam / team / categorie</label>
+        <input type="text" placeholder="bv. Condors — U14" value="${esc(ns.label)}" oninput="updateNewSessionField('label', this.value)">
+        <label>Datum</label>
+        <input type="date" value="${esc(ns.date)}" oninput="updateNewSessionField('date', this.value)">
+        <label>Startuur</label>
+        <input type="time" value="${esc(ns.startTime)}" oninput="updateNewSessionField('startTime', this.value)">
+        <label>Einduur</label>
+        <input type="time" value="${esc(ns.endTime)}" oninput="updateNewSessionField('endTime', this.value)">
+        ${preview}
+        ${state.newSessionError ? `<div class="error-text">${esc(state.newSessionError)}</div>` : ''}
+        <div class="btn-row"><button class="btn" type="submit" ${state.adminBusy?'disabled':''}>${state.adminBusy?'Bezig…':'Sessie toevoegen'}</button></div>
+      </form>
+    </div>
+    <div class="hint" style="margin-top:10px;">Alle inschrijvingen komen automatisch in het tabblad "Inschrijvingen" van je Google Sheet terecht — geen export nodig.</div>
+    <hr class="divider">
+    <p class="session-label" style="margin-bottom:10px;">Alle sessies</p>
+    ${sorted.length===0 ? '<div class="empty">Nog geen sessies aangemaakt.</div>' : sorted.map(s => {
+      const slots = generateSlots(s).length;
+      const count = state.adminBookingCounts[s.id] ?? 0;
+      return `
+      <div class="card admin-session">
+        <div class="admin-session-top">
+          <div>
+            <p class="session-label" style="font-size:16px;margin-bottom:2px;">${esc(s.label)}</p>
+            <div class="session-date">${esc(formatDate(s.date))} · ${esc(s.startTime)}–${esc(s.endTime)}</div>
+          </div>
+          <span class="badge ${s.open?'open':'closed'}">${s.open?'OPEN':'GESLOTEN'}</span>
+        </div>
+        <div class="count" style="margin-top:8px;">${count} / ${slots} sloten bezet</div>
+        <div class="btn-row">
+          <button class="btn small secondary" ${state.adminBusy?'disabled':''} onclick="toggleOpen('${s.id}')">${s.open?'Sluiten':'Openen'}</button>
+          <button class="btn small danger" ${state.adminBusy?'disabled':''} onclick="deleteSession('${s.id}')">Verwijder</button>
+        </div>
+      </div>`;
+    }).join('')}
+  `;
+}
+
+function render(){
+  const app = document.getElementById('app');
+  let body = '';
+
+  if(!configured){
+    body = `<div class="config-warning">
+      Deze pagina is nog niet gekoppeld aan je Google Sheet.<br>
+      Open het HTML-bestand en vervang <code>PLAK_HIER_JE_WEBAPP_URL</code> bovenaan het script door de web-app-URL van je Apps Script (eindigt op <code>/exec</code>).
+    </div>`;
+  } else if(state.view === 'signup'){
+    if(state.confirmedBooking){
+      body = renderConfirmation();
+    } else if(state.selectedSessionId){
+      body = renderSlotGrid();
+    } else {
+      body = `
+        <div class="hero">
+          <h1 class="display">Kies je moment.</h1>
+          <p>Schrijf je in voor een tijdslot bij de eerstvolgende teamshoot.</p>
+        </div>
+        ${renderSignupList()}
+      `;
+    }
+  } else {
+    body = state.adminUnlocked ? renderAdminPanel() : renderAdminPinGate();
+  }
+
+  app.innerHTML = `
+    <header class="top">
+      <div class="brand">
+        <div class="brand-name">SNAP<span>360</span></div>
+        ${renderNav()}
+      </div>
+    </header>
+    ${body}
+    <footer>SNAP360 — shoot inschrijvingen</footer>
+  `;
+}
+
+loadSessions();
+</script>
+</body>
+</html>
