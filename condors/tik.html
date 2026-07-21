@@ -32,6 +32,11 @@
     width:100%;padding:12px 14px;border-radius:10px;border:1px solid var(--border);
     background:var(--card);color:var(--text);font-size:16px;
   }
+  #filter-row{display:flex;gap:8px;margin-bottom:10px;}
+  #filter-row select{
+    flex:1;padding:10px 12px;border-radius:10px;border:1px solid var(--border);
+    background:var(--card);color:var(--text);font-size:14px;
+  }
   #search::placeholder{color:var(--text-dim);}
 
   #status{font-size:12px;color:var(--text-dim);margin:6px 2px 14px;min-height:16px;}
@@ -85,6 +90,11 @@
 
 <div id="club-row">
   <select id="club-select"></select>
+</div>
+
+<div id="filter-row">
+  <select id="categorie-select"><option value="">Alle categorieën</option></select>
+  <select id="sessie-select"><option value="">Alle sessies</option></select>
 </div>
 
 <input id="search" type="text" placeholder="Zoek naam…" autocomplete="off">
@@ -142,6 +152,8 @@ async function loadNames(){
     const res = await fetch(`${CONFIG.WEBAPP_URL}?club=${encodeURIComponent(currentClub())}`);
     const data = await res.json();
     namesCache = data.personen || [];
+    populateFilter("categorie-select", data.categorieen || []);
+    populateFilter("sessie-select", data.sessies || []);
     renderList();
     setStatus(`${namesCache.length} namen geladen.`, "ok");
   }catch(err){
@@ -149,15 +161,38 @@ async function loadNames(){
   }
 }
 
+function populateFilter(selectId, values){
+  const sel = $(selectId);
+  const current = sel.value;
+  const placeholder = sel.options[0]; // "Alle categorieën" / "Alle sessies"
+  sel.innerHTML = "";
+  sel.appendChild(placeholder);
+  values.forEach(v => {
+    const opt = document.createElement("option");
+    opt.value = v; opt.textContent = v;
+    sel.appendChild(opt);
+  });
+  if (values.includes(current)) sel.value = current;
+}
+
 function renderList(filter){
   const q = (filter || $("search").value || "").trim().toLowerCase();
-  const filtered = q
-    ? namesCache.filter(p => p.naam.toLowerCase().includes(q))
-    : namesCache;
+  const categorie = $("categorie-select").value;
+  const sessie = $("sessie-select").value;
+  const filtered = namesCache.filter(p => {
+    if (q && !p.naam.toLowerCase().includes(q)) return false;
+    if (categorie && p.leeftijdscategorie !== categorie) return false;
+    if (sessie && p.sessie !== sessie) return false;
+    return true;
+  });
   $("list").innerHTML = filtered
-    .map(p => `<button class="name-btn" data-naam="${escapeHtml(p.naam)}" data-rol="${escapeHtml(p.rol||"")}">
-        ${escapeHtml(p.naam)}${p.rol ? `<span class="rol-tag">${escapeHtml(p.rol)}</span>` : ""}
-      </button>`)
+    .map(p => {
+      const tags = [p.leeftijdscategorie, p.rol].filter(Boolean)
+        .map(t => `<span class="rol-tag">${escapeHtml(t)}</span>`).join("");
+      return `<button class="name-btn" data-naam="${escapeHtml(p.naam)}" data-rol="${escapeHtml(p.rol||"")}">
+          ${escapeHtml(p.naam)}${tags}
+        </button>`;
+    })
     .join("");
   $("list").querySelectorAll(".name-btn").forEach(btn=>{
     btn.addEventListener("click", () => logTap(btn.dataset.naam, btn.dataset.rol));
@@ -254,6 +289,8 @@ function undoLast(){
 }
 
 $("search").addEventListener("input", () => renderList());
+$("categorie-select").addEventListener("change", () => renderList());
+$("sessie-select").addEventListener("change", () => renderList());
 $("club-select").addEventListener("change", loadNames);
 $("add-btn").addEventListener("click", () => {
   const naam = $("new-name").value.trim();
