@@ -125,6 +125,11 @@
   .slot.taken:hover{transform:none;}
   .slot.selected{outline:2px solid var(--gold); background:var(--free-hover);}
 
+  .cat-badges{display:flex; flex-wrap:wrap; gap:6px; margin-top:8px;}
+  .cat-badge{
+    font-family:'Oswald',sans-serif; font-size:11px; letter-spacing:0.04em;
+    color:var(--gold-soft); border:1px solid #453c2c; border-radius:999px; padding:3px 9px;
+  }
   .legend{display:flex; gap:16px; margin-top:12px; font-size:12px; color:var(--text-dim);}
   .legend-dot{display:inline-block; width:9px; height:9px; border-radius:3px; margin-right:5px; vertical-align:middle;}
 
@@ -210,6 +215,10 @@
 </div>
 
 <script>
+function toggleAndereCategorie(value){
+  const wrap = document.getElementById('anders-wrap');
+  if(wrap) wrap.style.display = (value === '__anders__') ? 'block' : 'none';
+}
 function toggleVoorwaarden(show){
   document.getElementById('voorwaarden-modal').classList.toggle('show', show);
 }
@@ -257,7 +266,7 @@ let state = {
   pinChecking: false,
   adminBookingCounts: {},
   adminBusy: false,
-  newSession: { label:'', date:'', startTime:'', endTime:'' },
+  newSession: { label:'', date:'', startTime:'', endTime:'', categories:'' },
   newSessionError: ''
 };
 
@@ -352,7 +361,10 @@ async function submitBooking(e){
   const form = e.target;
   const achternaam = form.achternaam.value.trim();
   const voornaam = form.voornaam.value.trim();
-  const leeftijd = form.leeftijd.value.trim();
+  let leeftijd = form.leeftijd.value.trim();
+  if(leeftijd === '__anders__'){
+    leeftijd = form.leeftijdAnders ? form.leeftijdAnders.value.trim() : '';
+  }
   const email = form.email.value.trim();
   const ouderVan = form.ouderVan.value.trim();
   const instagram = form.instagram.value.trim().replace(/^@+/, '');
@@ -470,10 +482,10 @@ async function addSession(e){
   }
   state.adminBusy = true; state.newSessionError=''; render();
   try{
-    const res = await apiPost({action:'addSession', pin: state.adminPin, label: ns.label.trim(), date: ns.date, startTime: ns.startTime, endTime: ns.endTime});
+    const res = await apiPost({action:'addSession', pin: state.adminPin, label: ns.label.trim(), date: ns.date, startTime: ns.startTime, endTime: ns.endTime, categories: ns.categories.trim()});
     if(res.error){ state.newSessionError = res.error; }
     else {
-      state.newSession = { label:'', date:'', startTime:'', endTime:'' };
+      state.newSession = { label:'', date:'', startTime:'', endTime:'', categories:'' };
       await refreshAdmin();
     }
   } catch(err){
@@ -530,6 +542,7 @@ function renderSignupList(){
           <p class="session-label">${esc(s.label)}</p>
           <div class="session-date">${esc(formatDate(s.date))}</div>
           <div class="session-meta">${esc(s.startTime)} – ${esc(s.endTime)} · sloten van 3 min</div>
+          ${s.categories && s.categories.length ? `<div class="cat-badges">${s.categories.map(c=>`<span class="cat-badge">${esc(c)}</span>`).join('')}</div>` : ''}
         </div>
         <span class="badge open">OPEN</span>
       </div>
@@ -545,7 +558,7 @@ function renderSlotGrid(){
     <button class="backlink" onclick="backToList()">← Terug naar overzicht</button>
     <h2 class="display" style="font-size:22px;margin:0 0 2px;">${esc(s.label)}</h2>
     <div class="session-date" style="margin-bottom:4px;">${esc(formatDate(s.date))}</div>
-    <div class="session-meta">Kies je vrij tijdslot hieronder.</div>
+    <div class="session-meta">${s.categories && s.categories.length ? 'Deze sessie is voor: <b style="color:var(--gold-soft)">' + s.categories.map(esc).join(', ') + '</b>. Hoor je bij een andere categorie, kies dan bij voorkeur de sessie van jouw team — kan je enkel op dit moment, dan ben je hier ook welkom.' : 'Kies je vrij tijdslot hieronder.'}</div>
     <div class="slot-grid">
       ${slots.map(slot => {
         const taken = !!state.bookings[slot];
@@ -573,8 +586,19 @@ function renderBookingForm(session){
         <label>Achternaam *</label>
         <input name="achternaam" type="text" required autocomplete="family-name">
         <label>Leeftijdscategorie *</label>
-        <input name="leeftijd" type="text" list="age-list" placeholder="bv. U12" required>
-        <datalist id="age-list">${AGE_SUGGESTIONS.map(a=>`<option value="${a}">`).join('')}</datalist>
+        ${session.categories && session.categories.length
+          ? `<select name="leeftijd" required onchange="toggleAndereCategorie(this.value)">
+               <option value="" disabled selected>Kies je categorie…</option>
+               ${session.categories.map(c=>`<option value="${esc(c)}">${esc(c)}</option>`).join('')}
+               <option value="__anders__">Andere categorie…</option>
+             </select>
+             <div id="anders-wrap" style="display:none;">
+               <input name="leeftijdAnders" type="text" list="age-list" placeholder="jouw categorie, bv. U12" style="margin-top:8px;">
+               <datalist id="age-list">${AGE_SUGGESTIONS.map(a=>`<option value="${a}">`).join('')}</datalist>
+               <div class="hint">Kan je enkel op dit moment? Geen probleem — vul hier je eigen categorie in.</div>
+             </div>`
+          : `<input name="leeftijd" type="text" list="age-list" placeholder="bv. U12" required>
+             <datalist id="age-list">${AGE_SUGGESTIONS.map(a=>`<option value="${a}">`).join('')}</datalist>`}
         <label>E-mail *</label>
         <input name="email" type="email" required autocomplete="email">
         <label>Ouder van … (optioneel)</label>
@@ -651,6 +675,9 @@ function renderAdminPanel(){
         <input type="time" value="${esc(ns.startTime)}" oninput="updateNewSessionField('startTime', this.value)">
         <label>Einduur</label>
         <input type="time" value="${esc(ns.endTime)}" oninput="updateNewSessionField('endTime', this.value)">
+        <label>Leeftijdscategorie&euml;n (optioneel)</label>
+        <input type="text" value="${esc(ns.categories)}" placeholder="bv. U6, U8, U10 — gescheiden door komma's" oninput="updateNewSessionField('categories', this.value)">
+        <div class="hint">Indien ingevuld kunnen leden bij deze sessie enkel uit deze categorie&euml;n kiezen.</div>
         <div class="hint" id="slot-preview">${slotPreviewText()}</div>
         ${state.newSessionError ? `<div class="error-text">${esc(state.newSessionError)}</div>` : ''}
         <div class="btn-row"><button class="btn" type="submit" ${state.adminBusy?'disabled':''}>${state.adminBusy?'Bezig…':'Sessie toevoegen'}</button></div>
