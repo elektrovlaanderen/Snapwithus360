@@ -195,12 +195,12 @@
   <div class="modal">
     <h3>Wedstrijdvoorwaarden — win een uitvergrote print</h3>
     <ol>
-      <li><strong style="color:var(--text);">Organisator.</strong> Deze actie wordt georganiseerd door SnapWithUs360 (DE BACKER LLC). Contact via <a href="https://www.snapwithus360.com" target="_blank" rel="noopener" style="color:var(--gold-soft);">snapwithus360.com</a>.</li>
-      <li><strong style="color:var(--text);">Deelname.</strong> Iedereen die tijdens dit evenement een volledig fotopakket aankoopt én het Instagram-account @snapwithus360 volgt, neemt automatisch deel. Het opgeven van je Instagram-naam bij de inschrijving vergemakkelijkt de controle, maar je kan ook deelnemen door je gegevens na aankoop door te geven via de website.</li>
+      <li><strong style="color:var(--text);">Organisator.</strong> Deze actie wordt georganiseerd door SNAP360 (DE BACKER LLC). Contact via <a href="https://www.snapwithus360.com" target="_blank" rel="noopener" style="color:var(--gold-soft);">snapwithus360.com</a>.</li>
+      <li><strong style="color:var(--text);">Deelname.</strong> Iedereen die tijdens dit evenement een volledig fotopakket aankoopt én het Instagram-account @snapwithus360 volgt, neemt automatisch deel. Het opgeven van je Instagram-naam bij de inschrijving is nodig om je deelname (aankoop + volgen) te kunnen controleren en koppelen; wie dit niet invulde, kan alsnog deelnemen door zijn gegevens na aankoop door te geven via de website.</li>
       <li><strong style="color:var(--text);">Minderjarigen.</strong> Deelname voor minderjarigen verloopt via een ouder of voogd.</li>
       <li><strong style="color:var(--text);">Looptijd.</strong> De actie loopt per fotoshoot-evenement, vanaf de opening van de inschrijvingen tot de sluiting van de bijhorende online fotogalerij.</li>
       <li><strong style="color:var(--text);">Prijs.</strong> Per evenement wordt één winnaar willekeurig getrokken uit alle geldige deelnemers. De prijs is één uitvergrote foto in print, gekozen uit de eigen foto's van de winnaar. De prijs is niet inwisselbaar voor geld of andere producten.</li>
-      <li><strong style="color:var(--text);">Bekendmaking.</strong> De winnaar wordt persoonlijk verwittigd via e-mail of Instagram. Over de uitslag wordt niet gecorrespondeerd.</li>
+      <li><strong style="color:var(--text);">Bekendmaking.</strong> De winnaar wordt persoonlijk verwittigd via e-mail of Instagram, en kan (met voornaam en/of Instagram-naam) bekendgemaakt worden via de Instagram-kanalen van SNAP360. Door deel te nemen ga je hiermee akkoord.</li>
       <li><strong style="color:var(--text);">Gegevens.</strong> Je gegevens worden uitsluitend gebruikt voor deze actie en de levering van je foto's, en worden niet doorgegeven aan derden.</li>
       <li><strong style="color:var(--text);">Instagram.</strong> Deze actie wordt op geen enkele wijze gesponsord, ondersteund of georganiseerd door Instagram of Meta.</li>
     </ol>
@@ -580,7 +580,7 @@ function renderBookingForm(session){
         <input name="ouderVan" type="text" placeholder="enkel invullen indien je inschrijft namens een minderjarige">
         <label>Instagram (optioneel)</label>
         <input name="instagram" type="text" placeholder="@jouwnaam">
-        <div class="hint">Volg <a href="https://www.instagram.com/snapwithus360" target="_blank" rel="noopener" style="color:var(--gold-soft);">@snapwithus360</a> — wie een volledig pakket koopt én ons volgt, maakt kans op een uitvergrote foto in print! <span class="voorwaarden-link" onclick="toggleVoorwaarden(true)">Wedstrijdvoorwaarden</span></div>
+        <div class="hint">Volg <a href="https://www.instagram.com/snapwithus360/" target="_blank" rel="noopener noreferrer" style="color:var(--gold-soft);">@snapwithus360</a> — wie een volledig pakket koopt én ons volgt, maakt kans op een uitvergrote foto in print! Je Instagram-naam hebben we nodig om je deelname aan de winactie te kunnen controleren. <span class="voorwaarden-link" onclick="toggleVoorwaarden(true)">Wedstrijdvoorwaarden</span></div>
         ${state.formError ? `<div class="error-text">${esc(state.formError)}</div>` : ''}
         <div class="btn-row">
           <button type="submit" class="btn" ${state.submitting?'disabled':''}>${state.submitting?'Bezig…':'Inschrijving bevestigen'}</button>
@@ -611,11 +611,12 @@ function renderConfirmation(){
       <p class="session-label" style="font-size:15px;margin-bottom:6px;">Wat na de shoot?</p>
       <div class="session-meta" style="line-height:1.7;">
         Je foto's worden professioneel bewerkt en geleverd via je persoonlijke online galerij.
-        Volg <a href="https://www.instagram.com/snapwithus360" target="_blank" rel="noopener">@snapwithus360</a> —
+        Volg <a href="https://www.instagram.com/snapwithus360/" target="_blank" rel="noopener noreferrer">@snapwithus360</a> —
         wie een volledig pakket koopt én ons volgt, maakt kans op een uitvergrote foto in print
         (<span class="voorwaarden-link" onclick="toggleVoorwaarden(true)">wedstrijdvoorwaarden</span>).
-        Ontdek al ons werk op <a href="https://www.snapwithus360.com" target="_blank" rel="noopener">snapwithus360.com</a> —
-        ook voor vastgoedfotografie, drone- en 360°-opnames.
+        SNAP360 is een media company: sportportretten, vastgoedmedia, drone- en 360°-opnames,
+        maar ook promotievideo's en sociale-mediacontent voor bedrijven en zelfstandigen —
+        ontdek alles op <a href="https://www.snapwithus360.com" target="_blank" rel="noopener">snapwithus360.com</a>.
       </div>
     </div>
   `;
@@ -715,9 +716,9 @@ function render(){
     </header>
     ${body}
     <footer>
-      <span class="display" style="color:var(--gold);font-size:13px;">SnapWithUs360</span> — sport · vastgoed · 360°<br>
+      <span class="display" style="color:var(--gold);font-size:13px;">SNAP360</span> — media company · sport · vastgoed · promo & socials<br>
       <a href="https://www.snapwithus360.com" target="_blank" rel="noopener">snapwithus360.com</a> ·
-      <a href="https://www.instagram.com/snapwithus360" target="_blank" rel="noopener">Instagram</a> ·
+      <a href="https://www.instagram.com/snapwithus360/" target="_blank" rel="noopener noreferrer">Instagram</a> ·
       <span class="voorwaarden-link" onclick="toggleVoorwaarden(true)" style="text-decoration:none;">Wedstrijdvoorwaarden</span>
     </footer>
   `;
