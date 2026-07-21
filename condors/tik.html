@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>SNAP360 — Tik-app</title>
+<style>
+  :root{
+    --gold:#D5943B;
+    --gold-dark:#9c6a24;
+    --bg:#111110;
+    --card:#1c1c1a;
+    --card-2:#26261f;
+    --text:#f2f0ea;
+    --text-dim:#a9a79d;
+    --ok:#3c9a5f;
+    --warn:#c4432e;
+    --border:#333330;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;}
+  body{padding:14px;padding-bottom:100px;}
+
+  header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+  h1{font-size:17px;font-weight:600;margin:0;letter-spacing:.02em;}
+  h1 span{color:var(--gold);}
+  #clock{font-size:15px;font-variant-numeric:tabular-nums;color:var(--text-dim);}
+
+  #club-row{display:flex;gap:8px;margin-bottom:10px;}
+  #club-select, #search{
+    width:100%;padding:12px 14px;border-radius:10px;border:1px solid var(--border);
+    background:var(--card);color:var(--text);font-size:16px;
+  }
+  #search::placeholder{color:var(--text-dim);}
+
+  #status{font-size:12px;color:var(--text-dim);margin:6px 2px 14px;min-height:16px;}
+  #status.err{color:var(--warn);}
+  #status.ok{color:var(--ok);}
+
+  #list{display:flex;flex-direction:column;gap:8px;}
+  .name-btn{
+    width:100%;text-align:left;padding:16px 16px;border-radius:12px;
+    border:1px solid var(--border);background:var(--card);color:var(--text);
+    font-size:17px;font-weight:500;
+  }
+  .name-btn:active{background:var(--gold);color:#1a1207;border-color:var(--gold);}
+  .rol-tag{display:inline-block;margin-left:8px;font-size:11px;font-weight:400;
+    color:var(--text-dim);text-transform:lowercase;}
+
+  #add-row{display:flex;gap:8px;margin-top:14px;}
+  #new-name{flex:1;padding:14px;border-radius:10px;border:1px solid var(--border);
+    background:var(--card);color:var(--text);font-size:16px;}
+  #add-btn{padding:14px 18px;border-radius:10px;border:none;background:var(--gold);
+    color:#1a1207;font-weight:600;font-size:15px;white-space:nowrap;}
+
+  #recent{
+    position:fixed;left:0;right:0;bottom:0;background:var(--card-2);
+    border-top:1px solid var(--border);padding:10px 14px 14px;
+    max-height:150px;overflow-y:auto;
+  }
+  #recent h2{font-size:12px;text-transform:uppercase;letter-spacing:.08em;
+    color:var(--text-dim);margin:0 0 8px;font-weight:600;}
+  .tap-row{display:flex;justify-content:space-between;align-items:center;
+    font-size:14px;padding:6px 0;border-bottom:1px solid var(--border);}
+  .tap-row:last-child{border-bottom:none;}
+  .tap-time{color:var(--text-dim);font-variant-numeric:tabular-nums;}
+  .undo-btn{background:none;border:1px solid var(--warn);color:var(--warn);
+    border-radius:8px;padding:4px 10px;font-size:12px;}
+  .pending{color:var(--gold);}
+  .queued-badge{font-size:11px;color:var(--gold);margin-left:6px;}
+
+  button{font-family:inherit;cursor:pointer;}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>SNAP360 <span>tik-app</span></h1>
+  <div style="text-align:right">
+    <div id="clock">--:--:--</div>
+    <div style="font-size:10px;color:var(--text-dim)">check dit tegen je camera-klok</div>
+  </div>
+</header>
+
+<div id="club-row">
+  <select id="club-select"></select>
+</div>
+
+<input id="search" type="text" placeholder="Zoek naam…" autocomplete="off">
+<div id="status"></div>
+
+<div id="list"></div>
+
+<div id="add-row">
+  <input id="new-name" type="text" placeholder="Naam niet in lijst — typ hier" autocomplete="off">
+  <button id="add-btn">Tik &amp; log</button>
+</div>
+
+<div id="recent">
+  <h2>Laatste tikken</h2>
+  <div id="recent-list"></div>
+</div>
+
+<script>
+/* ============================================================
+   CONFIGURATIE
+   Vul hier de URL van je gedeployde Apps Script Web App in,
+   en de club-sleutels die overeenkomen met je bestaande
+   tijdslot-systeem (folder-namen op GitHub).
+   ============================================================ */
+const CONFIG = {
+  WEBAPP_URL: "https://script.google.com/macros/s/AKfycbxPAPa_zT-I4yzs8dyc1fTAcbOXjTSM7kxdaVUVHEFPVdO9Ay3egQOTqvxXAYMtgbYnnA/exec",
+  CLUBS: [
+    { key: "condors", label: "Sint-Niklaas de Condors" }
+    // Voeg hier extra clubs/shoots toe: { key: "...", label: "..." }
+  ]
+};
+
+let namesCache = [];       // { naam, rol } uit de registratie
+let tapLog = [];           // lokale weergave van getikte namen (recent)
+let pendingQueue = [];     // taps die nog niet succesvol verzonden zijn
+
+const $ = (id) => document.getElementById(id);
+
+function currentClub(){ return $("club-select").value; }
+
+function populateClubs(){
+  $("club-select").innerHTML = CONFIG.CLUBS
+    .map(c => `<option value="${c.key}">${c.label}</option>`).join("");
+}
+
+function tickClock(){
+  const now = new Date();
+  $("clock").textContent = now.toLocaleTimeString("nl-BE", { hour12:false });
+}
+setInterval(tickClock, 1000); tickClock();
+
+async function loadNames(){
+  setStatus("Namen laden…", "");
+  try{
+    const res = await fetch(`${CONFIG.WEBAPP_URL}?club=${encodeURIComponent(currentClub())}`);
+    const data = await res.json();
+    namesCache = data.personen || [];
+    renderList();
+    setStatus(`${namesCache.length} namen geladen.`, "ok");
+  }catch(err){
+    setStatus("Kon namenlijst niet laden — check internet. Je kan wel manueel namen intikken.", "err");
+  }
+}
+
+function renderList(filter){
+  const q = (filter || $("search").value || "").trim().toLowerCase();
+  const filtered = q
+    ? namesCache.filter(p => p.naam.toLowerCase().includes(q))
+    : namesCache;
+  $("list").innerHTML = filtered
+    .map(p => `<button class="name-btn" data-naam="${escapeHtml(p.naam)}" data-rol="${escapeHtml(p.rol||"")}">
+        ${escapeHtml(p.naam)}${p.rol ? `<span class="rol-tag">${escapeHtml(p.rol)}</span>` : ""}
+      </button>`)
+    .join("");
+  $("list").querySelectorAll(".name-btn").forEach(btn=>{
+    btn.addEventListener("click", () => logTap(btn.dataset.naam, btn.dataset.rol));
+  });
+}
+
+function setStatus(msg, cls){
+  const el = $("status");
+  el.textContent = msg;
+  el.className = cls || "";
+}
+
+function escapeHtml(s){
+  return s.replace(/[&<>"']/g, m => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
+}
+
+async function logTap(naam, rol){
+  const ts = new Date();
+  const entry = { naam, rol: rol || "", ts, club: currentClub(), sent: false };
+  tapLog.unshift(entry);
+  renderRecent();
+
+  try{
+    await sendTap(entry);
+    entry.sent = true;
+    renderRecent();
+  }catch(err){
+    pendingQueue.push(entry);
+    renderRecent();
+    retryQueueSoon();
+  }
+}
+
+function toLocalTimestamp(d){
+  // Lokale (wandklok-)tijd, GEEN UTC — dit moet overeenkomen met de
+  // tijdzone-instelling van je camera zodat het match-script rechtstreeks
+  // kan vergelijken zonder tijdzone-omrekening.
+  const pad = (n, len=2) => String(n).padStart(len, "0");
+  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}` +
+         `T${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}.${pad(d.getMilliseconds(),3)}`;
+}
+
+async function sendTap(entry){
+  const body = JSON.stringify({
+    club: entry.club,
+    naam: entry.naam,
+    rol: entry.rol || "",
+    timestamp: toLocalTimestamp(entry.ts)
+  });
+  // Content-Type bewust NIET expliciet zetten (blijft text/plain) —
+  // dat voorkomt een CORS-preflight die Apps Script niet ondersteunt.
+  const res = await fetch(CONFIG.WEBAPP_URL, { method: "POST", body });
+  if(!res.ok) throw new Error("Server error");
+}
+
+let retryTimer = null;
+function retryQueueSoon(){
+  if(retryTimer) return;
+  retryTimer = setTimeout(async () => {
+    retryTimer = null;
+    const stillPending = [];
+    for(const entry of pendingQueue){
+      try{ await sendTap(entry); entry.sent = true; }
+      catch(err){ stillPending.push(entry); }
+    }
+    pendingQueue = stillPending;
+    renderRecent();
+    if(pendingQueue.length) retryQueueSoon();
+  }, 4000);
+}
+
+function renderRecent(){
+  $("recent-list").innerHTML = tapLog.slice(0, 8).map((e, idx) => `
+    <div class="tap-row">
+      <span>${escapeHtml(e.naam)}${e.rol ? `<span class="rol-tag">${escapeHtml(e.rol)}</span>` : ""}${e.sent ? "" : '<span class="queued-badge">verzenden…</span>'}</span>
+      <span class="tap-time">${e.ts.toLocaleTimeString("nl-BE",{hour12:false})}
+        ${idx===0 ? '<button class="undo-btn" onclick="undoLast()">undo</button>' : ""}
+      </span>
+    </div>
+  `).join("");
+}
+
+function undoLast(){
+  if(!tapLog.length) return;
+  const removed = tapLog.shift();
+  renderRecent();
+  // Verwijder ook uit de wachtrij als hij nog niet verzonden was
+  pendingQueue = pendingQueue.filter(e => e !== removed);
+  // Best-effort: stuur een "undo"-signaal naar de backend (negeert fouten)
+  fetch(CONFIG.WEBAPP_URL, {
+    method: "POST",
+    body: JSON.stringify({ club: removed.club, naam: removed.naam, rol: removed.rol || "", timestamp: toLocalTimestamp(removed.ts), undo: true })
+  }).catch(()=>{});
+}
+
+$("search").addEventListener("input", () => renderList());
+$("club-select").addEventListener("change", loadNames);
+$("add-btn").addEventListener("click", () => {
+  const naam = $("new-name").value.trim();
+  if(!naam) return;
+  logTap(naam);
+  $("new-name").value = "";
+});
+$("new-name").addEventListener("keydown", (e) => {
+  if(e.key === "Enter") $("add-btn").click();
+});
+
+populateClubs();
+loadNames();
+</script>
+</body>
+</html>
