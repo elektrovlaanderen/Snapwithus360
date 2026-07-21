@@ -361,6 +361,7 @@ async function submitBooking(e){
   const form = e.target;
   const achternaam = form.achternaam.value.trim();
   const voornaam = form.voornaam.value.trim();
+  const rol = form.rol.value;
   let leeftijd = form.leeftijd.value.trim();
   if(leeftijd === '__anders__'){
     leeftijd = form.leeftijdAnders ? form.leeftijdAnders.value.trim() : '';
@@ -384,7 +385,7 @@ async function submitBooking(e){
       action:'book',
       sessionId: state.selectedSessionId,
       slot: state.selectedSlot,
-      achternaam, voornaam, leeftijd, email, ouderVan, instagram
+      achternaam, voornaam, leeftijd, email, ouderVan, instagram, rol
     });
     if(res.error === 'taken'){
       state.bookings = await loadBookings(state.selectedSessionId);
@@ -581,10 +582,18 @@ function renderBookingForm(session){
     <div class="card" style="margin-top:20px;">
       <div class="session-meta" style="margin-bottom:10px;">Je schrijft je in voor <span class="mono" style="color:var(--gold-soft)">${esc(state.selectedSlot)}</span></div>
       <form onsubmit="submitBooking(event)">
-        <label>Voornaam *</label>
+        <label>Voornaam speler/clublid *</label>
         <input name="voornaam" type="text" required autocomplete="given-name">
-        <label>Achternaam *</label>
+        <div class="hint">Vul de naam in van wie op de foto komt, niet die van de ouder.</div>
+        <label>Achternaam speler/clublid *</label>
         <input name="achternaam" type="text" required autocomplete="family-name">
+        <label>Rol binnen de club *</label>
+        <select name="rol" required>
+          <option value="Speler" selected>Speler</option>
+          <option value="Coach">Coach</option>
+          <option value="Bestuur">Bestuur</option>
+          <option value="Andere">Andere</option>
+        </select>
         <label>Leeftijdscategorie *</label>
         ${session.categories && session.categories.length
           ? `<select name="leeftijd" required onchange="toggleAndereCategorie(this.value)">
