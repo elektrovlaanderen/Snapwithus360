@@ -99,6 +99,9 @@
   }
   .badge.open{background:rgba(92,140,110,0.18); color:#8fd3a8; border:1px solid #3c5c46;}
   .badge.closed{background:rgba(166,85,63,0.15); color:#e2a794; border:1px solid #5c3c33;}
+  .badge.soon{background:rgba(213,148,59,0.12); color:var(--gold-soft); border:1px solid #453c2c;}
+  .session-card.soon{cursor:default; opacity:0.75;}
+  .session-card.soon:hover{background:var(--bg-card);}
 
   .empty{color:var(--text-dim); font-size:14px; padding:30px 0; text-align:center;}
 
@@ -266,7 +269,7 @@ let state = {
   pinChecking: false,
   adminBookingCounts: {},
   adminBusy: false,
-  newSession: { label:'', date:'', startTime:'', endTime:'', categories:'' },
+  newSession: { label:'', date:'', startTime:'', endTime:'', categories:'', opensDate:'', opensTime:'' },
   newSessionError: ''
 };
 
@@ -309,6 +312,13 @@ function formatDate(dateStr){
   return d.toLocaleDateString('nl-BE', {weekday:'long', day:'numeric', month:'long', year:'numeric'});
 }
 function esc(s){ const d=document.createElement('div'); d.textContent=s==null?'':s; return d.innerHTML; }
+function formatOpensAt(str){
+  const d = new Date(str.replace(' ','T'));
+  if(isNaN(d)) return str;
+  const datum = d.toLocaleDateString('nl-BE', {weekday:'long', day:'numeric', month:'long'});
+  const tijd = d.toLocaleTimeString('nl-BE', {hour:'2-digit', minute:'2-digit'});
+  return datum + ' om ' + tijd;
+}
 
 // ---------- Data ----------
 async function loadSessions(){
@@ -483,10 +493,11 @@ async function addSession(e){
   }
   state.adminBusy = true; state.newSessionError=''; render();
   try{
-    const res = await apiPost({action:'addSession', pin: state.adminPin, label: ns.label.trim(), date: ns.date, startTime: ns.startTime, endTime: ns.endTime, categories: ns.categories.trim()});
+    const opensAt = ns.opensDate ? ns.opensDate + ' ' + (ns.opensTime || '00:00') : '';
+    const res = await apiPost({action:'addSession', pin: state.adminPin, label: ns.label.trim(), date: ns.date, startTime: ns.startTime, endTime: ns.endTime, categories: ns.categories.trim(), opensAt: opensAt});
     if(res.error){ state.newSessionError = res.error; }
     else {
-      state.newSession = { label:'', date:'', startTime:'', endTime:'', categories:'' };
+      state.newSession = { label:'', date:'', startTime:'', endTime:'', categories:'', opensDate:'', opensTime:'' };
       await refreshAdmin();
     }
   } catch(err){
@@ -532,20 +543,23 @@ function renderNav(){
 function renderSignupList(){
   if(state.loadingSessions) return `<div class="loading">Sessies laden…</div>`;
   if(state.loadError) return `<div class="error-text">${esc(state.loadError)}</div><div class="btn-row"><button class="btn secondary" onclick="loadSessions()">Opnieuw proberen</button></div>`;
-  const open = state.sessions.filter(s => s.open).sort((a,b)=> (a.date+a.startTime).localeCompare(b.date+b.startTime));
-  if(open.length === 0){
+  const zichtbaar = state.sessions
+    .filter(s => s.open || s.opensAt)
+    .sort((a,b)=> (a.date+a.startTime).localeCompare(b.date+b.startTime));
+  if(zichtbaar.length === 0){
     return `<div class="empty">Er staan momenteel geen shoots open voor inschrijving.<br>Kom later nog eens terug.</div>`;
   }
-  return open.map(s => `
-    <div class="card session-card" onclick="openSession('${s.id}')">
+  return zichtbaar.map(s => `
+    <div class="card session-card ${s.open ? '' : 'soon'}" ${s.open ? `onclick="openSession('${s.id}')"` : ''}>
       <div class="session-row">
         <div>
           <p class="session-label">${esc(s.label)}</p>
           <div class="session-date">${esc(formatDate(s.date))}</div>
           <div class="session-meta">${esc(s.startTime)} – ${esc(s.endTime)} · sloten van 3 min</div>
           ${s.categories && s.categories.length ? `<div class="cat-badges">${s.categories.map(c=>`<span class="cat-badge">${esc(c)}</span>`).join('')}</div>` : ''}
+          ${!s.open && s.opensAt ? `<div class="session-meta" style="color:var(--gold-soft);">Inschrijven kan vanaf ${esc(formatOpensAt(s.opensAt))}</div>` : ''}
         </div>
-        <span class="badge open">OPEN</span>
+        <span class="badge ${s.open ? 'open' : 'soon'}">${s.open ? 'OPEN' : 'BINNENKORT'}</span>
       </div>
     </div>
   `).join('');
@@ -684,6 +698,10 @@ function renderAdminPanel(){
         <input type="time" value="${esc(ns.startTime)}" oninput="updateNewSessionField('startTime', this.value)">
         <label>Einduur</label>
         <input type="time" value="${esc(ns.endTime)}" oninput="updateNewSessionField('endTime', this.value)">
+        <label>Automatisch openstellen op (optioneel)</label>
+        <input type="date" value="${esc(ns.opensDate)}" oninput="updateNewSessionField('opensDate', this.value)">
+        <input type="time" value="${esc(ns.opensTime)}" oninput="updateNewSessionField('opensTime', this.value)" style="margin-top:8px;">
+        <div class="hint">Indien ingevuld staat de sessie al zichtbaar als "binnenkort", maar kan men pas vanaf dat moment inschrijven. Leeg = meteen open.</div>
         <label>Leeftijdscategorie&euml;n (optioneel)</label>
         <input type="text" value="${esc(ns.categories)}" placeholder="bv. U6, U8, U10 — gescheiden door komma's" oninput="updateNewSessionField('categories', this.value)">
         <div class="hint">Indien ingevuld kunnen leden bij deze sessie enkel uit deze categorie&euml;n kiezen.</div>
@@ -704,8 +722,9 @@ function renderAdminPanel(){
           <div>
             <p class="session-label" style="font-size:16px;margin-bottom:2px;">${esc(s.label)}</p>
             <div class="session-date">${esc(formatDate(s.date))} · ${esc(s.startTime)}–${esc(s.endTime)}</div>
+            ${!s.open && s.opensAt ? `<div class="session-meta" style="color:var(--gold-soft);">Opent automatisch op ${esc(formatOpensAt(s.opensAt))}</div>` : ''}
           </div>
-          <span class="badge ${s.open?'open':'closed'}">${s.open?'OPEN':'GESLOTEN'}</span>
+          <span class="badge ${s.open?'open':(s.opensAt?'soon':'closed')}">${s.open?'OPEN':(s.opensAt?'BINNENKORT':'GESLOTEN')}</span>
         </div>
         <div class="count" style="margin-top:8px;">${count} / ${slots} sloten bezet</div>
         <div class="btn-row">
