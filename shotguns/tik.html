@@ -120,12 +120,26 @@
    tijdslot-systeem (folder-namen op GitHub).
    ============================================================ */
 const CONFIG = {
-  WEBAPP_URL: "https://script.google.com/macros/s/AKfycbxPAPa_zT-I4yzs8dyc1fTAcbOXjTSM7kxdaVUVHEFPVdO9Ay3egQOTqvxXAYMtgbYnnA/exec",
+  WEBAPP_URL: "https://script.google.com/macros/s/AKfycbwe3efFGlyJy297CVn1wYBGvVLJisGfF1a642C71Vav2P3Wtw58y5fM_RC7mxs4GbhO/exec",
+  // Optioneel: extra clubs die je in de keuzelijst wil zien, ook als je
+  // dit bestand vanuit een andere map opent. De club van de HUIDIGE map
+  // wordt sowieso automatisch toegevoegd en geselecteerd.
   CLUBS: [
-    { key: "condors", label: "Sint-Niklaas de Condors" }
-    // Voeg hier extra clubs/shoots toe: { key: "...", label: "..." }
+    { key: "shotguns", label: "Shotguns" }
   ]
 };
+
+// De clubsleutel wordt afgeleid van de mapnaam (bv. /condors/tik.html -> "condors"),
+// zodat exact hetzelfde bestand in elke team-directory werkt zonder aanpassing.
+function detectClubKey(){
+  const segs = window.location.pathname.split("/")
+    .filter(s => s && !s.toLowerCase().endsWith(".html"));
+  return segs.length ? decodeURIComponent(segs[segs.length-1]).toLowerCase() : "";
+}
+const DETECTED_CLUB = detectClubKey();
+if (DETECTED_CLUB && !CONFIG.CLUBS.some(c => c.key === DETECTED_CLUB)) {
+  CONFIG.CLUBS.unshift({ key: DETECTED_CLUB, label: DETECTED_CLUB });
+}
 
 let namesCache = [];       // { naam, rol } uit de registratie
 let tapLog = [];           // lokale weergave van getikte namen (recent)
@@ -138,6 +152,9 @@ function currentClub(){ return $("club-select").value; }
 function populateClubs(){
   $("club-select").innerHTML = CONFIG.CLUBS
     .map(c => `<option value="${c.key}">${c.label}</option>`).join("");
+  if (DETECTED_CLUB && CONFIG.CLUBS.some(c => c.key === DETECTED_CLUB)) {
+    $("club-select").value = DETECTED_CLUB;
+  }
 }
 
 function tickClock(){
@@ -151,6 +168,7 @@ async function loadNames(){
   try{
     const res = await fetch(`${CONFIG.WEBAPP_URL}?club=${encodeURIComponent(currentClub())}`);
     const data = await res.json();
+    if (data.error) { setStatus("Backend: " + data.error, "err"); return; }
     namesCache = data.personen || [];
     populateFilter("categorie-select", data.categorieen || []);
     populateFilter("sessie-select", data.sessies || []);
