@@ -126,8 +126,14 @@ code{font-family:ui-monospace,Menlo,monospace;font-size:13px;color:var(--gold)}
     <div class="veld"><label>Telefoon</label><input data-b="tel"></div>
   </div>
   <h3 style="margin-top:24px">Rekenen en versturen</h3>
+  <div class="veld"><label>Hoe ga je om met btw?</label>
+    <select data-i="btwRegime">
+      <option value="vast">Vast percentage, meteen zichtbaar op de offerte</option>
+      <option value="later">Enkel bedragen exclusief btw, tarief volgt bij de facturatie</option>
+    </select>
+    <div class="mini">Voor Belgische klanten is het standaardtarief 21%. Voor werk buiten België is de tweede optie veiliger.</div></div>
   <div class="rij3">
-    <div class="veld"><label>Btw-percentage</label><input data-i="btw" type="text"><div class="mini">21 voor België, 0 voor werk buiten de EU.</div></div>
+    <div class="veld"><label>Btw-percentage</label><input data-i="btw" type="text"><div class="mini">21 voor België.</div></div>
     <div class="veld"><label>Voorschot in procent</label><input data-i="voorschot" type="text"></div>
     <div class="veld"><label>Munt</label><input data-i="munt"></div>
   </div>
@@ -268,6 +274,7 @@ function vulBedrijf(){
     if(k==='btw' || k==='voorschot') el.value = Math.round(CONFIG[k]*100);
     else if(k==='publiekeCatalogus') el.value = String(CONFIG[k]);
     else if(k==='foto') el.value = CONFIG.foto || 'optioneel';
+    else if(k==='btwRegime') el.value = CONFIG.btwRegime || 'vast';
     else el.value = CONFIG[k] || '';
     el.oninput = el.onchange = ()=>{
       if(map[k]) CONFIG[k] = map[k](el.value);

@@ -75,8 +75,11 @@ h2{font-size:26px;font-weight:600;letter-spacing:-.02em;margin-bottom:8px}
 .opt b{display:block;font-size:17px;font-weight:600;margin-bottom:4px}
 .opt small{display:block;color:var(--muted);font-size:14px;line-height:1.45}
 .opt .price{
-  float:right;color:var(--gold);font-weight:600;font-size:16px;margin-left:12px;
+  float:right;color:var(--gold);font-weight:600;font-size:16px;margin-left:12px;text-align:right;
 }
+.opt .price em{display:block;font-style:normal;font-weight:400;font-size:12px;color:var(--muted);margin-top:1px}
+.opt .price s{display:block;font-weight:400;font-size:13px;color:var(--muted);text-decoration:line-through}
+.exclbtw{color:var(--muted);font-size:13.5px;margin:-14px 0 20px}
 .opt ul{margin:12px 0 0;padding-left:16px;color:var(--muted);font-size:14px}
 .opt li{margin-bottom:3px}
 
@@ -240,6 +243,7 @@ button.klein:hover{border-color:var(--gold);color:var(--gold)}
 <section class="step" data-step="2">
   <h2>Welk pakket?</h2>
   <p class="lead" id="pakLead"></p>
+  <p class="exclbtw" id="pakBtw"></p>
   <div class="opts" id="pakOpts"></div>
   <div class="err" id="e2">Kies een pakket.</div>
   <div class="nav"><button class="back" data-prev>Terug</button><button class="go" data-next>Verder</button></div>
@@ -357,7 +361,11 @@ let CONFIG = {
     web:     "snapwithus360.com"
   },
 
-  btw: 0.21,          // 21% — zet op 0 voor werk buiten BE
+  btw: 0.21,          // standaardtarief voor deze diensten in België
+
+  // "vast"  = het percentage hierboven wordt getoond en meegerekend
+  // "later" = enkel bedragen exclusief btw; het tarief volgt bij de facturatie
+  btwRegime: "vast",
   munt: "€",
   voorschot: 0.30,    // 30% voorschot bij bevestiging
 
@@ -551,7 +559,7 @@ let CONFIG = {
 
     /* ============ ZELFSTANDIGE ============ */
     zelfstandige: {
-      label: "Zelfstandige of kleine zaak",
+      label: "Zelfstandige of KMO",
       sub: "Jij, je zaak, je vak",
       pakketten: ["portret","verhaal","reeks"],
       suggesties: ["De zaak van buiten","Mij aan het werk","Het eindresultaat","Het team"],
@@ -976,7 +984,8 @@ function start(){
    STATE
    ============================================================ */
 const S = { type:null, situatie:null, pakket:null, klant:{}, antw:{},
-            shots:[], ref:maakRef(), link:null, linkPaketten:null, foto:null };
+            shots:[], ref:maakRef(), link:null, linkPaketten:null, foto:null,
+            kortPct:0, kortLabel:'', toonVan:false };
 let stap = 0;
 let volgorde = [0,1,2,3,4,5];
 const VAST = { type:false, situatie:false };
@@ -1065,6 +1074,9 @@ if(LINK){
   if(LINK.s){ S.situatie = LINK.s; VAST.situatie = true; }
   if(Array.isArray(LINK.p) && LINK.p.length) S.linkPaketten = LINK.p;
   S.link = LINK.c || LINK.n || 'persoonlijke link';
+  S.kortPct = Number(LINK.k) > 0 ? Number(LINK.k) : 0;
+  S.kortLabel = LINK.kt || 'Introductiekorting';
+  S.toonVan = !!LINK.kd;
   if(LINK.n) $('h1').textContent = 'Video-opdracht voor ' + LINK.n;
   if(LINK.b) $('header p').textContent = LINK.b;
 }
@@ -1124,8 +1136,14 @@ function toonPakketten(){
   $('#pakLead').textContent = enkel
     ? 'Dit is het pakket dat we voor je samenstelden. Lees na wat erin zit en ga verder.'
     : (s && s.lead) || '';
+  $('#pakBtw').textContent = CONFIG.btwRegime === 'later'
+    ? 'Alle prijzen zijn exclusief btw. Het btw-tarief wordt bij de facturatie vastgesteld.'
+    : `Alle prijzen zijn exclusief btw. Er komt ${Math.round(CONFIG.btw*100)}% btw bij.`;
   $('#pakOpts').innerHTML = lijst.map(p=>{
-    const prijs = (p.prijs===null || p.prijs===undefined) ? 'Op maat' : geld(p.prijs);
+    const opMaat = (p.prijs===null || p.prijs===undefined);
+    const prijs = opMaat ? 'Op maat'
+      : `${geld(netto(p.prijs))}<em>excl. btw</em>` +
+        (S.kortPct && S.toonVan ? `<s>${geld(p.prijs)}</s>` : '');
     return `<button type="button" class="opt" aria-pressed="${enkel}" data-pak="${esc(p.id)}">
       <span class="price">${prijs}</span>
       <b>${esc(p.naam)}</b>
@@ -1316,11 +1334,21 @@ function valideer(n){
 /* ============================================================
    DOCUMENT
    ============================================================ */
+function netto(basis){
+  return S.kortPct ? Math.round((basis*(1-S.kortPct/100))*100)/100 : basis;
+}
 function bedragen(){
-  const p = S.pakket.prijs;
-  if(p===null || p===undefined) return null;
-  const btw = p*CONFIG.btw;
-  return { ex:p, btw, in:p+btw, voorschot:(p+btw)*CONFIG.voorschot };
+  const basis = S.pakket.prijs;
+  if(basis===null || basis===undefined) return null;
+  const ex = netto(basis);
+  const later = CONFIG.btwRegime === 'later';
+  const btw = later ? 0 : ex*CONFIG.btw;
+  const totaal = ex + btw;
+  return { basis, kortPct:S.kortPct, kortLabel:S.kortLabel,
+           kortBedrag: Math.round((basis-ex)*100)/100,
+           ex, btw, in:totaal, later,
+           btwPct: later ? null : Math.round(CONFIG.btw*100),
+           voorschot: totaal*CONFIG.voorschot };
 }
 function datumNL(iso){
   if(!iso) return null;
@@ -1359,13 +1387,18 @@ function tekenDocument(){
     <p style="margin-top:8px"><strong>Wat je krijgt</strong></p>
     <ul>${S.pakket.levert.map(l=>`<li>${esc(l)}</li>`).join('')}</ul>
     ${b ? `<dl style="margin-top:12px">
-        <dt>Pakket, exclusief btw</dt><dd>${geld(b.ex)}</dd>
-        <dt>Btw ${Math.round(CONFIG.btw*100)}%</dt><dd>${geld(b.btw)}</dd>
+        ${b.kortPct ? `<dt>Pakket</dt><dd>${geld(b.basis)}</dd>
+          <dt>${esc(b.kortLabel)} ${b.kortPct}%</dt><dd>− ${geld(b.kortBedrag)}</dd>` : ''}
+        <dt>${b.kortPct ? 'Te betalen, exclusief btw' : 'Pakket, exclusief btw'}</dt><dd>${geld(b.ex)}</dd>
+        ${b.later ? '' : `<dt>Btw ${b.btwPct}%</dt><dd>${geld(b.btw)}</dd>`}
       </dl>
-      <p class="total">Totaal inclusief btw: ${geld(b.in)}</p>
+      ${b.later
+        ? `<p class="total">Totaal exclusief btw: ${geld(b.ex)}</p>
+           <p class="small">Het btw-tarief wordt bij het opmaken van de factuur vastgesteld volgens het regime dat op deze opdracht van toepassing is.</p>`
+        : `<p class="total">Totaal inclusief btw: ${geld(b.in)}</p>`}
       <p class="small">Voorschot bij bevestiging: ${geld(b.voorschot)}. Het saldo volgt na de opname.</p>`
     : `<p class="total">Prijs op maat</p>
-       <p class="small">Je krijgt binnen twee werkdagen een offerte op basis van dit document. De opdracht start pas na jouw goedkeuring van die offerte.</p>`}
+       <p class="small">Je krijgt binnen twee werkdagen een offerte op basis van dit document. De opdracht start pas na jouw goedkeuring van die offerte. Alle prijzen zijn exclusief btw.</p>`}
 
     <h4>Dit moet zeker in beeld</h4>
     <ol>${S.shots.map(s=>`<li>${esc(s.w)}${s.h?` <span class="small">— ${esc(s.h)}</span>`:''}</li>`).join('')}</ol>
