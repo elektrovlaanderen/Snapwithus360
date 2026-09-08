@@ -80,6 +80,23 @@ h2{font-size:26px;font-weight:600;letter-spacing:-.02em;margin-bottom:8px}
 .opt .price em{display:block;font-style:normal;font-weight:400;font-size:12px;color:var(--muted);margin-top:1px}
 .opt .price s{display:block;font-weight:400;font-size:13px;color:var(--muted);text-decoration:line-through}
 .exclbtw{color:var(--muted);font-size:13.5px;margin:-14px 0 20px}
+.optie{display:flex;gap:12px;align-items:flex-start;background:var(--panel);border:1px solid var(--line);
+  border-radius:var(--r);padding:15px 17px;margin-bottom:8px;cursor:pointer}
+.optie:hover{border-color:#4A443A}
+.optie.aan{border-color:var(--gold);background:var(--panel-2)}
+.optie.vast{cursor:default;opacity:.85}
+.optie input{width:17px;height:17px;flex:none;margin-top:3px;accent-color:var(--gold)}
+.optie .tekst{flex:1}
+.optie b{display:block;font-size:15.5px;font-weight:600}
+.optie small{display:block;color:var(--muted);font-size:13.5px;margin-top:2px;line-height:1.45}
+.optie .bedrag{color:var(--gold);font-weight:600;font-size:15px;white-space:nowrap;margin-left:6px}
+.optie .bedrag.inb{color:var(--muted);font-weight:400;font-size:13px}
+.totaalbalk{border:1px solid var(--gold);border-radius:var(--r);background:var(--panel-2);
+  padding:18px 20px;margin-top:18px}
+.totaalbalk .regel{display:flex;justify-content:space-between;gap:12px;font-size:14.5px;color:var(--muted);margin-bottom:5px}
+.totaalbalk .som{display:flex;justify-content:space-between;gap:12px;font-size:18px;font-weight:600;
+  color:var(--text);padding-top:10px;border-top:1px solid var(--line)}
+.totaalbalk .note{color:var(--gold);font-size:13.5px;margin-top:10px;line-height:1.45}
 .opt ul{margin:12px 0 0;padding-left:16px;color:var(--muted);font-size:14px}
 .opt li{margin-bottom:3px}
 
@@ -249,8 +266,17 @@ button.klein:hover{border-color:var(--gold);color:var(--gold)}
   <div class="nav"><button class="back" data-prev>Terug</button><button class="go" data-next>Verder</button></div>
 </section>
 
-<!-- 3. GEGEVENS -->
+<!-- 3. OPTIES -->
 <section class="step" data-step="3">
+  <h2 id="optTitel">Stel het verder af</h2>
+  <p class="lead" id="optLead"></p>
+  <div id="optLijst"></div>
+  <div class="totaalbalk" id="totaalBalk"></div>
+  <div class="nav"><button class="back" data-prev>Terug</button><button class="go" data-next>Verder</button></div>
+</section>
+
+<!-- 4. GEGEVENS -->
+<section class="step" data-step="4">
   <h2>Je gegevens</h2>
   <p class="lead">Deze komen op de opdrachtbevestiging en op de factuur.</p>
   <div id="gegevens"></div>
@@ -277,12 +303,12 @@ button.klein:hover{border-color:var(--gold);color:var(--gold)}
     </div>
   </div>
 
-  <div class="err" id="e3">Vul de verplichte velden in.</div>
+  <div class="err" id="e4">Vul de verplichte velden in.</div>
   <div class="nav"><button class="back" data-prev>Terug</button><button class="go" data-next>Verder</button></div>
 </section>
 
 <!-- 4. AANDACHTSPUNTEN -->
-<section class="step" data-step="4">
+<section class="step" data-step="5">
   <h2>Aandachtspunten</h2>
   <p class="lead">Dit is het belangrijkste deel. Alles wat je hier zet, staat mee in het document en wordt onze checklist op de dag zelf.</p>
 
@@ -300,12 +326,12 @@ button.klein:hover{border-color:var(--gold);color:var(--gold)}
   </div>
 
   <div id="vragen"></div>
-  <div class="err" id="e4">Voeg minstens één punt toe dat zeker in beeld moet.</div>
+  <div class="err" id="e5">Voeg minstens één punt toe dat zeker in beeld moet.</div>
   <div class="nav"><button class="back" data-prev>Terug</button><button class="go" data-next>Naar het document</button></div>
 </section>
 
 <!-- 5. DOCUMENT + HANDTEKENING -->
-<section class="step" data-step="5">
+<section class="step" data-step="6">
   <h2>Opdrachtbevestiging</h2>
   <p class="lead">Lees na en onderteken. Klopt er iets niet, ga dan terug en pas het aan.</p>
   <div class="doc" id="doc"></div>
@@ -321,12 +347,12 @@ button.klein:hover{border-color:var(--gold);color:var(--gold)}
     <div class="signbar"><span>Teken met je muis of vinger</span><button type="button" id="clearPad">Wissen</button></div>
   </div>
 
-  <div class="err" id="e5">Vink het akkoord aan, vul je naam in en zet je handtekening.</div>
+  <div class="err" id="e6">Vink het akkoord aan, vul je naam in en zet je handtekening.</div>
   <div class="nav"><button class="back" data-prev>Terug</button><button class="go" id="send">Onderteken en verstuur</button></div>
 </section>
 
 <!-- 6. KLAAR -->
-<section class="step" data-step="6">
+<section class="step" data-step="7">
   <div class="done-panel">
     <h2>Getekend</h2>
     <p class="lead" style="margin-bottom:0" id="doneTxt"></p>
@@ -369,6 +395,9 @@ let CONFIG = {
   munt: "€",
   voorschot: 0.30,    // 30% voorschot bij bevestiging
 
+  // Opties tonen: "prijzen" (bedrag per optie), "stil" (één all-in prijs) of "uit"
+  optieModus: "stil",
+
   // Foto van de ondertekenaar: "optioneel", "verplicht" of "uit"
   foto: "optioneel",
 
@@ -385,27 +414,27 @@ let CONFIG = {
       levert:["Video van 45 à 60 seconden, verticaal of horizontaal","Kleurcorrectie en muziek","Levering binnen 5 werkdagen"] },
     listingPlus:  { id:"listing-plus", naam:"Listing+", prijs:395, duur:"± 2 uur ter plaatse",
       omschrijving:"Pandvideo met luchtbeelden van het pand en de omgeving.",
-      levert:["Video van 60 à 90 seconden","Drone- en FPV-beelden waar toegelaten","Extra versie op maat van social media","Levering binnen 5 werkdagen"] },
+      levert:["Video van 60 à 90 seconden","Drone- en FPV-beelden waar toegelaten","Extra versie op maat van social media","Levering binnen 5 werkdagen"], inbegrepen:["drone"] },
     toppand:      { id:"toppand", naam:"Toppand", prijs:695, duur:"± 3 uur ter plaatse",
       omschrijving:"Cinematische film met de makelaar centraal in het pand.",
-      levert:["Cinematische film van 90 à 120 seconden","Makelaar in beeld, met begeleiding ter plaatse","Luchtbeelden waar toegelaten","Twee korte social-versies","Levering binnen 7 werkdagen"] },
+      levert:["Cinematische film van 90 à 120 seconden","Makelaar in beeld, met begeleiding ter plaatse","Luchtbeelden waar toegelaten","Twee korte social-versies","Levering binnen 7 werkdagen"], inbegrepen:["drone","interview"] },
     toppandCompleet:{ id:"toppand-compleet", naam:"Toppand Compleet", prijs:995, duur:"± een halve dag",
       omschrijving:"De volledige presentatie van het pand én van jouw kantoor.",
-      levert:["Alles uit Toppand","Volledige fotoreportage van het pand, binnen 24 uur geleverd","Interviewfragment met de makelaar","Losse beelden voor eigen gebruik","Levering binnen 7 werkdagen"] },
+      levert:["Alles uit Toppand","Volledige fotoreportage van het pand, binnen 24 uur geleverd","Interviewfragment met de makelaar","Losse beelden voor eigen gebruik","Levering binnen 7 werkdagen"], inbegrepen:["drone","interview","fotoreportage"] },
     kantoorProfiel:{ id:"kantoor-profiel", naam:"Kantoorprofiel", prijs:895, duur:"± een halve dag",
       omschrijving:"Jouw kantoor en je mensen in beeld, om mandaten mee binnen te halen.",
-      levert:["Film van 90 à 120 seconden over het kantoor","Interview met de zaakvoerder","Korte voorstelling per medewerker","Losse clips voor social media","Levering binnen 10 werkdagen"] },
+      levert:["Film van 90 à 120 seconden over het kantoor","Interview met de zaakvoerder","Korte voorstelling per medewerker","Losse clips voor social media","Levering binnen 10 werkdagen"], inbegrepen:["interview","extraReels"] },
     project:      { id:"project", naam:"Projectfilm", prijs:null, duur:"één opnamedag of meer",
       omschrijving:"Een volledig nieuwbouw- of renovatieproject met meerdere units.",
-      levert:["Projectfilm van 2 à 3 minuten","Losse video per unittype","Luchtbeelden van het project en de buurt","Beelden van de omgeving en de voorzieningen","Prijs op maat van het aantal units"] },
+      levert:["Projectfilm van 2 à 3 minuten","Losse video per unittype","Luchtbeelden van het project en de buurt","Beelden van de omgeving en de voorzieningen","Prijs op maat van het aantal units"], inbegrepen:["drone","interview"] },
 
     /* ---------- vakantieverhuur ---------- */
     rentalStart:  { id:"rental-start", naam:"Rental", prijs:445, duur:"± 2,5 uur ter plaatse",
       omschrijving:"Je verhuurpand zoals een gast het beleeft, van aankomst tot terras.",
-      levert:["Video van 60 à 90 seconden in gastvolgorde","Verticale versie voor Instagram en TikTok","Luchtbeelden van pand en omgeving waar toegelaten","Levering binnen 7 werkdagen"] },
+      levert:["Video van 60 à 90 seconden in gastvolgorde","Verticale versie voor Instagram en TikTok","Luchtbeelden van pand en omgeving waar toegelaten","Levering binnen 7 werkdagen"], inbegrepen:["drone"] },
     rentalCompleet:{ id:"rental-compleet", naam:"Rental Compleet", prijs:795, duur:"± een halve dag",
       omschrijving:"Video, foto's en omgevingsbeelden voor je eigen site en de platformen.",
-      levert:["Alles uit Rental","Fotoreportage klaar voor Airbnb en Booking","Losse sfeerclips van de omgeving","Korte instructievideo voor de check-in","Levering binnen 10 werkdagen"] },
+      levert:["Alles uit Rental","Fotoreportage klaar voor Airbnb en Booking","Losse sfeerclips van de omgeving","Korte instructievideo voor de check-in","Levering binnen 10 werkdagen"], inbegrepen:["fotoreportage","drone"] },
 
     /* ---------- zelfstandige ---------- */
     realisaties:  { id:"realisaties", naam:"Realisaties", prijs:395, duur:"± 2 uur, één of twee locaties",
@@ -416,18 +445,18 @@ let CONFIG = {
       levert:["Video van 60 à 90 seconden","Eén verticale versie voor social media","Kleurcorrectie, muziek en ondertiteling","Levering binnen 7 werkdagen"] },
     verhaal:      { id:"verhaal", naam:"Verhaal", prijs:895, duur:"± een halve dag",
       omschrijving:"Bedrijfsvideo met interview, plus losse reels.",
-      levert:["Hoofdvideo van 2 à 3 minuten met interview","Drie reels van elk 15 à 30 seconden","Ondertiteling in het Nederlands","Enkele stilstaande beelden uit de opname","Levering binnen 10 werkdagen"] },
+      levert:["Hoofdvideo van 2 à 3 minuten met interview","Drie reels van elk 15 à 30 seconden","Ondertiteling in het Nederlands","Enkele stilstaande beelden uit de opname","Levering binnen 10 werkdagen"], inbegrepen:["interview","ondertiteling","extraReels"] },
     reeks:        { id:"reeks", naam:"Reeks", prijs:null, duur:"terugkerend, per maand",
       omschrijving:"Elke maand nieuwe content, in hetzelfde vaste stramien.",
-      levert:["Eén opnamedag per maand","Vier reels per maand","Vaste look en vaste planning","Prijs op maat van het volume"] },
+      levert:["Eén opnamedag per maand","Vier reels per maand","Vaste look en vaste planning","Prijs op maat van het volume"], inbegrepen:["extraReels","ondertiteling"] },
 
     /* ---------- bedrijf ---------- */
     bedrijfsfilm: { id:"bedrijfsfilm", naam:"Bedrijfsfilm", prijs:1450, duur:"één opnamedag",
       omschrijving:"Eén film die je bedrijf voorstelt aan klanten of kandidaten.",
-      levert:["Film van 2 à 4 minuten","Voorbereidend gesprek en draaiboek","Twee interviews","Kleurcorrectie, sounddesign en ondertiteling","Eén feedbackronde inbegrepen","Levering binnen 15 werkdagen"] },
+      levert:["Film van 2 à 4 minuten","Voorbereidend gesprek en draaiboek","Twee interviews","Kleurcorrectie, sounddesign en ondertiteling","Eén feedbackronde inbegrepen","Levering binnen 15 werkdagen"], inbegrepen:["interview","ondertiteling"] },
     corporatePlus:{ id:"corporate-plus", naam:"Bedrijfsfilm met interviewreeks", prijs:2450, duur:"twee opnamedagen",
       omschrijving:"Hoofdfilm plus losse interviews per afdeling of per persoon.",
-      levert:["Alles uit Bedrijfsfilm","Tot zes losse interviewvideo's","Versies voor LinkedIn en voor de website","Luchtbeelden waar toegelaten","Levering binnen 20 werkdagen"] },
+      levert:["Alles uit Bedrijfsfilm","Tot zes losse interviewvideo's","Versies voor LinkedIn en voor de website","Luchtbeelden waar toegelaten","Levering binnen 20 werkdagen"], inbegrepen:["interview","ondertiteling","drone","langeVersie"] },
     vacature:     { id:"vacature", naam:"Vacaturevideo", prijs:750, duur:"± een halve dag",
       omschrijving:"Eén functie in beeld, om kandidaten aan te trekken.",
       levert:["Video van 60 à 90 seconden per functie","Collega's aan het woord","Versies voor LinkedIn, Instagram en de vacaturesite","Levering binnen 10 werkdagen"] },
@@ -447,13 +476,13 @@ let CONFIG = {
       levert:["Highlightvideo van 60 à 120 seconden","Sfeerbeelden van het publiek","Sponsors zichtbaar in beeld","Levering binnen 5 werkdagen"] },
     seizoen:      { id:"seizoen", naam:"Seizoensfilm", prijs:null, duur:"meerdere momenten in het seizoen",
       omschrijving:"De club door het jaar heen, opgebouwd uit meerdere opnamedagen.",
-      levert:["Film van 3 à 5 minuten","Meerdere opnamemomenten","Interviews met trainers en spelers","Losse clips per ploeg","Prijs op maat van het aantal dagen"] },
+      levert:["Film van 3 à 5 minuten","Meerdere opnamemomenten","Interviews met trainers en spelers","Losse clips per ploeg","Prijs op maat van het aantal dagen"], inbegrepen:["interview","extraPloeg"] },
     atleet:       { id:"atleet", naam:"Atleetportret", prijs:445, duur:"± 2 uur ter plaatse",
       omschrijving:"Jouw training en jouw sport, cinematisch gefilmd.",
       levert:["Video van 45 à 60 seconden","Drie verticale clips voor social media","Sponsors zichtbaar in beeld","Stilstaande beelden uit de opname","Levering binnen 7 werkdagen"] },
     sponsordossier:{ id:"sponsordossier", naam:"Sponsordossier", prijs:795, duur:"± een halve dag",
       omschrijving:"Video plus beeldmateriaal om sponsors mee te overtuigen.",
-      levert:["Video van 90 à 120 seconden met jouw verhaal","Interviewfragment","Fotoreportage voor je dossier","Losse clips per sponsor","Levering binnen 10 werkdagen"] },
+      levert:["Video van 90 à 120 seconden met jouw verhaal","Interviewfragment","Fotoreportage voor je dossier","Losse clips per sponsor","Levering binnen 10 werkdagen"], inbegrepen:["interview","fotoreportage"] },
 
     /* ---------- particulier ---------- */
     moment:       { id:"moment", naam:"Moment", prijs:395, duur:"± 2 uur ter plaatse",
@@ -461,7 +490,26 @@ let CONFIG = {
       levert:["Video van 60 à 90 seconden","Kleurcorrectie en muziek","Privégalerij om te delen","Levering binnen 10 werkdagen"] },
     aftermovie:   { id:"aftermovie", naam:"Aftermovie", prijs:795, duur:"± een halve dag",
       omschrijving:"Het volledige verloop van je dag of avond.",
-      levert:["Film van 3 à 5 minuten","Korte versie voor social media","Geluid van speeches opgenomen","Levering binnen 15 werkdagen"] }
+      levert:["Film van 3 à 5 minuten","Korte versie voor social media","Geluid van speeches opgenomen","Levering binnen 15 werkdagen"], inbegrepen:["langeVersie"] }
+  },
+
+/* ================================================================
+   OPTIES — waar de klant zijn pakket mee verfijnt
+   Een pakket kan opties al bevatten via "inbegrepen".
+   ================================================================ */
+  opties: {
+    drone:        { naam:"Luchtbeelden", prijs:195, uitleg:"Drone- en FPV-beelden van het pand en de omgeving, waar toegelaten." },
+    interview:    { naam:"Jij in beeld", prijs:195, uitleg:"Een interviewfragment waarin je zelf aan het woord komt." },
+    fotoreportage:{ naam:"Fotoreportage", prijs:295, uitleg:"Een volledige reeks foto's naast de video." },
+    extraReels:   { naam:"Twee extra reels", prijs:150, uitleg:"Twee bijkomende korte versies voor social media." },
+    ondertiteling:{ naam:"Ondertiteling", prijs:75, uitleg:"Ingebrande ondertitels, ook leesbaar zonder geluid." },
+    voiceover:    { naam:"Voice-over", prijs:150, uitleg:"Een ingesproken stem over de beelden." },
+    tweedeLocatie:{ naam:"Tweede locatie", prijs:175, uitleg:"We filmen op een tweede adres op dezelfde dag." },
+    spoed:        { naam:"Spoedlevering", prijs:150, uitleg:"Klaar binnen 48 uur na de opname." },
+    matterport:   { naam:"Matterport 3D-tour", prijs:245, uitleg:"Een virtuele rondgang die bezoekers zelf kunnen doorlopen." },
+    grondplan:    { naam:"Grondplan", prijs:95, uitleg:"Een getekend plan van de indeling." },
+    extraPloeg:   { naam:"Extra ploeg", prijs:150, uitleg:"Nog een ploeg in hetzelfde stramien gefilmd." },
+    langeVersie:  { naam:"Lange versie", prijs:250, uitleg:"Naast de korte video ook een uitgebreide versie van enkele minuten." }
   },
 
 /* ================================================================
@@ -474,6 +522,7 @@ let CONFIG = {
       label: "Vastgoed",
       sub: "Een pand, een project of je kantoor",
       pakketten: ["listing","listingPlus","toppand","toppandCompleet"],
+      opties: ["drone","interview","fotoreportage","matterport","grondplan","extraReels","spoed"],
       suggesties: ["De gevel en de inrit","De leefruimte","De keuken","De tuin","De omgeving vanuit de lucht"],
       vragen: [],
       situaties: {
@@ -562,6 +611,7 @@ let CONFIG = {
       label: "Zelfstandige of KMO",
       sub: "Jij, je zaak, je vak",
       pakketten: ["portret","verhaal","reeks"],
+      opties: ["interview","extraReels","ondertiteling","voiceover","fotoreportage","tweedeLocatie","spoed"],
       suggesties: ["De zaak van buiten","Mij aan het werk","Het eindresultaat","Het team"],
       vragen: [
         { k:"doel", label:"Wat wil je vooral bereiken?", type:"select", verplicht:true,
@@ -683,6 +733,7 @@ let CONFIG = {
       label: "Bedrijf of organisatie",
       sub: "Meerdere afdelingen, mensen of locaties",
       pakketten: ["bedrijfsfilm","corporatePlus","eventFilm"],
+      opties: ["drone","interview","extraReels","ondertiteling","voiceover","tweedeLocatie","fotoreportage","langeVersie","spoed"],
       suggesties: ["Het gebouw van buiten","De medewerkers aan het werk","Interview met de zaakvoerder","Het logo op de gevel"],
       vragen: [
         { k:"contact", label:"Contactpersoon op de opnamedag", hint:"Naam en gsm-nummer van wie ons ter plaatse begeleidt.", type:"text", verplicht:true },
@@ -792,6 +843,7 @@ let CONFIG = {
       label: "Sport",
       sub: "Club, ploeg of individuele sporter",
       pakketten: ["team","clubdag","wedstrijd","seizoen"],
+      opties: ["extraPloeg","interview","fotoreportage","extraReels","drone","spoed"],
       suggesties: ["Actiebeelden","De sfeer langs de kant","Het clubhuis en de accommodatie","De sponsorborden"],
       vragen: [
         { k:"sporttak", label:"Welke sport?", type:"text", verplicht:true },
@@ -881,6 +933,7 @@ let CONFIG = {
       label: "Particulier of event",
       sub: "Een feest, een huwelijk, een familiemoment",
       pakketten: ["moment","aftermovie"],
+      opties: ["langeVersie","fotoreportage","extraReels","drone","spoed"],
       suggesties: ["De aankomst van de gasten","De speech","De dansvloer","Een groepsbeeld"],
       vragen: [
         { k:"locatie", label:"Locatie van het event", type:"adres", verplicht:true },
@@ -966,6 +1019,37 @@ let CONFIG = {
    Staat er een config.json naast dit bestand (geëxporteerd uit
    beheer.html), dan gebruiken we die in plaats van bovenstaande.
    ============================================================ */
+let OFFERTE_BRON = null;   // wordt gevuld voor start() draait
+
+async function haalOfferte(){
+  const p = new URLSearchParams(location.search);
+
+  // 1. offerte in de link zelf: ?o=<code>
+  const code = p.get('o');
+  if(code){
+    try{ return JSON.parse(decodeURIComponent(escape(
+      atob(code.replace(/-/g,'+').replace(/_/g,'/'))))); }
+    catch(e){ return 'fout'; }
+  }
+
+  // 2. korte link: ?k=kvik  ->  offertes/kvik.json
+  const naam = (p.get('k') || '').toLowerCase().replace(/[^a-z0-9_-]/g,'');
+  if(naam){
+    try{
+      const r = await fetch('offertes/' + naam + '.json', {cache:'no-store'});
+      if(r.ok) return await r.json();
+    }catch(e){}
+    return 'fout';
+  }
+
+  // 3. eigen map: offerte.json naast dit bestand
+  try{
+    const r = await fetch('offerte.json', {cache:'no-store'});
+    if(r.ok) return await r.json();
+  }catch(e){}
+  return null;
+}
+
 (async function(){
   try{
     const r = await fetch('config.json', {cache:'no-store'});
@@ -975,6 +1059,7 @@ let CONFIG = {
     }
   }catch(e){ /* geen config.json, we gebruiken de standaard */ }
   window.CONFIG = CONFIG;
+  OFFERTE_BRON = await haalOfferte();
   try{ start(); }catch(e){ /* blokkeer() stopt hier bewust */ }
 })();
 
@@ -985,9 +1070,9 @@ function start(){
    ============================================================ */
 const S = { type:null, situatie:null, pakket:null, klant:{}, antw:{},
             shots:[], ref:maakRef(), link:null, linkPaketten:null, foto:null,
-            kortPct:0, kortLabel:'', toonVan:false, sitFilter:null };
+            kortLabel:'', sitFilter:null, opties:[], optieModus:null, upgrade:null };
 let stap = 0;
-let volgorde = [0,1,2,3,4,5];
+let volgorde = [0,1,2,3,4,5,6];
 const VAST = { type:false, situatie:false };
 
 function maakRef(){
@@ -1025,6 +1110,19 @@ function vragenLijst(){
   CONFIG.algemeen.forEach(zet);
   return uit;
 }
+function optieModus(){ return S.optieModus || CONFIG.optieModus || 'stil'; }
+function optieLijst(){
+  if(optieModus() === 'uit') return [];
+  const s = sitObj();
+  let ids = (s && s.opties) || typeObj().opties || [];
+  if(S.optieFilter) ids = ids.filter(i => S.optieFilter.includes(i));
+  return ids.map(id => Object.assign({ id }, CONFIG.opties[id])).filter(o => o.naam);
+}
+const zitIn = (pak, id) => (pak.inbegrepen || []).includes(id);
+function extraOpties(){
+  const pak = S.upgrade || S.pakket;
+  return S.opties.filter(id => !zitIn(pak, id));
+}
 function suggestieLijst(){
   const s = sitObj();
   return (s && s.suggesties) ? s.suggesties : (typeObj().suggesties || []);
@@ -1035,16 +1133,11 @@ function suggestieLijst(){
    De offerte zit versleuteld in de parameter ?o= van de URL.
    Genereer die met maak-link.html.
    ============================================================ */
-function decodeer(s){
-  return JSON.parse(decodeURIComponent(escape(
-    atob(s.replace(/-/g,'+').replace(/_/g,'/'))
-  )));
-}
 function leesLink(){
-  const p = new URLSearchParams(location.search).get('o');
-  if(!p) return null;
+  const o = OFFERTE_BRON;
+  if(!o) return null;
+  if(o === 'fout') return 'fout';
   try{
-    const o = decodeer(p);
     if(!o.t || !CONFIG.types[o.t]) return 'fout';
     const sits = CONFIG.types[o.t].situaties || {};
     if(o.s && !sits[o.s]) return 'fout';
@@ -1084,9 +1177,9 @@ if(LINK){
   if(LINK.s){ S.situatie = LINK.s; VAST.situatie = true; }
   if(Array.isArray(LINK.p) && LINK.p.length) S.linkPaketten = LINK.p;
   S.link = LINK.c || LINK.n || 'persoonlijke link';
-  S.kortPct = Number(LINK.k) > 0 ? Number(LINK.k) : 0;
   S.kortLabel = LINK.kt || 'Introductiekorting';
-  S.toonVan = !!LINK.kd;
+  if(LINK.om) S.optieModus = LINK.om;
+  if(Array.isArray(LINK.op)) S.optieFilter = LINK.op;
   if(LINK.n) $('h1').textContent = 'Video-opdracht voor ' + LINK.n;
   if(LINK.b) $('header p').textContent = LINK.b;
 }
@@ -1102,7 +1195,8 @@ function herbereken(){
     if(lijst.length > 1) v.push(1);
     else if(lijst.length === 1) S.situatie = lijst[0][0];
   }
-  v.push(2,3,4,5);
+  v.push(2,3,4,5,6);
+  if(optieModus() === 'uit' || (S.type && !optieLijst().length)) v.splice(v.indexOf(3),1);
   volgorde = v;
   $('#rail').innerHTML = v.map(()=>'<i></i>').join('');
 }
@@ -1150,9 +1244,10 @@ function toonPakketten(){
     : `Alle prijzen zijn exclusief btw. Er komt ${Math.round(CONFIG.btw*100)}% btw bij.`;
   $('#pakOpts').innerHTML = lijst.map(p=>{
     const opMaat = (p.prijs===null || p.prijs===undefined);
+    const van = Number(p.van) || 0;
     const prijs = opMaat ? 'Op maat'
-      : `${geld(netto(p.prijs))}<em>excl. btw</em>` +
-        (S.kortPct && S.toonVan ? `<s>${geld(p.prijs)}</s>` : '');
+      : `${geld(p.prijs)}<em>excl. btw</em>` +
+        (van > p.prijs ? `<s>${geld(van)}</s>` : '');
     return `<button type="button" class="opt" aria-pressed="${enkel}" data-pak="${esc(p.id)}">
       <span class="price">${prijs}</span>
       <b>${esc(p.naam)}</b>
@@ -1165,9 +1260,85 @@ function toonPakketten(){
 $('#pakOpts').addEventListener('click', e => {
   const b = e.target.closest('[data-pak]'); if(!b) return;
   S.pakket = pakLijst().find(p => p.id === b.dataset.pak);
+  S.opties = []; S.upgrade = null;
   $$('#pakOpts .opt').forEach(o => o.setAttribute('aria-pressed', o===b));
   $('#e2').classList.remove('on');
 });
+
+/* ---- opties ---- */
+function toonOpties(){
+  const lijst = optieLijst();
+  const stil = optieModus() === 'stil';
+  const pak = S.upgrade || S.pakket;
+
+  $('#optLead').textContent = stil
+    ? 'Vink aan wat er zeker bij moet. We stellen je formule daarrond samen en tonen je meteen wat het geheel kost.'
+    : 'Vink aan wat je erbij wil. Het totaal loopt mee terwijl je kiest.';
+
+  $('#optLijst').innerHTML = lijst.map(o=>{
+    const vast = zitIn(pak, o.id);
+    const aan = vast || S.opties.includes(o.id);
+    const bedrag = vast ? '<span class="bedrag inb">inbegrepen</span>'
+      : (stil ? '' : `<span class="bedrag">+ ${geld(o.prijs)}</span>`);
+    return `<label class="optie ${aan?'aan':''} ${vast?'vast':''}">
+      <input type="checkbox" data-o="${esc(o.id)}" ${aan?'checked':''} ${vast?'disabled':''}>
+      <span class="tekst"><b>${esc(o.naam)}</b><small>${esc(o.uitleg||'')}</small></span>
+      ${bedrag}</label>`;
+  }).join('') || '<p class="lead">Er zijn geen extra opties voor dit pakket.</p>';
+
+  tekenTotaal();
+}
+
+$('#optLijst').addEventListener('change', e=>{
+  const cb = e.target.closest('[data-o]'); if(!cb) return;
+  const id = cb.dataset.o;
+  const i = S.opties.indexOf(id);
+  if(cb.checked && i < 0) S.opties.push(id);
+  if(!cb.checked && i >= 0) S.opties.splice(i,1);
+  zoekUpgrade();
+  toonOpties();
+});
+
+/* In stille modus zoeken we het goedkoopste pakket dat alles al bevat. */
+function zoekUpgrade(){
+  S.upgrade = null;
+  if(optieModus() !== 'stil' || !S.opties.length) return;
+  if(S.pakket.prijs === null || S.pakket.prijs === undefined) return;
+
+  const extra = S.opties.filter(id => !zitIn(S.pakket, id))
+    .reduce((t,id)=> t + (Number((CONFIG.opties[id]||{}).prijs) || 0), 0);
+  if(!extra) return;
+  const losTotaal = S.pakket.prijs + extra;
+
+  // Ook een fractie duurder mag: alles zit er dan in, en dat verkoopt beter.
+  const grens = losTotaal * 1.08;
+  const beter = pakLijst()
+    .filter(p => p !== S.pakket && p.prijs != null && p.prijs <= grens)
+    .filter(p => S.opties.every(id => zitIn(p, id)))
+    .sort((a,b)=> a.prijs - b.prijs)[0];
+  if(beter) S.upgrade = beter;
+}
+
+function tekenTotaal(){
+  const b = bedragen(), stil = optieModus() === 'stil';
+  if(!b){
+    $('#totaalBalk').innerHTML =
+      '<div class="som"><span>Prijs op maat</span><span></span></div>' +
+      '<p class="note">Je krijgt een offerte op basis van wat je hier aanduidt.</p>';
+    return;
+  }
+  const regels = stil ? '' :
+    `<div class="regel"><span>${esc(b.pakketNaam)}</span><span>${geld((S.upgrade||S.pakket).prijs)}</span></div>` +
+    b.opties.map(o=>`<div class="regel"><span>${esc(o.naam)}</span><span>+ ${geld(o.prijs)}</span></div>`).join('');
+
+  $('#totaalBalk').innerHTML = regels +
+    `<div class="som"><span>${stil
+        ? 'Jouw formule: ' + esc(b.pakketNaam) + (b.opties.length ? ' met extra\'s' : '')
+        : 'Totaal'}</span>
+      <span>${geld(b.ex)}</span></div>
+     <p class="note" style="color:var(--muted)">Exclusief btw.</p>` +
+    (S.upgrade ? `<p class="note">Met deze keuzes zit je beter in ${esc(S.upgrade.naam)}: daar zit alles wat je aanvinkte al in. We hebben die formule voor je gekozen.</p>` : '');
+}
 
 /* ---- gegevens ---- */
 const VELDEN = [
@@ -1218,7 +1389,7 @@ function voegShot(w, h){
   S.shots.push({ w, h:(h||'').trim() });
   $('#shotIn').value=''; $('#shotHoe').value='';
   $('#shotIn').focus();
-  $('#e4').classList.remove('on');
+  $('#e5').classList.remove('on');
   tekenShots();
 }
 function tekenShots(){
@@ -1260,11 +1431,12 @@ function toonVragen(){
 function ga(n){
   if(n===1) toonSituaties();
   if(n===2) toonPakketten();
-  if(n===4){ toonSuggesties(); toonVragen(); tekenShots(); }
-  if(n===5) tekenDocument();
+  if(n===3) toonOpties();
+  if(n===5){ toonSuggesties(); toonVragen(); tekenShots(); }
+  if(n===6) tekenDocument();
   stap = n;
   $$('.step').forEach(s => s.classList.toggle('on', +s.dataset.step===n));
-  if(n===5) requestAnimationFrame(()=>schaal());
+  if(n===6) requestAnimationFrame(()=>schaal());
   const i = pos(n);
   $$('#rail i').forEach((bar,ix) => bar.classList.toggle('done', i<0 ? true : ix < i));
   $('#stepno').textContent = i<0 ? '' : `Stap ${i+1} van ${volgorde.length}`;
@@ -1280,8 +1452,13 @@ $$('[data-prev]').forEach(b => b.addEventListener('click', ()=> ga(volgorde[pos(
 function valideer(n){
   if(n===0){ if(!S.type){ $('#e0').classList.add('on'); return false; } return true; }
   if(n===1){ if(!S.situatie){ $('#e1').classList.add('on'); return false; } return true; }
-  if(n===2){ if(!S.pakket){ $('#e2').classList.add('on'); return false; } return true; }
-  if(n===3){
+  if(n===2){
+    if(!S.pakket){ $('#e2').classList.add('on'); return false; }
+    herbereken();
+    return true;
+  }
+  if(n===3) return true;
+  if(n===4){
     let ok = true;
     const heeftBedrijf = !!$('#k_bedrijf').value.trim();
     VELDEN.forEach(f=>{
@@ -1291,7 +1468,7 @@ function valideer(n){
       el.classList.toggle('bad', slecht); if(slecht) ok=false; else S.klant[f.k]=val;
     });
     if(!ok && heeftBedrijf && !$('#k_btw').value.trim())
-      $('#e3').textContent = 'Vul ook het ondernemingsnummer in, of laat het bedrijfsveld leeg.';
+      $('#e4').textContent = 'Vul ook het ondernemingsnummer in, of laat het bedrijfsveld leeg.';
     S.klant.adres = [
       [S.klant.straat, S.klant.nummer].filter(Boolean).join(' '),
       [S.klant.postcode, S.klant.gemeente].filter(Boolean).join(' '),
@@ -1299,15 +1476,15 @@ function valideer(n){
     ].filter(Boolean).join(', ');
     if(fotoAan && fotoMoet && !S.foto){
       ok = false;
-      $('#e3').textContent = 'Neem nog een foto van de ondertekenaar.';
+      $('#e4').textContent = 'Neem nog een foto van de ondertekenaar.';
     } else if(ok){
-      $('#e3').textContent = 'Vul de verplichte velden in.';
+      $('#e4').textContent = 'Vul de verplichte velden in.';
     }
-    $('#e3').classList.toggle('on', !ok); return ok;
+    $('#e4').classList.toggle('on', !ok); return ok;
   }
-  if(n===4){
+  if(n===5){
     let ok = S.shots.length>0;
-    $('#e4').textContent = ok ? 'Vul de verplichte velden in.'
+    $('#e5').textContent = ok ? 'Vul de verplichte velden in.'
                               : 'Voeg minstens één punt toe dat zeker in beeld moet.';
     vragenLijst().forEach(v=>{
       if(v.type==='adres'){
@@ -1335,7 +1512,7 @@ function valideer(n){
       const val = el.value.trim(), slecht = v.verplicht && !val;
       el.classList.toggle('bad', slecht); if(slecht) ok=false; else S.antw[v.k]=val;
     });
-    $('#e4').classList.toggle('on', !ok); return ok;
+    $('#e5').classList.toggle('on', !ok); return ok;
   }
   return true;
 }
@@ -1343,17 +1520,25 @@ function valideer(n){
 /* ============================================================
    DOCUMENT
    ============================================================ */
-function netto(basis){
-  return S.kortPct ? Math.round((basis*(1-S.kortPct/100))*100)/100 : basis;
-}
 function bedragen(){
-  const basis = S.pakket.prijs;
-  if(basis===null || basis===undefined) return null;
-  const ex = netto(basis);
+  const pak = S.upgrade || S.pakket;
+  if(pak.prijs===null || pak.prijs===undefined) return null;
+  const extra = extraOpties()
+    .reduce((t,id)=> t + (Number((CONFIG.opties[id]||{}).prijs) || 0), 0);
+  const ex = Math.round((pak.prijs + extra)*100)/100;
+  const van = Number(pak.van) || 0;
+  const basis = van > pak.prijs ? Math.round((van + extra)*100)/100 : ex;
   const later = CONFIG.btwRegime === 'later';
   const btw = later ? 0 : ex*CONFIG.btw;
   const totaal = ex + btw;
-  return { basis, kortPct:S.kortPct, kortLabel:S.kortLabel,
+  return { basis, extra, pakketNaam: pak.naam,
+           opties: extraOpties().map(id => ({
+             naam: CONFIG.opties[id].naam,
+             prijs: CONFIG.opties[id].prijs })),
+           inbegrepen: S.opties.filter(id => zitIn(pak,id))
+             .map(id => CONFIG.opties[id].naam),
+           kortPct: basis > ex ? Math.round((1-ex/basis)*100) : 0,
+           kortLabel: S.kortLabel || 'Korting',
            kortBedrag: Math.round((basis-ex)*100)/100,
            ex, btw, in:totaal, later,
            btwPct: later ? null : Math.round(CONFIG.btw*100),
@@ -1369,6 +1554,8 @@ function opdrachtLabel(){
 }
 function tekenDocument(){
   const b = bedragen(), A = S.antw, K = S.klant;
+  const pak = S.upgrade || S.pakket;
+  const stilModus = optieModus() === 'stil';
   const extra = vragenLijst()
     .filter(v => v.k!=='nietBeeld' && v.k!=='opmerking')
     .map(v => {
@@ -1391,12 +1578,15 @@ function tekenDocument(){
     <p class="small" style="margin-top:8px">Soort opdracht: ${esc(opdrachtLabel())}</p>
 
     <h4>Pakket</h4>
-    <p><strong>${esc(S.pakket.naam)}</strong> — ${esc(S.pakket.omschrijving)}<br>
-       <span class="small">Tijd ter plaatse: ${esc(S.pakket.duur)}</span></p>
+    <p><strong>${esc(pak.naam)}</strong> — ${esc(pak.omschrijving)}<br>
+       <span class="small">Tijd ter plaatse: ${esc(pak.duur)}</span></p>
     <p style="margin-top:8px"><strong>Wat je krijgt</strong></p>
-    <ul>${S.pakket.levert.map(l=>`<li>${esc(l)}</li>`).join('')}</ul>
+    <ul>${pak.levert.map(l=>`<li>${esc(l)}</li>`).join('')}
+       ${(b ? b.inbegrepen : []).map(n=>`<li>${esc(n)}</li>`).join('')}</ul>
+    ${(b && b.opties.length) ? `<p style="margin-top:8px"><strong>Door jou toegevoegd</strong></p>
+      <ul>${b.opties.map(o=>`<li>${esc(o.naam)}${stilModus?'':` — ${geld(o.prijs)}`}</li>`).join('')}</ul>` : ''}
     ${b ? `<dl style="margin-top:12px">
-        ${b.kortPct ? `<dt>Pakket</dt><dd>${geld(b.basis)}</dd>
+        ${b.kortPct ? `<dt>Gewone prijs</dt><dd>${geld(b.basis)}</dd>
           <dt>${esc(b.kortLabel)} ${b.kortPct}%</dt><dd>− ${geld(b.kortBedrag)}</dd>` : ''}
         <dt>${b.kortPct ? 'Te betalen, exclusief btw' : 'Pakket, exclusief btw'}</dt><dd>${geld(b.ex)}</dd>
         ${b.later ? '' : `<dt>Btw ${b.btwPct}%</dt><dd>${geld(b.btw)}</dd>`}
@@ -1439,7 +1629,7 @@ function zetFoto(dataUrl){
   $('#fotoVoor').style.display = 'flex';
   $('#fotoKnop').style.display = 'none';
   $('#fotoOfwel').style.display = 'none';
-  $('#e3').classList.remove('on');
+  $('#e4').classList.remove('on');
 }
 function stopCam(){
   if(stroom){ stroom.getTracks().forEach(t=>t.stop()); stroom = null; }
@@ -1544,7 +1734,7 @@ function punt(e){
 pad.addEventListener('pointerdown', e=>{
   pad.setPointerCapture(e.pointerId);
   huidig = [punt(e)]; lijnen.push(huidig);
-  $('#e5').classList.remove('on');
+  $('#e6').classList.remove('on');
 });
 pad.addEventListener('pointermove', e=>{
   if(!huidig) return;
@@ -1581,7 +1771,7 @@ function handtekeningPng(){
    ============================================================ */
 $('#send').addEventListener('click', async ()=>{
   const naam = $('#signName').value.trim();
-  if(!$('#akkoord').checked || !naam || !getekend()){ $('#e5').classList.add('on'); return; }
+  if(!$('#akkoord').checked || !naam || !getekend()){ $('#e6').classList.add('on'); return; }
 
   const knop = $('#send');
   knop.disabled = true; knop.innerHTML = '<span class="spin"></span>Versturen…';
@@ -1593,7 +1783,9 @@ $('#send').addEventListener('click', async ()=>{
     situatie: S.situatie,
     typeLabel: opdrachtLabel(),
     herkomst: S.link || 'open formulier',
-    pakket: S.pakket,
+    pakket: S.upgrade || S.pakket,
+    gekozenPakket: S.pakket.naam,
+    optieModus: optieModus(),
     bedragen: bedragen(),
     klant: S.klant,
     shots: S.shots,
@@ -1622,11 +1814,11 @@ $('#send').addEventListener('click', async ()=>{
       `Bedankt, ${esc(naam)}. Je opdracht staat geregistreerd onder ${esc(S.ref)}.<br><br>` +
       `De ondertekende opdrachtbevestiging is naar ${esc(S.klant.email)} verstuurd. ` +
       `We nemen binnen twee werkdagen contact op om de opnamedatum vast te leggen.`;
-    ga(6);
+    ga(7);
   }catch(err){
     knop.disabled = false; knop.textContent = 'Onderteken en verstuur';
-    $('#e5').textContent = 'Het versturen lukte niet. Controleer je verbinding en probeer opnieuw, of mail ons op ' + CONFIG.bedrijf.email + '.';
-    $('#e5').classList.add('on');
+    $('#e6').textContent = 'Het versturen lukte niet. Controleer je verbinding en probeer opnieuw, of mail ons op ' + CONFIG.bedrijf.email + '.';
+    $('#e6').classList.add('on');
   }
 });
 

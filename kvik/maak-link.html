@@ -86,22 +86,44 @@ iframe{display:none}
       <input type="date" id="geldig">
     </div>
     <div class="field">
-      <label for="basis">Adres van het formulier</label>
-      <input type="text" id="basis">
+      <label for="kort">Korte naam voor deze klant<span class="hint">Alleen letters, cijfers en streepjes. Wordt de naam van het offertebestand.</span></label>
+      <input type="text" id="kort" placeholder="kvik">
+    </div>
+  </div>
+  <div class="row">
+    <div class="field">
+      <label for="basis">Adres van het formulier<span class="hint">Het online adres, niet localhost. Wordt onthouden.</span></label>
+      <input type="text" id="basis" placeholder="https://jouwnaam.github.io/repo/video/index.html">
     </div>
   </div>
 
-  <h2>Korting voor deze klant</h2>
-  <p style="color:var(--muted);font-size:14px;margin:-8px 0 14px">Werkt op alle pakketten in deze link. Laat leeg voor de gewone prijs.</p>
+  <h2>Prijzen voor deze klant</h2>
+  <p style="color:var(--muted);font-size:14px;margin:-8px 0 14px">Bij elk pakket zet je wat de klant betaalt. Wil je een korting tonen, vul dan ook de gewone prijs in; die verschijnt doorstreept ernaast en als kortingsregel in het document.</p>
   <div class="rij">
-    <div class="veld"><label>Percentage</label>
-      <input type="text" id="korting" placeholder="bijvoorbeeld 20"></div>
     <div class="veld"><label>Hoe noem je die korting?</label>
       <input type="text" id="kortLabel" placeholder="Introductiekorting"></div>
+    <div class="veld"><label>Snel rekenen<span class="hint">Vult alle prijzen in met dit percentage korting.</span></label>
+      <div class="knoprij" style="margin-top:0">
+        <input type="text" id="korting" placeholder="20" style="width:80px">
+        <button class="klein" id="rekenKorting" type="button">Pas toe</button>
+        <button class="klein" id="rekenTerug" type="button">Gewone prijzen</button>
+      </div></div>
   </div>
-  <label style="display:flex;gap:8px;align-items:center;color:var(--text);font-size:14px;margin-bottom:8px">
-    <input type="checkbox" id="kortToon" style="width:16px;height:16px;accent-color:var(--gold)">
-    <span>Toon de gewone prijs doorstreept ernaast</span></label>
+
+  <h2>Zelf samenstellen</h2>
+  <p style="color:var(--muted);font-size:14px;margin:-8px 0 14px">Na de pakketkeuze krijgt de klant een scherm waar hij zelf extra's aanvinkt.</p>
+  <div class="veld">
+    <label for="optieModus">Hoe tonen we de extra's?</label>
+    <select id="optieModus">
+      <option value="stil">Zonder losse prijzen, wij stellen de formule samen</option>
+      <option value="prijzen">Met een prijs per extra en een lopend totaal</option>
+      <option value="uit">Niet tonen, enkel het pakket</option>
+    </select>
+  </div>
+  <div class="veld" id="optieKeusVeld">
+    <label>Welke extra's mag hij zien<span class="hint">Laat alles aangevinkt om er niets uit te sluiten.</span></label>
+    <div class="pakkeus" id="optieKeus"></div>
+  </div>
 
   <h2 id="pakTitel">Welke pakketten mag hij zien</h2>
   <p id="pakUitleg" style="color:var(--muted);font-size:14px;margin:-8px 0 14px">Deze lijst volgt uit het type en de branche hierboven.</p>
@@ -115,8 +137,13 @@ iframe{display:none}
       <button class="klein" id="kopieer">Kopieer de link</button>
       <button class="klein" id="open">Open ter controle</button>
       <button class="klein" id="mail">Open in mail</button>
+      <button class="go" id="downloadJson" style="display:none">Download het offertebestand</button>
     </div>
+    <p class="melding" id="kortUitleg" style="display:none"></p>
     <p class="melding" id="melding"></p>
+    <p class="melding" id="waarschuw" style="display:none;color:var(--gold)">
+      Let op: dit adres staat nog op je eigen computer. Zet bij Adres van het formulier
+      het online adres van index.html, anders werkt deze link enkel bij jou.</p>
   </div>
 
   <p class="waarschuw">Deze pagina hoort niet bij het publieke formulier. Zet ze in een aparte map of houd ze lokaal, want ze bevat je volledige prijslijst.</p>
@@ -156,6 +183,7 @@ document.getElementById('bron').addEventListener('load', async function(){
 const $  = s => document.querySelector(s);
 const $$ = s => [...document.querySelectorAll(s)];
 const esc = s => String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let laatsteData = null, laatsteKort = '';
 const codeer = o => btoa(unescape(encodeURIComponent(JSON.stringify(o))))
                     .replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
 
@@ -165,12 +193,19 @@ function start(){
 
   $('#type').innerHTML = Object.entries(CONFIG.types)
     .map(([k,t])=>`<option value="${k}">${esc(t.label)}</option>`).join('');
-  $('#basis').value = location.href.replace(/[^/]*$/,'') + 'index.html';
+  // Het adres van het live formulier wordt onthouden in deze browser.
+  const bewaardAdres = localStorage.getItem('snap360-formulier-url');
+  $('#basis').value = bewaardAdres || location.href.replace(/[^/]*$/,'') + 'index.html';
+  $('#basis').addEventListener('input', ()=>{
+    const v = $('#basis').value.trim();
+    if(v) localStorage.setItem('snap360-formulier-url', v);
+  });
 
   const d = new Date(); d.setMonth(d.getMonth()+1);
   $('#geldig').value = d.toISOString().slice(0,10);
 
   $('#type').addEventListener('change', tekenSituaties);
+  $('#optieModus').addEventListener('change', tekenOpties);
   $('#sitAlles').addEventListener('click', ()=> zetAlle(true));
   $('#sitNiets').addEventListener('click', ()=> zetAlle(false));
   tekenSituaties();
@@ -180,13 +215,27 @@ function situaties(){
   return CONFIG.types[$('#type').value].situaties || {};
 }
 
+function tekenOpties(){
+  const t = CONFIG.types[$('#type').value];
+  const k = eenBranche();
+  const s = k ? situaties()[k] : null;
+  const ids = (s && s.opties) || t.opties || [];
+  const uit = $('#optieModus').value === 'uit';
+  $('#optieKeusVeld').style.display = uit ? 'none' : '';
+  $('#optieKeus').innerHTML = ids.map(id=>{
+    const o = (CONFIG.opties||{})[id]; if(!o) return '';
+    return `<label><input type="checkbox" value="${esc(id)}" checked>
+      <span>${esc(o.naam)}${o.prijs==null?'':' · '+CONFIG.munt+o.prijs}</span></label>`;
+  }).join('') || '<p class="mini">Dit type heeft nog geen extra\'s.</p>';
+}
+
 function tekenSituaties(){
   const sits = situaties();
   $('#sitKeus').innerHTML = Object.entries(sits).map(([k,s])=>
     `<label><input type="checkbox" value="${esc(k)}" checked><span>${esc(s.label)}</span></label>`).join('')
     || '<p class="mini">Dit type heeft geen branches.</p>';
-  $('#sitKeus').onchange = tekenPaketten;
-  tekenPaketten();
+  $('#sitKeus').onchange = ()=>{ tekenPaketten(); tekenOpties(); };
+  tekenPaketten(); tekenOpties();
 }
 function zetAlle(aan){
   $$('#sitKeus input').forEach(cb => cb.checked = aan);
@@ -225,9 +274,11 @@ function tekenPaketten(){
         <input type="checkbox" checked>
         <span><b>${esc(p.naam)}</b><small>${esc(p.omschrijving)} · ${esc(p.duur)}</small></span>
       </label>
-      <div class="aanpas">
+      <div class="aanpas" style="grid-template-columns:1fr 130px 130px">
         <div><label>Naam op de offerte</label><input class="pn" type="text" value="${esc(p.naam)}"></div>
-        <div><label>Prijs, exclusief btw</label>
+        <div><label>Gewone prijs</label>
+          <input class="pv" type="text" value="" placeholder="optioneel"></div>
+        <div><label>Klant betaalt</label>
           <input class="pp" type="text" value="${p.prijs===null?'':p.prijs}" placeholder="op maat"></div>
       </div>
     </div>`).join('');
@@ -238,6 +289,25 @@ function tekenPaketten(){
   });
   $('#out').classList.remove('on');
 }
+
+$('#rekenKorting').addEventListener('click', ()=>{
+  const k = Number(($('#korting').value||'').replace(',','.'));
+  if(!(k > 0 && k < 100)) return;
+  $$('.pak').forEach((el,i)=>{
+    const basis = huidigePaketten()[i];
+    if(!basis || basis.prijs == null) return;
+    el.querySelector('.pv').value = basis.prijs;
+    el.querySelector('.pp').value = Math.round(basis.prijs*(1-k/100)*100)/100;
+  });
+});
+$('#rekenTerug').addEventListener('click', ()=>{
+  $$('.pak').forEach((el,i)=>{
+    const basis = huidigePaketten()[i];
+    if(!basis) return;
+    el.querySelector('.pv').value = '';
+    el.querySelector('.pp').value = basis.prijs == null ? '' : basis.prijs;
+  });
+});
 
 $('#maak').addEventListener('click', ()=>{
   const type = $('#type').value;
@@ -259,6 +329,9 @@ $('#maak').addEventListener('click', ()=>{
     p.naam = el.querySelector('.pn').value.trim() || p.naam;
     const pr = el.querySelector('.pp').value.trim().replace(',','.');
     p.prijs = pr === '' ? null : Number(pr);
+    const vn = el.querySelector('.pv').value.trim().replace(',','.');
+    if(vn !== '' && Number(vn) > (p.prijs || 0)) p.van = Number(vn);
+    else delete p.van;
     gekozen.push(p);
   });
 
@@ -273,11 +346,13 @@ $('#maak').addEventListener('click', ()=>{
   const data = { t:type };
   if(enkel){ data.s = enkel; data.p = gekozen; }
   else if(sitKeuze.length && sitKeuze.length < alle.length) data.sl = sitKeuze;
-  const k = Number(($('#korting').value||'').replace(',','.'));
-  if(k > 0 && k < 100){
-    data.k = k;
-    data.kt = $('#kortLabel').value.trim() || 'Introductiekorting';
-    if($('#kortToon').checked) data.kd = 1;
+  if(gekozen.some(p => p.van)) data.kt = $('#kortLabel').value.trim() || 'Introductiekorting';
+
+  data.om = $('#optieModus').value;
+  if(data.om !== 'uit'){
+    const alleOpt = $$('#optieKeus input').map(cb=>cb.value);
+    const gekozenOpt = $$('#optieKeus input:checked').map(cb=>cb.value);
+    if(gekozenOpt.length && gekozenOpt.length < alleOpt.length) data.op = gekozenOpt;
   }
   if($('#naam').value.trim())    data.n = $('#naam').value.trim();
   if($('#bericht').value.trim()) data.b = $('#bericht').value.trim();
@@ -285,8 +360,24 @@ $('#maak').addEventListener('click', ()=>{
   data.c = ($('#naam').value.trim() || 'link') + ' · ' +
            new Date().toISOString().slice(0,10);
 
-  const url = $('#basis').value.trim() + '?o=' + codeer(data);
+  const basis = $('#basis').value.trim();
+  const kort = ($('#kort').value || '').toLowerCase()
+                 .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+                 .replace(/[^a-z0-9-]+/g,'-').replace(/^-|-$/g,'');
+  laatsteData = data; laatsteKort = kort;
+
+  const url = kort ? basis + '?k=' + kort : basis + '?o=' + codeer(data);
   $('#linkTxt').textContent = url;
+  $('#downloadJson').style.display = kort ? '' : 'none';
+  $('#kortUitleg').style.display = kort ? 'block' : 'none';
+  if(kort){
+    const map = basis.replace(/[^/]*$/,'') + 'offertes/';
+    $('#kortUitleg').textContent =
+      'Deze korte link werkt pas als het offertebestand online staat. ' +
+      'Download het hieronder en zet ' + kort + '.json in de map offertes naast index.html.';
+  }
+  $('#waarschuw').style.display =
+    /localhost|127\.0\.0\.1|^file:/.test(basis) ? 'block' : 'none';
   $('#out').classList.add('on');
   $('#melding').textContent =
     (enkel
@@ -295,8 +386,17 @@ $('#maak').addEventListener('click', ()=>{
           : gekozen.length + ' pakketten zichtbaar, andere prijzen zitten niet in deze link. ') +
         'De branche staat vast, dus die stap wordt overgeslagen. '
       : sitKeuze.length + ' branches zichtbaar van de ' + alle.length + '. De klant kiest daaruit. ') +
-    (data.k ? data.kt + ' van ' + data.k + '% wordt overal toegepast.' : '');
+    (gekozen.some(p=>p.van) ? 'Bij ' + gekozen.filter(p=>p.van).length +
+      ' pakket(ten) staat de gewone prijs doorstreept ernaast.' : '');
   $('#out').scrollIntoView({behavior:'smooth',block:'nearest'});
+});
+
+$('#downloadJson').addEventListener('click', ()=>{
+  if(!laatsteData || !laatsteKort) return;
+  const blob = new Blob([JSON.stringify(laatsteData, null, 2)], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob); a.download = laatsteKort + '.json';
+  a.click(); URL.revokeObjectURL(a.href);
 });
 
 $('#kopieer').addEventListener('click', async ()=>{
