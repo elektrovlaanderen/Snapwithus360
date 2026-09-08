@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Link maken — SNAP360</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#12110F;--panel:#1C1A17;--panel-2:#242118;--line:#332F28;--text:#EFEAE1;--muted:#9E978B;--gold:#D5943B;--r:4px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--ink);color:var(--text);font-family:'Archivo',system-ui,sans-serif;font-size:16px;line-height:1.55;padding:0 20px 80px}
+.wrap{max-width:760px;margin:0 auto}
+header{padding:44px 0 26px;border-bottom:1px solid var(--line)}
+.brand{font-size:13px;font-weight:700;letter-spacing:.22em;color:var(--gold)}
+h1{font-size:clamp(28px,5.5vw,40px);font-weight:600;letter-spacing:-.025em;margin:14px 0 10px}
+header p{color:var(--muted);font-size:15px;max-width:58ch}
+h2{font-size:20px;font-weight:600;letter-spacing:-.015em;margin:34px 0 14px}
+.field{margin-bottom:18px}
+label{display:block;font-size:14px;font-weight:500;margin-bottom:6px}
+.hint{display:block;color:var(--muted);font-weight:400;font-size:13px;margin-top:2px}
+input,select,textarea{width:100%;background:var(--panel);border:1px solid var(--line);border-radius:var(--r);color:var(--text);font:inherit;font-size:15px;padding:10px 12px}
+textarea{min-height:70px;resize:vertical}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold)}
+.row{display:grid;gap:14px;grid-template-columns:1fr 1fr}
+@media(max-width:560px){.row{grid-template-columns:1fr}}
+.pak{border:1px solid var(--line);border-radius:var(--r);background:var(--panel);padding:14px 16px;margin-bottom:8px}
+.pak.aan{border-color:var(--gold);background:var(--panel-2)}
+.pak .top{display:flex;gap:10px;align-items:flex-start;cursor:pointer}
+.pak input[type=checkbox]{width:16px;height:16px;flex:none;margin-top:4px;accent-color:var(--gold)}
+.pak b{font-size:16px;font-weight:600;display:block}
+.pak small{color:var(--muted);font-size:13.5px}
+.pak .aanpas{display:none;grid-template-columns:1fr 140px;gap:10px;margin-top:12px;padding-top:12px;border-top:1px solid var(--line)}
+.pak.aan .aanpas{display:grid}
+.pak .aanpas label{font-size:12.5px;color:var(--muted)}
+button.go{background:var(--gold);color:#17140E;border:none;border-radius:var(--r);padding:13px 26px;font:inherit;font-size:15px;font-weight:600;cursor:pointer}
+button.go:hover{background:#E3A44C}
+button.klein{background:none;border:1px solid var(--line);color:var(--muted);border-radius:var(--r);padding:9px 14px;font:inherit;font-size:14px;cursor:pointer}
+button.klein:hover{color:var(--text);border-color:#4A443A}
+button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.out{display:none;margin-top:16px;border:1px solid var(--gold);border-radius:var(--r);background:var(--panel-2);padding:20px}
+.out.on{display:block}
+.link{background:var(--ink);border:1px solid var(--line);border-radius:var(--r);padding:12px;font-size:13px;word-break:break-all;line-height:1.5;margin-bottom:12px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+.acties{display:flex;gap:8px;flex-wrap:wrap}
+.melding{color:var(--muted);font-size:14px;margin-top:10px}
+.waarschuw{border-left:2px solid var(--gold);padding-left:14px;color:var(--muted);font-size:14px;margin-top:28px}
+iframe{display:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="brand">SNAP360 · intern</div>
+  <h1>Persoonlijke link maken</h1>
+  <p>Kies wat deze klant te zien krijgt. Alles wat je hier instelt zit in de link zelf, dus hij ziet geen andere pakketten en geen andere prijzen.</p>
+</header>
+
+<div id="app" style="display:none">
+  <h2>Voor wie</h2>
+  <div class="row">
+    <div class="field">
+      <label for="type">Type klant</label>
+      <select id="type"></select>
+    </div>
+  </div>
+  <div class="veld field">
+    <label>Welke branches mag hij zien<span class="hint">Vink er één aan om ze vast te zetten: die stap wordt dan overgeslagen. Vink er meerdere aan en de klant kiest zelf, maar enkel uit die.</span></label>
+    <div class="pakkeus" id="sitKeus"></div>
+    <div class="knoprij" style="margin-top:8px">
+      <button class="klein" id="sitAlles" type="button">Alles aanvinken</button>
+      <button class="klein" id="sitNiets" type="button">Alles uitvinken</button>
+    </div>
+  </div>
+  <div class="field">
+    <label for="naam">Naam van de klant<span class="hint">Komt in de titel van de pagina.</span></label>
+    <input type="text" id="naam" placeholder="Schilderwerken Vermeulen">
+  </div>
+  <div class="field">
+    <label for="bericht">Eigen introzin<span class="hint">Laat leeg voor de standaardtekst.</span></label>
+    <textarea id="bericht" placeholder="Zoals besproken op donderdag. Kies je pakket, vul de aandachtspunten in en teken."></textarea>
+  </div>
+  <div class="row">
+    <div class="field">
+      <label for="geldig">Geldig tot<span class="hint">Daarna toont de link een vervalbericht.</span></label>
+      <input type="date" id="geldig">
+    </div>
+    <div class="field">
+      <label for="basis">Adres van het formulier</label>
+      <input type="text" id="basis">
+    </div>
+  </div>
+
+  <h2>Korting voor deze klant</h2>
+  <p style="color:var(--muted);font-size:14px;margin:-8px 0 14px">Werkt op alle pakketten in deze link. Laat leeg voor de gewone prijs.</p>
+  <div class="rij">
+    <div class="veld"><label>Percentage</label>
+      <input type="text" id="korting" placeholder="bijvoorbeeld 20"></div>
+    <div class="veld"><label>Hoe noem je die korting?</label>
+      <input type="text" id="kortLabel" placeholder="Introductiekorting"></div>
+  </div>
+  <label style="display:flex;gap:8px;align-items:center;color:var(--text);font-size:14px;margin-bottom:8px">
+    <input type="checkbox" id="kortToon" style="width:16px;height:16px;accent-color:var(--gold)">
+    <span>Toon de gewone prijs doorstreept ernaast</span></label>
+
+  <h2 id="pakTitel">Welke pakketten mag hij zien</h2>
+  <p id="pakUitleg" style="color:var(--muted);font-size:14px;margin:-8px 0 14px">Deze lijst volgt uit het type en de branche hierboven.</p>
+  <div id="pakKeus"><div id="paketten"></div></div>
+
+  <div style="margin-top:24px"><button class="go" id="maak">Maak de link</button></div>
+
+  <div class="out" id="out">
+    <div class="link" id="linkTxt"></div>
+    <div class="acties">
+      <button class="klein" id="kopieer">Kopieer de link</button>
+      <button class="klein" id="open">Open ter controle</button>
+      <button class="klein" id="mail">Open in mail</button>
+    </div>
+    <p class="melding" id="melding"></p>
+  </div>
+
+  <p class="waarschuw">Deze pagina hoort niet bij het publieke formulier. Zet ze in een aparte map of houd ze lokaal, want ze bevat je volledige prijslijst.</p>
+</div>
+
+<div id="laden"><p style="color:var(--muted);margin-top:30px">Prijslijst inladen…</p></div>
+</div>
+
+<iframe id="bron" src="index.html"></iframe>
+
+<script>
+let CONFIG = null;
+
+async function eigenConfig(){
+  try{
+    const r = await fetch('config.json', {cache:'no-store'});
+    if(r.ok){
+      const j = await r.json();
+      if(j && j.types && j.paketten) return j;
+    }
+  }catch(e){}
+  return null;
+}
+
+document.getElementById('bron').addEventListener('load', async function(){
+  try{
+    CONFIG = await eigenConfig() || this.contentWindow.CONFIG || this.contentWindow.eval('CONFIG');
+    start();
+  }catch(e){
+    document.getElementById('laden').innerHTML =
+      '<p style="color:var(--muted);margin-top:30px">De prijslijst kon niet ingelezen worden uit index.html. ' +
+      'Dat lukt niet als je dit bestand rechtstreeks vanaf je schijf opent. Zet beide bestanden online ' +
+      '(GitHub Pages) of start lokaal een servertje, bijvoorbeeld met <code>python3 -m http.server</code>.</p>';
+  }
+});
+
+const $  = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const esc = s => String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const codeer = o => btoa(unescape(encodeURIComponent(JSON.stringify(o))))
+                    .replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+
+function start(){
+  $('#laden').style.display = 'none';
+  $('#app').style.display = 'block';
+
+  $('#type').innerHTML = Object.entries(CONFIG.types)
+    .map(([k,t])=>`<option value="${k}">${esc(t.label)}</option>`).join('');
+  $('#basis').value = location.href.replace(/[^/]*$/,'') + 'index.html';
+
+  const d = new Date(); d.setMonth(d.getMonth()+1);
+  $('#geldig').value = d.toISOString().slice(0,10);
+
+  $('#type').addEventListener('change', tekenSituaties);
+  $('#sitAlles').addEventListener('click', ()=> zetAlle(true));
+  $('#sitNiets').addEventListener('click', ()=> zetAlle(false));
+  tekenSituaties();
+}
+
+function situaties(){
+  return CONFIG.types[$('#type').value].situaties || {};
+}
+
+function tekenSituaties(){
+  const sits = situaties();
+  $('#sitKeus').innerHTML = Object.entries(sits).map(([k,s])=>
+    `<label><input type="checkbox" value="${esc(k)}" checked><span>${esc(s.label)}</span></label>`).join('')
+    || '<p class="mini">Dit type heeft geen branches.</p>';
+  $('#sitKeus').onchange = tekenPaketten;
+  tekenPaketten();
+}
+function zetAlle(aan){
+  $$('#sitKeus input').forEach(cb => cb.checked = aan);
+  tekenPaketten();
+}
+function gekozenSits(){
+  return $$('#sitKeus input:checked').map(cb => cb.value);
+}
+
+// Bij precies één branche kies je zelf de pakketten. Bij meerdere gebruikt
+// elke branche haar eigen lijst, dus dan valt er niets te kiezen.
+function eenBranche(){
+  const g = gekozenSits();
+  return g.length === 1 ? g[0] : null;
+}
+function huidigePaketten(){
+  const t = CONFIG.types[$('#type').value];
+  const k = eenBranche();
+  const s = k ? situaties()[k] : null;
+  const ids = (s && s.pakketten) || t.pakketten;
+  return ids.map(id => CONFIG.paketten[id]).filter(Boolean);
+}
+
+function tekenPaketten(){
+  const meerdere = !eenBranche() && gekozenSits().length > 1;
+  $('#pakTitel').textContent = meerdere ? 'Pakketten' : 'Welke pakketten mag hij zien';
+  $('#pakUitleg').textContent = meerdere
+    ? 'Je hebt meerdere branches aangevinkt. Elke branche toont dan haar eigen pakketten. Wil je zelf kiezen welke pakketten hij ziet, vink dan één branche aan.'
+    : 'Deze lijst volgt uit het type en de branche hierboven.';
+  $('#pakKeus').style.display = meerdere ? 'none' : '';
+  if(meerdere){ $('#paketten').innerHTML = ''; $('#out').classList.remove('on'); return; }
+  const lijst = huidigePaketten();
+  $('#paketten').innerHTML = lijst.map((p,i)=>`
+    <div class="pak" data-i="${i}">
+      <label class="top">
+        <input type="checkbox" checked>
+        <span><b>${esc(p.naam)}</b><small>${esc(p.omschrijving)} · ${esc(p.duur)}</small></span>
+      </label>
+      <div class="aanpas">
+        <div><label>Naam op de offerte</label><input class="pn" type="text" value="${esc(p.naam)}"></div>
+        <div><label>Prijs, exclusief btw</label>
+          <input class="pp" type="text" value="${p.prijs===null?'':p.prijs}" placeholder="op maat"></div>
+      </div>
+    </div>`).join('');
+  document.querySelectorAll('.pak').forEach(el=>{
+    const cb = el.querySelector('input[type=checkbox]');
+    const sync = ()=> el.classList.toggle('aan', cb.checked);
+    cb.addEventListener('change', sync); sync();
+  });
+  $('#out').classList.remove('on');
+}
+
+$('#maak').addEventListener('click', ()=>{
+  const type = $('#type').value;
+  const sitKeuze = gekozenSits();
+  const alle = Object.keys(situaties());
+  const bron = huidigePaketten();
+  const gekozen = [];
+
+  if(alle.length && !sitKeuze.length){
+    $('#out').classList.add('on');
+    $('#linkTxt').textContent = 'Vink minstens één branche aan.';
+    $('#melding').textContent = '';
+    return;
+  }
+
+  document.querySelectorAll('.pak').forEach(el=>{
+    if(!el.querySelector('input[type=checkbox]').checked) return;
+    const p = Object.assign({}, bron[+el.dataset.i]);
+    p.naam = el.querySelector('.pn').value.trim() || p.naam;
+    const pr = el.querySelector('.pp').value.trim().replace(',','.');
+    p.prijs = pr === '' ? null : Number(pr);
+    gekozen.push(p);
+  });
+
+  const enkel = eenBranche();
+  if(enkel && !gekozen.length){
+    $('#out').classList.add('on');
+    $('#linkTxt').textContent = 'Vink minstens één pakket aan.';
+    $('#melding').textContent = '';
+    return;
+  }
+
+  const data = { t:type };
+  if(enkel){ data.s = enkel; data.p = gekozen; }
+  else if(sitKeuze.length && sitKeuze.length < alle.length) data.sl = sitKeuze;
+  const k = Number(($('#korting').value||'').replace(',','.'));
+  if(k > 0 && k < 100){
+    data.k = k;
+    data.kt = $('#kortLabel').value.trim() || 'Introductiekorting';
+    if($('#kortToon').checked) data.kd = 1;
+  }
+  if($('#naam').value.trim())    data.n = $('#naam').value.trim();
+  if($('#bericht').value.trim()) data.b = $('#bericht').value.trim();
+  if($('#geldig').value)         data.g = $('#geldig').value;
+  data.c = ($('#naam').value.trim() || 'link') + ' · ' +
+           new Date().toISOString().slice(0,10);
+
+  const url = $('#basis').value.trim() + '?o=' + codeer(data);
+  $('#linkTxt').textContent = url;
+  $('#out').classList.add('on');
+  $('#melding').textContent =
+    (enkel
+      ? (gekozen.length === 1
+          ? 'Eén pakket: de klant ziet het als een vaste offerte en kan niet kiezen. '
+          : gekozen.length + ' pakketten zichtbaar, andere prijzen zitten niet in deze link. ') +
+        'De branche staat vast, dus die stap wordt overgeslagen. '
+      : sitKeuze.length + ' branches zichtbaar van de ' + alle.length + '. De klant kiest daaruit. ') +
+    (data.k ? data.kt + ' van ' + data.k + '% wordt overal toegepast.' : '');
+  $('#out').scrollIntoView({behavior:'smooth',block:'nearest'});
+});
+
+$('#kopieer').addEventListener('click', async ()=>{
+  await navigator.clipboard.writeText($('#linkTxt').textContent);
+  $('#kopieer').textContent = 'Gekopieerd';
+  setTimeout(()=>$('#kopieer').textContent='Kopieer de link', 1800);
+});
+$('#open').addEventListener('click', ()=> window.open($('#linkTxt').textContent,'_blank'));
+$('#mail').addEventListener('click', ()=>{
+  const naam = $('#naam').value.trim();
+  const body =
+    'Dag' + (naam ? ' ' + naam : '') + ',\n\n' +
+    'Via onderstaande link kies je je pakket, geef je door wat er zeker in beeld moet, ' +
+    'en teken je de opdracht meteen digitaal.\n\n' +
+    $('#linkTxt').textContent + '\n\n' +
+    'Duurt een vijftal minuten. Je krijgt het getekende document daarna in je mailbox.\n\n' +
+    'Met vriendelijke groeten,\nTom';
+  location.href = 'mailto:?subject=' + encodeURIComponent('Je video-opdracht bij SNAP360') +
+                  '&body=' + encodeURIComponent(body);
+});
+</script>
+</body>
+</html>

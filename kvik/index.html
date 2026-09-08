@@ -985,7 +985,7 @@ function start(){
    ============================================================ */
 const S = { type:null, situatie:null, pakket:null, klant:{}, antw:{},
             shots:[], ref:maakRef(), link:null, linkPaketten:null, foto:null,
-            kortPct:0, kortLabel:'', toonVan:false };
+            kortPct:0, kortLabel:'', toonVan:false, sitFilter:null };
 let stap = 0;
 let volgorde = [0,1,2,3,4,5];
 const VAST = { type:false, situatie:false };
@@ -1003,6 +1003,10 @@ const geld = n => CONFIG.munt + n.toLocaleString('nl-BE',{minimumFractionDigits:
 
 /* ---- afgeleide lijsten ---- */
 const typeObj = () => CONFIG.types[S.type];
+function sitLijst(){
+  const alles = Object.entries(typeObj().situaties || {});
+  return S.sitFilter ? alles.filter(([k]) => S.sitFilter.includes(k)) : alles;
+}
 const sitObj  = () => (S.situatie && typeObj().situaties) ? typeObj().situaties[S.situatie] : null;
 
 function pakLijst(){
@@ -1042,7 +1046,12 @@ function leesLink(){
   try{
     const o = decodeer(p);
     if(!o.t || !CONFIG.types[o.t]) return 'fout';
-    if(o.s && !(CONFIG.types[o.t].situaties||{})[o.s]) return 'fout';
+    const sits = CONFIG.types[o.t].situaties || {};
+    if(o.s && !sits[o.s]) return 'fout';
+    if(Array.isArray(o.sl)){
+      o.sl = o.sl.filter(k => sits[k]);
+      if(!o.sl.length) return 'fout';
+    }
     return o;
   }catch(e){ return 'fout'; }
 }
@@ -1071,6 +1080,7 @@ if(LINK){
       'De geldigheidsdatum van deze link is voorbij. Mail ons op ' + mailLink() + ' voor een nieuwe.');
 
   S.type = LINK.t;  VAST.type = true;
+  if(Array.isArray(LINK.sl)) S.sitFilter = LINK.sl;
   if(LINK.s){ S.situatie = LINK.s; VAST.situatie = true; }
   if(Array.isArray(LINK.p) && LINK.p.length) S.linkPaketten = LINK.p;
   S.link = LINK.c || LINK.n || 'persoonlijke link';
@@ -1088,9 +1098,9 @@ function herbereken(){
   const v = [];
   if(!VAST.type) v.push(0);
   if(!VAST.situatie){
-    const n = S.type ? Object.keys(typeObj().situaties || {}).length : 2;
-    if(n > 1) v.push(1);
-    else if(n === 1) S.situatie = Object.keys(typeObj().situaties)[0];
+    const lijst = S.type ? sitLijst() : [[0],[1]];
+    if(lijst.length > 1) v.push(1);
+    else if(lijst.length === 1) S.situatie = lijst[0][0];
   }
   v.push(2,3,4,5);
   volgorde = v;
@@ -1114,10 +1124,9 @@ $('#typeOpts').addEventListener('click', e => {
 });
 
 function toonSituaties(){
-  const sits = typeObj().situaties || {};
   $('#sitTitel').textContent = typeObj().label === 'Sport'
     ? 'Wat filmen we precies?' : 'Wat voor opdracht is het?';
-  $('#sitOpts').innerHTML = Object.entries(sits).map(([k,s])=>
+  $('#sitOpts').innerHTML = sitLijst().map(([k,s])=>
     `<button type="button" class="opt" aria-pressed="${S.situatie===k}" data-sit="${k}">
        <b>${esc(s.label)}</b><small>${esc(s.sub)}</small></button>`).join('');
 }
