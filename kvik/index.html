@@ -178,6 +178,15 @@ canvas{
 .spin{display:inline-block;width:14px;height:14px;border:2px solid rgba(23,20,14,.3);border-top-color:#17140E;border-radius:50%;animation:sp .7s linear infinite;vertical-align:-2px;margin-right:8px}
 @keyframes sp{to{transform:rotate(360deg)}}
 
+button.klein{background:none;border:1px solid var(--line);color:var(--text);border-radius:var(--r);
+  padding:10px 16px;font:inherit;font-size:14.5px;cursor:pointer}
+button.klein:hover{border-color:var(--gold);color:var(--gold)}
+.fotoblok{border:1px solid var(--line);border-radius:var(--r);background:var(--panel);padding:18px 20px;margin-top:8px}
+.fotoblok h3{font-size:16px;font-weight:600;margin-bottom:4px}
+.fotoblok p{color:var(--muted);font-size:13.5px;margin-bottom:14px;max-width:56ch}
+.fotorij{display:flex;gap:14px;align-items:center;margin-top:14px}
+.fotorij img{width:88px;height:88px;object-fit:cover;border-radius:var(--r);border:1px solid var(--line)}
+.doc .pasfoto{width:92px;border:1px solid #E3DDD2;border-radius:3px;margin-top:6px}
 .shotadd{display:flex;gap:8px;flex-wrap:wrap}
 .shotadd input{flex:1 1 180px;min-width:0}
 .shotadd button{flex:none}
@@ -227,6 +236,18 @@ canvas{
   <h2>Je gegevens</h2>
   <p class="lead">Deze komen op de opdrachtbevestiging en op de factuur.</p>
   <div id="gegevens"></div>
+
+  <div class="fotoblok" id="fotoBlok">
+    <h3>Foto van de ondertekenaar</h3>
+    <p id="fotoUitleg">Zo weten we op de opnamedag meteen wie we voor ons hebben. De foto wordt enkel bij deze opdracht bewaard.</p>
+    <input type="file" accept="image/*" capture="user" id="fotoIn" style="display:none">
+    <button type="button" class="klein" id="fotoKnop">Foto nemen of kiezen</button>
+    <div class="fotorij" id="fotoVoor" style="display:none">
+      <img id="fotoImg" alt="Genomen foto">
+      <button type="button" class="klein" id="fotoWeg">Verwijder</button>
+    </div>
+  </div>
+
   <div class="err" id="e3">Vul de verplichte velden in.</div>
   <div class="nav"><button class="back" data-prev>Terug</button><button class="go" data-next>Verder</button></div>
 </section>
@@ -314,6 +335,9 @@ let CONFIG = {
   btw: 0.21,          // 21% — zet op 0 voor werk buiten BE
   munt: "€",
   voorschot: 0.30,    // 30% voorschot bij bevestiging
+
+  // Foto van de ondertekenaar: "optioneel", "verplicht" of "uit"
+  foto: "optioneel",
 
 /* ================================================================
    PAKKETTEN
@@ -925,7 +949,7 @@ function start(){
    STATE
    ============================================================ */
 const S = { type:null, situatie:null, pakket:null, klant:{}, antw:{},
-            shots:[], ref:maakRef(), link:null, linkPaketten:null };
+            shots:[], ref:maakRef(), link:null, linkPaketten:null, foto:null };
 let stap = 0;
 let volgorde = [0,1,2,3,4,5];
 const VAST = { type:false, situatie:false };
@@ -1195,6 +1219,12 @@ function valideer(n){
       const slecht = f.v && (!val || (f.t==='email' && !/^\S+@\S+\.\S+$/.test(val)));
       el.classList.toggle('bad', slecht); if(slecht) ok=false; else S.klant[f.k]=val;
     });
+    if(fotoAan && fotoMoet && !S.foto){
+      ok = false;
+      $('#e3').textContent = 'Neem nog een foto van de ondertekenaar.';
+    } else if(ok){
+      $('#e3').textContent = 'Vul de verplichte velden in.';
+    }
     $('#e3').classList.toggle('on', !ok); return ok;
   }
   if(n===4){
@@ -1249,6 +1279,7 @@ function tekenDocument(){
        ${esc(CONFIG.bedrijf.btwnr)}<br>${esc(CONFIG.bedrijf.email)} · ${esc(CONFIG.bedrijf.tel)}</p>
     <p style="margin-top:10px"><strong>Opdrachtgever</strong><br>${esc(K.naam)}${K.bedrijf?'<br>'+esc(K.bedrijf):''}<br>
        ${esc(K.adres)}<br>${K.btw?esc(K.btw)+'<br>':''}${esc(K.email)} · ${esc(K.tel)}</p>
+    ${S.foto?`<img class="pasfoto" src="${S.foto}" alt="Foto van de ondertekenaar">`:''}
     <p class="small" style="margin-top:8px">Soort opdracht: ${esc(opdrachtLabel())}</p>
 
     <h4>Pakket</h4>
@@ -1279,36 +1310,117 @@ function tekenDocument(){
 }
 
 /* ============================================================
+   FOTO VAN DE ONDERTEKENAAR
+   ============================================================ */
+const fotoAan = (CONFIG.foto || 'optioneel') !== 'uit';
+const fotoMoet = CONFIG.foto === 'verplicht';
+if(!fotoAan) $('#fotoBlok').style.display = 'none';
+else if(fotoMoet) $('#fotoUitleg').textContent =
+  'Zo weten we op de opnamedag meteen wie we voor ons hebben. Deze foto is nodig om verder te gaan.';
+
+$('#fotoKnop').addEventListener('click', ()=> $('#fotoIn').click());
+$('#fotoWeg').addEventListener('click', ()=>{
+  S.foto = null; $('#fotoVoor').style.display = 'none';
+  $('#fotoKnop').textContent = 'Foto nemen of kiezen';
+  $('#fotoIn').value = '';
+});
+$('#fotoIn').addEventListener('change', e=>{
+  const f = e.target.files && e.target.files[0]; if(!f) return;
+  const lezer = new FileReader();
+  lezer.onload = ()=>{
+    const img = new Image();
+    img.onload = ()=>{
+      const max = 800;
+      const s = Math.min(1, max/Math.max(img.width, img.height));
+      const c = document.createElement('canvas');
+      c.width = Math.round(img.width*s); c.height = Math.round(img.height*s);
+      const cc = c.getContext('2d');
+      cc.fillStyle = '#FFFFFF'; cc.fillRect(0,0,c.width,c.height);
+      cc.drawImage(img, 0, 0, c.width, c.height);
+      S.foto = c.toDataURL('image/jpeg', 0.72);
+      $('#fotoImg').src = S.foto;
+      $('#fotoVoor').style.display = 'flex';
+      $('#fotoKnop').textContent = 'Andere foto';
+      $('#e3').classList.remove('on');
+    };
+    img.src = lezer.result;
+  };
+  lezer.readAsDataURL(f);
+});
+
+/* ============================================================
    HANDTEKENING
+   De streken worden als coordinaten bewaard, niet als afbeelding.
+   Zo gaat er niets verloren als het canvas herschaald wordt,
+   bijvoorbeeld wanneer het toetsenbord op een gsm opengaat.
    ============================================================ */
 const pad = $('#pad'), ctx = pad.getContext('2d');
-let tekent = false, getekend = false;
+let lijnen = [], huidig = null;
+const getekend = () => lijnen.some(l => l.length > 1);
+
 function schaal(){
-  const r = pad.getBoundingClientRect(), dpr = window.devicePixelRatio||1;
+  const r = pad.getBoundingClientRect(), dpr = window.devicePixelRatio || 1;
   if(!r.width) return;
-  const oud = getekend ? pad.toDataURL() : null;
-  pad.width = r.width*dpr; pad.height = r.height*dpr;
-  ctx.setTransform(1,0,0,1,0,0); ctx.scale(dpr,dpr);
-  ctx.lineWidth=2.2; ctx.lineCap='round'; ctx.lineJoin='round'; ctx.strokeStyle='#1A1815';
-  if(oud){ const i=new Image(); i.onload=()=>ctx.drawImage(i,0,0,r.width,r.height); i.src=oud; }
+  pad.width = Math.round(r.width*dpr); pad.height = Math.round(r.height*dpr);
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  ctx.lineWidth = 2.2; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.strokeStyle = '#1A1815';
+  hertekenPad(ctx, r.width, r.height);
 }
-const punt = e => { const r = pad.getBoundingClientRect(); return [e.clientX-r.left, e.clientY-r.top]; };
+function hertekenPad(c, b, hh){
+  c.clearRect(0,0,b,hh);
+  lijnen.forEach(l=>{
+    if(l.length < 2) return;
+    c.beginPath();
+    c.moveTo(l[0][0]*b, l[0][1]*hh);
+    for(let i=1;i<l.length;i++) c.lineTo(l[i][0]*b, l[i][1]*hh);
+    c.stroke();
+  });
+}
+function punt(e){
+  const r = pad.getBoundingClientRect();
+  return [(e.clientX-r.left)/r.width, (e.clientY-r.top)/r.height];
+}
 pad.addEventListener('pointerdown', e=>{
-  tekent=true; getekend=true; pad.setPointerCapture(e.pointerId);
-  const [x,y]=punt(e); ctx.beginPath(); ctx.moveTo(x,y);
+  pad.setPointerCapture(e.pointerId);
+  huidig = [punt(e)]; lijnen.push(huidig);
   $('#e5').classList.remove('on');
 });
-pad.addEventListener('pointermove', e=>{ if(!tekent) return; const [x,y]=punt(e); ctx.lineTo(x,y); ctx.stroke(); });
-['pointerup','pointercancel','pointerleave'].forEach(ev=>pad.addEventListener(ev,()=>tekent=false));
-$('#clearPad').addEventListener('click', ()=>{ ctx.clearRect(0,0,pad.width,pad.height); getekend=false; });
+pad.addEventListener('pointermove', e=>{
+  if(!huidig) return;
+  huidig.push(punt(e));
+  const r = pad.getBoundingClientRect();
+  const n = huidig.length;
+  ctx.beginPath();
+  ctx.moveTo(huidig[n-2][0]*r.width, huidig[n-2][1]*r.height);
+  ctx.lineTo(huidig[n-1][0]*r.width, huidig[n-1][1]*r.height);
+  ctx.stroke();
+});
+['pointerup','pointercancel','pointerleave'].forEach(ev =>
+  pad.addEventListener(ev, ()=>{ huidig = null; }));
+$('#clearPad').addEventListener('click', ()=>{
+  lijnen = []; huidig = null; schaal();
+});
 window.addEventListener('resize', schaal);
+
+/* Bouwt de definitieve handtekening op een witte achtergrond,
+   los van hoe groot het canvas op het scherm stond. */
+function handtekeningPng(){
+  const b = 660, hh = 240;
+  const c = document.createElement('canvas');
+  c.width = b; c.height = hh;
+  const cc = c.getContext('2d');
+  cc.fillStyle = '#FFFFFF'; cc.fillRect(0,0,b,hh);
+  cc.lineWidth = 3; cc.lineCap = 'round'; cc.lineJoin = 'round'; cc.strokeStyle = '#1A1815';
+  hertekenPad(cc, b, hh);
+  return c.toDataURL('image/png');
+}
 
 /* ============================================================
    VERSTUREN
    ============================================================ */
 $('#send').addEventListener('click', async ()=>{
   const naam = $('#signName').value.trim();
-  if(!$('#akkoord').checked || !naam || !getekend){ $('#e5').classList.add('on'); return; }
+  if(!$('#akkoord').checked || !naam || !getekend()){ $('#e5').classList.add('on'); return; }
 
   const knop = $('#send');
   knop.disabled = true; knop.innerHTML = '<span class="spin"></span>Versturen…';
@@ -1329,7 +1441,8 @@ $('#send').addEventListener('click', async ()=>{
     voorwaarden: CONFIG.voorwaarden,
     bedrijf: CONFIG.bedrijf,
     documentHtml: $('#doc').innerHTML,
-    handtekening: pad.toDataURL('image/png'),
+    handtekening: handtekeningPng(),
+    foto: S.foto,
     ondertekenaar: naam
   };
 

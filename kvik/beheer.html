@@ -132,6 +132,12 @@ code{font-family:ui-monospace,Menlo,monospace;font-size:13px;color:var(--gold)}
     <div class="veld"><label>Munt</label><input data-i="munt"></div>
   </div>
   <div class="veld"><label>Apps Script webapp-URL</label><input data-i="endpoint"></div>
+  <div class="veld"><label>Foto van de ondertekenaar</label>
+    <select data-i="foto">
+      <option value="optioneel">Vragen, maar niet verplicht</option>
+      <option value="verplicht">Verplicht om verder te gaan</option>
+      <option value="uit">Helemaal niet vragen</option>
+    </select><div class="mini">De foto komt op de opdrachtbevestiging en wordt apart in je Drive-map bewaard.</div></div>
   <div class="veld"><label>Wie mag het open formulier gebruiken?</label>
     <select data-i="publiekeCatalogus">
       <option value="true">Iedereen: de kale link toont alle types en prijzen</option>
@@ -261,6 +267,7 @@ function vulBedrijf(){
     const k = el.dataset.i;
     if(k==='btw' || k==='voorschot') el.value = Math.round(CONFIG[k]*100);
     else if(k==='publiekeCatalogus') el.value = String(CONFIG[k]);
+    else if(k==='foto') el.value = CONFIG.foto || 'optioneel';
     else el.value = CONFIG[k] || '';
     el.oninput = el.onchange = ()=>{
       if(map[k]) CONFIG[k] = map[k](el.value);
