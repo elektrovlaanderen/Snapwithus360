@@ -413,12 +413,17 @@ $('#maak').addEventListener('click', ()=>{
   $('#out').scrollIntoView({behavior:'smooth',block:'nearest'});
 });
 
+const VERSIE = '2026-09-08';   // moet overeenkomen met de meta in index.html
+
 let bronHtml = null;
 async function haalBron(){
   if(bronHtml) return bronHtml;
   const r = await fetch('index.html', {cache:'no-store'});
   bronHtml = await r.text();
   return bronHtml;
+}
+function bronIsOud(bron){
+  return bron.indexOf('content="' + VERSIE + '"') < 0;
 }
 const veilig = o => JSON.stringify(o).replace(/</g, '\\u003c');
 
@@ -431,6 +436,14 @@ $('#downloadPagina').addEventListener('click', async ()=>{
   knop.textContent = 'Bezig…'; knop.disabled = true;
   try{
     const bron = await haalBron();
+    if(bronIsOud(bron)){
+      $('#paginaUitleg').innerHTML =
+        '<span style="color:var(--gold)">De index.html in deze map is ouder dan deze beheerpagina. ' +
+        'Zou je die eerst vervangen door de nieuwste versie en dan deze pagina herladen met ' +
+        'Cmd+Shift+R? Anders bak je de oude code in de klantpagina.</span>';
+      knop.textContent = oudeTekst; knop.disabled = false;
+      return;
+    }
     const injectie =
       '<script>\n' +
       'window.INGEBAKKEN_CONFIG = ' + veilig(CONFIG) + ';\n' +

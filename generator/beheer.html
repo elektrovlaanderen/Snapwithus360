@@ -138,6 +138,12 @@ code{font-family:ui-monospace,Menlo,monospace;font-size:13px;color:var(--gold)}
     <div class="veld"><label>Munt</label><input data-i="munt"></div>
   </div>
   <div class="veld"><label>Apps Script webapp-URL</label><input data-i="endpoint"></div>
+  <div class="veld"><label>Zelf samenstellen: hoe tonen we de extra's?</label>
+    <select data-i="optieModus">
+      <option value="stil">Zonder losse prijzen, het systeem kiest de formule</option>
+      <option value="prijzen">Met een prijs per extra en een lopend totaal</option>
+      <option value="uit">Niet tonen</option>
+    </select><div class="mini">Dit is de standaard. Per link kan je het overschrijven.</div></div>
   <div class="veld"><label>Foto van de ondertekenaar</label>
     <select data-i="foto">
       <option value="optioneel">Vragen, maar niet verplicht</option>
@@ -275,6 +281,7 @@ function vulBedrijf(){
     else if(k==='publiekeCatalogus') el.value = String(CONFIG[k]);
     else if(k==='foto') el.value = CONFIG.foto || 'optioneel';
     else if(k==='btwRegime') el.value = CONFIG.btwRegime || 'vast';
+    else if(k==='optieModus') el.value = CONFIG.optieModus || 'stil';
     else el.value = CONFIG[k] || '';
     el.oninput = el.onchange = ()=>{
       if(map[k]) CONFIG[k] = map[k](el.value);
