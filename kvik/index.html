@@ -184,7 +184,21 @@ button.klein:hover{border-color:var(--gold);color:var(--gold)}
 .fotoblok{border:1px solid var(--line);border-radius:var(--r);background:var(--panel);padding:18px 20px;margin-top:8px}
 .fotoblok h3{font-size:16px;font-weight:600;margin-bottom:4px}
 .fotoblok p{color:var(--muted);font-size:13.5px;margin-bottom:14px;max-width:56ch}
-.fotorij{display:flex;gap:14px;align-items:center;margin-top:14px}
+.fotorij{display:flex;gap:14px;align-items:center;margin-top:14px;flex-wrap:wrap}
+#camBox{margin-top:14px}
+#cam{width:100%;max-width:420px;border-radius:var(--r);border:1px solid var(--line);background:#000;display:block}
+.camrij{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.ofwel{color:var(--muted);font-size:13.5px;margin-top:10px}
+.ofwel button{background:none;border:none;color:var(--gold);font:inherit;font-size:13.5px;
+  cursor:pointer;text-decoration:underline;padding:0}
+.adres{display:grid;gap:10px;grid-template-columns:repeat(4,1fr)}
+.adres .straat{grid-column:span 3}
+.adres .nummer{grid-column:span 1}
+.adres .postcode{grid-column:span 1}
+.adres .gemeente{grid-column:span 3}
+@media(max-width:560px){.adres{grid-template-columns:1fr 1fr}
+  .adres .straat,.adres .gemeente{grid-column:span 2}
+  .adres .nummer,.adres .postcode{grid-column:span 1}}
 .fotorij img{width:88px;height:88px;object-fit:cover;border-radius:var(--r);border:1px solid var(--line)}
 .doc .pasfoto{width:92px;border:1px solid #E3DDD2;border-radius:3px;margin-top:6px}
 .shotadd{display:flex;gap:8px;flex-wrap:wrap}
@@ -241,10 +255,21 @@ button.klein:hover{border-color:var(--gold);color:var(--gold)}
     <h3>Foto van de ondertekenaar</h3>
     <p id="fotoUitleg">Zo weten we op de opnamedag meteen wie we voor ons hebben. De foto wordt enkel bij deze opdracht bewaard.</p>
     <input type="file" accept="image/*" capture="user" id="fotoIn" style="display:none">
-    <button type="button" class="klein" id="fotoKnop">Foto nemen of kiezen</button>
+    <button type="button" class="klein" id="fotoKnop">Foto nemen</button>
+    <div class="ofwel" id="fotoOfwel">of <button type="button" id="fotoBestand">kies een bestand van je toestel</button></div>
+
+    <div id="camBox" style="display:none">
+      <video id="cam" playsinline muted autoplay></video>
+      <div class="camrij">
+        <button type="button" class="go" id="camSnap">Neem de foto</button>
+        <button type="button" class="klein" id="camWissel">Andere camera</button>
+        <button type="button" class="klein" id="camStop">Annuleer</button>
+      </div>
+    </div>
+
     <div class="fotorij" id="fotoVoor" style="display:none">
       <img id="fotoImg" alt="Genomen foto">
-      <button type="button" class="klein" id="fotoWeg">Verwijder</button>
+      <button type="button" class="klein" id="fotoWeg">Opnieuw</button>
     </div>
   </div>
 
@@ -449,7 +474,7 @@ let CONFIG = {
           sub: "Eén pand, klaar om online te zetten",
           lead: "Alle pakketten zijn per pand. Meerdere panden? Zet het bij de opmerkingen, dan maken we een formule op maat.",
           vragen: [
-            { k:"pandAdres", label:"Adres van het pand", type:"text", verplicht:true },
+            { k:"pandAdres", label:"Adres van het pand", type:"adres", verplicht:true },
             { k:"pandType", label:"Wat voor pand is het?", type:"select", opties:["Woning","Appartement","Villa","Hoeve of karaktervolle woning","Bouwgrond of casco","Handelspand"] },
             { k:"bewoond", label:"Is het pand bewoond?", type:"select", opties:["Leegstaand","Bewoond door de eigenaar","Verhuurd","Nieuwbouw of casco"] },
             { k:"toegang", label:"Hoe geraken we binnen?", hint:"Sleutel, sleutelkluis, of iemand ter plaatse.", type:"text", verplicht:true },
@@ -466,7 +491,7 @@ let CONFIG = {
           pakketten: ["rentalStart","rentalCompleet"],
           suggesties: ["De aankomst en de voordeur","De slaapkamers, elk apart","De badkamer","De keuken met alles erop","Het terras of het zwembad","Het uitzicht","De omgeving en het dorp","De parking of de garage"],
           vragen: [
-            { k:"pandAdres", label:"Adres van het verhuurpand", type:"text", verplicht:true },
+            { k:"pandAdres", label:"Adres van het verhuurpand", type:"adres", verplicht:true },
             { k:"platform", label:"Waar staat het pand te huur?", type:"select", opties:["Airbnb","Booking.com","Eigen website","Meerdere platformen","Nog niet online"] },
             { k:"capaciteit", label:"Hoeveel gasten en hoeveel slaapkamers?", type:"text", verplicht:true },
             { k:"troeven", label:"Waarom kiezen gasten voor dit pand?", hint:"Zwembad, uitzicht, rust, ligging bij de zee, honden toegelaten.", type:"textarea", verplicht:true },
@@ -484,7 +509,8 @@ let CONFIG = {
           pakketten: ["project","toppand"],
           suggesties: ["De maquette of de renders","Het bouwterrein vanuit de lucht","Een afgewerkte modelwoning","De gemeenschappelijke delen","De buurt en de voorzieningen","De projectontwikkelaar aan het woord"],
           vragen: [
-            { k:"projectNaam", label:"Naam en adres van het project", type:"text", verplicht:true },
+            { k:"projectNaam", label:"Naam van het project", type:"text", verplicht:true },
+            { k:"projectAdres", label:"Adres van het project", type:"adres", verplicht:true },
             { k:"units", label:"Hoeveel units en welke types?", hint:"Bijvoorbeeld: 12 appartementen, 3 types, 2 met tuin.", type:"textarea", verplicht:true },
             { k:"fase", label:"In welke fase zit het project?", type:"select", opties:["Nog te bouwen, enkel renders","In aanbouw","Modelwoning klaar","Volledig afgewerkt"] },
             { k:"werf", label:"Veiligheidsregels op de werf", hint:"PBM, werfleider, verboden zones.", type:"textarea" },
@@ -498,7 +524,7 @@ let CONFIG = {
           lead: "Voor commercieel vastgoed. De nadruk ligt op oppervlakte, indeling, toegankelijkheid en ligging.",
           suggesties: ["De gevel en de zichtbaarheid vanaf de straat","De volledige oppervlakte","De laad- en loskade","De parking","De ligging ten opzichte van de invalswegen","De technische installaties"],
           vragen: [
-            { k:"pandAdres", label:"Adres van het pand", type:"text", verplicht:true },
+            { k:"pandAdres", label:"Adres van het pand", type:"adres", verplicht:true },
             { k:"bestemming", label:"Wat is de bestemming?", type:"select", opties:["Winkel of horeca","Kantoor","Magazijn of KMO-unit","Industrieel","Gemengd"] },
             { k:"oppervlakte", label:"Oppervlakte en indeling", type:"text" },
             { k:"toegang", label:"Hoe geraken we binnen?", type:"text", verplicht:true },
@@ -513,7 +539,7 @@ let CONFIG = {
           pakketten: ["kantoorProfiel","toppandCompleet"],
           suggesties: ["Het kantoor en de etalage","Het team aan het werk","Een gesprek met een klant","De zaakvoerder aan het woord","Beelden van gerealiseerde verkopen"],
           vragen: [
-            { k:"locatie", label:"Waar filmen we?", type:"text", verplicht:true },
+            { k:"locatie", label:"Waar filmen we?", type:"adres", verplicht:true },
             { k:"inBeeld", label:"Wie komt er in beeld?", hint:"Namen en functie.", type:"textarea", verplicht:true },
             { k:"boodschap", label:"Waarom zou een verkoper voor jullie kiezen?", hint:"Dit wordt de rode draad van de film.", type:"textarea", verplicht:true },
             { k:"referentiePand", label:"Is er een gerealiseerd pand dat mee in beeld mag?", type:"text" },
@@ -636,7 +662,7 @@ let CONFIG = {
           lead: "Beschrijf zo concreet mogelijk wat je doet, dan stemmen we het draaiboek daarop af.",
           vragen: [
             { k:"activiteit", label:"Wat doe je precies?", type:"textarea", verplicht:true },
-            { k:"locatie", label:"Waar filmen we?", type:"text", verplicht:true },
+            { k:"locatie", label:"Waar filmen we?", type:"adres", verplicht:true },
             { k:"tonen", label:"Wat moet er zeker getoond worden?", type:"textarea", verplicht:true },
             { k:"zelfInBeeld", label:"Ik kom zelf in beeld", type:"check" }
           ]
@@ -652,6 +678,7 @@ let CONFIG = {
       suggesties: ["Het gebouw van buiten","De medewerkers aan het werk","Interview met de zaakvoerder","Het logo op de gevel"],
       vragen: [
         { k:"contact", label:"Contactpersoon op de opnamedag", hint:"Naam en gsm-nummer van wie ons ter plaatse begeleidt.", type:"text", verplicht:true },
+        { k:"opnameAdres", label:"Adres van de opnamelocatie", type:"adres", verplicht:true },
         { k:"doelgroep", label:"Voor wie is deze video bedoeld?", type:"select", verplicht:true,
           opties:["Klanten en prospecten","Kandidaat-werknemers","Investeerders of partners","Eigen medewerkers","Het brede publiek"] },
         { k:"veiligheid", label:"Veiligheidsregels of toegangsvoorwaarden", hint:"PBM, badge, veiligheidsonthaal, verboden zones.", type:"textarea" },
@@ -760,7 +787,7 @@ let CONFIG = {
       suggesties: ["Actiebeelden","De sfeer langs de kant","Het clubhuis en de accommodatie","De sponsorborden"],
       vragen: [
         { k:"sporttak", label:"Welke sport?", type:"text", verplicht:true },
-        { k:"locatie", label:"Terrein, zaal of piste", type:"text", verplicht:true },
+        { k:"locatie", label:"Terrein, zaal of piste", type:"adres", verplicht:true },
         { k:"sponsors", label:"Sponsors die zichtbaar moeten zijn", type:"textarea" }
       ],
       situaties: {
@@ -803,7 +830,7 @@ let CONFIG = {
           suggesties: ["De voorbereiding voor de training","De beweging van dichtbij","Het zweet en het detail","Het materiaal","Een volledige oefening of run","De sponsors op de kledij"],
           vragen: [
             { k:"discipline", label:"Welke discipline en welk niveau?", type:"text", verplicht:true },
-            { k:"waar", label:"Waar train je?", type:"text", verplicht:true },
+            { k:"waar", label:"Waar train je?", type:"adres", verplicht:true },
             { k:"doel", label:"Waarvoor gebruik je de video?", type:"select", verplicht:true,
               opties:["Social media","Sponsordossier","Selectie of transfer","Persoonlijk archief"] },
             { k:"sponsorsInBeeld", label:"Welke sponsors moeten zichtbaar zijn?", type:"textarea" },
@@ -848,7 +875,7 @@ let CONFIG = {
       pakketten: ["moment","aftermovie"],
       suggesties: ["De aankomst van de gasten","De speech","De dansvloer","Een groepsbeeld"],
       vragen: [
-        { k:"locatie", label:"Locatie van het event", type:"text", verplicht:true },
+        { k:"locatie", label:"Locatie van het event", type:"adres", verplicht:true },
         { k:"gasten", label:"Hoeveel gasten verwacht je?", type:"text" },
         { k:"gastenAkkoord", label:"Ik breng mijn gasten op de hoogte dat er gefilmd wordt", type:"check" }
       ],
@@ -1117,24 +1144,33 @@ $('#pakOpts').addEventListener('click', e => {
 
 /* ---- gegevens ---- */
 const VELDEN = [
-  { k:"naam",    l:"Naam en voornaam", v:true, ac:"name" },
-  { k:"bedrijf", l:"Bedrijf of organisatie", h:"Laat leeg als particulier." },
-  { k:"email",   l:"E-mailadres", v:true, t:"email", ac:"email" },
-  { k:"tel",     l:"Telefoon", v:true, t:"tel", ac:"tel" },
-  { k:"adres",   l:"Facturatieadres", v:true },
-  { k:"btw",     l:"Ondernemingsnummer of btw-nummer", h:"Laat leeg als particulier." }
+  { k:"naam",    l:"Naam en voornaam", v:true, ac:"name", p:"Voor- en achternaam" },
+  { k:"bedrijf", l:"Bedrijf of organisatie", h:"Laat leeg als particulier.", ac:"organization", p:"Naam van de zaak" },
+  { k:"email",   l:"E-mailadres", v:true, t:"email", ac:"email", p:"naam@voorbeeld.be" },
+  { k:"tel",     l:"Telefoon", v:true, t:"tel", ac:"tel", p:"0470 12 34 56" },
+  { k:"straat",   l:"Straat", v:true, kl:"straat", ac:"address-line1", p:"Straatnaam" },
+  { k:"nummer",   l:"Nummer en bus", v:true, kl:"nummer", p:"12" },
+  { k:"postcode", l:"Postcode", v:true, kl:"postcode", ac:"postal-code", p:"9100" },
+  { k:"gemeente", l:"Gemeente", v:true, kl:"gemeente", ac:"address-level2", p:"Sint-Niklaas" },
+  { k:"land",     l:"Land", kl:"straat", ac:"country-name", p:"België" },
+  { k:"btw",     l:"Ondernemingsnummer of btw-nummer", h:"Verplicht zodra je een bedrijf invult.", p:"BE 0123.456.789" }
 ];
 function veld(f){
-  return `<div class="field">
+  return `<div class="field ${f.kl||''}">
     <label for="k_${f.k}">${esc(f.l)}${f.v?'':' <span class="hint" style="display:inline">(optioneel)</span>'}
     ${f.h?`<span class="hint">${esc(f.h)}</span>`:''}</label>
-    <input type="${f.t||'text'}" id="k_${f.k}" data-klant="${f.k}" ${f.ac?`autocomplete="${f.ac}"`:''}>
+    <input type="${f.t||'text'}" id="k_${f.k}" data-klant="${f.k}"
+      ${f.p?`placeholder="${esc(f.p)}"`:''} ${f.ac?`autocomplete="${f.ac}"`:''}>
   </div>`;
 }
+const perK = k => VELDEN.find(f=>f.k===k);
 $('#gegevens').innerHTML =
-  `<div class="row">${VELDEN.slice(0,2).map(veld).join('')}</div>` +
-  `<div class="row">${VELDEN.slice(2,4).map(veld).join('')}</div>` +
-  VELDEN.slice(4).map(veld).join('');
+  `<div class="row">${['naam','bedrijf'].map(k=>veld(perK(k))).join('')}</div>` +
+  `<div class="row">${['email','tel'].map(k=>veld(perK(k))).join('')}</div>` +
+  `<label style="display:block;font-size:14px;font-weight:500;margin-bottom:6px">Facturatieadres</label>` +
+  `<div class="adres" style="margin-bottom:20px">${['straat','nummer','postcode','gemeente','land']
+      .map(k=>veld(perK(k))).join('')}</div>` +
+  veld(perK('btw'));
 
 /* ---- shotlijst ---- */
 function toonSuggesties(){
@@ -1181,6 +1217,12 @@ function toonVragen(){
     if(v.type==='textarea') return `<div class="field">${lab}<textarea id="${id}" data-v="${v.k}"></textarea></div>`;
     if(v.type==='select')   return `<div class="field">${lab}<select id="${id}" data-v="${v.k}">
       <option value="">Kies…</option>${v.opties.map(o=>`<option>${esc(o)}</option>`).join('')}</select></div>`;
+    if(v.type==='adres')    return `<div class="field">${lab}<div class="adres">
+      <input class="straat"   id="${id}_straat"   data-va="${v.k}" placeholder="Straat" autocomplete="off">
+      <input class="nummer"   id="${id}_nummer"   data-va="${v.k}" placeholder="Nr" autocomplete="off">
+      <input class="postcode" id="${id}_postcode" data-va="${v.k}" placeholder="Postcode" autocomplete="off">
+      <input class="gemeente" id="${id}_gemeente" data-va="${v.k}" placeholder="Gemeente" autocomplete="off">
+      </div></div>`;
     return `<div class="field">${lab}<input type="${v.type==='date'?'date':'text'}" id="${id}" data-v="${v.k}"></div>`;
   }).join('');
 }
@@ -1214,11 +1256,20 @@ function valideer(n){
   if(n===2){ if(!S.pakket){ $('#e2').classList.add('on'); return false; } return true; }
   if(n===3){
     let ok = true;
+    const heeftBedrijf = !!$('#k_bedrijf').value.trim();
     VELDEN.forEach(f=>{
       const el = $('#k_'+f.k), val = el.value.trim();
-      const slecht = f.v && (!val || (f.t==='email' && !/^\S+@\S+\.\S+$/.test(val)));
+      const moet = f.v || (f.k==='btw' && heeftBedrijf);
+      const slecht = moet && (!val || (f.t==='email' && !/^\S+@\S+\.\S+$/.test(val)));
       el.classList.toggle('bad', slecht); if(slecht) ok=false; else S.klant[f.k]=val;
     });
+    if(!ok && heeftBedrijf && !$('#k_btw').value.trim())
+      $('#e3').textContent = 'Vul ook het ondernemingsnummer in, of laat het bedrijfsveld leeg.';
+    S.klant.adres = [
+      [S.klant.straat, S.klant.nummer].filter(Boolean).join(' '),
+      [S.klant.postcode, S.klant.gemeente].filter(Boolean).join(' '),
+      S.klant.land || ''
+    ].filter(Boolean).join(', ');
     if(fotoAan && fotoMoet && !S.foto){
       ok = false;
       $('#e3').textContent = 'Neem nog een foto van de ondertekenaar.';
@@ -1232,6 +1283,26 @@ function valideer(n){
     $('#e4').textContent = ok ? 'Vul de verplichte velden in.'
                               : 'Voeg minstens één punt toe dat zeker in beeld moet.';
     vragenLijst().forEach(v=>{
+      if(v.type==='adres'){
+        const delen = ['straat','nummer','postcode','gemeente']
+          .map(d => ({ d, el: $('#v_'+v.k+'_'+d) })).filter(x=>x.el);
+        if(!delen.length) return;
+        let mis = false;
+        delen.forEach(x=>{
+          const leeg = !x.el.value.trim();
+          const slecht = v.verplicht && leeg;
+          x.el.classList.toggle('bad', slecht);
+          if(slecht) mis = true;
+        });
+        if(mis){ ok = false; return; }
+        const w = {};
+        delen.forEach(x => w[x.d] = x.el.value.trim());
+        S.antw[v.k] = [
+          [w.straat, w.nummer].filter(Boolean).join(' '),
+          [w.postcode, w.gemeente].filter(Boolean).join(' ')
+        ].filter(Boolean).join(', ');
+        return;
+      }
       const el = $('#v_'+v.k); if(!el) return;
       if(el.type==='checkbox'){ S.antw[v.k] = el.checked; return; }
       const val = el.value.trim(), slecht = v.verplicht && !val;
@@ -1318,10 +1389,62 @@ if(!fotoAan) $('#fotoBlok').style.display = 'none';
 else if(fotoMoet) $('#fotoUitleg').textContent =
   'Zo weten we op de opnamedag meteen wie we voor ons hebben. Deze foto is nodig om verder te gaan.';
 
-$('#fotoKnop').addEventListener('click', ()=> $('#fotoIn').click());
+let stroom = null, camKant = 'user';
+
+function zetFoto(dataUrl){
+  S.foto = dataUrl;
+  $('#fotoImg').src = dataUrl;
+  $('#fotoVoor').style.display = 'flex';
+  $('#fotoKnop').style.display = 'none';
+  $('#fotoOfwel').style.display = 'none';
+  $('#e3').classList.remove('on');
+}
+function stopCam(){
+  if(stroom){ stroom.getTracks().forEach(t=>t.stop()); stroom = null; }
+  $('#camBox').style.display = 'none';
+  $('#cam').srcObject = null;
+}
+async function startCam(){
+  if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) return false;
+  try{
+    stroom = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: camKant, width: { ideal: 1280 } }, audio: false });
+    const v = $('#cam');
+    v.srcObject = stroom; await v.play();
+    $('#camBox').style.display = 'block';
+    $('#camWissel').style.display =
+      (navigator.mediaDevices.enumerateDevices ? '' : 'none');
+    return true;
+  }catch(e){ stopCam(); return false; }
+}
+
+$('#fotoKnop').addEventListener('click', async ()=>{
+  const gelukt = await startCam();
+  if(!gelukt) $('#fotoIn').click();   // geen camera beschikbaar of geen toestemming
+});
+$('#fotoBestand').addEventListener('click', ()=>{ stopCam(); $('#fotoIn').click(); });
+$('#camStop').addEventListener('click', stopCam);
+$('#camWissel').addEventListener('click', async ()=>{
+  camKant = camKant === 'user' ? 'environment' : 'user';
+  stopCam(); await startCam();
+});
+$('#camSnap').addEventListener('click', ()=>{
+  const v = $('#cam');
+  const max = 800;
+  const s = Math.min(1, max/Math.max(v.videoWidth, v.videoHeight));
+  const c = document.createElement('canvas');
+  c.width = Math.round(v.videoWidth*s); c.height = Math.round(v.videoHeight*s);
+  const cc = c.getContext('2d');
+  if(camKant === 'user'){ cc.translate(c.width, 0); cc.scale(-1, 1); }  // spiegel wegwerken
+  cc.drawImage(v, 0, 0, c.width, c.height);
+  zetFoto(c.toDataURL('image/jpeg', 0.72));
+  stopCam();
+});
 $('#fotoWeg').addEventListener('click', ()=>{
-  S.foto = null; $('#fotoVoor').style.display = 'none';
-  $('#fotoKnop').textContent = 'Foto nemen of kiezen';
+  S.foto = null;
+  $('#fotoVoor').style.display = 'none';
+  $('#fotoKnop').style.display = '';
+  $('#fotoOfwel').style.display = '';
   $('#fotoIn').value = '';
 });
 $('#fotoIn').addEventListener('change', e=>{
@@ -1337,11 +1460,7 @@ $('#fotoIn').addEventListener('change', e=>{
       const cc = c.getContext('2d');
       cc.fillStyle = '#FFFFFF'; cc.fillRect(0,0,c.width,c.height);
       cc.drawImage(img, 0, 0, c.width, c.height);
-      S.foto = c.toDataURL('image/jpeg', 0.72);
-      $('#fotoImg').src = S.foto;
-      $('#fotoVoor').style.display = 'flex';
-      $('#fotoKnop').textContent = 'Andere foto';
-      $('#e3').classList.remove('on');
+      zetFoto(c.toDataURL('image/jpeg', 0.72));
     };
     img.src = lezer.result;
   };

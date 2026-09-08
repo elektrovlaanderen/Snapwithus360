@@ -306,7 +306,7 @@ function lijstEditor(host, arr, plaats, opnieuw){
 }
 
 const SOORTEN = [['text','Kort antwoord'],['textarea','Lang antwoord'],['select','Keuzelijst'],
-                 ['date','Datum'],['check','Aanvinkvakje']];
+                 ['adres','Adres in aparte velden'],['date','Datum'],['check','Aanvinkvakje']];
 
 function vragenEditor(host, arr, opnieuw){
   host.innerHTML = arr.map((v,i)=>`
