@@ -1022,6 +1022,9 @@ let CONFIG = {
 let OFFERTE_BRON = null;   // wordt gevuld voor start() draait
 
 async function haalOfferte(){
+  // 0. offerte die in dit bestand zelf zit (gegenereerd met maak-link.html)
+  if(window.INGEBAKKEN_OFFERTE) return window.INGEBAKKEN_OFFERTE;
+
   const p = new URLSearchParams(location.search);
 
   // 1. offerte in de link zelf: ?o=<code>
@@ -1051,13 +1054,17 @@ async function haalOfferte(){
 }
 
 (async function(){
-  try{
-    const r = await fetch('config.json', {cache:'no-store'});
-    if(r.ok){
-      const j = await r.json();
-      if(j && j.types && j.paketten) CONFIG = j;
-    }
-  }catch(e){ /* geen config.json, we gebruiken de standaard */ }
+  if(window.INGEBAKKEN_CONFIG && window.INGEBAKKEN_CONFIG.types){
+    CONFIG = window.INGEBAKKEN_CONFIG;
+  } else {
+    try{
+      const r = await fetch('config.json', {cache:'no-store'});
+      if(r.ok){
+        const j = await r.json();
+        if(j && j.types && j.paketten) CONFIG = j;
+      }
+    }catch(e){ /* geen config.json, we gebruiken de standaard */ }
+  }
   window.CONFIG = CONFIG;
   OFFERTE_BRON = await haalOfferte();
   try{ start(); }catch(e){ /* blokkeer() stopt hier bewust */ }

@@ -133,6 +133,12 @@ iframe{display:none}
 
   <div class="out" id="out">
     <div class="link" id="linkTxt"></div>
+    <div class="acties" style="margin-bottom:10px">
+      <button class="go" id="downloadPagina">Download index.html voor deze klant</button>
+    </div>
+    <p class="melding" id="paginaUitleg" style="margin:0 0 14px">
+      Eén bestand met alles erin. Maak een map met de naam van de klant naast je formulier,
+      zet dit bestand erin, en de klant surft naar dat mapadres. Geen lange link, geen config.json nodig.</p>
     <div class="acties">
       <button class="klein" id="kopieer">Kopieer de link</button>
       <button class="klein" id="open">Open ter controle</button>
@@ -389,6 +395,43 @@ $('#maak').addEventListener('click', ()=>{
     (gekozen.some(p=>p.van) ? 'Bij ' + gekozen.filter(p=>p.van).length +
       ' pakket(ten) staat de gewone prijs doorstreept ernaast.' : '');
   $('#out').scrollIntoView({behavior:'smooth',block:'nearest'});
+});
+
+let bronHtml = null;
+async function haalBron(){
+  if(bronHtml) return bronHtml;
+  const r = await fetch('index.html', {cache:'no-store'});
+  bronHtml = await r.text();
+  return bronHtml;
+}
+const veilig = o => JSON.stringify(o).replace(/</g, '\\u003c');
+
+$('#downloadPagina').addEventListener('click', async ()=>{
+  if(!laatsteData) return;
+  const knop = $('#downloadPagina');
+  const oudeTekst = knop.textContent;
+  knop.textContent = 'Bezig…'; knop.disabled = true;
+  try{
+    const bron = await haalBron();
+    const injectie =
+      '<script>\n' +
+      'window.INGEBAKKEN_CONFIG = ' + veilig(CONFIG) + ';\n' +
+      'window.INGEBAKKEN_OFFERTE = ' + veilig(laatsteData) + ';\n' +
+      '<\/script>\n</head>';
+    const uit = bron.replace('</head>', injectie);
+    const blob = new Blob([uit], {type:'text/html'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob); a.download = 'index.html';
+    a.click(); URL.revokeObjectURL(a.href);
+    const map = laatsteKort || 'klantnaam';
+    $('#paginaUitleg').textContent =
+      'Gedownload. Maak op GitHub een map ' + map + ' naast je formulier en zet dit index.html erin. ' +
+      'De klant surft dan naar het adres van die map. Verder heb je niets nodig.';
+  }catch(e){
+    $('#paginaUitleg').textContent =
+      'Het bronbestand index.html kon niet gelezen worden. Zorg dat het in dezelfde map staat en dat je via het servertje werkt.';
+  }
+  knop.textContent = oudeTekst; knop.disabled = false;
 });
 
 $('#downloadJson').addEventListener('click', ()=>{
