@@ -315,43 +315,48 @@ $('#rekenTerug').addEventListener('click', ()=>{
   });
 });
 
-$('#maak').addEventListener('click', ()=>{
+/* Bouwt de offerte op uit wat er NU in het formulier staat.
+   Geeft null terug en toont een melding als er iets ontbreekt. */
+function bouwData(){
   const type = $('#type').value;
   const sitKeuze = gekozenSits();
   const alle = Object.keys(situaties());
   const bron = huidigePaketten();
   const gekozen = [];
 
-  if(alle.length && !sitKeuze.length){
+  const stop = tekst => {
     $('#out').classList.add('on');
-    $('#linkTxt').textContent = 'Vink minstens één branche aan.';
+    $('#linkTxt').textContent = tekst;
     $('#melding').textContent = '';
-    return;
-  }
+    $('#downloadJson').style.display = 'none';
+    $('#kortUitleg').style.display = 'none';
+    return null;
+  };
 
-  document.querySelectorAll('.pak').forEach(el=>{
+  if(alle.length && !sitKeuze.length) return stop('Vink minstens één branche aan.');
+
+  $$('.pak').forEach(el=>{
     if(!el.querySelector('input[type=checkbox]').checked) return;
     const p = Object.assign({}, bron[+el.dataset.i]);
     p.naam = el.querySelector('.pn').value.trim() || p.naam;
     const pr = el.querySelector('.pp').value.trim().replace(',','.');
-    p.prijs = pr === '' ? null : Number(pr);
+    p.prijs = (pr === '' || isNaN(Number(pr))) ? null : Number(pr);
     const vn = el.querySelector('.pv').value.trim().replace(',','.');
-    if(vn !== '' && Number(vn) > (p.prijs || 0)) p.van = Number(vn);
+    if(vn !== '' && !isNaN(Number(vn)) && Number(vn) > (p.prijs || 0)) p.van = Number(vn);
     else delete p.van;
     gekozen.push(p);
   });
 
   const enkel = eenBranche();
-  if(enkel && !gekozen.length){
-    $('#out').classList.add('on');
-    $('#linkTxt').textContent = 'Vink minstens één pakket aan.';
-    $('#melding').textContent = '';
-    return;
-  }
+  if(enkel && !gekozen.length) return stop('Vink minstens één pakket aan.');
 
   const data = { t:type };
   if(enkel){ data.s = enkel; data.p = gekozen; }
   else if(sitKeuze.length && sitKeuze.length < alle.length) data.sl = sitKeuze;
+
+  if($('#naam').value.trim())    data.n = $('#naam').value.trim();
+  if($('#bericht').value.trim()) data.b = $('#bericht').value.trim();
+  if($('#geldig').value)         data.g = $('#geldig').value;
   if(gekozen.some(p => p.van)) data.kt = $('#kortLabel').value.trim() || 'Introductiekorting';
 
   data.om = $('#optieModus').value;
@@ -360,40 +365,50 @@ $('#maak').addEventListener('click', ()=>{
     const gekozenOpt = $$('#optieKeus input:checked').map(cb=>cb.value);
     if(gekozenOpt.length && gekozenOpt.length < alleOpt.length) data.op = gekozenOpt;
   }
-  if($('#naam').value.trim())    data.n = $('#naam').value.trim();
-  if($('#bericht').value.trim()) data.b = $('#bericht').value.trim();
-  if($('#geldig').value)         data.g = $('#geldig').value;
-  data.c = ($('#naam').value.trim() || 'link') + ' · ' +
-           new Date().toISOString().slice(0,10);
+  data.c = ($('#naam').value.trim() || 'link') + ' · ' + new Date().toISOString().slice(0,10);
+
+  laatsteData = data;
+  laatsteKort = ($('#kort').value || '').toLowerCase()
+                  .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+                  .replace(/[^a-z0-9-]+/g,'-').replace(/^-|-$/g,'');
+  data.enkelBranche = enkel;
+  data.aantalSits = sitKeuze.length;
+  data.totaalSits = alle.length;
+  return data;
+}
+
+$('#maak').addEventListener('click', ()=>{
+  const data = bouwData();
+  if(!data) return;
+  const enkel = data.enkelBranche;
+  const gekozen = data.p || [];
+  delete data.enkelBranche;
+  const aantalSits = data.aantalSits, totaalSits = data.totaalSits;
+  delete data.aantalSits; delete data.totaalSits;
 
   const basis = $('#basis').value.trim();
-  const kort = ($('#kort').value || '').toLowerCase()
-                 .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
-                 .replace(/[^a-z0-9-]+/g,'-').replace(/^-|-$/g,'');
-  laatsteData = data; laatsteKort = kort;
-
-  const url = kort ? basis + '?k=' + kort : basis + '?o=' + codeer(data);
+  const url = laatsteKort ? basis + '?k=' + laatsteKort : basis + '?o=' + codeer(data);
   $('#linkTxt').textContent = url;
-  $('#downloadJson').style.display = kort ? '' : 'none';
-  $('#kortUitleg').style.display = kort ? 'block' : 'none';
-  if(kort){
-    const map = basis.replace(/[^/]*$/,'') + 'offertes/';
+  $('#out').classList.add('on');
+  $('#downloadJson').style.display = laatsteKort ? '' : 'none';
+  $('#kortUitleg').style.display = laatsteKort ? 'block' : 'none';
+  if(laatsteKort){
     $('#kortUitleg').textContent =
       'Deze korte link werkt pas als het offertebestand online staat. ' +
-      'Download het hieronder en zet ' + kort + '.json in de map offertes naast index.html.';
+      'Download het hieronder en zet ' + laatsteKort + '.json in de map offertes naast index.html.';
   }
   $('#waarschuw').style.display =
     /localhost|127\.0\.0\.1|^file:/.test(basis) ? 'block' : 'none';
-  $('#out').classList.add('on');
+
+  const metVan = gekozen.filter(p=>p.van).length;
   $('#melding').textContent =
     (enkel
       ? (gekozen.length === 1
           ? 'Eén pakket: de klant ziet het als een vaste offerte en kan niet kiezen. '
           : gekozen.length + ' pakketten zichtbaar, andere prijzen zitten niet in deze link. ') +
         'De branche staat vast, dus die stap wordt overgeslagen. '
-      : sitKeuze.length + ' branches zichtbaar van de ' + alle.length + '. De klant kiest daaruit. ') +
-    (gekozen.some(p=>p.van) ? 'Bij ' + gekozen.filter(p=>p.van).length +
-      ' pakket(ten) staat de gewone prijs doorstreept ernaast.' : '');
+      : aantalSits + ' branches zichtbaar van de ' + totaalSits + '. De klant kiest daaruit. ') +
+    (metVan ? 'Bij ' + metVan + ' pakket(ten) staat de gewone prijs doorstreept ernaast.' : '');
   $('#out').scrollIntoView({behavior:'smooth',block:'nearest'});
 });
 
@@ -407,7 +422,9 @@ async function haalBron(){
 const veilig = o => JSON.stringify(o).replace(/</g, '\\u003c');
 
 $('#downloadPagina').addEventListener('click', async ()=>{
-  if(!laatsteData) return;
+  const data = bouwData();
+  if(!data) return;
+  delete data.enkelBranche; delete data.aantalSits; delete data.totaalSits;
   const knop = $('#downloadPagina');
   const oudeTekst = knop.textContent;
   knop.textContent = 'Bezig…'; knop.disabled = true;
@@ -416,7 +433,7 @@ $('#downloadPagina').addEventListener('click', async ()=>{
     const injectie =
       '<script>\n' +
       'window.INGEBAKKEN_CONFIG = ' + veilig(CONFIG) + ';\n' +
-      'window.INGEBAKKEN_OFFERTE = ' + veilig(laatsteData) + ';\n' +
+      'window.INGEBAKKEN_OFFERTE = ' + veilig(data) + ';\n' +
       '<\/script>\n</head>';
     const uit = bron.replace('</head>', injectie);
     const blob = new Blob([uit], {type:'text/html'});
@@ -435,8 +452,10 @@ $('#downloadPagina').addEventListener('click', async ()=>{
 });
 
 $('#downloadJson').addEventListener('click', ()=>{
-  if(!laatsteData || !laatsteKort) return;
-  const blob = new Blob([JSON.stringify(laatsteData, null, 2)], {type:'application/json'});
+  const data = bouwData();
+  if(!data || !laatsteKort) return;
+  delete data.enkelBranche; delete data.aantalSits; delete data.totaalSits;
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob); a.download = laatsteKort + '.json';
   a.click(); URL.revokeObjectURL(a.href);
