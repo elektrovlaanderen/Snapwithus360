@@ -299,6 +299,38 @@ footer{background:var(--gold);padding:56px 5% 32px}
 /* WhatsApp button */
 .wa-btn{display:inline-flex;align-items:center;gap:8px;background:#25D366;color:#000;padding:10px 18px;border-radius:3px;font-weight:700;font-size:12px;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;margin-top:8px;transition:background .2s,transform .15s}
 .wa-btn:hover{background:#20c05a;transform:translateY(-1px)}
+
+/* ═══ SOCIAL MEDIA PRICING ═══ */
+.smp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:64px}
+.smp-card{background:var(--dark);border:1px solid var(--border-d);border-radius:8px;padding:36px 32px;display:flex;flex-direction:column;position:relative;transition:border-color .25s}
+.smp-card:hover{border-color:rgba(221,154,62,.4)}
+.smp-card-featured{border-color:rgba(221,154,62,.5);background:#0D0D0D}
+.smp-card-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:24px}
+.smp-icon{width:44px;height:44px;background:rgba(221,154,62,.1);border:1px solid rgba(221,154,62,.2);border-radius:8px;display:flex;align-items:center;justify-content:center}
+.smp-icon svg{width:20px;height:20px;stroke:var(--gold);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.smp-badge{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.7);font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:5px 12px;border-radius:20px}
+.smp-card-featured .smp-badge{background:rgba(221,154,62,.15);border-color:rgba(221,154,62,.3);color:var(--gold)}
+.smp-name{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:.04em;color:var(--white);margin-bottom:8px}
+.smp-price-row{display:flex;align-items:baseline;gap:4px;margin-bottom:4px}
+.smp-currency{font-size:24px;font-weight:700;color:var(--white)}
+.smp-amount{font-family:'Bebas Neue',sans-serif;font-size:64px;line-height:1;color:var(--white)}
+.smp-card-featured .smp-amount,.smp-card-featured .smp-currency{color:var(--gold)}
+.smp-period{font-size:14px;color:var(--muted-d);margin-left:2px}
+.smp-desc{font-size:13px;color:rgba(255,255,255,.45);line-height:1.7;margin-bottom:24px}
+.smp-tags{display:flex;flex-direction:column;gap:8px;margin-bottom:24px}
+.smp-tag{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:4px;padding:8px 14px;font-size:12px;color:rgba(255,255,255,.6);display:flex;align-items:center;gap:8px}
+.smp-tag strong{color:var(--white);font-weight:600}
+.smp-divider{width:100%;height:1px;background:var(--border-d);margin-bottom:24px}
+.smp-features{list-style:none;display:flex;flex-direction:column;gap:10px;flex:1;margin-bottom:32px}
+.smp-features li{display:flex;align-items:flex-start;gap:10px;font-size:13px;color:rgba(255,255,255,.7);line-height:1.5}
+.smp-check{width:18px;height:18px;background:rgba(221,154,62,.15);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.smp-check svg{width:10px;height:10px;stroke:var(--gold);fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+.smp-cta{background:var(--gold);color:#000;border:none;padding:14px;border-radius:6px;font-family:'Outfit',sans-serif;font-weight:700;font-size:13px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:background .2s;width:100%;text-align:center;text-decoration:none;display:block}
+.smp-cta:hover{background:var(--gold-light)}
+.smp-cta-ghost{background:transparent;color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.2)}
+.smp-cta-ghost:hover{background:rgba(255,255,255,.06);color:#fff}
+@media(max-width:900px){.smp-grid{grid-template-columns:1fr}}
+
 </style>
 </head>
 <body>
@@ -550,6 +582,98 @@ footer{background:var(--gold);padding:56px 5% 32px}
       <div class="gear-item"><div class="gear-name">Sony FX6</div><div class="gear-type">Full-frame Cinema · 4K RAW</div></div>
     </div>
   </div>
+
+      <!-- SOCIAL MEDIA PRICING -->
+      <div style="margin-top:80px">
+        <div class="pkg-label rv">Packages</div>
+        <h2 class="pkg-title rv d1" style="color:var(--black)">Kies jouw <em>formule</em></h2>
+        <p style="font-size:14px;color:var(--muted-l);max-width:520px;margin-bottom:8px;line-height:1.8" class="rv d2">Éénmalige producties of terugkerende content — wij zorgen voor beelden die jouw merk op social media laten groeien.</p>
+        <div class="smp-grid rv d3" style="background:transparent">
+
+          <!-- PORTRET -->
+          <div class="smp-card">
+            <div class="smp-card-top">
+              <div class="smp-icon"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+              <span class="smp-badge">Zelfstandigen</span>
+            </div>
+            <div class="smp-name">Portret Package</div>
+            <div class="smp-price-row">
+              <span class="smp-currency">€</span>
+              <span class="smp-amount">1.000</span>
+            </div>
+            <div class="smp-period" style="margin-bottom:16px">eenmalig · ± 2u ter plaatse</div>
+            <p class="smp-desc">Eén video die toont wie je bent en wat je doet. Ideaal voor zelfstandigen en kleine bedrijven.</p>
+            <div class="smp-tags">
+              <div class="smp-tag"><strong>Eénmalige productie</strong></div>
+            </div>
+            <div class="smp-divider"></div>
+            <ul class="smp-features">
+              <li><span class="smp-check"><svg viewBox="0 0 12 12"><polyline points="2 6 5 9 10 3"/></svg></span>Video van 60 à 90 seconden</li>
+              <li><span class="smp-check"><svg viewBox="0 0 12 12"><polyline points="2 6 5 9 10 3"/></svg></span>Verticale versie voor social media</li>
+              <li><span class="smp-check"><svg viewBox="0 0 12 12"><polyline points="2 6 5 9 10 3"/></svg></span>Kleurcorrectie, muziek &amp; ondertiteling</li>
+              <li><span class="smp-check"><svg viewBox="0 0 12 12"><polyline points="2 6 5 9 10 3"/></svg></span>Levering binnen 7 werkdagen</li>
+            </ul>
+            <a href="#contact" class="smp-cta smp-cta-ghost">Plan een gesprek</a>
+          </div>
+
+          <!-- STORYLINE — featured -->
+          <div class="smp-card smp-card-featured">
+            <div class="smp-card-top">
+              <div class="smp-icon"><svg viewBox="0 0 24 24"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg></div>
+              <span class="smp-badge">Meest gekozen</span>
+            </div>
+            <div class="smp-name">Storyline Package</div>
+            <div class="smp-price-row">
+              <span class="smp-currency">€</span>
+              <span class="smp-amount">1.500</span>
+            </div>
+            <div class="smp-period" style="margin-bottom:16px">per maand · ± halve dag</div>
+            <p class="smp-desc">Bedrijfsvideo met interview, plus losse reels voor langdurig gebruik op alle platformen.</p>
+            <div class="smp-tags">
+              <div class="smp-tag"><strong>€250</strong> <span style="color:rgba(255,255,255,.4)">| Eénmalige registratie</span></div>
+              <div class="smp-tag"><strong>3 maanden minimum</strong> <span style="color:rgba(255,255,255,.4)">| Initiële looptijd</span></div>
+            </div>
+            <div class="smp-divider"></div>
+            <ul class="smp-features">
+              <li><span class="smp-check"><svg viewBox="0 0 12 12"><polyline points="2 6 5 9 10 3"/></svg></span>Hoofdvideo van 2 à 3 min met interview</li>
+              <li><span class="smp-check"><svg viewBox="0 0 12 12"><polyline points="2 6 5 9 10 3"/></svg></span>Drie reels van elk 15 à 30 seconden</li>
+              <li><span class="smp-check"><svg viewBox="0 0 12 12"><polyline points="2 6 5 9 10 3"/></svg></span>Ondertiteling in het Nederlands</li>
+              <li><span class="smp-check"><svg viewBox="0 0 12 12"><polyline points="2 6 5 9 10 3"/></svg></span>Enkele stilstaande beelden uit de opname</li>
+              <li><span class="smp-check"><svg viewBox="0 0 12 12"><polyline points="2 6 5 9 10 3"/></svg></span>Levering binnen 10 werkdagen</li>
+              <li><span class="smp-check"><svg viewBox="0 0 12 12"><polyline points="2 6 5 9 10 3"/></svg></span>Optioneel: hoofdvideo + 3 reels omzetten naar <strong>12 reels</strong></li>
+            </ul>
+            <a href="#contact" class="smp-cta">Plan een gesprek</a>
+          </div>
+
+          <!-- INFLUENCER -->
+          <div class="smp-card">
+            <div class="smp-card-top">
+              <div class="smp-icon"><svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div>
+              <span class="smp-badge">Terugkerend</span>
+            </div>
+            <div class="smp-name">Influencer Package</div>
+            <div class="smp-price-row">
+              <span class="smp-amount" style="font-size:48px">Op maat</span>
+            </div>
+            <div class="smp-period" style="margin-bottom:16px">per maand · prijs op volume</div>
+            <p class="smp-desc">Elke maand nieuwe content in hetzelfde vaste stramien. Jij focust op je zaak, wij op je beelden.</p>
+            <div class="smp-tags">
+              <div class="smp-tag"><strong>€250</strong> <span style="color:rgba(255,255,255,.4)">| Eénmalige registratie</span></div>
+              <div class="smp-tag"><strong>3 maanden minimum</strong> <span style="color:rgba(255,255,255,.4)">| Initiële looptijd</span></div>
+            </div>
+            <div class="smp-divider"></div>
+            <ul class="smp-features">
+              <li><span class="smp-check"><svg viewBox="0 0 12 12"><polyline points="2 6 5 9 10 3"/></svg></span>Één opnamedag per maand</li>
+              <li><span class="smp-check"><svg viewBox="0 0 12 12"><polyline points="2 6 5 9 10 3"/></svg></span>Vier reels per maand</li>
+              <li><span class="smp-check"><svg viewBox="0 0 12 12"><polyline points="2 6 5 9 10 3"/></svg></span>Vaste look &amp; vaste planning</li>
+              <li><span class="smp-check"><svg viewBox="0 0 12 12"><polyline points="2 6 5 9 10 3"/></svg></span>Prijs op maat van het volume</li>
+            </ul>
+            <a href="#contact" class="smp-cta smp-cta-ghost">Vraag offerte aan</a>
+          </div>
+
+        </div>
+      </div>
+
   <div style="margin-top:80px">
     <div class="pkg-label rv">Voor wie?</div>
     <h2 class="pkg-title rv d1" style="color:var(--black)">Wie wij <em>helpen</em></h2>
@@ -732,15 +856,11 @@ footer{background:var(--gold);padding:56px 5% 32px}
 <section id="team" class="on-dark sec" style="background:var(--dark)">
   <div class="section-label rv on-dark">Het team</div>
   <h2 class="sec-h rv d1">Maak kennis met <em>SNAP360</em></h2>
-  <p class="sec-sub rv d2" style="color:var(--muted-d);margin-bottom:56px">Twee oprichters, drie pijlers, één missie — jouw merk beter in beeld brengen dan de concurrentie.</p>
-  <div class="team-grid">
-    <div class="tc rv"><div class="tc-bar"></div><div class="tc-init">TDB</div><div class="tc-name">Tom De Backer</div><div class="tc-role">Chief Operating Officer</div><div class="tc-div"></div>
-      <div class="tc-row"><div class="tc-ico"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013 6.19a2 2 0 012-2.18h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L9.91 11a16 16 0 006.09 6.09l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg></div><div><div class="tc-lbl">Telefoon</div><div class="tc-val">+32 0476 611 099</div></div></div>
+  <p class="sec-sub rv d2" style="color:var(--muted-d);margin-bottom:56px">Eén gedreven zaakvoerder, drie pijlers, één missie — jouw merk beter in beeld brengen dan de concurrentie.</p>
+  <div class="team-grid" style="grid-template-columns:1fr">
+    <div class="tc rv"><div class="tc-bar"></div><div class="tc-init">TDB</div><div class="tc-name">Tom De Backer</div><div class="tc-role">Chief Executive Officer · Zaakvoerder</div><div class="tc-div"></div>
+      <div class="tc-row"><div class="tc-ico"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013 6.19a2 2 0 012-2.18h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L9.91 11a16 16 0 006.09 6.09l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg></div><div><div class="tc-lbl">WhatsApp</div><div class="tc-val"><a href="https://wa.me/17028810971" target="_blank" style="color:rgba(255,255,255,.75);text-decoration:none">+1 (702) 881-0971</a></div></div></div>
       <div class="tc-row"><div class="tc-ico"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div><div><div class="tc-lbl">E-mail</div><div class="tc-val">tom@snapwithus360.com</div></div></div>
-    </div>
-    <div class="tc rv d1"><div class="tc-bar"></div><div class="tc-init">DG</div><div class="tc-name">Dominique Goossens</div><div class="tc-role">Chief Executive Officer</div><div class="tc-div"></div>
-      <div class="tc-row"><div class="tc-ico"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013 6.19a2 2 0 012-2.18h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L9.91 11a16 16 0 006.09 6.09l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg></div><div><div class="tc-lbl">Telefoon</div><div class="tc-val">+32 0496 705 123</div></div></div>
-      <div class="tc-row"><div class="tc-ico"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div><div><div class="tc-lbl">E-mail</div><div class="tc-val">dominique@snapwithus360.com</div></div></div>
       <div class="tc-row"><div class="tc-ico"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></div><div><div class="tc-lbl">Instagram</div><div class="tc-val">@snapwithus360</div></div></div>
     </div>
   </div>
