@@ -335,6 +335,21 @@ footer{background:var(--gold);padding:56px 5% 32px}
 /* Sport gallery: contain so full subject always visible */
 .gallery-item[data-cat="sport"] .gallery-img-wrap{background:#0D0D0D}
 .gallery-item[data-cat="sport"] .gallery-img-wrap img{object-fit:contain !important;object-position:center !important}
+
+/* ═══ LIGHTBOX ═══ */
+.lb-overlay{position:fixed;inset:0;background:rgba(0,0,0,.95);z-index:1000;display:none;align-items:center;justify-content:center;cursor:zoom-out}
+.lb-overlay.active{display:flex}
+.lb-img{max-width:90vw;max-height:90vh;object-fit:contain;border-radius:4px;cursor:default;animation:lbIn .2s ease}
+.lb-close{position:fixed;top:20px;right:24px;width:44px;height:44px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .2s;z-index:1001}
+.lb-close:hover{background:rgba(255,255,255,.2)}
+.lb-close svg{width:18px;height:18px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round}
+.lb-prev,.lb-next{position:fixed;top:50%;transform:translateY(-50%);width:48px;height:48px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .2s;z-index:1001}
+.lb-prev{left:16px}.lb-next{right:16px}
+.lb-prev:hover,.lb-next:hover{background:rgba(221,154,62,.3);border-color:var(--gold)}
+.lb-prev svg,.lb-next svg{width:18px;height:18px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round}
+.lb-caption{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.5);font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;text-align:center;pointer-events:none}
+@keyframes lbIn{from{opacity:0;transform:scale(.92)}to{opacity:1;transform:scale(1)}}
+.gallery-item{cursor:zoom-in}
 </style>
 </head>
 <body>
@@ -1048,6 +1063,73 @@ document.querySelectorAll('.gf-btn').forEach(btn => {
   })
 })
 
+
+// Lightbox
+let lbItems = [], lbIndex = 0;
+
+function lbOpen(idx) {
+  const visible = [...document.querySelectorAll('.gallery-item:not(.hidden)')]
+  lbItems = visible.map(el => ({
+    src: el.querySelector('img') ? el.querySelector('img').src : null,
+    title: el.querySelector('.gallery-item-title') ? el.querySelector('.gallery-item-title').textContent : '',
+    cat: el.querySelector('.gallery-cat-tag') ? el.querySelector('.gallery-cat-tag').textContent : ''
+  })).filter(i => i.src)
+  lbIndex = idx
+  lbShow()
+  document.getElementById('lightbox').classList.add('active')
+  document.body.style.overflow = 'hidden'
+}
+
+function lbShow() {
+  const item = lbItems[lbIndex]
+  if (!item) return
+  const img = document.getElementById('lb-img')
+  img.style.opacity = 0
+  img.src = item.src
+  img.onload = () => { img.style.transition = 'opacity .2s'; img.style.opacity = 1 }
+  document.getElementById('lb-caption').textContent = item.cat + (item.title && item.title !== 'Portret' && item.title !== 'Portrait' && item.title !== 'Pand' && item.title !== 'Project name' && item.title !== 'Project naam' ? ' · ' + item.title : '')
+}
+
+function lbHide() {
+  document.getElementById('lightbox').classList.remove('active')
+  document.body.style.overflow = ''
+}
+
+function lbClose(e) { if(e.target === document.getElementById('lightbox')) lbHide() }
+
+function lbNav(dir) {
+  lbIndex = (lbIndex + dir + lbItems.length) % lbItems.length
+  lbShow()
+}
+
+document.addEventListener('keydown', e => {
+  if (!document.getElementById('lightbox').classList.contains('active')) return
+  if (e.key === 'Escape') lbHide()
+  if (e.key === 'ArrowRight') lbNav(1)
+  if (e.key === 'ArrowLeft') lbNav(-1)
+})
+
+// Attach click to gallery items
+document.querySelectorAll('.gallery-item').forEach((el, i) => {
+  if (el.querySelector('img')) {
+    el.addEventListener('click', () => {
+      const visible = [...document.querySelectorAll('.gallery-item:not(.hidden)')]
+      const visIdx = visible.indexOf(el)
+      lbOpen(visIdx)
+    })
+  }
+})
+
 </script>
+
+<!-- LIGHTBOX -->
+<div class="lb-overlay" id="lightbox" onclick="lbClose(event)">
+  <div class="lb-close" onclick="lbHide()"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+  <div class="lb-prev" onclick="lbNav(-1);event.stopPropagation()"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></div>
+  <img class="lb-img" id="lb-img" src="" alt="" onclick="event.stopPropagation()">
+  <div class="lb-next" onclick="lbNav(1);event.stopPropagation()"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
+  <div class="lb-caption" id="lb-caption"></div>
+</div>
+
 </body>
 </html>
