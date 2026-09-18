@@ -380,6 +380,20 @@ footer{background:var(--gold);padding:56px 5% 32px}
 .popup-close{position:absolute;top:14px;right:14px;width:32px;height:32px;background:rgba(255,255,255,.06);border:none;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .2s}
 .popup-close:hover{background:rgba(255,255,255,.12)}
 .popup-close svg{width:14px;height:14px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round}
+
+/* ═══ JOBS ═══ */
+.job-card{background:var(--dark);border:1px solid var(--border-d);border-radius:8px;padding:28px;cursor:pointer;transition:border-color .25s,background .25s;position:relative;overflow:hidden}
+.job-card::after{content:'';position:absolute;bottom:0;left:0;width:0;height:2px;background:var(--gold);transition:width .35s}
+.job-card:hover{border-color:rgba(221,154,62,.4);background:#111}
+.job-card:hover::after{width:100%}
+.job-card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.job-icon{width:40px;height:40px;background:rgba(221,154,62,.08);border:1px solid rgba(221,154,62,.2);border-radius:6px;display:flex;align-items:center;justify-content:center}
+.job-icon svg{width:18px;height:18px}
+.job-badge{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;background:rgba(221,154,62,.12);color:var(--gold);padding:4px 12px;border-radius:20px}
+.job-title{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:.04em;color:var(--white);margin-bottom:6px}
+.job-tags{font-size:12px;color:var(--muted-d);margin-bottom:8px}
+.job-region{font-size:12px;color:rgba(255,255,255,.3);margin-bottom:16px}
+.job-cta{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold)}
 </style>
 </head>
 <body>
@@ -416,6 +430,7 @@ footer{background:var(--gold);padding:56px 5% 32px}
     </div>
     <div class="nav-item"><a href="#portfolio" class="nav-link">Portfolio</a></div>
     <div class="nav-item"><a href="#team" class="nav-link">About Us</a></div>
+    <div class="nav-item"><a href="#jobs" class="nav-link" style="color:var(--gold)">We're Hiring</a></div>
     <div class="nav-item"><a href="#contact" class="nav-link">Contact</a></div>
   </div>
   <a class="nav-cta" href="#contact">Get a Quote</a>
@@ -432,6 +447,7 @@ footer{background:var(--gold);padding:56px 5% 32px}
   <a href="#social" style="color:rgba(255,255,255,.7);text-decoration:none;padding:11px 0;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;border-bottom:1px solid #111;display:block" onclick="closeMobileNav()">Social Media Production</a>
   <a href="#portfolio" style="color:rgba(255,255,255,.7);text-decoration:none;padding:11px 0;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;border-bottom:1px solid #111;display:block" onclick="closeMobileNav()">Portfolio</a>
   <a href="#team" style="color:rgba(255,255,255,.7);text-decoration:none;padding:11px 0;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;border-bottom:1px solid #111;display:block" onclick="closeMobileNav()">About Us</a>
+  <a href="#jobs" style="color:var(--gold);text-decoration:none;padding:11px 0;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;border-bottom:1px solid #111;display:block" onclick="closeMobileNav()">We're Hiring</a>
   <a href="#contact" style="color:rgba(255,255,255,.7);text-decoration:none;padding:11px 0;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;display:block" onclick="closeMobileNav()">Contact</a>
 </div>
 
@@ -989,6 +1005,55 @@ footer{background:var(--gold);padding:56px 5% 32px}
   </div>
 </section>
 
+
+<!-- JOBS -->
+<section id="jobs" class="on-black sec" style="background:#0A0A0A;padding:100px 5%">
+  <div class="section-label rv on-black">Join the team</div>
+  <h2 class="sec-h rv d1">We're <em>Hiring</em></h2>
+  <p class="sec-sub rv d2" style="color:var(--muted-d)">We're growing in California and looking for talented freelancers to join the SNAP360 team. Independent contractors only — flexible, project-based work.</p>
+
+  <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px;max-width:800px" class="rv d3">
+
+    <!-- Photographer -->
+    <div class="job-card" onclick="openJob('photographer')">
+      <div class="job-card-top">
+        <div class="job-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        </div>
+        <span class="job-badge">Open</span>
+      </div>
+      <div class="job-title">Photographer</div>
+      <div class="job-tags">Real Estate · Sport · Events</div>
+      <div class="job-region">📍 California Region</div>
+      <div class="job-cta">View details →</div>
+    </div>
+
+    <!-- Video Editor -->
+    <div class="job-card" onclick="openJob('editor')">
+      <div class="job-card-top">
+        <div class="job-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5" stroke-linecap="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+        </div>
+        <span class="job-badge">Open</span>
+      </div>
+      <div class="job-title">Video Editor</div>
+      <div class="job-tags">Reels · Brand Videos · FPV</div>
+      <div class="job-region">📍 Remote / California</div>
+      <div class="job-cta">View details →</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- JOB DETAIL MODALS -->
+<div class="popup-overlay" id="jobModal" onclick="closeJob(event)">
+  <div class="popup-box" style="max-width:540px">
+    <div class="popup-accent"></div>
+    <button class="popup-close" onclick="document.getElementById('jobModal').classList.remove('active')"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <div class="popup-body" id="jobModalBody"></div>
+  </div>
+</div>
+
 <!-- CONTACT -->
 <section id="contact" class="on-black sec" style="background:var(--black)">
   <div class="section-label rv on-black">Get in touch</div>
@@ -1045,7 +1110,7 @@ Henderson, NV 89012, USA</div></div></div>
       <p class="footer-tagline">Specialists in real estate visuals, sport portraits and social media production. Active in Belgium and the US.</p>
     </div>
     <div class="footer-col"><h5>Real Estate</h5><ul><li><a href="#realestate">Photography</a></li><li><a href="#realestate">FPV Films</a></li><li><a href="#realestate">Matterport 3D</a></li><li><a href="#realestate">Floor Plans</a></li><li><a href="#packages">Packages</a></li></ul></div>
-    <div class="footer-col"><h5>Other services</h5><ul><li><a href="#sport">Sport Portraits</a></li><li><a href="#social">Social Media Production</a></li><li><a href="#social">Restaurant Content</a></li><li><a href="#social">Brand Stories</a></li></ul></div>
+    <div class="footer-col"><h5>Other services</h5><ul><li><a href="#sport">Sport Portraits</a></li><li><a href="#social">Social Media Production</a></li><li><a href="#social">Restaurant Content</a></li><li><a href="#social">Brand Stories</a></li><li><a href="#jobs" style="color:var(--gold)">We're Hiring</a></li></ul></div>
     <div class="footer-col"><h5>Contact</h5><ul><li><a href="https://wa.me/17028810971" target="_blank">WhatsApp: +1 (702) 881-0971</a></li><li><a href="mailto:tom@snapwithus360.com">tom@snapwithus360.com</a></li><li><a href="https://instagram.com/snapwithus360" target="_blank">@snapwithus360</a></li></ul></div>
   </div>
   <div class="footer-bottom">
@@ -1194,6 +1259,69 @@ if (!sessionStorage.getItem('popupSeen')) {
   setTimeout(() => {
     document.getElementById('hiringPopup').classList.add('active')
   }, 3000)
+}
+
+
+const jobData = {
+  photographer: {
+    title: 'Photographer',
+    region: '📍 California Region',
+    type: 'Independent Contractor · Freelance',
+    desc: 'We are looking for a skilled photographer to join our SNAP360 team in California. You will work on real estate shoots, sport portraits and events on a project basis.',
+    requirements: [
+      'Professional camera equipment (full-frame preferred)',
+      'Experience in real estate or sport photography',
+      'Reliable transportation in the California area',
+      'Ability to deliver edited photos within 48h',
+      'Professional attitude and client-facing skills'
+    ],
+    nice: [
+      'Drone / aerial photography certification (FAA Part 107)',
+      'Experience with Lightroom / Capture One',
+      'Own studio lighting setup'
+    ]
+  },
+  editor: {
+    title: 'Video Editor',
+    region: '📍 Remote / California',
+    type: 'Independent Contractor · Freelance',
+    desc: 'We are looking for a creative video editor for short-form content (Reels, TikTok), brand videos and FPV footage. Remote work possible with occasional on-site collaboration.',
+    requirements: [
+      'Proficiency in Premiere Pro, DaVinci Resolve or similar',
+      'Experience editing social media content (Reels, TikTok)',
+      'Strong sense of rhythm, color grading and storytelling',
+      'Ability to deliver within tight deadlines',
+      'Portfolio of previous work required'
+    ],
+    nice: [
+      'Experience with FPV / drone footage',
+      'Motion graphics skills (After Effects)',
+      'Understanding of platform-specific formats'
+    ]
+  }
+}
+
+function openJob(key) {
+  const job = jobData[key]
+  const reqs = job.requirements.map(r => `<li><span class="smp-check"><svg viewBox="0 0 12 12" fill="none" stroke="var(--gold)" stroke-width="2.5" stroke-linecap="round"><polyline points="2 6 5 9 10 3"/></svg></span>${r}</li>`).join('')
+  const nice = job.nice.map(n => `<li style="color:rgba(255,255,255,.45)"><span class="smp-check" style="background:rgba(255,255,255,.06)"><svg viewBox="0 0 12 12" fill="none" stroke="rgba(255,255,255,.3)" stroke-width="2.5" stroke-linecap="round"><polyline points="2 6 5 9 10 3"/></svg></span>${n}</li>`).join('')
+  document.getElementById('jobModalBody').innerHTML = `
+    <div class="popup-tag">Now Hiring</div>
+    <div class="popup-title">${job.title}</div>
+    <div class="popup-region">${job.region} &nbsp;·&nbsp; <span style="color:rgba(255,255,255,.3)">${job.type}</span></div>
+    <p style="font-size:13px;color:rgba(255,255,255,.55);line-height:1.8;margin-bottom:20px">${job.desc}</p>
+    <div style="font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:12px">Requirements</div>
+    <ul class="smp-features" style="margin-bottom:16px">${reqs}</ul>
+    <div style="font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:12px">Nice to have</div>
+    <ul class="smp-features" style="margin-bottom:24px">${nice}</ul>
+    <a href="#contact" class="smp-cta" onclick="document.getElementById('jobModal').classList.remove('active')" style="display:block;text-align:center;text-decoration:none;border-radius:var(--r)">Apply via contact form →</a>
+  `
+  document.getElementById('jobModal').classList.add('active')
+}
+
+function closeJob(e) {
+  if(e.target === document.getElementById('jobModal'))
+    document.getElementById('jobModal').classList.remove('active')
 }
 
 </script>
