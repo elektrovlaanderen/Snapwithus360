@@ -402,6 +402,7 @@ footer{background:var(--gold);padding:56px 5% 32px}
   .packages[style*="repeat(4"]{grid-template-columns:1fr !important}
   .packages{grid-template-columns:1fr !important}
 }
+@media(max-width:768px){.rv.d3[style*="repeat(3"]{grid-template-columns:1fr !important}}
 </style>
 </head>
 <body>
@@ -1020,7 +1021,7 @@ footer{background:var(--gold);padding:56px 5% 32px}
   <h2 class="sec-h rv d1">We're <em>Hiring</em></h2>
   <p class="sec-sub rv d2" style="color:var(--muted-d)">We're growing in California and looking for talented freelancers to join the SNAP360 team. Independent contractors only — flexible, project-based work.</p>
 
-  <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px;max-width:800px" class="rv d3">
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px" class="rv d3">
 
     <!-- Photographer -->
     <div class="job-card" onclick="openJob('photographer')">
@@ -1033,6 +1034,21 @@ footer{background:var(--gold);padding:56px 5% 32px}
       <div class="job-title">Photographer</div>
       <div class="job-tags">Real Estate · Sport · Events</div>
       <div class="job-region">📍 California Region</div>
+      <div style="font-size:11px;color:rgba(221,154,62,.5);font-weight:600;letter-spacing:.06em;margin-bottom:8px">Must be authorized to work in the USA</div>
+      <div class="job-cta">View details →</div>
+    </div>
+
+    <!-- Cold Caller -->
+    <div class="job-card" onclick="openJob('caller')" style="grid-column:span 1">
+      <div class="job-card-top">
+        <div class="job-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5" stroke-linecap="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013 6.19a2 2 0 012-2.18h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L9.91 11a16 16 0 006.09 6.09l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+        </div>
+        <span class="job-badge">Open</span>
+      </div>
+      <div class="job-title">Sales Caller</div>
+      <div class="job-tags">Cold Calling · Clubs · Real Estate Agents</div>
+      <div class="job-region">📍 Remote · 15% commission per closed job</div>
       <div style="font-size:11px;color:rgba(221,154,62,.5);font-weight:600;letter-spacing:.06em;margin-bottom:8px">Must be authorized to work in the USA</div>
       <div class="job-cta">View details →</div>
     </div>
@@ -1274,6 +1290,24 @@ if (!sessionStorage.getItem('popupSeen')) {
 
 
 const jobData = {
+  caller: {
+    title: 'Sales Caller',
+    region: '📍 Remote · Commission-based',
+    type: 'Independent Contractor · 15% per closed job',
+    desc: 'We are looking for motivated sales callers to reach out to sports clubs, real estate agents and businesses on behalf of SNAP360. Fully remote — you call, we shoot, you earn 15% of every completed job you bring in.',
+    requirements: [
+      'Must be authorized to work in the USA (I-9)',
+      'Strong phone communication skills',
+      'Self-motivated and target-driven',
+      'Ability to explain our services clearly',
+      'Reliable phone and internet connection'
+    ],
+    nice: [
+      'Experience in sales or telemarketing',
+      'Knowledge of the real estate or sports industry',
+      'Bilingual (English + Spanish or other language)'
+    ]
+  },
   photographer: {
     title: 'Photographer',
     region: '📍 California Region',
