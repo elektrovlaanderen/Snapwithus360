@@ -353,6 +353,33 @@ footer{background:var(--gold);padding:56px 5% 32px}
 .lb-caption{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.5);font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;text-align:center;pointer-events:none}
 @keyframes lbIn{from{opacity:0;transform:scale(.92)}to{opacity:1;transform:scale(1)}}
 .gallery-item{cursor:zoom-in}
+
+/* ═══ HIRING POPUP ═══ */
+.popup-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:500;display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px);opacity:0;pointer-events:none;transition:opacity .4s ease}
+.popup-overlay.active{opacity:1;pointer-events:all}
+.popup-box{background:var(--dark);border:1px solid var(--border-d);border-radius:8px;max-width:480px;width:100%;position:relative;overflow:hidden;transform:translateY(24px) scale(.97);transition:transform .4s ease,opacity .4s ease;opacity:0}
+.popup-overlay.active .popup-box{transform:none;opacity:1}
+.popup-accent{width:100%;height:3px;background:linear-gradient(to right,var(--gold),var(--gold-light))}
+.popup-body{padding:36px 36px 32px}
+.popup-tag{font-size:10px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);display:flex;align-items:center;gap:8px;margin-bottom:16px}
+.popup-tag::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--gold);animation:popupDot 1.5s ease-in-out infinite}
+@keyframes popupDot{0%,100%{opacity:1}50%{opacity:.3}}
+.popup-title{font-family:'Bebas Neue',sans-serif;font-size:38px;letter-spacing:.03em;color:var(--white);line-height:1;margin-bottom:6px}
+.popup-title em{color:var(--gold);font-style:normal}
+.popup-region{font-size:13px;color:var(--muted-d);margin-bottom:24px;letter-spacing:.06em}
+.popup-positions{display:flex;flex-direction:column;gap:10px;margin-bottom:28px}
+.popup-position{background:rgba(255,255,255,.04);border:1px solid var(--border-d);border-left:3px solid var(--gold);border-radius:0 var(--r) var(--r) 0;padding:14px 18px;display:flex;align-items:center;justify-content:space-between}
+.popup-position-title{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:.04em;color:var(--white)}
+.popup-position-type{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted-d);margin-top:3px}
+.popup-position-badge{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;background:rgba(221,154,62,.12);color:var(--gold);padding:4px 10px;border-radius:20px}
+.popup-actions{display:flex;gap:10px}
+.popup-cta{flex:1;background:var(--gold);color:#000;border:none;padding:13px;border-radius:var(--r);font-family:'Outfit',sans-serif;font-weight:700;font-size:12px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:background .2s;text-decoration:none;display:flex;align-items:center;justify-content:center}
+.popup-cta:hover{background:var(--gold-light)}
+.popup-dismiss{background:transparent;border:1px solid var(--border-d);color:var(--muted-d);padding:13px 18px;border-radius:var(--r);font-family:'Outfit',sans-serif;font-weight:600;font-size:12px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:border-color .2s,color .2s}
+.popup-dismiss:hover{border-color:rgba(255,255,255,.3);color:#fff}
+.popup-close{position:absolute;top:14px;right:14px;width:32px;height:32px;background:rgba(255,255,255,.06);border:none;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .2s}
+.popup-close:hover{background:rgba(255,255,255,.12)}
+.popup-close svg{width:14px;height:14px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round}
 </style>
 </head>
 <body>
@@ -956,7 +983,7 @@ footer{background:var(--gold);padding:56px 5% 32px}
     <!-- Dimitri -->
     <div class="tc rv d2"><div class="tc-bar"></div><div class="tc-init">DS</div><div class="tc-name">Dimitri Sonck</div><div class="tc-role">Sales &amp; Production · California Region</div><div class="tc-div"></div>
       <div class="tc-row"><div class="tc-ico"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013 6.19a2 2 0 012-2.18h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L9.91 11a16 16 0 006.09 6.09l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg></div><div><div class="tc-lbl">Phone</div><div class="tc-val">+1 (951) 818-5076</div></div></div>
-      <div class="tc-row"><div class="tc-ico"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013 6.19a2 2 0 012-2.18h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L9.91 11a16 16 0 006.09 6.09l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg></div><div><div class="tc-lbl">Focus</div><div class="tc-val">Client Relations &amp; Sales</div></div></div>
+      <div class="tc-row"><div class="tc-ico"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013 6.19a2 2 0 012-2.18h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L9.91 11a16 16 0 006.09 6.09l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg></div><div><div class="tc-lbl">Focus</div><div class="tc-val">Client Relations · Sales · Production</div></div></div>
     </div>
 
   </div>
@@ -1157,6 +1184,18 @@ document.querySelectorAll('.gallery-item').forEach((el, i) => {
   }
 })
 
+
+// Hiring popup — show once per session after 3s
+function closePopup() {
+  document.getElementById('hiringPopup').classList.remove('active')
+  sessionStorage.setItem('popupSeen', '1')
+}
+if (!sessionStorage.getItem('popupSeen')) {
+  setTimeout(() => {
+    document.getElementById('hiringPopup').classList.add('active')
+  }, 3000)
+}
+
 </script>
 
 <!-- LIGHTBOX -->
@@ -1166,6 +1205,40 @@ document.querySelectorAll('.gallery-item').forEach((el, i) => {
   <img class="lb-img" id="lb-img" src="" alt="" onclick="event.stopPropagation()">
   <div class="lb-next" onclick="lbNav(1);event.stopPropagation()"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
   <div class="lb-caption" id="lb-caption"></div>
+</div>
+
+
+<!-- HIRING POPUP -->
+<div class="popup-overlay" id="hiringPopup">
+  <div class="popup-box">
+    <div class="popup-accent"></div>
+    <button class="popup-close" onclick="closePopup()"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <div class="popup-body">
+      <div class="popup-tag">We're hiring</div>
+      <div class="popup-title">Join <em>SNAP360</em></div>
+      <div class="popup-region">📍 California Region · Freelance / Independent</div>
+      <div class="popup-positions">
+        <div class="popup-position">
+          <div>
+            <div class="popup-position-title">Photographer</div>
+            <div class="popup-position-type">Real Estate · Sport · Events</div>
+          </div>
+          <div class="popup-position-badge">Open</div>
+        </div>
+        <div class="popup-position">
+          <div>
+            <div class="popup-position-title">Video Editor</div>
+            <div class="popup-position-type">Reels · Brand Videos · FPV</div>
+          </div>
+          <div class="popup-position-badge">Open</div>
+        </div>
+      </div>
+      <div class="popup-actions">
+        <a href="#contact" class="popup-cta" onclick="closePopup()">Apply via contact form →</a>
+        <button class="popup-dismiss" onclick="closePopup()">Not now</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 </body>
