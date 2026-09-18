@@ -1024,7 +1024,7 @@ footer{background:var(--gold);padding:56px 5% 32px}
   <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px" class="rv d3">
 
     <!-- Photographer -->
-    <div class="job-card" onclick="openJob('photographer')">
+    <div class="job-card" onclick="openJob('photographer')" data-share="job-photographer.html">
       <div class="job-card-top">
         <div class="job-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
@@ -1039,7 +1039,7 @@ footer{background:var(--gold);padding:56px 5% 32px}
     </div>
 
     <!-- Cold Caller -->
-    <div class="job-card" onclick="openJob('caller')" style="grid-column:span 1">
+    <div class="job-card" onclick="openJob('caller')" data-share="job-caller.html" style="grid-column:span 1">
       <div class="job-card-top">
         <div class="job-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5" stroke-linecap="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013 6.19a2 2 0 012-2.18h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L9.91 11a16 16 0 006.09 6.09l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
@@ -1054,7 +1054,7 @@ footer{background:var(--gold);padding:56px 5% 32px}
     </div>
 
     <!-- Video Editor -->
-    <div class="job-card" onclick="openJob('editor')">
+    <div class="job-card" onclick="openJob('editor')" data-share="job-editor.html">
       <div class="job-card-top">
         <div class="job-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5" stroke-linecap="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
@@ -1361,8 +1361,14 @@ function openJob(key) {
     <ul class="smp-features" style="margin-bottom:16px">${reqs}</ul>
     <div style="font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:12px">Nice to have</div>
     <ul class="smp-features" style="margin-bottom:24px">${nice}</ul>
-    <a href="#contact" class="smp-cta" onclick="document.getElementById('jobModal').classList.remove('active')" style="display:block;text-align:center;text-decoration:none;border-radius:var(--r)">Apply via contact form →</a>
+    <a href="#contact" class="smp-cta" onclick="document.getElementById('jobModal').classList.remove('active')" style="display:block;text-align:center;text-decoration:none;border-radius:var(--r);margin-bottom:10px">Apply via contact form →</a>
+    <a id="modal-share-link" href="#" target="_blank" style="display:block;text-align:center;text-decoration:none;border:1px solid var(--border-d);color:rgba(255,255,255,.5);padding:11px;border-radius:var(--r);font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;transition:border-color .2s" onmouseover="this.style.borderColor='rgba(221,154,62,.4)'" onmouseout="this.style.borderColor='var(--border-d)'">🔗 Share this job →</a>
   `
+  const card = document.querySelector(`[data-share]`)
+  const cards = document.querySelectorAll('.job-card[data-share]')
+  const shareFiles = {photographer:'job-photographer.html',editor:'job-editor.html',caller:'job-caller.html'}
+  const shareLink = document.getElementById('modal-share-link')
+  if(shareLink) shareLink.href = shareFiles[key] || '#'
   document.getElementById('jobModal').classList.add('active')
 }
 
