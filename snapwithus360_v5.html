@@ -350,6 +350,14 @@ footer{background:var(--gold);padding:56px 5% 32px}
 .lb-caption{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.5);font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;text-align:center;pointer-events:none}
 @keyframes lbIn{from{opacity:0;transform:scale(.92)}to{opacity:1;transform:scale(1)}}
 .gallery-item{cursor:zoom-in}
+
+@media(max-width:900px){
+  .packages[style*="repeat(4"]{grid-template-columns:repeat(2,1fr) !important}
+}
+@media(max-width:560px){
+  .packages[style*="repeat(4"]{grid-template-columns:1fr !important}
+  .packages{grid-template-columns:1fr !important}
+}
 </style>
 </head>
 <body>

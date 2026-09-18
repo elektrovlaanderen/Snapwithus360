@@ -48,7 +48,7 @@ body{background:var(--black);color:var(--white);font-family:'Outfit',sans-serif;
 .panel:hover .panel-inner::after{opacity:1}
 
 /* BG TEXT */
-.panel-bg-text{position:absolute;font-family:'Bebas Neue',sans-serif;font-size:clamp(160px,18vw,260px);color:var(--white);opacity:.03;letter-spacing:.04em;line-height:1;pointer-events:none;transition:opacity .4s,transform .5s;user-select:none;white-space:nowrap}
+.panel-bg-text{position:absolute;font-family:'Bebas Neue',sans-serif;font-size:clamp(120px,18vw,220px);color:var(--white);opacity:.03;letter-spacing:.04em;line-height:1;pointer-events:none;transition:opacity .4s,transform .5s;user-select:none;white-space:nowrap}
 .panel-be .panel-bg-text{bottom:-20px;left:-10px}
 .panel-us .panel-bg-text{top:-20px;right:-10px}
 
@@ -125,20 +125,27 @@ body{background:var(--black);color:var(--white);font-family:'Outfit',sans-serif;
 <!-- SPLIT -->
 <div class="split">
   <!-- Instruction banner -->
-  <div style="position:fixed;top:68px;left:0;right:0;z-index:50;display:flex;pointer-events:none;opacity:0;animation:fadeDown .5s .9s forwards">
-    <div style="flex:1;display:flex;justify-content:center">
+  <div id="splitBanners" style="position:fixed;top:68px;left:0;right:0;z-index:50;display:flex;pointer-events:auto;opacity:0;animation:fadeDown .5s .9s forwards">
+    <div style="flex:1;display:flex;justify-content:center;cursor:pointer" onclick="goTo('be')">
       <div style="background:var(--gold);border-radius:0 0 10px 10px;padding:10px 28px;display:flex;align-items:center;gap:8px">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5" stroke-linecap="round"><polyline points="7 13 12 18 17 13"/><polyline points="7 6 12 11 17 6"/></svg>
         <span style="font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#000">Klik hier om verder te gaan</span>
       </div>
     </div>
-    <div style="flex:1;display:flex;justify-content:center">
+    <div style="flex:1;display:flex;justify-content:center;cursor:pointer" onclick="goTo('us')">
       <div style="background:var(--gold);border-radius:0 0 10px 10px;padding:10px 28px;display:flex;align-items:center;gap:8px">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5" stroke-linecap="round"><polyline points="7 13 12 18 17 13"/><polyline points="7 6 12 11 17 6"/></svg>
         <span style="font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#000">Click here to enter</span>
       </div>
     </div>
   </div>
+  <style>
+  @media(max-width:680px){
+    #splitBanners{flex-direction:column;top:68px}
+    #splitBanners > div{padding:6px 0}
+    #splitBanners > div > div{border-radius:0;padding:8px 20px;width:100%;justify-content:center}
+  }
+  </style>
 
   <!-- DIVIDER -->
   <div class="divider">
@@ -191,6 +198,12 @@ body{background:var(--black);color:var(--white);font-family:'Outfit',sans-serif;
 </div>
 
 <script>
+// Reset transition overlay on back button
+window.addEventListener('pageshow', function(e) {
+  const overlay = document.getElementById('pg-transition')
+  if(overlay) { overlay.classList.remove('active'); document.body.style.overflow = '' }
+})
+
 function goTo(region) {
   const urls = { be: 'snapwithus360_v5.html', us: 'snapwithus360_us.html' }
   const labels = { be: 'België', us: 'United States' }
