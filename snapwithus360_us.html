@@ -1069,7 +1069,7 @@ footer{background:var(--gold);padding:56px 5% 32px}
     </div>
 
   </div>
-  <p style="font-size:11px;color:rgba(255,255,255,.2);margin-top:24px;line-height:1.7;max-width:600px">All applicants must be authorized to work in the USA and provide proof of work authorization upon request (I-9). DE BACKER LLC is an equal opportunity employer.</p>
+  <p style="font-size:11px;color:rgba(255,255,255,.2);margin-top:24px;line-height:1.7;max-width:600px">All applicants must be authorized to work in the USA and provide proof of work authorization upon request. DE BACKER LLC is an equal opportunity employer.</p>
 </section>
 
 <!-- JOB DETAIL MODALS -->
@@ -1296,7 +1296,7 @@ const jobData = {
     type: 'Independent Contractor · 15% per closed job',
     desc: 'We are looking for motivated sales callers to reach out to sports clubs, real estate agents and businesses on behalf of SNAP360. Fully remote — you call, we shoot, you earn 15% of every completed job you bring in.',
     requirements: [
-      'Must be authorized to work in the USA (I-9)',
+      'Legally authorized to work in the USA',
       'Strong phone communication skills',
       'Self-motivated and target-driven',
       'Ability to explain our services clearly',
@@ -1314,7 +1314,7 @@ const jobData = {
     type: 'Independent Contractor · Freelance',
     desc: 'We are looking for a skilled photographer to join our SNAP360 team in California. You will work on real estate shoots, sport portraits and events on a project basis.',
     requirements: [
-      'Must be authorized to work in the USA (I-9)',
+      'Legally authorized to work in the USA',
       'Professional camera equipment (full-frame preferred)',
       'Experience in real estate or sport photography',
       'Reliable transportation in the California area',
@@ -1333,7 +1333,7 @@ const jobData = {
     type: 'Independent Contractor · Freelance',
     desc: 'We are looking for a creative video editor for short-form content (Reels, TikTok), brand videos and FPV footage. Must be based in California — local remote work within the USA only.',
     requirements: [
-      'Must be authorized to work in the USA (I-9)',
+      'Legally authorized to work in the USA',
       'Proficiency in Premiere Pro, DaVinci Resolve or similar',
       'Experience editing social media content (Reels, TikTok)',
       'Strong sense of rhythm, color grading and storytelling',
@@ -1402,20 +1402,27 @@ function closeJob(e) {
         <div class="popup-position">
           <div>
             <div class="popup-position-title">Photographer</div>
-            <div class="popup-position-type">Real Estate · Sport · Events</div>
+            <div class="popup-position-type">Real Estate · Sport · Events · California</div>
           </div>
           <div class="popup-position-badge">Open</div>
         </div>
         <div class="popup-position">
           <div>
             <div class="popup-position-title">Video Editor</div>
-            <div class="popup-position-type">Reels · Brand Videos · FPV</div>
+            <div class="popup-position-type">Reels · Brand Videos · FPV · California</div>
+          </div>
+          <div class="popup-position-badge">Open</div>
+        </div>
+        <div class="popup-position">
+          <div>
+            <div class="popup-position-title">Sales Caller</div>
+            <div class="popup-position-type">Remote · 15% commission per closed job</div>
           </div>
           <div class="popup-position-badge">Open</div>
         </div>
       </div>
       <div class="popup-actions">
-        <a href="#contact" class="popup-cta" onclick="closePopup()">Apply via contact form →</a>
+        <a href="#jobs" class="popup-cta" onclick="closePopup()">View open positions →</a>
         <button class="popup-dismiss" onclick="closePopup()">Not now</button>
       </div>
     </div>
