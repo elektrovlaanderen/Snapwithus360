@@ -95,7 +95,8 @@ figcaption{margin-top:12px;color:var(--muted);font-size:15px}
 .p-name{font-weight:900;font-size:10cqw;line-height:.9}
 .p-meta{font:600 3.8cqw/1.3 'Barlow',sans-serif;letter-spacing:.06em;opacity:.85}
 .p-top{position:absolute;top:3.5%;left:6cqw;font:700 3.4cqw/1 'Barlow',sans-serif;letter-spacing:.14em}
-.p-snap{position:absolute;top:3.5%;right:6cqw;font:900 3.4cqw/1 'Big Shoulders Display',sans-serif;letter-spacing:.06em;opacity:.7}
+.p-snap{position:absolute;top:2.6%;right:5cqw;width:17cqw;opacity:.92}
+.p-snap img{display:block;width:100%;height:auto}
 .tag{position:absolute;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.62);color:#fff;border:1px dashed rgba(255,255,255,.75);border-radius:99px;font:600 3.6cqw/1 'Barlow',sans-serif;padding:2.2cqw 4cqw;white-space:nowrap;text-transform:none;letter-spacing:0}
 .poster .tag{top:52%}
 
@@ -149,3 +150,35 @@ figcaption{margin-top:12px;color:var(--muted);font-size:15px}
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms!important;animation-delay:0s!important;transition:none!important}
 }
+
+/* Taalkeuze */
+.top-right{display:flex;align-items:center;gap:16px}
+.lang{display:flex;gap:4px}
+.lang button{background:none;border:1px solid var(--line);color:var(--muted);border-radius:6px;padding:4px 10px;font:600 13px/1.2 'Barlow',sans-serif;cursor:pointer}
+.lang button[aria-pressed=true]{background:var(--gold);border-color:var(--gold);color:var(--ink)}
+@media (max-width:520px){.top small{display:none}}
+
+/* SNAP360-logo */
+.brand img{display:block;height:34px;width:auto}
+.foot-brand{display:flex;align-items:center;gap:12px}
+.foot-brand img{height:20px;width:auto}
+.rv-by{position:absolute;top:9vh;left:0;right:0;display:flex;flex-direction:column;align-items:center;gap:1vmin;animation:byIn 1.6s .05s ease-out both}
+.rv-by img{width:18vmin;min-width:110px;height:auto}
+.rv-by span{font:600 1.6vmin/1 'Barlow',sans-serif;letter-spacing:.4em;text-transform:uppercase;color:rgba(255,255,255,.6)}
+@keyframes byIn{0%{opacity:0;transform:translateY(-8px)}35%{opacity:1;transform:none}100%{opacity:.85}}
+
+/* Echte voorbeeldspeler op de poster */
+.p-player.fit-cut{left:0;right:0;bottom:0;height:86%}
+.p-player.fit-full{left:4%;right:4%;bottom:11.5%;height:77%}
+.p-player img{filter:drop-shadow(0 2cqw 5cqw rgba(0,0,0,.55))}
+.poster.fit-cut .tag{top:auto;bottom:18.5%}
+.poster.fit-full .tag{top:47%;left:auto;right:4cqw;transform:none;white-space:normal;max-width:34cqw;text-align:center;line-height:1.25;border-radius:3cqw}
+
+/* Echt werk */
+.werk{padding:0 0 96px}
+.werk-head{max-width:640px;margin-bottom:28px}
+.werk-head h3{font:900 clamp(34px,4.4vw,56px)/.95 'Big Shoulders Display',sans-serif;margin:0 0 12px}
+.werk-head p{color:var(--muted);margin:0}
+.werk-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.werk-grid img{width:100%;aspect-ratio:2/3;object-fit:cover;display:block;border-radius:4px;background:var(--panel)}
+@media (max-width:860px){.werk-grid{grid-template-columns:1fr 1fr}}
