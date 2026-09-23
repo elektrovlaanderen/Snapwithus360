@@ -1,0 +1,853 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SNAP360 Lichtplan</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#1B2530">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Lichtplan">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  --bg:#D7DAD4; --panel:#EEF0EB; --panel2:#E2E5DF; --floor:#E7E9E3;
+  --ink:#1B2530; --muted:#55606A; --line:rgba(27,37,48,.14);
+  --gold:#D5943B; --gold-ink:#8A5A17; --player:#2F5D8A; --warn:#B4541E; --ok:#3C7A4A;
+  --beam:rgba(213,148,59,.18); --body:rgba(47,93,138,.35);
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#151C22; --panel:#1E272F; --panel2:#27323B; --floor:#19222A;
+    --ink:#E4E8E2; --muted:#98A3AC; --line:rgba(228,232,226,.13);
+    --gold-ink:#E7B270; --player:#7EA6CF; --warn:#E58A5A; --ok:#79B98A;
+    --beam:rgba(213,148,59,.16); --body:rgba(126,166,207,.35);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#151C22; --panel:#1E272F; --panel2:#27323B; --floor:#19222A;
+  --ink:#E4E8E2; --muted:#98A3AC; --line:rgba(228,232,226,.13);
+  --gold-ink:#E7B270; --player:#7EA6CF; --warn:#E58A5A; --ok:#79B98A;
+  --beam:rgba(213,148,59,.16); --body:rgba(126,166,207,.35);
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 15px/1.5 Barlow,"Helvetica Neue",Arial,sans-serif;-webkit-font-smoothing:antialiased}
+.cond{font-family:"Barlow Condensed","Arial Narrow",Arial,sans-serif}
+
+.top{max-width:1320px;margin:0 auto;padding:26px 20px 18px;display:flex;flex-wrap:wrap;gap:16px 32px;align-items:flex-end;justify-content:space-between}
+h1{font:700 clamp(44px,7vw,72px)/.88 "Barlow Condensed","Arial Narrow",sans-serif;margin:0;letter-spacing:-.01em}
+h1 small{display:block;font:600 17px/1.2 Barlow,sans-serif;color:var(--gold-ink);letter-spacing:0;margin-bottom:6px}
+.lede{margin:.55em 0 0;color:var(--muted);max-width:48ch}
+.switches{display:flex;gap:10px;flex-wrap:wrap}
+.seg{display:inline-flex;background:var(--panel2);border-radius:999px;padding:3px}
+.seg button{font:600 15px Barlow,sans-serif;border:0;background:transparent;color:var(--muted);padding:9px 18px;border-radius:999px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.seg.sm button{padding:9px 13px}
+
+.wrap{max-width:1320px;margin:0 auto;padding:0 20px 56px;display:grid;grid-template-columns:330px minmax(0,1fr);gap:26px;align-items:start}
+@media (max-width:900px){.wrap{grid-template-columns:1fr}}
+
+.inputs{background:var(--panel);border-radius:16px;padding:18px 18px 6px;position:sticky;top:calc(env(safe-area-inset-top,0px) + 12px);max-height:calc(100vh - 24px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px));overflow:auto}
+@media (max-width:900px){.inputs{position:static;max-height:none}}
+fieldset{border:0;padding:0;margin:0 0 20px;display:grid;grid-template-columns:1fr 1fr;gap:10px 12px;min-width:0}
+fieldset[hidden]{display:none}
+legend{font:600 21px/1 "Barlow Condensed",sans-serif;padding:0;margin-bottom:10px}
+label{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--muted);min-width:0}
+label.wide{grid-column:1/-1}
+input,select{font:500 16px Barlow,sans-serif;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 10px;width:100%;min-width:0}
+select:disabled{opacity:.45}
+label.check{flex-direction:row;align-items:center;gap:9px;grid-column:1/-1;font-size:15px;color:var(--ink);cursor:pointer}
+label.check input{width:19px;height:19px;accent-color:var(--gold);flex:none}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+
+.kitbox{margin:0 0 20px;border-bottom:1px solid var(--line)}
+.kitbox summary{cursor:pointer;font:600 21px/1 "Barlow Condensed",sans-serif;padding:2px 0 14px}
+.kitbox summary span{font:500 14px Barlow,sans-serif;color:var(--muted);margin-left:10px}
+.kh{grid-column:1/-1;margin:8px 0 -2px;font-size:14px;font-weight:600;color:var(--ink)}
+td b{font:700 20px/1.1 "Barlow Condensed",sans-serif;white-space:nowrap}
+.plan{min-width:0}
+.setbar{display:flex;flex-wrap:wrap;gap:8px 30px;padding:2px 2px 16px;border-bottom:2px solid var(--ink)}
+.setbar div{display:flex;flex-direction:column;min-width:0}
+.setbar b{font:700 clamp(28px,3.4vw,40px)/1 "Barlow Condensed",sans-serif}
+.setbar span{font-size:13px;color:var(--muted)}
+
+.grid2{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:26px;margin-top:22px;align-items:start}
+@media (max-width:1150px){.grid2{grid-template-columns:1fr}}
+figure{margin:0}
+.floor{background:var(--floor);border-radius:16px;padding:10px 10px 12px;border:1px solid var(--line)}
+.floor figcaption{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:13px;color:var(--muted);padding:2px 6px 8px}
+.floor figcaption b{font:600 18px "Barlow Condensed",sans-serif;color:var(--ink)}
+svg{display:block;width:100%;height:auto;max-width:100%}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:13px;color:var(--muted);padding:8px 6px 0}
+.legend i{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:6px;vertical-align:-1px}
+
+h2{font:600 25px/1.1 "Barlow Condensed",sans-serif;margin:0 0 10px}
+.blk{margin-top:28px}
+.blk:first-child{margin-top:0}
+.lines p{margin:0 0 9px;max-width:72ch}
+.lines b{font-weight:600}
+
+.tbl{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{border-collapse:collapse;width:100%;min-width:720px;font-size:14px}
+th{text-align:left;font-weight:600;color:var(--muted);font-size:13px;padding:6px 10px;border-bottom:1px solid var(--line)}
+td{padding:11px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+td.id{font:700 26px/1 "Barlow Condensed",sans-serif;color:var(--gold-ink);width:40px}
+td .sub{display:block;color:var(--muted);font-size:13px}
+
+.warns{display:grid;gap:8px}
+.warn{border-left:4px solid var(--warn);padding:9px 14px;background:var(--panel);border-radius:0 10px 10px 0;max-width:80ch}
+
+.even .verdict{margin:0 0 10px}
+.even .verdict.ok{color:var(--ok)}
+.even .verdict.bad{color:var(--warn)}
+.erow{display:flex;gap:10px;align-items:center;margin:4px 0}
+.erow .lab{width:108px;flex:none;font-size:13px;color:var(--muted)}
+.cells{display:flex;gap:3px;flex-wrap:wrap}
+.cell{min-width:36px;height:30px;padding:0 4px;border-radius:6px;font:600 13px "Barlow Condensed",sans-serif;display:grid;place-items:center;color:#1B2530}
+.cell.co{box-shadow:inset 0 0 0 2px var(--ink)}
+.cell.off{outline:2px solid var(--warn);outline-offset:1px}
+
+.checks{list-style:none;padding:0;margin:0;columns:2 330px;column-gap:30px}
+.checks li{break-inside:avoid;padding:0 0 11px 30px;position:relative;cursor:pointer;max-width:62ch}
+.checks li::before{content:"";position:absolute;left:0;top:.2em;width:17px;height:17px;border:2px solid var(--gold);border-radius:5px}
+.checks li.done{color:var(--muted);text-decoration:line-through}
+.checks li.done::before{background:var(--gold)}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:28px}
+.btn{font:600 15px Barlow,sans-serif;border:1px solid var(--ink);background:transparent;color:var(--ink);padding:10px 18px;border-radius:999px;cursor:pointer}
+.btn.primary{background:var(--ink);color:var(--bg)}
+.toast{font-size:14px;color:var(--ok);align-self:center}
+
+/* svg */
+.g-grid{stroke:var(--line);stroke-width:1}
+.g-fov{stroke:var(--muted);stroke-width:1.2;stroke-dasharray:5 6;fill:none}
+.g-beam{fill:var(--beam)}
+.g-mod{stroke:var(--gold);stroke-width:7;stroke-linecap:round}
+.g-lamp{fill:var(--ink)}
+.g-pl{fill:var(--player)}
+.g-co{fill:var(--gold);stroke:var(--ink);stroke-width:1.5}
+.g-cam{fill:var(--ink)}
+.g-lbl{font:700 17px "Barlow Condensed",sans-serif;fill:var(--ink)}
+.g-sm{font:500 13px Barlow,sans-serif;fill:var(--muted)}
+.g-dim{stroke:var(--ink);stroke-width:1;stroke-dasharray:2 4}
+.g-dimw{stroke:var(--ink);stroke-width:1}
+.g-bgl{stroke:var(--muted);stroke-width:7;stroke-linecap:round}
+.g-ground{stroke:var(--ink);stroke-width:1.5}
+.g-body{stroke:var(--body);stroke-linecap:round}
+.g-stand{stroke:var(--muted);stroke-width:2}
+.g-aim{stroke:var(--gold);stroke-width:1.4;stroke-dasharray:4 5;fill:none}
+.g-sight{stroke:var(--ink);stroke-width:1;stroke-dasharray:3 5;fill:none;opacity:.6}
+@media (prefers-reduced-motion:no-preference){.plan svg{transition:opacity .15s}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div>
+    <h1><small>SNAP360</small>Lichtplan</h1>
+    <p class="lede">Vul de shoot in. Opstelling, camera en flitsers worden voor je uitgerekend en getekend.</p>
+  </div>
+  <div class="switches">
+    <div class="seg" role="group" aria-label="Soort shoot">
+      <button type="button" data-mode="team" aria-pressed="true">Teamfoto</button>
+      <button type="button" data-mode="portrait" aria-pressed="false">Portret</button>
+    </div>
+    <div class="seg sm" role="group" aria-label="Eenheid">
+      <button type="button" data-unit="m" aria-pressed="true">meter</button>
+      <button type="button" data-unit="ft" aria-pressed="false">feet</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <aside class="inputs">
+    <form id="form" onsubmit="return false">
+      <details class="kitbox" open>
+        <summary>Mijn kit<span id="kitSum"></span></summary>
+        <fieldset>
+          <label>Kit<select id="k_sel"><option value="0">Kit 1</option><option value="1">Kit 2</option><option value="2">Kit 3</option></select></label>
+          <label>Naam<input id="k_name" data-kit type="text" maxlength="30"></label>
+          <p class="kh">Flitsers</p>
+          <label>AD600BM<input id="k_ad600bm" data-kit type="number" min="0" max="20" inputmode="numeric"></label>
+          <label>AD600 Pro<input id="k_ad600p" data-kit type="number" min="0" max="20" inputmode="numeric"></label>
+          <label>AD600 Pro II<input id="k_ad600p2" data-kit type="number" min="0" max="20" inputmode="numeric"></label>
+          <label>AD400 Pro<input id="k_ad400p" data-kit type="number" min="0" max="20" inputmode="numeric"></label>
+          <label>AD200 Pro<input id="k_ad200p" data-kit type="number" min="0" max="20" inputmode="numeric"></label>
+          <p class="kh">Lichtvormers</p>
+          <label>Grote paraplu<input id="k_umb" data-kit type="number" min="0" max="20" inputmode="numeric"></label>
+          <label>Octabox 120 cm<input id="k_oct120" data-kit type="number" min="0" max="20" inputmode="numeric"></label>
+          <label>Octabox 90 cm<input id="k_oct90" data-kit type="number" min="0" max="20" inputmode="numeric"></label>
+          <label>Softbox 60×90<input id="k_sb" data-kit type="number" min="0" max="20" inputmode="numeric"></label>
+          <label>Stripbox 30×120<input id="k_strip" data-kit type="number" min="0" max="20" inputmode="numeric"></label>
+          <label>Beauty dish<input id="k_bd" data-kit type="number" min="0" max="20" inputmode="numeric"></label>
+          <label>Reflector + grid<input id="k_grid" data-kit type="number" min="0" max="20" inputmode="numeric"></label>
+          <label>Reflectiescherm<input id="k_refl" data-kit type="number" min="0" max="20" inputmode="numeric"></label>
+          <p class="kh">Statieven</p>
+          <label>Lichtstatieven<input id="k_stands" data-kit type="number" min="0" max="20" inputmode="numeric"></label>
+          <label>Hoogste (<span class="u">m</span>)<input id="k_standH" data-kit data-len type="number" min="1" step="0.1" inputmode="decimal"></label>
+        </fieldset>
+      </details>
+
+      <!-- TEAM -->
+      <fieldset data-for="team">
+        <legend>Groep</legend>
+        <label>Spelers<input id="t_players" type="number" min="1" max="80" value="20" inputmode="numeric"></label>
+        <label>Coaches en staf<input id="t_coaches" type="number" min="0" max="10" value="1" inputmode="numeric"></label>
+        <label class="wide">Leeftijd
+          <select id="t_age"><option value="volw">Volwassenen</option><option value="jeugd">Jeugd 12–16</option><option value="kids">Kinderen tot 12</option></select></label>
+        <label>Opstelling
+          <select id="t_layout"><option value="rows">Rijen</option><option value="arc">Rijen in een boog</option><option value="v">V-vorm</option><option value="line">Eén lange rij</option></select></label>
+        <label>Aantal rijen
+          <select id="t_rows"><option value="auto">Automatisch</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option></select></label>
+        <label class="wide">Coach en staf
+          <select id="t_coachpos"><option value="front-mid">Vooraan in het midden</option><option value="back-ends">Achteraan op de uiteinden</option><option value="front-ends">Vooraan op de uiteinden</option></select></label>
+      </fieldset>
+      <fieldset data-for="team">
+        <legend>Plek en camera</legend>
+        <label class="wide">Locatie
+          <select id="t_loc"><option value="in">Binnen (zaal, studio)</option><option value="sun">Buiten, zon</option><option value="cloud">Buiten, bewolkt of schaduw</option></select></label>
+        <label class="wide">Vrije ruimte vóór de groep (<span class="u">m</span>)<input id="t_space" data-len type="number" min="1" step="0.1" value="15" inputmode="decimal"></label>
+        <label>Sensor
+          <select id="t_sensor"><option value="ff">Full frame</option><option value="apsc">APS-C</option></select></label>
+        <label>Brandpunt (mm)<input id="t_f" type="number" min="10" max="400" value="50" inputmode="numeric"></label>
+      </fieldset>
+      <fieldset data-for="team">
+        <legend>Licht</legend>
+        <label class="wide">Lichtvormer hoofdlichten
+          <select id="t_mod"><option value="auto">Automatisch uit mijn kit</option><option value="umb">Grote paraplu</option><option value="oct120">Octabox 120 cm</option><option value="oct90">Octabox 90 cm</option><option value="sb">Softbox 60×90</option><option value="bare">Kale flits met reflector</option></select></label>
+        <label class="check"><input id="t_glasses" type="checkbox"> Brildragers in de groep</label>
+        <label class="check"><input id="t_rim" type="checkbox"> Rimlicht achter de groep</label>
+      </fieldset>
+
+      <!-- PORTRAIT -->
+      <fieldset data-for="portrait" hidden>
+        <legend>Onderwerp</legend>
+        <label class="wide">Stijl
+          <select id="p_style"><option value="sport">Sport dramatisch (key + 2 rims)</option><option value="clean">Clean (key + invul)</option><option value="clam">Clamshell (beauty)</option><option value="rembrandt">Rembrandt</option><option value="split">Split</option></select></label>
+        <label class="wide">Kader
+          <select id="p_frame"><option value="full">Volledig lichaam</option><option value="tq">Driekwart (knie en hoger)</option><option value="half">Halflang (taille en hoger)</option><option value="head">Hoofd en schouders</option></select></label>
+        <label>Lengte (<span class="u">m</span>)<input id="p_h" data-len type="number" min="0.8" step="0.01" value="1.8" inputmode="decimal"></label>
+        <label>Achtergrond
+          <select id="p_bg"><option value="dark">Zwart of donker</option><option value="smoke">Rook</option><option value="gray">Grijs</option><option value="white">Wit</option></select></label>
+      </fieldset>
+      <fieldset data-for="portrait" hidden>
+        <legend>Plek en camera</legend>
+        <label class="wide">Lengte van de ruimte, achtergrond tot achtermuur (<span class="u">m</span>)<input id="p_space" data-len type="number" min="2" step="0.1" value="9" inputmode="decimal"></label>
+        <label>Sensor
+          <select id="p_sensor"><option value="ff">Full frame</option><option value="apsc">APS-C</option></select></label>
+        <label>Brandpunt (mm)<input id="p_f" type="number" min="10" max="400" value="85" inputmode="numeric"></label>
+      </fieldset>
+      <fieldset data-for="portrait" hidden>
+        <legend>Licht</legend>
+        <label class="wide">Hoofdlicht
+          <select id="p_mod"><option value="auto">Automatisch uit mijn kit</option><option value="bd">Beauty dish 55 cm</option><option value="oct90">Octabox 90 cm</option><option value="oct120">Octabox 120 cm</option><option value="sb">Softbox 60×90 cm</option><option value="umb">Paraplu</option></select></label>
+      </fieldset>
+    </form>
+  </aside>
+
+  <section class="plan" aria-live="polite">
+    <div class="setbar" id="setbar"></div>
+
+    <div class="grid2">
+      <figure class="floor">
+        <figcaption><b>Bovenaanzicht</b><span>links en rechts zoals de camera het ziet, raster 1 m</span></figcaption>
+        <svg id="svgTop" role="img" aria-label="Bovenaanzicht van de opstelling"></svg>
+        <div class="legend" id="legend"></div>
+      </figure>
+      <div>
+        <div class="blk lines" id="secLayout"></div>
+        <div class="blk lines" id="secCam"></div>
+      </div>
+    </div>
+
+    <div class="blk" id="secLights"></div>
+    <div class="blk lines" id="secKit"></div>
+
+    <figure class="floor blk">
+      <figcaption><b>Zijaanzicht</b><span>hoogtes van camera, lichten en hoofden</span></figcaption>
+      <svg id="svgSide" role="img" aria-label="Zijaanzicht met hoogtes"></svg>
+    </figure>
+
+    <div class="blk even" id="secEven"></div>
+    <div class="blk warns" id="secWarn"></div>
+    <div class="blk" id="secCheck"></div>
+
+    <div class="actions">
+      <button type="button" class="btn primary" id="copyBtn">Kopieer plan als tekst</button>
+      <button type="button" class="btn" id="resetChecks">Vinkjes wissen</button>
+      <span class="toast" id="toast" role="status"></span>
+    </div>
+    <textarea id="copyArea" aria-hidden="true" tabindex="-1" style="position:absolute;left:-9999px;top:0"></textarea>
+  </section>
+</main>
+
+<script>
+(function(){
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const FT=3.28084, RAD=Math.PI/180, STORE='snap360-lichtplan-v1';
+let mode='team', unit='m', lastPlan=null;
+
+/* ---------- helpers ---------- */
+const num=id=>{const v=parseFloat(String($('#'+id).value).replace(',','.'));return Number.isFinite(v)?v:0};
+const len=id=>unit==='ft'?num(id)/FT:num(id);
+const clampInt=(v,a,b)=>Math.max(a,Math.min(b,Math.round(v)));
+const dec=(x,d=1)=>(Math.round(x*10**d)/10**d).toFixed(d).replace('.',',');
+function fL(m,d=1){
+  if(unit==='ft'){let t=Math.abs(m)*FT,ft=Math.floor(t),inch=Math.round((t-ft)*12);if(inch===12){ft++;inch=0}return `${ft}′${inch?` ${inch}″`:''}`}
+  return `${dec(Math.abs(m),d)} m`;
+}
+const fCm=m=>unit==='ft'?`${Math.round(m*39.37)}″`:`${Math.round(m*100)} cm`;
+function stops(x){const r=Math.round(x*10)/10;if(Math.abs(r)<.05)return '0';return (r>0?'+':'−')+dec(Math.abs(r),1)}
+const fNum=N=>'f/'+(Number.isInteger(N)?N:N.toFixed(1));
+const deg=x=>Math.round(x)+'°';
+
+/* ---------- team model ---------- */
+const AGE={volw:1,jeugd:.9,kids:.75};
+const POSE={grond:{h:.85,t:'zitten op de grond'},stoel:{h:1.22,t:'zitten op stoelen of knielen'},staand:{h:1.62,t:'staan'},bank:{h:1.62,x:.45,t:'staan op een bank of podium (40–50 cm)'}};
+const poseH=(p,s)=>POSE[p].h*s+(POSE[p].x||0);
+const ROWP={1:['staand'],2:['stoel','staand'],3:['stoel','staand','bank'],4:['grond','stoel','staand','bank']};
+const ROWN={1:['De rij'],2:['Voorste rij','Achterste rij'],3:['Voorste rij','Middelste rij','Achterste rij'],4:['Voorste rij','Tweede rij','Derde rij','Achterste rij']};
+/* ---------- gear ---------- */
+const FLASH=[{id:'ad600bm',t:'AD600BM',gn:87,ttl:false},{id:'ad600p',t:'AD600 Pro',gn:87,ttl:true},{id:'ad600p2',t:'AD600 Pro II',gn:87,ttl:true},{id:'ad400p',t:'AD400 Pro',gn:72,ttl:true},{id:'ad200p',t:'AD200 Pro',gn:52,ttl:true}];
+const MOD={umb:{t:'grote paraplu',loss:1.7,k:1.3,spread:32,size:1.5},oct120:{t:'octabox 120 cm',loss:2.3,k:2,spread:28,size:1.2},oct90:{t:'octabox 90 cm',loss:2,k:2.2,spread:26,size:.9},sb:{t:'softbox 60×90',loss:2,k:2.5,spread:24,size:.9},strip:{t:'stripbox 30×120',loss:2.7,k:4,spread:15,size:.35},bd:{t:'beauty dish',loss:1,k:3,spread:22,size:.55},grid:{t:'reflector met grid',loss:.3,k:8,spread:10,size:.25},bare:{t:'kale reflector',loss:0,k:6,spread:14,size:.3}};
+const KIT_IDS=['k_ad600bm','k_ad600p','k_ad600p2','k_ad400p','k_ad200p','k_umb','k_oct120','k_oct90','k_sb','k_strip','k_bd','k_grid','k_refl','k_stands'];
+const DEFAULT_KITS=[
+  {name:'Kit 1 (VS)',k_ad600bm:5,k_ad600p:0,k_ad600p2:0,k_ad400p:0,k_ad200p:0,k_umb:2,k_oct120:1,k_oct90:0,k_sb:0,k_strip:2,k_bd:1,k_grid:2,k_refl:1,k_stands:5,k_standH:3},
+  {name:'Kit 2 (België)',k_ad600bm:0,k_ad600p:0,k_ad600p2:2,k_ad400p:2,k_ad200p:0,k_umb:2,k_oct120:1,k_oct90:0,k_sb:0,k_strip:2,k_bd:1,k_grid:2,k_refl:1,k_stands:4,k_standH:3},
+  {name:'Kit 3',k_ad600bm:0,k_ad600p:0,k_ad600p2:0,k_ad400p:0,k_ad200p:0,k_umb:0,k_oct120:0,k_oct90:0,k_sb:0,k_strip:0,k_bd:0,k_grid:0,k_refl:0,k_stands:0,k_standH:3}];
+const KIT_STORE=STORE+'-kits';
+let kits=(()=>{try{const k=JSON.parse(localStorage.getItem(KIT_STORE)||'null');if(Array.isArray(k)&&k.length===3)return k}catch(e){}return JSON.parse(JSON.stringify(DEFAULT_KITS))})(),curKit=0;
+const getKit=()=>kits[curKit];
+function flashList(k){const a=[];FLASH.forEach(f=>{for(let i=0;i<(k['k_'+f.id]||0);i++)a.push(f)});return a.sort((x,y)=>y.gn-x.gn)}
+function makePool(k){return {umb:k.k_umb||0,oct120:k.k_oct120||0,oct90:k.k_oct90||0,sb:k.k_sb||0,strip:k.k_strip||0,bd:k.k_bd||0,grid:k.k_grid||0,refl:k.k_refl||0}}
+function takeMod(pool,prefs){for(const m of prefs){if(m==='bare')return 'bare';if(pool[m]>0){pool[m]--;return m}}return 'bare'}
+const needP=(N,iso,r,loss,gn,extra,frac,pat)=>{const ge=gn*Math.pow(2,-loss/2);return frac*Math.pow(2,extra)*(N*r)**2/(ge*ge*(iso/100)*Math.max(pat,.15))};
+function godox(p){if(p>1.02)return 'meer dan 1/1';const s=-Math.log2(Math.min(1,p));let c=Math.ceil(s-1e-9),plus=Math.round((c-s)*10)/10;if(plus>=1){c--;plus=0}if(c>8)return '1/256 (min.)';return (c<=0?'1/1':'1/'+(2**c))+(plus>0?' +'+plus.toFixed(1):'')}
+function assignPower(Ls,flashes,N){
+  Ls.map(L=>({L,d:needP(N,100,L.r,L.loss,87,L.extra||0,L.frac||1,L.pat||1)})).sort((a,b)=>b.d-a.d).forEach((o,i)=>o.L.flash=flashes[i]||FLASH[0]);
+  const calc=iso=>Ls.map(L=>needP(N,iso,L.r,L.loss,L.flash.gn,L.extra||0,L.frac||1,L.pat||1));
+  const ISOS=[100,200,400,800,1600,3200],mx=iso=>Ls.length?Math.max(...calc(iso)):0;
+  let iso=ISOS.find(i=>mx(i)<=.5),note='';
+  if(!iso){iso=ISOS.find(i=>mx(i)<=1);note='slow'}
+  if(!iso){iso=3200;note='weak'}
+  calc(iso).forEach((p,i)=>Ls[i].p=p);
+  return {iso,note};
+}
+function powerWarnings(res,Ls,w){
+  if(!Ls.length)return;
+  if(res.note==='slow')w.push(`Zelfs op ISO ${res.iso} moeten sommige flitsers boven 1/2. Ze laden dan trager op tussen de foto's van een reeks: zet ze iets dichterbij.`);
+  if(res.note==='weak')w.push('Je flitsers halen de gevraagde belichting niet, zelfs niet op ISO 3200. Zet de lichten dichterbij, kies een groter diafragma, of een lichtvormer met minder lichtverlies (paraplu in plaats van octabox).');
+  if(res.iso===100&&Ls.some(L=>L.p<1/256))w.push('Minstens één flitser moet onder 1/256: te veel licht. Zet dat licht verder weg of gebruik een dichtere lichtvormer.');
+}
+const escH=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function kitUsage(k,usedF,usedM,passive){
+  const cnt=a=>{const m={};a.forEach(x=>m[x]=(m[x]||0)+1);return m},fmt=m=>Object.entries(m).map(([t,n])=>`${n}× ${t}`).join(', ');
+  const fl=cnt(usedF.map(f=>f.t)),md=cnt(usedM.filter(m=>m!=='bare').map(m=>MOD[m].t));
+  const all=cnt(flashList(k).map(f=>f.t)),left={};for(const t in all){const n=all[t]-(fl[t]||0);if(n>0)left[t]=n}
+  const pool=makePool(k);usedM.forEach(m=>{if(m!=='bare'&&pool[m]>0)pool[m]--});if(passive)pool.refl--;
+  const leftM={};for(const m in pool)if(pool[m]>0)leftM[m==='refl'?'reflectiescherm':MOD[m].t]=pool[m];
+  const out=[`<b>Gebruikt</b>: ${fmt(fl)||'geen flitsers'}${Object.keys(md).length?`; ${fmt(md)}`:''}${passive?'; 1× reflectiescherm':''}.`];
+  const lo=[fmt(left),fmt(leftM)].filter(Boolean).join('; ');
+  out.push(`<b>Blijft in de tas</b>: ${lo||'niets, alles is in gebruik'}.`);
+  if(usedF.length>1)out.push('Geef op je Godox-trigger elke flitser de groep met dezelfde letter als in dit plan (A, B, C…). Dan stel je alles bij vanaf de camera.');
+  if(usedF.some(f=>f.ttl))out.push('Zet ook je TTL-flitsers op manueel. TTL meet elke foto opnieuw, waardoor gezichten in een reeks net anders belicht worden.');
+  if(new Set(usedF.map(f=>f.t)).size>1)out.push('Gemengde flitsers: de startstanden verschillen per model, maar geven dezelfde hoeveelheid licht. Stel dus niet alles gelijk.');
+  out.push('Startstanden zijn berekend, geen meting: reken op ±½ stop afwijking door lichtvormer en ruimte. Eén testfoto en je past alles samen aan.');
+  return out;
+}
+
+
+function distribute(T,R){
+  if(R<=1)return [T];
+  let best=null,bestC=1e9;const a=[];
+  const cost=v=>{let c=v[v.length-1];for(let i=1;i<v.length;i++){const d=v[i]-v[i-1];if(d%2===0)c+=.6;if(d>1)c+=.5*(d-1)}return c};
+  (function rec(r,rem,min){
+    if(r===R-1){if(rem<min)return;a[r]=rem;const c=cost(a);if(c<bestC){bestC=c;best=a.slice()}return}
+    for(let n=min;n*(R-r)<=rem;n++){a[r]=n;rec(r+1,rem-n,n)}
+  })(0,T,1);
+  return best||[T];
+}
+
+function buildRows(T,C,R,s,pw,coachPos){
+  const counts=distribute(T,R);R=counts.length;
+  let offs=[0],flip=1;const shifted=[false];
+  for(let r=1;r<R;r++){let o=offs[r-1],sh=false;if((counts[r]-counts[r-1])%2===0){o+=flip*pw/2;flip*=-1;sh=true}offs.push(o);shifted.push(sh)}
+  const mid=(Math.max(...offs)+Math.min(...offs))/2;offs=offs.map(o=>o-mid);
+  const people=[];
+  for(let r=0;r<R;r++){const n=counts[r];for(let i=0;i<n;i++)people.push({x:(i-(n-1)/2)*pw+offs[r],z:r*.6,h:poseH(ROWP[R][r],s),row:r,i,coach:false})}
+  let left=C;
+  const order=(r,how)=>{const row=people.filter(p=>p.row===r);if(how==='mid')return row.sort((a,b)=>Math.abs(a.x)-Math.abs(b.x));const out=[];let lo=0,hi=row.length-1;while(lo<=hi){out.push(row[lo++]);if(lo<=hi)out.push(row[hi--])}return out};
+  const rows=[...Array(R).keys()];if(coachPos==='back-ends')rows.reverse();
+  const how=coachPos==='front-mid'?'mid':'ends';
+  for(const r of rows){if(left<=0)break;for(const p of order(r,how)){if(left<=0)break;p.coach=true;left--}}
+  return {people,counts,shifted,R};
+}
+
+function buildV(P,C,s,lines){
+  const dx=.55*s,dz=.4*s+.05,people=[];
+  const apexCoach=C>0;
+  people.push({x:0,z:0,h:poseH('staand',s),coach:apexCoach,apex:true,arm:0,j:0,layer:0});
+  const rem=P-(apexCoach?0:1),left=Math.ceil(rem/2),right=rem-left;
+  const layers=left<=6?1:left<=12?2:3;
+  const split=n=>{const a=[];for(let L=0;L<layers;L++)a.push(Math.floor(n/layers)+(L<n%layers?1:0));return a};
+  const front={};
+  [[-1,left],[1,right]].forEach(([sg,n])=>{const per=split(n);front[sg]=per[0];per.forEach((k,L)=>{for(let j=1;j<=k;j++)people.push({x:sg*(j*dx+L*dx*.5),z:j*dz+L*.7,h:poseH(L>=2?'bank':'staand',s),coach:false,arm:sg,j,layer:L})})});
+  const extra=C-(apexCoach?1:0);
+  for(let k=0;k<extra;k++){const sg=k%2?1:-1;const j=front[sg]+1+Math.floor(k/2);people.push({x:sg*j*dx,z:j*dz,h:poseH('staand',s),coach:true,arm:sg,j,layer:0})}
+  lines.push(`<b>Punt</b>: ${apexCoach?'de coach':'de kapitein'}, het dichtst bij de camera.`);
+  const per=split(left);
+  lines.push(`<b>Elke arm</b>: ${left===right?left:left+' en '+right} spelers${layers>1?`, verdeeld over ${layers} lijnen (${per.join(' + ')} per arm)`:''}. Elke volgende speler staat ±${fCm(dx)} opzij en ±${fCm(dz)} verder naar achter.`);
+  if(layers>1)lines.push(`<b>Tweede lijn</b>: ±${fCm(.7)} achter de eerste en een halve plaats naar buiten, zodat elk hoofd in een opening valt.${layers>2?' De derde lijn staat op een bank of podium.':''} Zet de langste spelers achteraan.`);
+  if(extra>0)lines.push(`<b>Overige staf</b>: aan de buitenste uiteinden van de voorste lijn.`);
+  return {people,layers};
+}
+
+function computeTeam(){
+  const P=clampInt(num('t_players'),1,80),C=clampInt(num('t_coaches'),0,10);
+  const age=$('#t_age').value,s=AGE[age],layout=$('#t_layout').value,coachPos=$('#t_coachpos').value,loc=$('#t_loc').value;
+  const T=P+C,pw=.52*s,warnings=[],layoutLines=[];
+  let R=1,people,counts=[],shifted=[],vLayers=1;
+  if(layout==='v'){const b=buildV(P,C,s,layoutLines);people=b.people;vLayers=b.layers}
+  else{
+    R=layout==='line'?1:($('#t_rows').value==='auto'?(T<=7?1:T<=16?2:T<=27?3:4):+$('#t_rows').value);
+    R=Math.min(R,T);
+    const b=buildRows(T,C,R,s,pw,coachPos);people=b.people;counts=b.counts;shifted=b.shifted;R=b.R;
+  }
+  const isV=layout==='v';
+  const frontLabel=isV?'de punt':(R===1?'de rij':'de voorste rij');
+  const xs=people.map(p=>p.x),minX=Math.min(...xs)-pw/2,maxX=Math.max(...xs)+pw/2,W=maxX-minX;
+  const hs=people.map(p=>p.h),hMin=Math.min(...hs),hMax=Math.max(...hs),topH=hMax+.28*s;
+  const sensor=$('#t_sensor').value,sw=sensor==='ff'?36:23.5,sh=sensor==='ff'?24:15.6,coc=sensor==='ff'?.03:.02,crop=36/sw;
+  const frameW=Math.max(W*1.18,topH*1.15*sw/sh);
+  const f0=Math.max(8,num('t_f')),space=Math.max(1.5,len('t_space')),maxD=space-.6;
+  const dNeed=frameW*f0/sw;let f=f0,d=dNeed,limited=false;
+  if(dNeed>maxD){limited=true;f=Math.max(10,Math.floor(maxD*sw/frameW));d=frameW*f/sw}
+  let sag=0;
+  if(layout==='arc')people.forEach(p=>{const Ra=d+p.z,dz=Ra-Math.sqrt(Math.max(0,Ra*Ra-p.x*p.x));p.z-=dz;sag=Math.max(sag,dz)});
+  const zs=people.map(p=>p.z),zmin=Math.min(...zs),zmax=Math.max(...zs),zc=(zmin+zmax)/2;
+  const camH=(hMax-hMin<.1)?1.3*s:(hMin+hMax)/2+.1;
+  const tilt=Math.atan((camH-topH/2)/(d+zc))/RAD;
+
+  // depth of field
+  const sFoc=d+zmin+(zmax-zmin)/3,nearNeed=d+zmin-.3,farNeed=d+zmax+.3,fm=f/1000,c=coc/1000;
+  const dof=N=>{const H=fm*fm/(N*c)+fm;return {n:sFoc*(H-fm)/(H+sFoc-2*fm),fr:sFoc<H?sFoc*(H-fm)/(H-sFoc):Infinity}};
+  const LIST=[4,5.6,6.3,7.1,8,9,10,11,13,16];
+  let N=LIST.find(n=>{const r=dof(n);return r.n<=nearNeed&&r.fr>=farNeed}),dofWarn=false;
+  if(!N){N=16;dofWarn=true}N=Math.max(N,5.6);const dd=dof(N);
+
+  // lights
+  const kit=getKit(),flashes=flashList(kit),stands=kit.k_stands||0,standMax=Math.max(1,kit.k_standH||3),glasses=$('#t_glasses').checked;
+  const avail=Math.min(flashes.length,stands);
+  if(flashes.length>stands)warnings.push(`Je kit heeft ${flashes.length} flitsers maar ${stands} statieven: er kunnen er maar ${stands} tegelijk staan.`);
+  const modSel=$('#t_mod').value,KEYPREF=['umb','oct120','oct90','sb','bd','bare'];
+  const pickKeyMods=(n,pool)=>{if(modSel!=='auto')return Array.from({length:n},()=>takeMod(pool,[modSel,'bare']));const t=KEYPREF.find(m=>m==='bare'||pool[m]>=n);return Array.from({length:n},()=>takeMod(pool,[t,...KEYPREF]))};
+  const kReq=W<=8?2:W<=12?3:4;
+  let keys=Math.min(kReq,avail);
+  const rimWanted=$('#t_rim').checked&&loc!=='sun';
+  const rims=rimWanted&&avail-keys>=2?2:0;
+  const Hmid=hs.reduce((a,b)=>a+b,0)/hs.length;
+  const tiltL=(glasses?22:15)*RAD;
+  const cam={x:0,y:camH,z:-d};
+  const halfAt=z=>(z+d)*sw/(2*f);
+  const evalL=Ls=>{
+    const vals=people.map(p=>{let E=0;const nx=cam.x-p.x,nz=cam.z-p.z,nl=Math.hypot(nx,nz);
+      for(const L of Ls){const vx=p.x-L.x,vy=p.h-L.y,vz=p.z-L.z,r=Math.hypot(vx,vy,vz);
+        const ax=L.ax-L.x,ay=L.ay-L.y,az=L.az-L.z,al=Math.hypot(ax,ay,az);
+        const cT=(vx*ax+vy*ay+vz*az)/(r*al);if(cT<=0)continue;
+        const cI=Math.max(0,(-vx*nx-vz*nz)/(r*nl));
+        E+=L.pw*Math.pow(cT,L.k)*(.25+.75*cI)/(r*r)}
+      return E});
+    const mx=Math.max(...vals),mn=Math.min(...vals);
+    return {vals,spread:mn>0?Math.log2(mx/mn):9};
+  };
+  const lightAt=(al,Lr,aimX)=>{const a=al*RAD,x=Lr*Math.sin(a),z=zc-Lr*Math.cos(a),hz=Math.hypot(x-aimX,z-zc);
+    let y=Hmid+hz*Math.tan(tiltL),want=y;y=Math.min(standMax,Math.max(hMax+.35,y));return {x,y,z,ax:aimX,ay:Hmid,az:zc,alpha:al,want}};
+  const centerLight=()=>{const z=Math.max(-space+.3,-d-.7);const hz=zc-z;let y=Hmid+hz*Math.tan(tiltL),want=y;y=Math.min(standMax,Math.max(camH+.8,y));return {x:0,y,z,ax:0,ay:Hmid,az:zc,alpha:0,want}};
+  const valid=(L,strict)=>{if(strict&&L.z<-space+.3)return false;if(L.z>-d){if(Math.abs(L.x)<halfAt(L.z)+.4)return false}return true};
+  let best=null;
+  const search=(strict,keys)=>{
+    if(keys===0)return null;let best=null;const km=pickKeyMods(keys,makePool(kit));
+    const sets=keys===1?[[0]]:keys===2?[25,30,35,40,45].map(a=>[-a,a]):keys===3?[25,30,35,40,45].map(a=>[0,-a,a]):[[15,35],[20,40],[20,45],[25,45],[25,50],[30,50],[30,55]].map(([a,b])=>[-a,a,-b,b]);
+    const aims=[0,.1,.2,.3,.4];
+    for(let Lr=2;Lr<=26;Lr+=.5)for(const set of sets)for(const af of aims){
+      if(keys===1&&(Lr>2||af>0))continue;
+      const Ls=[];let ok=true;
+      for(const al of set){const L=al===0?centerLight():lightAt(al,Lr,-Math.sign(al)*af*W/2);if(!valid(L,strict)){ok=false;break}Ls.push(L)}
+      if(!ok)continue;
+      Ls.forEach((L,i)=>{L.modId=km[i];L.k=MOD[km[i]].k});
+      Ls.forEach(L=>{const g=Math.hypot(L.x,L.y-Hmid,L.z-zc);L.pw=g*g/(Lr*Lr)});
+      const tgt=glasses?16:11;let pen=0;for(const L of Ls){const t=Math.atan((L.y-L.ay)/Math.hypot(L.x-L.ax,L.z-L.az))/RAD;if(t<tgt)pen+=.02*(tgt-t)}
+      const ev=evalL(Ls),cost=ev.spread+.012*Lr+pen;
+      if(!best||cost<best.cost)best={cost,Ls,ev,Lr};
+    }
+    return best;
+  };
+  best=search(true,keys);
+  if(best&&best.ev.spread>.3&&avail-rims>keys&&keys<4){const alt=search(true,keys+1);if(alt&&alt.ev.spread<best.ev.spread-.12){best=alt;keys++}}
+  if(!best&&keys>0){best=search(false,keys);if(best)warnings.push(`Met ${fL(space)} vrije ruimte passen de lichten niet buiten beeld én binnen de ruimte. Het plan zet ze verder dan je muur: kies een korter brandpunt, een extra rij, of zet de lichten schuin naast de groep.`)}
+  const keyLights=best?best.Ls.slice().sort((a,b)=>a.x-b.x):[];
+  const ids='ABCDEFGH';keyLights.forEach((L,i)=>L.id=ids[i]);
+  const refPw=keyLights.filter(L=>L.alpha!==0).map(L=>L.pw);const ref=refPw.length?Math.min(...refPw):1;
+
+  const aimDesc=ax=>{
+    if(Math.abs(ax)<pw*.6)return 'het midden van de groep';
+    let cand=isV?people.filter(p=>p.layer===0&&!p.apex):people.filter(p=>p.row===Math.floor((R-1)/2));
+    if(!cand.length)cand=people;
+    let b=cand[0];for(const p of cand)if(Math.abs(p.x-ax)<Math.abs(b.x-ax))b=p;
+    if(isV)return `de ${b.j}e speler vanaf de punt, ${b.arm<0?'linker':'rechter'}arm`;
+    const srt=cand.slice().sort((a,c)=>a.x-c.x),i=srt.indexOf(b),fl=i+1,fr=srt.length-i;
+    const rn=R===1?'rij':ROWN[R][b.row].toLowerCase();
+    return fl<=fr?`de ${fl}e persoon van links in de ${rn}`:`de ${fr}e persoon van rechts in de ${rn}`;
+  };
+  const place=L=>{const lat=Math.abs(L.x),fw=-L.z;let a=lat<.1?'Op de camera-as':`${fL(lat)} ${L.x<0?'links':'rechts'} van de middenlijn`;a+=fw>=0?`, ${fL(fw)} vóór ${frontLabel}`:`, ${fL(-fw)} achter ${frontLabel}`;return a};
+  const lightRows=keyLights.map(L=>{const hz=Math.hypot(L.x-L.ax,L.z-L.az),t=Math.atan((L.y-L.ay)/hz)/RAD;
+    return {id:L.id,role:L.alpha===0?'Hoofdlicht, midden achter de camera':'Hoofdlicht',mod:'',place:place(L),sub:`${fL(Math.hypot(L.x,L.z-zc))} van het midden van de groep, ${deg(Math.abs(L.alpha))} naast de camera-as`,height:fL(L.y),tilt:`${deg(t)} omlaag`,aim:aimDesc(L.ax),power:L.alpha===0?(refPw.length?`${stops(Math.log2(L.pw/ref))} stop t.o.v. de zijlichten`:'startpunt'):(keyLights.length>1?'gelijk aan de andere zijlichten':'startpunt')}});
+  if(keyLights.some(L=>Math.atan((L.y-L.ay)/Math.hypot(L.x-L.ax,L.z-L.az))/RAD<(glasses?16:9)))warnings.push(`Voor de ideale hoek ${glasses?'(met brillen) ':''}moeten de lichten hoger dan ${fL(standMax)}. Gebruik hogere statieven of een boom, of zet de lichten iets dichter bij de groep.`);
+
+  // rims
+  const rimLights=[];
+  if(rims){
+    const zb=zmax+.9,hw=halfAt(zb)+.4,hidden=hw-maxX>2.2;
+    [-1,1].forEach(sg=>{const L=hidden?{x:sg*(maxX-pw*.3),z:zmax+.5,y:Math.max(1,hMax-.15)}:{x:sg*hw,z:zb,y:hMax+.4};
+      L.ax=0;L.ay=hMax;L.az=zmax;L.id=ids[keyLights.length+rimLights.length];rimLights.push(L);
+      lightRows.push({id:L.id,role:'Rimlicht '+(sg<0?'links':'rechts'),mod:'striplight of kale flits met grid',place:hidden?`Verstopt achter de buitenste persoon ${sg<0?'links':'rechts'} in de achterste lijn, ${fCm(.5)} erachter`:place(L),sub:hidden?'buiten beeld zetten lukt niet zonder te ver weg te staan':'net buiten beeld',height:fL(L.y),tilt:hidden?'recht vooruit':'licht omlaag',aim:'de schouders en haren van de achterste lijn, schuin naar het midden',power:'begin gelijk aan de hoofdlichten, bijstellen op zicht'})});
+  }
+
+  // gear & power
+  const pool=makePool(kit);
+  keyLights.forEach(L=>{if(L.modId!=='bare')pool[L.modId]--;const m=MOD[L.modId];L.spread=m.spread;L.size=m.size});
+  rimLights.forEach(L=>{L.modId=takeMod(pool,['strip','grid','bare']);const m=MOD[L.modId];L.spread=m.spread;L.size=m.size});
+  if(modSel!=='auto'&&modSel!=='bare'&&(kit['k_'+modSel]||0)<keyLights.length)warnings.push(`Je kit heeft niet genoeg ${MOD[modSel].t}: de lichten zonder krijgen een kale reflector.`);
+  keyLights.forEach(L=>{const cx=-L.x,cy=Hmid-L.y,cz=zc-L.z,r=Math.hypot(cx,cy,cz),ax=L.ax-L.x,ay=L.ay-L.y,az=L.az-L.z,al=Math.hypot(ax,ay,az),cs=(cx*ax+cy*ay+cz*az)/(r*al);Object.assign(L,{r,loss:MOD[L.modId].loss,extra:0,frac:Math.min(1,1/(.75*keyLights.length)),pat:Math.pow(Math.max(cs,.1),MOD[L.modId].k)})});
+  rimLights.forEach(L=>Object.assign(L,{r:Math.hypot(L.ax-L.x,L.ay-L.y,L.az-L.z),loss:MOD[L.modId].loss,extra:0,frac:1,pat:1}));
+  const allL=[...keyLights,...rimLights];
+  const pwr=assignPower(allL,flashes,N),iso=pwr.iso;
+  powerWarnings(pwr,allL,warnings);
+  lightRows.forEach(row=>{const L=allL.find(l=>l.id===row.id);if(!L)return;row.mod=`${L.flash.t} met ${MOD[L.modId].t}`;row.power=`<b>${godox(L.p)}</b><span class="sub">${rimLights.includes(L)?'startstand, bijstellen op zicht':'startstand'}</span>`});
+
+  // warnings
+  if(limited)warnings.push(`Voor ${f0} mm heb je ${fL(dNeed)} nodig, maar er is maar ${fL(space)} vrije ruimte. Zoom uit naar ±${f} mm.`);
+  if(f*crop<35)warnings.push(`${f} mm ${sensor==='apsc'?`(≈ ${Math.round(f*crop)} mm full frame) `:''}is breed: de buitenste mensen worden breder en groter getekend. Liever een extra rij of de opstelling in een boog.`);
+  if(avail<kReq)warnings.push(`De groep is ${fL(W)} breed. Met ${avail} flitser${avail===1?'':'s'} wordt gelijkmatig belichten moeilijk; ${kReq} is beter.`);
+  if($('#t_rim').checked&&loc==='sun')warnings.push('Buiten in de zon heb je geen rimlichten nodig: zet de zon in de rug van de groep, dan is zij je rimlicht.');
+  else if(rimWanted&&!rims)warnings.push(`Voor rimlichten heb je nog 2 flitsers extra nodig (je hebt er ${avail}, de hoofdlichten gebruiken er ${keys}).`);
+  if(best&&best.ev.spread>.34)warnings.push(`Tussen het lichtste en donkerste gezicht zit ${dec(best.ev.spread,1)} stop. ${isV?'Bij een V staat de punt dichter bij de lichten en wordt die feller: zet de punt een halve stap terug, of richt beide lichten iets meer naar de uiteinden van de armen.':'Meer flitsers, grotere lichtvormers of de opstelling in een boog helpen.'}`);
+  if(dofWarn)warnings.push('De groep is zo diep dat zelfs f/16 niet alles scherp krijgt. Maak de opstelling minder diep of ga verder weg staan met een langer brandpunt.');
+  if(!isV&&Math.max(...counts)>12)warnings.push(`Een rij van ${Math.max(...counts)} personen is erg breed. Overweeg een rij extra.`);
+  if(!flashes.length||!stands)warnings.push('Deze kit heeft geen flitsers of geen statieven. Vul je materiaal in bij Mijn kit, bovenaan.');
+  if(keys===0)warnings.push('Zonder flitsers: zet de groep in open schaduw of met de zon in de rug, en vul bij met een grote reflector naast de camera.');
+
+  // layout lines
+  if(!isV){
+    for(let r=R-1;r>=0;r--){const rp=people.filter(p=>p.row===r),nC=rp.filter(p=>p.coach).length;
+      let l=`<b>${ROWN[R][r]}</b>: ${counts[r]} ${counts[r]===1?'persoon':'personen'}, ${POSE[ROWP[R][r]].t}`;
+      if(nC)l+=`, met ${nC===1?'de coach':nC+' coaches/staf'} ${coachPos==='front-mid'?'in het midden':'op de uiteinden'}`;
+      if(r>0&&shifted[r])l+='. Schuif deze rij een halve plaats op, zodat elk hoofd tussen twee hoofden van de rij ervoor valt';
+      layoutLines.push(l+'.')}
+    layoutLines.push(`Schouder aan schouder, lichaam licht naar het midden gedraaid: ±${fCm(pw)} per persoon, ±${fCm(.6)} tussen de rijen. Breedte van de groep: ${fL(W)}.`);
+    if(layout==='arc')layoutLines.push(`<b>Boog</b>: de uiteinden van de breedste rij staan ±${fCm(sag)} dichter bij de camera dan het midden. Zo staat iedereen even ver van de lens.`);
+  }else layoutLines.push(`Breedte van de V: ${fL(W)}, diepte van punt tot achterste speler: ${fL(zmax-zmin)}.`);
+
+  // camera lines
+  const focusLabel=isV?'een gezicht op de 2e of 3e plaats van een arm':R===1?'de rij':R===2?'de voorste rij':'de tweede rij van voren';
+  const expo=loc==='in'?`ISO ${iso}, 1/200 s, ${fNum(N)}, witbalans 5600 K. Het zaallicht moet minstens 2 stops onder je flits vallen, anders krijg je gemengde kleuren.`
+    :loc==='sun'?`ISO ${iso}, 1/200–1/250 s (sync), ${fNum(N)}. Zon in de rug van de groep, flitsers als hoofdlicht. Te fel? ND-filter, of HSS (kost veel vermogen).`
+    :`ISO ${iso}, 1/200 s, ${fNum(N)}. Laat het omgevingslicht ±1 stop onder de flits: natuurlijk, maar met pit.`;
+  const camLines=[
+    `<b>Statief</b> op ${fL(d)} van ${frontLabel}, lens op ${fL(camH)} hoogte, ${Math.abs(tilt)<1?'recht vooruit':`${deg(Math.abs(tilt))} ${tilt>0?'naar beneden':'naar boven'} gekanteld`}.`,
+    `<b>Kader</b> liggend, ${f} mm${sensor==='apsc'?` (≈ ${Math.round(f*crop)} mm full frame)`:''}. Beeldbreedte ter hoogte van de groep: ±${fL(frameW)}.`,
+    `<b>Scherpstellen</b> op ${focusLabel}. Bij ${fNum(N)} is alles scherp van ${fL(dd.n)} tot ${dd.fr===Infinity?'oneindig':fL(dd.fr)} vanaf de camera; de groep staat tussen ${fL(d+zmin)} en ${fL(d+zmax)}.`,
+    `<b>Belichting</b>: ${expo}`
+  ];
+
+  // evenness groups
+  let even=null;
+  if(best){
+    const vals=best.ev.vals,mean=vals.reduce((a,b)=>a+b,0)/vals.length;
+    people.forEach((p,i)=>p.ev=Math.log2(vals[i]/mean));
+    const groups=[];
+    if(isV){for(let L=vLayers-1;L>=0;L--){const g=people.filter(p=>p.layer===L).sort((a,b)=>a.x-b.x);if(g.length)groups.push({label:L===0?'Voorste lijn':L===1?'Tweede lijn':'Derde lijn',cells:g})}}
+    else for(let r=R-1;r>=0;r--)groups.push({label:ROWN[R][r],cells:people.filter(p=>p.row===r).sort((a,b)=>a.x-b.x)});
+    even={groups,spread:best.ev.spread};
+  }
+
+  // checklist
+  const checks=[
+    'Statief waterpas en de sensor zo recht mogelijk; kantel hooguit een paar graden, anders lopen de randen scheef.',
+    'Kijk door de zoeker: elk hoofd valt in een opening tussen twee hoofden van de rij ervoor. Wie de lens niet ziet, staat half verstopt.',
+    'Schouders 30–45° naar het midden gedraaid, gewicht op het achterste been. Kies één armhouding voor iedereen.',
+    'Tenues gelijk, petten recht (of iedereen zonder). Logo’s niet achter armen of ballen.',
+    'Bal, beker of clubbord vooraan in het midden, op de grond of in handen van de voorste rij.',
+    keys>1?'Kruis je lichten: het linkerlicht belicht vooral de rechterkant van de groep en omgekeerd. Zo blijven de randen even helder als het midden.':'Zet je licht hoog boven de camera en richt op het midden van de groep.',
+    'Testfoto, en zoom in op de buitenste gezichten en de achterste rij: daar zie je als eerste lichtval en schaduwen.',
+    'Schiet reeksen van 5 tot 8 beelden. Zo heb je voor elk gezicht een versie zonder dichte ogen, en kun je desnoods een hoofd wisselen.',
+    'Laat de flitsers opladen tussen de beelden. Missen er flitsen in een reeks? Zet ze lager en de ISO een stap hoger.'
+  ];
+  if(glasses)checks.push('Brillen: lichten hoog en ver genoeg opzij. Laat brildragers de kin iets zakken; nog reflectie? Kantel de bril licht naar beneden op de neus.');
+  if(age==='kids')checks.push('Kinderen: kleinsten vooraan, grootsten achteraan in het midden. Leg alles uit vóór je plaatst en werk binnen 2–3 minuten.');
+  if(age==='jeugd')checks.push('Jeugd: sorteer op lengte vóór je plaatst, niet erna. Grootsten achteraan in het midden.');
+  if(isV)checks.push('V-vorm: de punt staat het dichtst bij de camera en licht snel te fel op. Zet de punt een halve stap terug of zet het middenlicht lager.');
+  if(layout==='arc')checks.push('Boog: markeer de plaatsen van de uiteinden met tape, dan staat de boog in één keer goed.');
+  if(loc==='sun')checks.push('Zon in de rug: gebruik een zonnekap of laat iemand de lens afschermen tegen flare. Niemand mag in de zon kijken.');
+  if(rims)checks.push('Rimlichten: controleer of er geen licht rechtstreeks in de lens valt (waas, flare). Een vlag of grid lost het op.');
+
+  const legend=`<span><i style="background:var(--player)"></i>speler</span><span><i style="background:var(--gold);box-shadow:inset 0 0 0 1.5px var(--ink)"></i>coach of staf</span><span><i style="background:var(--gold);border-radius:2px;height:5px;width:16px"></i>lichtvormer, met lichtbundel</span>`;
+  return {
+    kind:'team',
+    title:`Teamfoto: ${P} spelers + ${C} staf, ${layout==='v'?'V-vorm':layout==='line'?'één rij':(R+' rij'+(R>1?'en':''))+(layout==='arc'?' in een boog':'')}`,
+    setbar:[{v:fL(d),l:'camera tot '+frontLabel},{v:fL(camH),l:'lenshoogte'},{v:f+' mm',l:limited?'brandpunt, aangepast':'brandpunt'},{v:fNum(N),l:'diafragma, ISO '+iso},{v:String(keys+rims),l:rims?`${keys} hoofd + ${rims} rim`:'flitsers'}],
+    layoutTitle:'Opstelling',kitName:kit.name,kitLines:kitUsage(kit,allL.map(L=>L.flash),allL.map(L=>L.modId),false),layoutLines,camLines,lightRows,warnings,checks,even,legend,
+    top:{people,lights:[...keyLights,...rimLights],cam,f,hs:sw,dLabel:d,spread:20,modSize:.9,width:{x1:minX,x2:maxX,z:zmax+.55,W},zFront:zmin},
+    side:{figs:people.map(p=>({z:p.z,h:p.h,coach:p.coach})),lights:[...keyLights,...rimLights],cam,camAim:{z:zc,y:topH/2}}
+  };
+}
+
+/* ---------- portrait model ---------- */
+const FRM={full:{v:1.14,c:.45,min:2.4,ap:8,t:'volledig lichaam',aim:.72,kh:.25,rd:2.2,rh:.55},tq:{v:.74,c:.6,min:1.8,ap:7.1,t:'driekwart',aim:.8,kh:.35,rd:1.9,rh:.62},half:{v:.58,c:.78,min:1.3,ap:5.6,t:'halflang',aim:.9,kh:.45,rd:1.6,rh:.72},head:{v:.36,c:.93,min:.95,ap:4,t:'hoofd en schouders',aim:.93,kh:.45,rd:1.4,rh:.83}};
+const STY={sport:{t:'Sport dramatisch',ka:40},clean:{t:'Clean',ka:30},clam:{t:'Clamshell',ka:0},rembrandt:{t:'Rembrandt',ka:45},split:{t:'Split',ka:85}};
+const BGS={white:{t:'wit',d:2},gray:{t:'grijs',d:1.6},dark:{t:'zwart of donker',d:3},smoke:{t:'rook',d:2.5}};
+
+function computePortrait(){
+  const H=Math.max(.8,len('p_h')),sty=$('#p_style').value,frame=$('#p_frame').value,fr=FRM[frame],bg=$('#p_bg').value;
+  const sensor=$('#p_sensor').value,sl=sensor==='ff'?36:23.5,ss=sensor==='ff'?24:15.6,crop=36/sl;
+  const eye=.93*H,warnings=[];
+  const kit=getKit(),flashes=flashList(kit),stands=kit.k_stands||0,standMax=Math.max(1,kit.k_standH||3),avail=Math.min(flashes.length,stands);
+  if(flashes.length>stands)warnings.push(`Je kit heeft ${flashes.length} flitsers maar ${stands} statieven: er kunnen er maar ${stands} tegelijk staan.`);
+  const pool=makePool(kit),modSel=$('#p_mod').value;
+  const KEYP={sport:['bd','oct90','sb','oct120','umb','bare'],clean:['oct120','oct90','umb','sb','bd','bare'],clam:['bd','oct90','sb','oct120','bare'],rembrandt:['oct90','bd','sb','oct120','umb','bare'],split:['strip','sb','oct90','bd','bare']};
+  const keyMod=modSel==='auto'?takeMod(pool,KEYP[sty]):takeMod(pool,[modSel,'bare']);
+  if(modSel!=='auto'&&keyMod!==modSel)warnings.push(`${MOD[modSel].t} zit niet in je kit: het hoofdlicht krijgt een kale reflector.`);
+  const mod=MOD[keyMod];
+  let camH=fr.c*H;if(sty==='sport'&&frame!=='head')camH-=.08*H;camH=Math.max(.45,camH);
+  const vert=fr.v*H,f0=Math.max(10,num('p_f'));let f=f0;const dNeed=vert*f/sl;let d=dNeed,limited=false;
+  const bgD=BGS[bg].d,room=Math.max(2,len('p_space')),maxD=room-bgD-.6;
+  if(maxD<1)warnings.push(`De ruimte is te kort: met ${fL(bgD)} tot de achtergrond blijft er maar ${fL(Math.max(0,maxD))} over voor camera en fotograaf.`);
+  if(dNeed>maxD&&maxD>=1){limited=true;f=Math.max(14,Math.floor(maxD*sl/vert));d=vert*f/sl;warnings.push(`Voor ${f0} mm heb je ${fL(dNeed)} tot het onderwerp nodig, maar er is ±${fL(maxD)}. Zoom uit naar ±${f} mm.`)}
+  if(f*crop<50&&frame!=='full')warnings.push(`${f} mm is kort voor een portret van dichtbij: neus en handen worden groter. Liever 70 mm of meer.`);
+  const aimY=fr.aim*H,side=-1; // key camera-left
+  const polar=(al,r,y,aim)=>{const a=al*RAD;return Object.assign({x:r*Math.sin(a),z:-r*Math.cos(a),y},aim)};
+  const kd=sty==='clam'?Math.max(mod.size*.9+.3,fr.min*.8):Math.max(mod.size*1.1+.35,fr.min);
+  let keyY=sty==='clam'?eye+.6:sty==='split'?eye+.15:eye+fr.kh;const keyWant=keyY;keyY=Math.min(standMax,keyY);
+  const cand=[];
+  const key=polar(side*STY[sty].ka,kd,keyY,{ax:0,ay:aimY,az:0});
+  Object.assign(key,{role:'Hoofdlicht',mod:mod.t,power:'startstand',aimT:frame==='full'||frame==='tq'?'de borst; veer het licht zodat de rand van de lichtvormer het gezicht raakt':'net voorbij de neus (veren), niet recht op het gezicht',spread:mod.spread,size:mod.size});
+  cand.push(key);
+  if(sty==='sport'){[1,-1].forEach(sg=>{const L=polar(sg*145,fr.rd,fr.rh*H,{ax:0,ay:fr.rh*H,az:0});Object.assign(L,{role:'Rimlicht '+(sg<0?'links':'rechts'),mod:'striplight 30×120 cm met grid',power:'+0,7 stop t.o.v. hoofdlicht',aimT:'de rand van schouder, arm en kaaklijn aan die kant',spread:15,size:.35});cand.push(L)})}
+  if(sty==='rembrandt'||sty==='split'){const L=polar(-side*150,fr.rd,fr.rh*H+.1,{ax:0,ay:eye,az:0});Object.assign(L,{role:'Kicker',mod:'striplight of kleine softbox met grid',power:'+0,3 stop t.o.v. hoofdlicht',aimT:'achterkant van hoofd en schouder aan de schaduwkant',spread:15,size:.35});cand.push(L)}
+  if(sty==='clean'){const L=polar(-side*35,kd*1.25,eye,{ax:0,ay:eye,az:0});Object.assign(L,{role:'Invullicht',mod:'grote paraplu of octabox',power:'−1,5 stop t.o.v. hoofdlicht',aimT:'het gezicht',spread:30,size:1.2,alt:'een reflector op ±1 m aan de schaduwkant'});cand.push(L)}
+  if(sty==='clam'){const L={x:0,z:-.8,y:Math.max(.5,eye-.75),ax:0,ay:eye,az:0,role:'Invullicht onder',mod:'stripbox liggend, of reflector',power:'−1,5 stop t.o.v. hoofdlicht',aimT:'schuin omhoog naar kin en ogen',spread:25,size:.9,alt:'een witte reflector op borsthoogte'};cand.push(L)}
+  if(bg==='white'){[-1,1].forEach(sg=>{const zb=bgD-1,hw=(zb+d)*ss/(2*f),x=sg*Math.max(1.1,hw+.35);cand.push({x,z:zb,y:1.3,ax:-sg*.6,ay:1.3,az:bgD,role:'Achtergrond '+(sg<0?'links':'rechts'),mod:'softbox of paraplu, naar de achtergrond gedraaid',power:'+1 tot +1,3 stop t.o.v. hoofdlicht, gemeten op de achtergrond',aimT:'de andere helft van de achtergrond (kruisen)',spread:30,size:.9,bgL:true})})}
+  if(bg==='gray')cand.push({x:0,z:.7,y:.5,ax:0,ay:1.1,az:bgD,role:'Achtergrond',mod:'kale flits met grid, laag achter het onderwerp',power:'−0,5 stop t.o.v. hoofdlicht',aimT:'de achtergrond achter het hoofd, voor een zachte halo',spread:18,size:.25,bgL:true});
+  if(bg==='smoke')cand.push({x:0,z:1.1,y:Math.min(1.2,.65*H),ax:0,ay:camH,az:-d,role:'Tegenlicht door de rook',mod:'kale flits of kleine softbox met grid',power:'+1 stop t.o.v. hoofdlicht',aimT:'richting camera, volledig verstopt achter het lichaam',spread:20,size:.3,bgL:true});
+  let used=cand.slice(0,avail),missing=cand.slice(avail);
+  if(bg==='white'&&used.filter(L=>L.bgL).length===1){used=used.filter(L=>!L.bgL);used.push({x:0,z:.8,y:.6,ax:0,ay:1.2,az:bgD,role:'Achtergrond',mod:'kale flits of kleine paraplu, laag achter het onderwerp',power:'+1 tot +1,3 stop t.o.v. hoofdlicht, gemeten op de achtergrond',aimT:'het midden van de achtergrond; verstopt achter het onderwerp',spread:35,size:.3,bgL:true});missing=missing.filter(L=>!L.bgL)}
+  const PRM=L=>L.role==='Hoofdlicht'?{extra:0,frac:1}:L.role.startsWith('Rim')?{prefs:['strip','grid','sb','oct90','bare'],extra:.7,frac:1}:L.role==='Kicker'?{prefs:['strip','grid','bare'],extra:.3,frac:1}:L.role==='Invullicht'?{prefs:['umb','oct120','oct90','sb','bare'],extra:-1.5,frac:1,fill:true}:L.role==='Invullicht onder'?{prefs:['strip','sb','oct90','bare'],extra:-1.5,frac:1,fill:true}:L.role.startsWith('Achtergrond ')?{prefs:['umb','sb','oct90','oct120','bare'],extra:1.2,frac:.6}:L.role==='Achtergrond'?{prefs:bg==='gray'?['grid','bare']:['umb','bare'],extra:bg==='gray'?-.5:1.2,frac:1}:{prefs:['grid','bare'],extra:0,frac:1};
+  let passive=false,bgPair=null;
+  used=used.map(L=>{Object.assign(L,PRM(L));if(L.role==='Hoofdlicht'){L.modId=keyMod}else if(L.role.startsWith('Achtergrond ')){if(!bgPair){const both=used.filter(l=>l.role.startsWith('Achtergrond ')).length;bgPair=['umb','sb','oct90','oct120'].find(m=>pool[m]>=both)||'bare'}L.modId=takeMod(pool,[bgPair,'bare'])}else{L.modId=takeMod(pool,L.prefs);if(L.fill&&L.modId==='bare'&&pool.refl>0){pool.refl--;passive=true;return Object.assign(L,{passive:true,x:L.x*.45,z:L.z*.45,y:Math.min(L.y,eye),mod:'reflectiescherm (wit of zilver)',spread:30,size:1})}}const m=MOD[L.modId];L.spread=m.spread;L.size=m.size;return L});
+  const fillMiss=missing.find(L=>PRM(L).fill);
+  if(fillMiss&&!passive&&pool.refl>0){pool.refl--;passive=true;missing=missing.filter(L=>L!==fillMiss);used.push(Object.assign(fillMiss,PRM(fillMiss),{passive:true,x:fillMiss.x*.45,z:fillMiss.z*.45,y:Math.min(fillMiss.y,eye),mod:'reflectiescherm (wit of zilver)',spread:30,size:1}))}
+  const ids='ABCDEFGH';let li=0;used.forEach(L=>L.id=L.passive?'R':ids[li++]);
+  const act=used.filter(L=>!L.passive);
+  act.forEach(L=>{L.r=L.role.startsWith('Tegenlicht')?1.5:Math.hypot(L.ax-L.x,L.ay-L.y,L.az-L.z);L.loss=MOD[L.modId].loss;L.pat=1});
+  const pwr=assignPower(act,flashes,fr.ap),iso=pwr.iso;powerWarnings(pwr,act,warnings);
+  if(!flashes.length||!stands)warnings.push('Deze kit heeft geen flitsers of geen statieven. Vul je materiaal in bij Mijn kit, bovenaan.');
+  else if(missing.length){
+    const alts=missing.map(L=>L.alt?`${L.role.toLowerCase()}: gebruik ${L.alt}`:L.role.startsWith('Rim')?`${L.role.toLowerCase()}: laat dit weg, of gebruik een witte reflector achter het onderwerp`:L.bgL?`${L.role.toLowerCase()}: ${bg==='white'?'zet het onderwerp dichter bij de achtergrond en laat het hoofdlicht die mee raken, of kies grijs':'kies een donkere achtergrond, of laat de rimlichten de rook raken'}`:`${L.role.toLowerCase()}: laat weg`);
+    warnings.push(`Te weinig flitsers voor alles. Alternatief voor ${alts.join('; ')}.`);
+  }
+  if(keyWant>standMax+.1)warnings.push(`Het hoofdlicht moet idealiter op ${fL(keyWant)}; je statief haalt ${fL(standMax)}.`);
+  const bgWidth=(d+bgD)*ss/f;
+  if(bgWidth>2.6)warnings.push(`Achter het onderwerp is het beeld ${fL(bgWidth)} breed; een achtergrondrol van 2,7 m wordt dan te smal. Ga dichter bij de achtergrond, of neem een langer brandpunt en ga verder weg.`);
+
+  const lightRows=used.map(L=>{
+    const r=Math.hypot(L.x,L.z),ang=Math.atan2(Math.abs(L.x),-L.z)/RAD;
+    let place;
+    if(L.bgL&&Math.abs(L.x)>.1)place=`${fL(Math.abs(L.x))} ${L.x<0?'links':'rechts'} van het midden, ${fL(bgD-L.z)} vóór de achtergrond`;
+    else if(Math.abs(L.x)<.1)place=L.z>0?`Recht achter het onderwerp, ${fL(L.z)} erachter`:`Recht vóór het onderwerp, ${fL(-L.z)} ervoor${L.y<eye?', onder het hoofdlicht':', boven de camera'}`;
+    else place=`${fL(r)} van het onderwerp, ${deg(ang)} ${L.x<0?'links':'rechts'} van de camera-as${ang>90?' (schuin achter)':''}`;
+    const hz=Math.hypot(L.x-L.ax,L.z-L.az),t=Math.atan((L.y-L.ay)/hz)/RAD;
+    return {id:L.id,role:L.role,mod:L.passive?L.mod:`${L.flash.t} met ${MOD[L.modId].t}`,place,sub:'',height:fL(L.y),tilt:Math.abs(t)<3?'recht':`${deg(Math.abs(t))} ${t>0?'omlaag':'omhoog'}`,aim:L.aimT,power:L.passive?'<b>geen flits</b><span class="sub">kaatst het hoofdlicht terug</span>':`<b>${godox(L.p)}</b><span class="sub">${L.power}</span>`};
+  });
+
+  const layoutLines=[
+    `<b>Onderwerp</b> op ${fL(bgD)} van de achtergrond (${BGS[bg].t}).`,
+    bg==='white'?'Dichter bij de achtergrond geeft lichtspill rond de randen en schaduwen op het papier.':bg==='dark'?'Hoe verder van de achtergrond, hoe zwarter die blijft. Gebruik grids zodat er niets op de achtergrond lekt.':bg==='smoke'?'Rook tussen onderwerp en achtergrond of rond de voeten. Tegenlicht maakt de rook zichtbaar, van voren belicht zie je haar amper.':'Een laag achtergrondlicht achter het onderwerp geeft een zachte halo en scheidt het hoofd van de achtergrond.',
+    sty==='sport'?'<b>Pose</b>: lichaam 30–45° weggedraaid van het hoofdlicht, kin licht omlaag, blik in de lens. Bal of materiaal in de hand geeft de handen iets te doen.':sty==='clam'?'<b>Pose</b>: gezicht recht naar de camera, kin iets naar voren. Het licht komt recht van boven de camera.':`<b>Pose</b>: gezicht een kwartslag naar het hoofdlicht gedraaid${sty==='rembrandt'?', tot er een driehoekje licht op de wang aan de schaduwkant verschijnt':''}.`
+  ];
+  const ap=fr.ap;
+  const camLines=[
+    `<b>Statief</b> op ${fL(d)} van het onderwerp, lens op ${fL(camH)} hoogte${sty==='sport'&&frame!=='head'?', iets laag voor een krachtige, heldhaftige hoek':''}.`,
+    `<b>Kader</b> staand, ${fr.t}, ${f} mm${sensor==='apsc'?` (≈ ${Math.round(f*crop)} mm full frame)`:''}. Beeldhoogte op het onderwerp: ±${fL(vert)}.`,
+    `<b>Scherpstellen</b> op het oog dat het dichtst bij de camera staat (oog-AF).`,
+    `<b>Belichting</b>: ISO ${iso}, 1/200 s, ${fNum(ap)}, witbalans 5600 K. Het zaallicht moet 2 à 3 stops onder de flits vallen, dan telt alleen jouw licht.`
+  ];
+  const checks=[
+    'Maak eerst een testfoto met alleen het hoofdlicht, dan één met alleen de andere lichten. Zo zie je wat elk licht doet.',
+    'Veer het hoofdlicht: richt de rand van de lichtvormer op het gezicht, niet het midden. Zachter licht, minder glans.',
+    'Catchlights: zie je het licht in beide ogen? Zo niet, draai het hoofdlicht iets meer naar de camera of laat het onderwerp de kin draaien.',
+    'Glimmende huid? Iets poeder of een doekje; glans wordt harder met kleinere lichtvormers.',
+    'Controleer het histogram en de highlights op huid en shirt, niet alleen het schermpje.'
+  ];
+  if(sty==='sport'||sty==='rembrandt'||sty==='split')checks.splice(2,0,'Rim- en kickerlichten: valt er licht rechtstreeks in de lens (waas, minder contrast)? Plaats een vlag of grid, of zet het licht iets verder naar achter.');
+  if(bg==='smoke')checks.push('Rook: weinig tegelijk, laat het even hangen en schiet in de rustmomenten. Check vooraf de rookmelders van de zaal.');
+  if(sty==='sport')checks.push('Water of spetters: korte flitsduur bevriest druppels beter, dus flitsers lager zetten en ISO omhoog. Bescherm lichten en camera.');
+  if(bg==='white')checks.push('Witte achtergrond: net uitgebrand is genoeg. Te fel en het licht kruipt rond de randen van je onderwerp.');
+  const top={people:[{x:0,z:0,h:eye,subject:true}],lights:used,cam:{x:0,y:camH,z:-d},f,hs:ss,dLabel:d,spread:mod.spread,modSize:mod.size,bg:{x1:-1.35,x2:1.35,z:bgD},zFront:0};
+  return {
+    kind:'portrait',
+    title:`Portret: ${STY[sty].t.toLowerCase()}, ${fr.t}, achtergrond ${BGS[bg].t}`,
+    setbar:[{v:fL(d),l:'camera tot onderwerp'},{v:fL(camH),l:'lenshoogte'},{v:f+' mm',l:limited?'brandpunt, aangepast':'brandpunt'},{v:fNum(ap),l:'diafragma, ISO '+iso},{v:String(act.length),l:'flitsers'}],
+    layoutTitle:'Onderwerp',kitName:kit.name,kitLines:kitUsage(kit,act.map(L=>L.flash),act.map(L=>L.modId),passive),layoutLines,camLines,lightRows,warnings,checks,even:null,
+    legend:`<span><i style="background:var(--player)"></i>onderwerp</span><span><i style="background:var(--gold);border-radius:2px;height:5px;width:16px"></i>lichtvormer, met lichtbundel</span><span><i style="background:var(--muted);border-radius:2px;height:5px;width:16px"></i>achtergrond</span>`,
+    top,
+    side:{figs:[{z:0,h:eye,full:H}],lights:used,cam:{x:0,y:camH,z:-d},camAim:{z:0,y:aimY},bgZ:bgD}
+  };
+}
+
+/* ---------- drawing ---------- */
+function drawTop(o){
+  const pts=[[o.cam.x,o.cam.z]];o.people.forEach(p=>pts.push([p.x,p.z]));o.lights.forEach(L=>pts.push([L.x,L.z]));
+  if(o.bg)pts.push([o.bg.x1,o.bg.z],[o.bg.x2,o.bg.z]);
+  const x0=Math.min(...pts.map(p=>p[0]))-1.1,x1=Math.max(...pts.map(p=>p[0]))+1.1,z0=Math.min(...pts.map(p=>p[1]))-1.1,z1=Math.max(...pts.map(p=>p[1]))+1.2;
+  const VW=800,MAXH=820;let sc=VW/(x1-x0);if((z1-z0)*sc>MAXH)sc=MAXH/(z1-z0);
+  const VH=Math.round((z1-z0)*sc),ox=(VW-(x1-x0)*sc)/2;
+  const X=x=>(ox+(x-x0)*sc).toFixed(1),Y=z=>((z1-z)*sc).toFixed(1);
+  let g='';
+  for(let x=Math.ceil(x0);x<=x1;x++)g+=`<line class="g-grid" x1="${X(x)}" y1="0" x2="${X(x)}" y2="${VH}"/>`;
+  for(let z=Math.ceil(z0);z<=z1;z++)g+=`<line class="g-grid" x1="${ox.toFixed(1)}" y1="${Y(z)}" x2="${(ox+(x1-x0)*sc).toFixed(1)}" y2="${Y(z)}"/>`;
+  // fov
+  const zf=z1-.15,hw=(zf-o.cam.z)*o.hs/(2*o.f);
+  g+=`<path class="g-fov" d="M${X(o.cam.x-hw)} ${Y(zf)} L${X(o.cam.x)} ${Y(o.cam.z)} L${X(o.cam.x+hw)} ${Y(zf)}"/>`;
+  // beams
+  for(const L of o.lights){const dx=L.ax-L.x,dz=L.az-L.z,dist=Math.hypot(dx,dz)||1,ux=dx/dist,uz=dz/dist,px=-uz,pz=ux;
+    const sp=(L.spread||o.spread)*RAD,len=Math.min(dist*1.1,dist+1.5),half=len*Math.tan(sp),tx=L.x+ux*len,tz=L.z+uz*len;
+    g+=`<polygon class="g-beam" points="${X(L.x)},${Y(L.z)} ${X(tx+px*half)},${Y(tz+pz*half)} ${X(tx-px*half)},${Y(tz-pz*half)}"/>`}
+  // background
+  if(o.bg)g+=`<line class="g-bgl" x1="${X(o.bg.x1)}" y1="${Y(o.bg.z)}" x2="${X(o.bg.x2)}" y2="${Y(o.bg.z)}"/><text class="g-sm" x="${X(o.bg.x2)}" y="${(+Y(o.bg.z)-10)}" text-anchor="end">achtergrond</text>`;
+  // distance dimension
+  g+=`<line class="g-dim" x1="${X(o.cam.x)}" y1="${(+Y(o.cam.z)-16)}" x2="${X(o.cam.x)}" y2="${(+Y(o.zFront)+14)}"/>`;
+  g+=`<text class="g-sm" x="${(+X(o.cam.x)+8)}" y="${((+Y(o.cam.z)+ +Y(o.zFront))/2).toFixed(1)}">${fL(o.dLabel)}</text>`;
+  if(o.width){const y=+Y(o.width.z);g+=`<line class="g-dimw" x1="${X(o.width.x1)}" y1="${y}" x2="${X(o.width.x2)}" y2="${y}"/><line class="g-dimw" x1="${X(o.width.x1)}" y1="${y-5}" x2="${X(o.width.x1)}" y2="${y+5}"/><line class="g-dimw" x1="${X(o.width.x2)}" y1="${y-5}" x2="${X(o.width.x2)}" y2="${y+5}"/><text class="g-sm" x="${X(0)}" y="${y-7}" text-anchor="middle">${fL(o.width.W)} breed</text>`}
+  // people
+  const pr=Math.max(5,.2*sc);
+  for(const p of o.people){
+    if(p.subject){g+=`<ellipse class="g-pl" cx="${X(p.x)}" cy="${Y(p.z)}" rx="${Math.max(12,.25*sc).toFixed(1)}" ry="${Math.max(7,.14*sc).toFixed(1)}"/>`;continue}
+    g+=`<circle class="${p.coach?'g-co':'g-pl'}" cx="${X(p.x)}" cy="${Y(p.z)}" r="${pr.toFixed(1)}"/>`;
+  }
+  // lights
+  for(const L of o.lights){const dx=L.ax-L.x,dz=L.az-L.z,dist=Math.hypot(dx,dz)||1,ux=dx/dist,uz=dz/dist,px=-uz,pz=ux;
+    const half=Math.max(9,(L.size||o.modSize)*sc/2)/sc;const cx=+X(L.x),cy=+Y(L.z);
+    const bx=cx-ux*8,by=cy+uz*8;
+    g+=`<circle class="g-lamp" cx="${bx.toFixed(1)}" cy="${by.toFixed(1)}" r="5"/>`;
+    g+=`<line class="g-mod" x1="${X(L.x+px*half)}" y1="${Y(L.z+pz*half)}" x2="${X(L.x-px*half)}" y2="${Y(L.z-pz*half)}"/>`;
+    g+=`<text class="g-lbl" x="${(cx-ux*26).toFixed(1)}" y="${(cy+uz*26+6).toFixed(1)}" text-anchor="middle">${L.id}</text>`}
+  // camera
+  const cx=+X(o.cam.x),cy=+Y(o.cam.z);
+  g+=`<g transform="translate(${cx},${cy})"><rect class="g-cam" x="-15" y="-6" width="30" height="18" rx="3"/><rect class="g-cam" x="-8" y="-15" width="16" height="10" rx="2"/></g><text class="g-sm" x="${cx}" y="${cy+30}" text-anchor="middle">camera</text>`;
+  const svg=$('#svgTop');svg.setAttribute('viewBox',`0 0 ${VW} ${VH+(cy+36>VH?cy+36-VH:0)}`);svg.innerHTML=g;
+}
+
+function drawSide(o){
+  const zs=[o.cam.z,...o.lights.map(L=>L.z),...o.figs.map(f=>f.z)];if(o.bgZ!=null)zs.push(o.bgZ);
+  const ys=[o.cam.y,...o.lights.map(L=>L.y),...o.figs.map(f=>(f.full||f.h+.15))];if(o.bgZ!=null)ys.push(2.4);
+  const z0=Math.min(...zs)-.9,z1=Math.max(...zs)+.9,y1=Math.max(...ys)+.45;
+  const VW=800,MAXH=330,PADB=24;let sc=VW/(z1-z0);if(y1*sc+PADB>MAXH)sc=(MAXH-PADB)/y1;
+  const VH=Math.round(y1*sc+PADB),ox=(VW-(z1-z0)*sc)/2;
+  const X=z=>(ox+(z-z0)*sc).toFixed(1),Y=y=>(VH-PADB-y*sc).toFixed(1);
+  let g='';
+  for(let y=1;y<y1;y++)g+=`<line class="g-grid" x1="${ox.toFixed(1)}" y1="${Y(y)}" x2="${(ox+(z1-z0)*sc).toFixed(1)}" y2="${Y(y)}"/><text class="g-sm" x="${(ox+4).toFixed(1)}" y="${(+Y(y)-4)}">${fL(y,0)}</text>`;
+  g+=`<line class="g-ground" x1="${ox.toFixed(1)}" y1="${Y(0)}" x2="${(ox+(z1-z0)*sc).toFixed(1)}" y2="${Y(0)}"/>`;
+  if(o.bgZ!=null)g+=`<line class="g-bgl" x1="${X(o.bgZ)}" y1="${Y(0)}" x2="${X(o.bgZ)}" y2="${Y(2.4)}"/>`;
+  // figures (dedupe)
+  const seen=new Set();const bw=Math.max(4,.3*sc);
+  for(const f of o.figs){const k=f.z.toFixed(1)+'|'+f.h.toFixed(2)+(f.coach?'c':'');if(seen.has(k))continue;seen.add(k);
+    const top=f.full?f.full:f.h+.12;
+    g+=`<line class="g-body" stroke-width="${bw.toFixed(1)}" x1="${X(f.z)}" y1="${Y(Math.min(.1,top))}" x2="${X(f.z)}" y2="${Y(f.h-.14)}"/>`;
+    g+=`<circle class="${f.coach?'g-co':'g-pl'}" cx="${X(f.z)}" cy="${Y(f.h)}" r="${Math.max(4,.11*sc).toFixed(1)}"/>`}
+  // camera
+  g+=`<line class="g-stand" x1="${X(o.cam.z)}" y1="${Y(0)}" x2="${X(o.cam.z)}" y2="${Y(o.cam.y)}"/>`;
+  g+=`<line class="g-sight" x1="${X(o.cam.z)}" y1="${Y(o.cam.y)}" x2="${X(o.camAim.z)}" y2="${Y(o.camAim.y)}"/>`;
+  g+=`<rect class="g-cam" x="${(+X(o.cam.z)-11)}" y="${(+Y(o.cam.y)-8)}" width="22" height="16" rx="3"/><text class="g-sm" x="${(+X(o.cam.z)-16)}" y="${(+Y(o.cam.y)+4)}" text-anchor="end">camera ${fL(o.cam.y)}</text>`;
+  // lights (dedupe by z/y)
+  const groups={};for(const L of o.lights){const k=L.z.toFixed(1)+'|'+L.y.toFixed(1);(groups[k]=groups[k]||[]).push(L)}
+  for(const k in groups){const Ls=groups[k],L=Ls[0];
+    g+=`<line class="g-stand" x1="${X(L.z)}" y1="${Y(0)}" x2="${X(L.z)}" y2="${Y(L.y)}"/>`;
+    g+=`<line class="g-aim" x1="${X(L.z)}" y1="${Y(L.y)}" x2="${X(L.az)}" y2="${Y(L.ay)}"/>`;
+    g+=`<circle class="g-lamp" cx="${X(L.z)}" cy="${Y(L.y)}" r="6"/>`;
+    g+=`<text class="g-lbl" x="${(+X(L.z)+10)}" y="${(+Y(L.y)-9)}">${Ls.map(l=>l.id).join('/')} <tspan class="g-sm">${fL(L.y)}</tspan></text>`}
+  const svg=$('#svgSide');svg.setAttribute('viewBox',`0 0 ${VW} ${VH}`);svg.innerHTML=g;
+}
+
+/* ---------- render ---------- */
+function render(p){
+  lastPlan=p;
+  $('#setbar').innerHTML=p.setbar.map(s=>`<div><b>${s.v}</b><span>${s.l}</span></div>`).join('');
+  $('#secLayout').innerHTML=`<h2>${p.layoutTitle}</h2>`+p.layoutLines.map(l=>`<p>${l}</p>`).join('');
+  $('#secCam').innerHTML='<h2>Camera</h2>'+p.camLines.map(l=>`<p>${l}</p>`).join('');
+  $('#legend').innerHTML=p.legend;
+  $('#secKit').innerHTML=`<h2>Uit je kit: ${escH(p.kitName)}</h2>`+p.kitLines.map(l=>`<p>${l}</p>`).join('');
+  $('#secLights').innerHTML=p.lightRows.length?`<h2>Lichten</h2><div class="tbl"><table><thead><tr><th></th><th>Rol en lichtvormer</th><th>Plaats</th><th>Hoogte</th><th>Kantelen</th><th>Richten op</th><th>Vermogen</th></tr></thead><tbody>${p.lightRows.map(r=>`<tr><td class="id">${r.id}</td><td>${r.role}<span class="sub">${r.mod}</span></td><td>${r.place}${r.sub?`<span class="sub">${r.sub}</span>`:''}</td><td>${r.height}</td><td>${r.tilt}</td><td>${r.aim}</td><td>${r.power}</td></tr>`).join('')}</tbody></table></div>`:'<h2>Lichten</h2><p>Geen flitsers ingepland.</p>';
+  if(p.even){
+    const ok=p.even.spread<=.34;
+    $('#secEven').innerHTML=`<h2>Belichting per gezicht</h2><p class="verdict ${ok?'ok':'bad'}">${ok?'Gelijkmatig':'Ongelijk'}: ${dec(p.even.spread,1)} stop tussen het lichtste en het donkerste gezicht. Cijfers in stops t.o.v. het gemiddelde.</p>`+
+      p.even.groups.map(g=>`<div class="erow"><span class="lab">${g.label}</span><div class="cells">${g.cells.map(c=>{const pct=Math.max(12,Math.min(92,55+c.ev*110));return `<span class="cell${c.coach?' co':''}${Math.abs(c.ev)>.2?' off':''}" style="background:#E6C394;background:color-mix(in srgb,#D5943B ${pct.toFixed(0)}%,#F4F1E8)" title="${c.coach?'Coach/staf':'Speler'}">${stops(c.ev)}</span>`}).join('')}</div></div>`).join('');
+    $('#secEven').hidden=false;
+  }else{$('#secEven').innerHTML='';$('#secEven').hidden=true}
+  $('#secWarn').innerHTML=p.warnings.length?'<h2>Let op</h2>'+p.warnings.map(w=>`<div class="warn">${w}</div>`).join(''):'';
+  $('#secWarn').hidden=!p.warnings.length;
+  const done=loadDone();
+  $('#secCheck').innerHTML='<h2>Waar op letten</h2><ul class="checks">'+p.checks.map((c,i)=>`<li tabindex="0" role="checkbox" aria-checked="${done.includes(c)}" class="${done.includes(c)?'done':''}">${c}</li>`).join('')+'</ul>';
+  drawTop(p.top);drawSide(p.side);
+}
+
+function update(){try{render(mode==='team'?computeTeam():computePortrait())}catch(e){console.error(e)}save()}
+
+/* ---------- persistence ---------- */
+function save(){try{const v={};$$('#form input,#form select').forEach(el=>{if(el.matches('[data-kit],#k_sel'))return;v[el.id]=el.type==='checkbox'?el.checked:el.value});localStorage.setItem(STORE,JSON.stringify({mode,unit,curKit,v}))}catch(e){}}
+function saveKits(){try{localStorage.setItem(KIT_STORE,JSON.stringify(kits))}catch(e){}}
+function kitLabels(){[...$('#k_sel').options].forEach((o,i)=>o.textContent=kits[i].name);$('#k_sel').value=String(curKit);const n=flashList(kits[curKit]).length;$('#kitSum').textContent=`${kits[curKit].name}, ${n} flitser${n===1?'':'s'}`}
+function kitToInputs(){const k=kits[curKit];$('#k_name').value=k.name;KIT_IDS.forEach(id=>$('#'+id).value=k[id]||0);const h=+k.k_standH||3;$('#k_standH').value=unit==='ft'?(h*FT).toFixed(1):h.toFixed(1);kitLabels()}
+function kitFromInputs(){const k=kits[curKit];k.name=$('#k_name').value.trim()||('Kit '+(curKit+1));KIT_IDS.forEach(id=>k[id]=clampInt(num(id),0,20));k.k_standH=Math.max(1,len('k_standH'));saveKits();kitLabels()}
+function restore(){try{const s=JSON.parse(localStorage.getItem(STORE)||'null');if(!s)return;unit=s.unit==='ft'?'ft':'m';mode=s.mode==='portrait'?'portrait':'team';curKit=[0,1,2].includes(s.curKit)?s.curKit:0;
+  for(const id in s.v){const el=document.getElementById(id);if(!el)continue;if(el.tagName==='SELECT'&&![...el.options].some(o=>o.value===s.v[id]))continue;if(el.type==='checkbox')el.checked=!!s.v[id];else el.value=s.v[id]}}catch(e){}}
+function loadDone(){try{return JSON.parse(localStorage.getItem(STORE+'-done')||'[]')}catch(e){return []}}
+function saveDone(a){try{localStorage.setItem(STORE+'-done',JSON.stringify(a))}catch(e){}}
+
+/* ---------- ui ---------- */
+function applyMode(){$$('[data-mode]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.mode===mode));$$('fieldset[data-for]').forEach(f=>f.hidden=f.dataset.for!==mode)}
+function applyUnit(){$$('[data-unit]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.unit===unit));$$('.u').forEach(e=>e.textContent=unit==='ft'?'ft':'m');$$('[data-len]').forEach(i=>i.step=unit==='ft'?'0.5':'0.1')}
+function syncRows(){const l=$('#t_layout').value;$('#t_rows').disabled=(l==='v'||l==='line')}
+$$('[data-mode]').forEach(b=>b.addEventListener('click',()=>{mode=b.dataset.mode;applyMode();update()}));
+$$('[data-unit]').forEach(b=>b.addEventListener('click',()=>{const u=b.dataset.unit;if(u===unit)return;
+  $$('[data-len]').forEach(i=>{const v=parseFloat(String(i.value).replace(',','.'));if(Number.isFinite(v))i.value=u==='ft'?(v*FT).toFixed(1):(v/FT).toFixed(2)});
+  unit=u;applyUnit();update()}));
+let raf=0;$('#form').addEventListener('input',e=>{if(e.target.matches('[data-kit]'))kitFromInputs();syncRows();cancelAnimationFrame(raf);raf=requestAnimationFrame(update)});
+$('#form').addEventListener('change',e=>{if(e.target.id==='k_sel'){curKit=+e.target.value;kitToInputs()}else if(e.target.matches('[data-kit]'))kitFromInputs();syncRows();update()});
+$('#secCheck').addEventListener('click',e=>{const li=e.target.closest('li');if(!li)return;toggle(li)});
+$('#secCheck').addEventListener('keydown',e=>{if((e.key===' '||e.key==='Enter')&&e.target.matches('li')){e.preventDefault();toggle(e.target)}});
+function toggle(li){li.classList.toggle('done');li.setAttribute('aria-checked',li.classList.contains('done'));const t=li.textContent;let a=loadDone();a=li.classList.contains('done')?[...new Set([...a,t])]:a.filter(x=>x!==t);saveDone(a)}
+$('#resetChecks').addEventListener('click',()=>{saveDone([]);update()});
+const strip=h=>h.replace(/<[^>]+>/g,'');
+$('#copyBtn').addEventListener('click',async()=>{
+  const p=lastPlan;if(!p)return;
+  const t=[p.title,'',p.setbar.map(s=>`${s.l}: ${s.v}`).join('\n'),'',p.layoutTitle.toUpperCase(),...p.layoutLines.map(strip),'','CAMERA',...p.camLines.map(strip),'','LICHTEN',...p.lightRows.map(r=>`${r.id}. ${r.role} (${r.mod})\n   Plaats: ${r.place}\n   Hoogte ${r.height}, kantelen ${r.tilt}\n   Richten op: ${r.aim}\n   Vermogen: ${strip(r.power.replace('</b>','</b> '))}`),'','KIT: '+p.kitName,...p.kitLines.map(strip),...(p.warnings.length?['','LET OP',...p.warnings.map(w=>'- '+strip(w))]:[]),'','CHECKLIST',...p.checks.map(c=>'[ ] '+c)].join('\n');
+  let ok=false;try{await navigator.clipboard.writeText(t);ok=true}catch(e){}
+  if(!ok){try{const a=$('#copyArea');a.value=t;a.select();ok=document.execCommand('copy')}catch(e){}}
+  $('#toast').textContent=ok?'Plan gekopieerd':'Kopiëren lukt hier niet; selecteer de tekst handmatig';
+  setTimeout(()=>$('#toast').textContent='',2500);
+});
+
+restore();applyMode();applyUnit();kitToInputs();syncRows();update();
+})();
+</script>
+<script>if('serviceWorker' in navigator&&location.protocol==='https:'){addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}))}</script>
+</body>
+</html>
