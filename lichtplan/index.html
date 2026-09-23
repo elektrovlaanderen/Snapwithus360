@@ -264,6 +264,13 @@ td .sub{display:block;color:var(--muted);font-size:13px}
       </fieldset>
       <fieldset data-for="portrait" hidden>
         <legend>Plek en camera</legend>
+        <label class="wide">Locatie
+          <select id="p_loc"><option value="in">Binnen (sporthal, zaal)</option><option value="studio">Studio, verduisterd</option><option value="sun">Buiten, zon</option><option value="cloud">Buiten, bewolkt of schaduw</option><option value="golden">Buiten, gouden uur</option></select></label>
+        <label class="wide">Omgevingslicht
+          <select id="p_amb"><option value="dark">Wegdrukken: donkere, dramatische achtergrond</option><option value="under">Iets onder: natuurlijk, flits als hoofdlicht</option><option value="fill">Correct: flits alleen als invul</option></select></label>
+        <label>Diafragma
+          <select id="p_ap"><option value="auto">Automatisch</option><option value="2.8">f/2.8</option><option value="4">f/4</option><option value="5.6">f/5.6</option><option value="8">f/8</option><option value="11">f/11</option></select></label>
+        <label class="check" style="grid-column:auto;align-self:end;padding-bottom:10px"><input id="p_nd" type="checkbox"> ND i.p.v. HSS</label>
         <label class="wide">Lengte van de ruimte, achtergrond tot achtermuur (<span class="u">m</span>)<input id="p_space" data-len type="number" min="2" step="0.1" value="9" inputmode="decimal"></label>
         <label>Sensor
           <select id="p_sensor"><option value="ff">Full frame</option><option value="apsc">APS-C</option></select></label>
@@ -357,17 +364,24 @@ const baseOf=m=>m.startsWith('dfr')?'dfr':m;
 function takeMod(pool,prefs){for(const m of prefs){if(m==='bare')return 'bare';if(pool[baseOf(m)]>0){pool[baseOf(m)]--;return m}}return 'bare'}
 const needP=(N,iso,r,loss,gn,extra,frac,pat)=>{const ge=gn*Math.pow(2,-loss/2);return frac*Math.pow(2,extra)*(N*r)**2/(ge*ge*(iso/100)*Math.max(pat,.15))};
 function godox(p){if(p>1.02)return 'meer dan 1/1';const s=-Math.log2(Math.min(1,p));let c=Math.ceil(s-1e-9),plus=Math.round((c-s)*10)/10;if(plus>=1){c--;plus=0}if(c>8)return '1/256 (min.)';return (c<=0?'1/1':'1/'+(2**c))+(plus>0?' +'+plus.toFixed(1):'')}
-function assignPower(Ls,flashes,N,cap=.5){
+function assignPower(Ls,flashes,N,cap=.5,opt={}){
   Ls.map(L=>({L,d:needP(N,100,L.r,L.loss,87,L.extra||0,L.frac||1,L.pat||1)})).sort((a,b)=>b.d-a.d).forEach((o,i)=>o.L.flash=flashes[i]||FLASH[0]);
-  const calc=iso=>Ls.map(L=>needP(N,iso,L.r,L.loss,L.flash.gn,L.extra||0,L.frac||1,L.pat||1));
-  const ISOS=[100,200,400,800,1600,3200];
+  const bst=opt.boost||(()=>0);
+  const calc=iso=>Ls.map(L=>needP(N,iso,L.r,L.loss,L.flash.gn,(L.extra||0)+bst(iso),L.frac||1,L.pat||1));
+  const ISOS=opt.isos||[100,200,400,800,1600,3200];
   const okAt=iso=>calc(iso).every((p,i)=>p<=Math.min(cap,Ls[i].cap||1));
   let iso=ISOS.find(okAt),note='';
   if(!iso){iso=ISOS.find(i=>calc(i).every(p=>p<=1));note=(cap<.5||Ls.some(L=>L.cap))?'freeze':'slow'}
-  if(!iso){iso=3200;note='weak'}
+  if(!iso){iso=ISOS[ISOS.length-1];note='weak'}
   calc(iso).forEach((p,i)=>Ls[i].p=p);
   return {iso,note};
 }
+const AMB={in:{t:'binnen',ev:7},studio:{t:'studio',ev:4},sun:{t:'zon',ev:15},cloud:{t:'bewolkt',ev:12},golden:{t:'gouden uur',ev:10}};
+const AOFF={dark:-3,under:-1.5,fill:0};
+const TS=1/250,HSS_LOSS=1.3;
+const SHUT=[8000,6400,5000,4000,3200,2500,2000,1600,1250,1000,800,640,500,400,320,250,200,160,125,100,80,60,50,40,30,25,20,15];
+function fShut(t){const inv=1/t;let b=SHUT[0];for(const v of SHUT)if(Math.abs(Math.log2(v/inv))<Math.abs(Math.log2(b/inv)))b=v;return '1/'+b+' s'}
+const STOPS=[2.8,4,5.6,8,11,16];
 function powerWarnings(res,Ls,w){
   if(!Ls.length)return;
   if(res.note==='slow')w.push(`Zelfs op ISO ${res.iso} moeten sommige flitsers boven 1/2. Ze laden dan trager op tussen de foto's van een reeks: zet ze iets dichterbij.`);
@@ -718,6 +732,8 @@ function computePortrait(){
   if(bg==='white'){[-1,1].forEach(sg=>{const zb=bgD-1,hw=(zb+d)*ss/(2*f),x=sg*Math.max(1.1,hw+.35);cand.push({x,z:zb,y:1.3,ax:-sg*.6,ay:1.3,az:bgD,role:'Achtergrond '+(sg<0?'links':'rechts'),mod:'softbox of paraplu, naar de achtergrond gedraaid',power:'+1 tot +1,3 stop t.o.v. hoofdlicht, gemeten op de achtergrond',aimT:'de andere helft van de achtergrond (kruisen)',spread:30,size:.9,bgL:true})})}
   if(bg==='gray')cand.push({x:0,z:.7,y:.5,ax:0,ay:1.1,az:bgD,role:'Achtergrond',mod:'kale flits met grid, laag achter het onderwerp',power:'−0,5 stop t.o.v. hoofdlicht',aimT:'de achtergrond achter het hoofd, voor een zachte halo',spread:18,size:.25,bgL:true});
   if(color==='bg'&&bg==='dark')cand.push({x:0,z:.9,y:.5,ax:0,ay:1.3,az:bgD,role:'Kleurspot achtergrond',mod:'',power:'+0,5 stop t.o.v. hoofdlicht',aimT:'het midden van de achtergrond, achter het hoofd',spread:8,size:.3,bgL:true});
+  const sunRim=$('#p_loc').value==='sun'&&cand.some(L=>L.role.startsWith('Rim')||L.role==='Kicker'||L.role==='Tegenlicht voor de druppels');
+  if(sunRim)for(let i=cand.length-1;i>=0;i--){const L=cand[i];if(L.role.startsWith('Rim')||L.role==='Kicker'||L.role==='Tegenlicht voor de druppels')cand.splice(i,1)}
   let used=cand.slice(0,avail),missing=cand.slice(avail);
   if(bg==='white'&&used.filter(L=>L.bgL).length===1){used=used.filter(L=>!L.bgL);used.push({x:0,z:.8,y:.6,ax:0,ay:1.2,az:bgD,role:'Achtergrond',mod:'kale flits of kleine paraplu, laag achter het onderwerp',power:'+1 tot +1,3 stop t.o.v. hoofdlicht, gemeten op de achtergrond',aimT:'het midden van de achtergrond; verstopt achter het onderwerp',spread:35,size:.3,bgL:true});missing=missing.filter(L=>!L.bgL)}
   const PRM=L=>L.role==='Hoofdlicht'?{extra:0,frac:1}:L.role.startsWith('Rim')?{prefs:color==='rims'?['dfr30','strip','grid','sb','oct90','bare']:['strip','dfr30','grid','sb','oct90','bare'],extra:.7,frac:1}:L.role==='Kicker'?{prefs:['dfr30','strip','grid','bare'],extra:.3,frac:1}:L.role==='Strijklicht over de vloer'?{prefs:['dfr30','grid','strip','bare'],extra:.5,frac:1}:L.role==='Tegenlicht voor de druppels'?{prefs:['dfr30','strip','grid','bare'],extra:.7,frac:1}:L.role==='Kleurspot achtergrond'?{prefs:['dfr15','dfr30','grid','bare'],extra:.5,frac:1}:L.role==='Invullicht'?{prefs:['umb','oct120','oct90','sb','bare'],extra:-1.5,frac:1,fill:true}:L.role==='Invullicht onder'?{prefs:['strip','sb','oct90','bare'],extra:-1.5,frac:1,fill:true}:L.role.startsWith('Achtergrond ')?{prefs:['umb','sb','oct90','oct120','bare'],extra:1.2,frac:.6}:L.role==='Achtergrond'?{prefs:bg==='gray'?['dfr30','grid','bare']:['umb','bare'],extra:bg==='gray'?-.5:1.2,frac:1}:{prefs:['dfr30','grid','bare'],extra:0,frac:1};
@@ -734,7 +750,29 @@ function computePortrait(){
   const ids='ABCDEFGH';let li=0;used.forEach(L=>L.id=L.passive?'R':ids[li++]);
   const act=used.filter(L=>!L.passive);
   act.forEach(L=>{L.r=L.role.startsWith('Tegenlicht')?1.5:Math.hypot(L.ax-L.x,L.ay-L.y,L.az-L.z);L.loss=MOD[L.modId].loss;L.pat=1});
-  const pwr=assignPower(act,flashes,fr.ap,wet?1/8:.5),iso=pwr.iso;powerWarnings(pwr,act,warnings);
+  // exposure: ambient + flash
+  const loc=$('#p_loc').value,amb=$('#p_amb').value,apSel=$('#p_ap').value,useND=$('#p_nd').checked;
+  const EV=AMB[loc].ev,AOreq=AOFF[amb],fillB=amb==='fill'?-1:0;
+  const tNeed=(N,iso,AO)=>N*N/Math.pow(2,EV+Math.log2(iso/100)-AO);
+  const Ns=apSel==='auto'?[fr.ap,...STOPS.filter(x=>x>fr.ap),...STOPS.filter(x=>x<fr.ap).reverse()]:[+apSel];
+  const ISOL=[100,200,400,800,1600,3200];
+  const mk=(N,iso,AO,allowFast)=>{let t=tNeed(N,iso,AO),mode='sync',boost=0,nd=0;
+    if(t>1/60){if(amb!=='dark')return null;t=TS}
+    else if(t>=TS){if(amb==='dark')t=TS}
+    else{if(!allowFast)return null;if(useND){mode='nd';nd=Math.log2(TS/t);boost=nd;t=TS}else{if(t<1/8000)return null;mode='hss';boost=HSS_LOSS+Math.log2(TS/t)}}
+    return {N,iso,AO,t,mode,boost,nd}};
+  const tryPlan=pl=>{if(!pl)return false;const c=pl.mode==='hss'?.5:(wet?1/8:.5);const r=assignPower(act,flashes,pl.N,c,{boost:()=>fillB+pl.boost,isos:[pl.iso]});pl.res=r;return !r.note};
+  let plan=null;
+  const AOs=[];for(let x=AOreq;x<=.01;x+=.5)AOs.push(x);if(!AOs.length)AOs.push(0);
+  search:for(const AO of AOs)for(const iso of ISOL)for(const fast of [false,true])for(const N of Ns){const pl=mk(N,iso,AO,fast);if(act.length?tryPlan(pl):pl){plan=pl;break search}}
+  let weak=false;
+  if(!plan){weak=true;plan=mk(Ns[0],100,AOreq,true)||mk(Ns[0],100,0,true)||{N:Ns[0],iso:100,AO:AOreq,t:TS,mode:'sync',boost:0,nd:0}}
+  const pwr=assignPower(act,flashes,plan.N,plan.mode==='hss'?.5:(wet?1/8:.5),{boost:()=>fillB+plan.boost,isos:[plan.iso]});
+  const iso=plan.iso,N=plan.N,mode=plan.mode,tSet=plan.t,ndStops=plan.nd;
+  if(weak)powerWarnings(pwr,act,warnings);
+  const ambOff=EV+Math.log2(iso/100)-Math.log2(N*N/(mode==='nd'?TS/Math.pow(2,ndStops):tSet));
+  if(!weak&&plan.AO>AOreq+.2&&act.length)warnings.push(`Met je flitsers op deze afstand krijg je de achtergrond maximaal ±${dec(Math.abs(plan.AO),1)} stop onder je onderwerp, niet de gevraagde ${dec(Math.abs(AOreq),1)}. Zet de lichten dichterbij (halve afstand = 2 stops meer licht) of gebruik een lichtvormer met minder verlies, zoals de Deep Focus.`);
+  if(amb!=='dark'&&mode==='sync'&&tSet>=1/60&&tNeed(N,iso,AOreq)>1/60)warnings.push('Er is te weinig omgevingslicht voor deze look. Kies Wegdrukken, of neem een statief en een tragere sluitertijd.');
   if(!flashes.length)warnings.push('Deze kit heeft nog geen flitsers. Vul je materiaal in bij Mijn kit, bovenaan.');
   else if(missing.length){
     const alts=missing.map(L=>L.alt?`${L.role.toLowerCase()}: gebruik ${L.alt}`:L.role.startsWith('Rim')?`${L.role.toLowerCase()}: laat dit weg, of gebruik een witte reflector achter het onderwerp`:L.bgL?`${L.role.toLowerCase()}: ${bg==='white'?'zet het onderwerp dichter bij de achtergrond en laat het hoofdlicht die mee raken, of kies grijs':'kies een donkere achtergrond, of laat de rimlichten de rook raken'}`:`${L.role.toLowerCase()}: laat weg`);
@@ -759,12 +797,21 @@ function computePortrait(){
     bg==='white'?'Dichter bij de achtergrond geeft lichtspill rond de randen en schaduwen op het papier.':bg==='dark'?'Hoe verder van de achtergrond, hoe zwarter die blijft. Gebruik grids zodat er niets op de achtergrond lekt.':bg==='smoke'?'Rook tussen onderwerp en achtergrond of rond de voeten. Tegenlicht maakt de rook zichtbaar, van voren belicht zie je haar amper.':'Een laag achtergrondlicht achter het onderwerp geeft een zachte halo en scheidt het hoofd van de achtergrond.',
     sty==='sport'?'<b>Pose</b>: lichaam 30–45° weggedraaid van het hoofdlicht, kin licht omlaag, blik in de lens. Bal of materiaal in de hand geeft de handen iets te doen.':sty==='clam'?'<b>Pose</b>: gezicht recht naar de camera, kin iets naar voren. Het licht komt recht van boven de camera.':`<b>Pose</b>: gezicht een kwartslag naar het hoofdlicht gedraaid${sty==='rembrandt'?', tot er een driehoekje licht op de wang aan de schaduwkant verschijnt':''}.`
   ];
-  const ap=fr.ap;
+  const ap=N;
+  const expoTxt=`ISO ${iso}, ${fShut(tSet)}${mode==='hss'?' (HSS aan op je trigger)':''}, ${fNum(ap)}${mode==='nd'?`, ND-filter van ±${Math.round(ndStops)} stops`:''}, witbalans 5600 K.`;
+  const ambTxt=mode==='stopdown'?`In de ${AMB[loc].t} blijf je op sync (1/250 s) en draai je het diafragma dicht tot ${fNum(ap)}. Zo valt de achtergrond ±${dec(Math.abs(ambOff),1)} stop onder je onderwerp; je flitsers zijn sterk genoeg om daar tegenop te boksen. Dit is de efficiëntste manier om de achtergrond donker te krijgen.`
+    :mode==='hss'?`Voor ${fNum(ap)} vraagt het omgevingslicht ${fShut(tSet)}, dus HSS. Let op: in HSS kost elke snellere sluitertijd je flits evenveel licht als de achtergrond, plus ±1⅓ stop HSS-verlies. Sneller gaan maakt de achtergrond dus niet donkerder ten opzichte van je onderwerp; HSS is vooral handig voor een open diafragma en onscherpe achtergrond. Nog donkerder? Lichten dichterbij, of Diafragma op Automatisch zodat de tool dichtdraait op sync.`
+    :mode==='nd'?`Met een ND-filter van ±${Math.round(ndStops)} stops blijf je op sync met ${fNum(ap)}. Het filter dimt flits en achtergrond evenveel, maar je spaart het HSS-verlies van ±1⅓ stop uit. Je zoeker en autofocus krijgen wel minder licht.`
+    :amb==='dark'?`Bij 1/250 s valt het omgevingslicht ±${dec(Math.abs(ambOff),1)} stop onder je flits: ${ambOff<-2.5?'achtergrond en zaallicht verdwijnen.':'de achtergrond wordt donker maar niet zwart. Nog donkerder: diafragma dichter en flitsers hoger.'}`
+    :Math.abs(ambOff)<.25?`Met ${fShut(tSet)} is het omgevingslicht correct belicht${amb==='fill'?', en je flitsers staan 1 stop lager als invul':''}.${tSet>1/60?' Onder 1/60 s: statief en stilstaan.':''}`
+    :`Met ${fShut(tSet)} valt het omgevingslicht ±${dec(Math.abs(ambOff),1)} stop ${ambOff<0?'onder':'boven'} de juiste belichting${amb==='fill'?', en je flitsers staan 1 stop lager als invul':': natuurlijk, met je flits als hoofdlicht'}.${tSet>1/60?' Onder 1/60 s: statief en stilstaan, anders krijg je bewegingsonscherpte.':''}`;
   const camLines=[
     `<b>Statief</b> op ${fL(d)} van het onderwerp, lens op ${fL(camH)} hoogte${sty==='sport'&&frame!=='head'?', iets laag voor een krachtige, heldhaftige hoek':''}.`,
     `<b>Kader</b> staand, ${fr.t}, ${f} mm${sensor==='apsc'?` (≈ ${Math.round(f*crop)} mm full frame)`:''}. Beeldhoogte op het onderwerp: ±${fL(vert)}.`,
     `<b>Scherpstellen</b> op het oog dat het dichtst bij de camera staat (oog-AF).`,
-    `<b>Belichting</b>: ISO ${iso}, 1/200 s, ${fNum(ap)}, witbalans 5600 K. Het zaallicht moet 2 à 3 stops onder de flits vallen, dan telt alleen jouw licht.`
+    `<b>Belichting</b>: ${expoTxt}`,
+    `<b>Omgevingslicht</b>: ${ambTxt}`,
+    ...(sunRim?['<b>Zon als rimlicht</b>: rimlichten halen het buiten niet tegen de zon, dus die vallen weg. Zet het onderwerp met de zon schuin in de rug; zij tekent de randen en het haar. Je flitsers verlichten dan alleen de voorkant.']:[])
   ];
   const checks=[
     'Maak eerst een testfoto met alleen het hoofdlicht, dan één met alleen de andere lichten. Zo zie je wat elk licht doet.',
@@ -817,7 +864,7 @@ function computePortrait(){
   return {
     kind:'portrait',
     title:`Portret: ${STY[sty].t.toLowerCase()}, ${fr.t}, achtergrond ${BGS[bg].t}${fx!=='none'?', met '+{smoke_back:'rook',smoke_floor:'lage rook',water_splash:'waterspetters',rain:'regen'}[fx]:''}`,
-    setbar:[{v:fL(d),l:'camera tot onderwerp'},{v:fL(camH),l:'lenshoogte'},{v:f+' mm',l:limited?'brandpunt, aangepast':'brandpunt'},{v:fNum(ap),l:'diafragma, ISO '+iso},{v:String(act.length),l:'flitsers'}],
+    setbar:[{v:fL(d),l:'camera tot onderwerp'},{v:fL(camH),l:'lenshoogte'},{v:f+' mm',l:limited?'brandpunt, aangepast':'brandpunt'},{v:fNum(ap),l:'diafragma, ISO '+iso},{v:fShut(tSet).replace(' s',''),l:mode==='hss'?'sluitertijd, HSS':mode==='nd'?'sluitertijd, met ND':'sluitertijd'},{v:String(act.length),l:'flitsers'}],
     fxTitle:{none:'',smoke_back:'Rook',smoke_floor:'Lage rook',water_splash:'Waterspetters',rain:'Regen'}[fx],fxLines,layoutTitle:'Onderwerp',kitName:kit.name,kitLines:kitUsage(kit,act.map(L=>L.flash),act.map(L=>L.modId),passive),layoutLines,camLines,lightRows,warnings,checks,even:null,
     legend:`<span><i style="background:var(--player)"></i>onderwerp</span><span><i style="background:var(--gold);border-radius:2px;height:5px;width:16px"></i>lichtvormer, met lichtbundel</span><span><i style="background:var(--muted);border-radius:2px;height:5px;width:16px"></i>achtergrond</span>`,
     top,
