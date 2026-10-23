@@ -102,10 +102,10 @@ iframe{display:none}
   <div class="rij">
     <div class="veld"><label>Hoe noem je die korting?</label>
       <input type="text" id="kortLabel" placeholder="Introductiekorting"></div>
-    <div class="veld"><label>Snel rekenen<span class="hint">Vult alle prijzen in met dit percentage korting.</span></label>
+    <div class="veld"><label>Korting in procent<span class="hint">Telt automatisch mee. Met de knop zie je de bedragen al in de vakjes.</span></label>
       <div class="knoprij" style="margin-top:0">
         <input type="text" id="korting" placeholder="20" style="width:80px">
-        <button class="klein" id="rekenKorting" type="button">Pas toe</button>
+        <button class="klein" id="rekenKorting" type="button">Toon de bedragen</button>
         <button class="klein" id="rekenTerug" type="button">Gewone prijzen</button>
       </div></div>
   </div>
@@ -335,15 +335,29 @@ function bouwData(){
 
   if(alle.length && !sitKeuze.length) return stop('Vink minstens één branche aan.');
 
+  // Een percentage in het kortingsvak telt mee, ook zonder op Pas toe te klikken.
+  const pct = Number(($('#korting').value||'').replace(',','.'));
+  const metPct = pct > 0 && pct < 100;
+
   $$('.pak').forEach(el=>{
     if(!el.querySelector('input[type=checkbox]').checked) return;
     const p = Object.assign({}, bron[+el.dataset.i]);
     p.naam = el.querySelector('.pn').value.trim() || p.naam;
+
     const pr = el.querySelector('.pp').value.trim().replace(',','.');
     p.prijs = (pr === '' || isNaN(Number(pr))) ? null : Number(pr);
-    const vn = el.querySelector('.pv').value.trim().replace(',','.');
-    if(vn !== '' && !isNaN(Number(vn)) && Number(vn) > (p.prijs || 0)) p.van = Number(vn);
-    else delete p.van;
+
+    const vnRuw = el.querySelector('.pv').value.trim().replace(',','.');
+    const vn = (vnRuw === '' || isNaN(Number(vnRuw))) ? null : Number(vnRuw);
+
+    if(vn !== null && vn > (p.prijs || 0)){
+      p.van = vn;                                  // allebei met de hand ingevuld
+    } else if(metPct && p.prijs !== null){
+      p.van = p.prijs;                             // wat er staat is de gewone prijs
+      p.prijs = Math.round(p.prijs * (1 - pct/100) * 100) / 100;
+    } else {
+      delete p.van;
+    }
     gekozen.push(p);
   });
 
@@ -358,6 +372,7 @@ function bouwData(){
   if($('#bericht').value.trim()) data.b = $('#bericht').value.trim();
   if($('#geldig').value)         data.g = $('#geldig').value;
   if(gekozen.some(p => p.van)) data.kt = $('#kortLabel').value.trim() || 'Introductiekorting';
+  data.pct = metPct ? pct : 0;
 
   data.om = $('#optieModus').value;
   if(data.om !== 'uit'){
@@ -402,7 +417,9 @@ $('#maak').addEventListener('click', ()=>{
     /localhost|127\.0\.0\.1|^file:/.test(basis) ? 'block' : 'none';
 
   const metVan = gekozen.filter(p=>p.van).length;
-  $('#melding').textContent =
+  const pctTekst = data.pct ? data.pct + '% korting toegepast op ' + metVan + ' pakket(ten). ' : '';
+  delete data.pct;
+  $('#melding').textContent = pctTekst +
     (enkel
       ? (gekozen.length === 1
           ? 'Eén pakket: de klant ziet het als een vaste offerte en kan niet kiezen. '
@@ -430,7 +447,7 @@ const veilig = o => JSON.stringify(o).replace(/</g, '\\u003c');
 $('#downloadPagina').addEventListener('click', async ()=>{
   const data = bouwData();
   if(!data) return;
-  delete data.enkelBranche; delete data.aantalSits; delete data.totaalSits;
+  delete data.enkelBranche; delete data.aantalSits; delete data.totaalSits; delete data.pct;
   const knop = $('#downloadPagina');
   const oudeTekst = knop.textContent;
   knop.textContent = 'Bezig…'; knop.disabled = true;
@@ -468,7 +485,7 @@ $('#downloadPagina').addEventListener('click', async ()=>{
 $('#downloadJson').addEventListener('click', ()=>{
   const data = bouwData();
   if(!data || !laatsteKort) return;
-  delete data.enkelBranche; delete data.aantalSits; delete data.totaalSits;
+  delete data.enkelBranche; delete data.aantalSits; delete data.totaalSits; delete data.pct;
   const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob); a.download = laatsteKort + '.json';
@@ -485,7 +502,7 @@ $('#kopieer').addEventListener('click', async ()=>{
 $('#open').addEventListener('click', ()=>{
   const data = bouwData();
   if(!data) return;
-  delete data.enkelBranche; delete data.aantalSits; delete data.totaalSits;
+  delete data.enkelBranche; delete data.aantalSits; delete data.totaalSits; delete data.pct;
   window.open($('#basis').value.trim() + '?o=' + codeer(data), '_blank');
 });
 $('#mail').addEventListener('click', ()=>{
