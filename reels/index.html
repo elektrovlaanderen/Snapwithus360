@@ -235,6 +235,25 @@
   .field input:focus, .field textarea:focus { outline: none; border-color: var(--gold); }
   .wide { grid-column: 1 / -1; }
   .hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+  .field input[readonly] { color: var(--dim); }
+
+  /* adressuggesties */
+  .ac { position: relative; }
+  .ac-list {
+    position: absolute; left: 0; right: 0; top: calc(100% + 6px); z-index: 20;
+    list-style: none; margin: 0; padding: 6px;
+    background: var(--pane); border: 1px solid var(--edge); border-radius: 10px;
+    box-shadow: 0 14px 32px rgba(0, 0, 0, 0.55);
+    max-height: 19rem; overflow-y: auto;
+  }
+  .ac-list li[role="option"] { display: grid; gap: 0.1rem; padding: 0.65rem 0.75rem; border-radius: 6px; cursor: pointer; line-height: 1.35; }
+  .ac-list li[role="option"][aria-selected="true"], .ac-list li[role="option"]:hover { background: rgba(243, 238, 231, 0.07); }
+  .ac-list b { font-weight: 500; color: var(--text); }
+  .ac-list small { font-size: 0.82rem; color: var(--dim); }
+  .ac-credit { padding: 0.45rem 0.75rem 0.15rem; font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.06em; }
+  .ac-credit a { color: var(--faint); text-decoration: none; }
+  .check { display: flex; gap: 0.65rem; align-items: center; color: var(--dim); font-size: 0.95rem; cursor: pointer; }
+  .check input { width: 1.15rem; height: 1.15rem; margin: 0; accent-color: var(--gold); }
 
   .send { display: flex; align-items: center; gap: 1.2rem; flex-wrap: wrap; margin-top: 0.4rem; }
   .btn-send {
@@ -359,9 +378,28 @@
       <label class="field"><span>Phone</span>
         <input type="tel" id="f-phone" maxlength="30" autocomplete="tel" placeholder="The best number to reach you" required>
       </label>
-      <label class="field wide"><span>Business and address (optional)</span>
-        <input type="text" id="f-place" maxlength="160" placeholder="Your business name and where we film">
+      <label class="field wide"><span>Business name</span>
+        <input type="text" id="f-biz" maxlength="100" autocomplete="organization" placeholder="Your restaurant, shop or studio">
       </label>
+      <div class="field wide">
+        <label for="f-bizaddr"><span>Business address</span></label>
+        <div class="ac">
+          <input type="text" id="f-bizaddr" maxlength="200" autocomplete="off" required
+            role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="f-bizaddr-list"
+            placeholder="Start typing, e.g. 2711 Main St">
+          <ul class="ac-list" id="f-bizaddr-list" role="listbox" hidden></ul>
+        </div>
+      </div>
+      <label class="check wide"><input type="checkbox" id="f-same"> We film at the business address</label>
+      <div class="field wide">
+        <label for="f-shootaddr"><span>Shoot location address</span></label>
+        <div class="ac">
+          <input type="text" id="f-shootaddr" maxlength="200" autocomplete="off" required
+            role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="f-shootaddr-list"
+            placeholder="Where the shoot will take place">
+          <ul class="ac-list" id="f-shootaddr-list" role="listbox" hidden></ul>
+        </div>
+      </div>
       <label class="field wide"><span>Ideas or notes (optional)</span>
         <textarea id="f-note" maxlength="800" placeholder="What would you like us to capture?"></textarea>
       </label>
@@ -393,7 +431,10 @@ const CONFIG = {
   voorbeelden: { map: "examples/", aantal: 8, ext: ".mp4" },
   // De web-app-URL van je Apps Script (eindigt op /exec)
   endpoint: "https://script.google.com/macros/s/AKfycbwwkoczlZpNYCs9J_yzjkEhiYg8JSr9NCBldkayITUTAdSXBgGfD0dsRP4wfF7Ib7Dy/exec",
-  vroegsteDag: 1        // aantal dagen vanaf vandaag
+  vroegsteDag: 1,       // aantal dagen vanaf vandaag
+  // adressuggesties via Geoapify (gratis key op geoapify.com); zonder key werkt het veld als gewoon tekstveld
+  adresKey: "PLAK_HIER_JE_GEOAPIFY_KEY",
+  adresLand: "us"
 };
 
 const $ = (id) => document.getElementById(id);
@@ -622,6 +663,108 @@ teken();
   });
 })();
 
+/* ---------- adressuggesties ----------
+   Vanaf 3 tekens toont het veld echte adressen. Zonder key, of als de dienst
+   niet antwoordt, blijft het een gewoon tekstveld. */
+(function () {
+  const sleutel = () => CONFIG.adresKey && CONFIG.adresKey.indexOf("PLAK_HIER") !== 0;
+
+  function adresVeld(input) {
+    const lijst = $(input.getAttribute("aria-controls"));
+    let items = [], actief = -1, timer = null, ctrl = null;
+
+    const sluit = () => {
+      lijst.hidden = true;
+      input.setAttribute("aria-expanded", "false");
+      input.removeAttribute("aria-activedescendant");
+      actief = -1;
+    };
+    const markeer = (i) => {
+      actief = i;
+      lijst.querySelectorAll('li[role="option"]').forEach((li, j) => li.setAttribute("aria-selected", j === i ? "true" : "false"));
+      if (i >= 0) input.setAttribute("aria-activedescendant", lijst.id + "-" + i);
+    };
+    const kies = (i) => {
+      const it = items[i];
+      if (!it) return;
+      input.value = it.formatted;
+      sluit();
+      input.dispatchEvent(new Event("change", { bubbles: true }));
+    };
+
+    function toon() {
+      if (!items.length) { sluit(); return; }
+      lijst.innerHTML = "";
+      items.forEach((it, i) => {
+        const li = document.createElement("li");
+        li.id = lijst.id + "-" + i;
+        li.setAttribute("role", "option");
+        li.setAttribute("aria-selected", "false");
+        const een = document.createElement("b");
+        een.textContent = it.address_line1 || it.formatted;
+        const twee = document.createElement("small");
+        twee.textContent = it.address_line2 || "";
+        li.append(een, twee);
+        li.addEventListener("mousedown", (e) => { e.preventDefault(); kies(i); });
+        lijst.appendChild(li);
+      });
+      const bron = document.createElement("li");
+      bron.className = "ac-credit";
+      bron.setAttribute("role", "presentation");
+      bron.innerHTML = '<a href="https://www.geoapify.com/" target="_blank" rel="noopener">Powered by Geoapify</a>';
+      lijst.appendChild(bron);
+      lijst.hidden = false;
+      input.setAttribute("aria-expanded", "true");
+      actief = -1;
+    }
+
+    async function zoek(q) {
+      if (ctrl) ctrl.abort();
+      ctrl = new AbortController();
+      const url = "https://api.geoapify.com/v1/geocode/autocomplete?text=" + encodeURIComponent(q) +
+        "&filter=countrycode:" + CONFIG.adresLand + "&format=json&limit=5&lang=en&apiKey=" + encodeURIComponent(CONFIG.adresKey);
+      try {
+        const res = await fetch(url, { signal: ctrl.signal });
+        if (!res.ok) throw new Error("geoapify " + res.status);
+        const data = await res.json();
+        if (document.activeElement !== input) return;
+        items = (data.results || []).filter((r) => r.formatted);
+        toon();
+      } catch (err) {
+        if (err.name !== "AbortError") { console.error(err); sluit(); }
+      }
+    }
+
+    input.addEventListener("input", () => {
+      clearTimeout(timer);
+      const q = input.value.trim();
+      if (input.readOnly || q.length < 3 || !sleutel()) { sluit(); return; }
+      timer = setTimeout(() => zoek(q), 250);
+    });
+    input.addEventListener("keydown", (e) => {
+      if (lijst.hidden) return;
+      if (e.key === "ArrowDown") { e.preventDefault(); markeer(Math.min(items.length - 1, actief + 1)); }
+      else if (e.key === "ArrowUp") { e.preventDefault(); markeer(Math.max(0, actief - 1)); }
+      else if (e.key === "Enter" && actief >= 0) { e.preventDefault(); kies(actief); }
+      else if (e.key === "Escape") { sluit(); }
+    });
+    input.addEventListener("blur", () => setTimeout(sluit, 150));
+  }
+
+  const biz = $("f-bizaddr"), shoot = $("f-shootaddr"), zelfde = $("f-same");
+  adresVeld(biz);
+  adresVeld(shoot);
+
+  // "We film at the business address": het shootadres volgt het bedrijfsadres
+  const volg = () => {
+    if (zelfde.checked) { shoot.value = biz.value; shoot.readOnly = true; }
+    else { shoot.readOnly = false; }
+  };
+  zelfde.addEventListener("change", () => { if (!zelfde.checked) shoot.value = ""; volg(); if (!zelfde.checked) shoot.focus(); });
+  biz.addEventListener("input", volg);
+  biz.addEventListener("change", volg);
+})();
+
 /* ---------- aanvraag via Google Apps Script ---------- */
 (function () {
   const form = $("form"), datum = $("f-date");
@@ -648,6 +791,10 @@ teken();
     if (!naam) { msg.textContent = "Please add your name."; $("f-name").focus(); return; }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(mail)) { msg.textContent = "Please add a valid email address."; $("f-email").focus(); return; }
     if (!/^[+(\d][\d\s()./-]{5,}$/.test(tel)) { msg.textContent = "Please add a phone number where we can reach you."; $("f-phone").focus(); return; }
+    const bizAdres = $("f-bizaddr").value.trim();
+    const shootAdres = $("f-shootaddr").value.trim();
+    if (bizAdres.length < 5) { msg.textContent = "Please add your business address."; $("f-bizaddr").focus(); return; }
+    if (shootAdres.length < 5) { msg.textContent = "Please add the address where the shoot will take place."; $("f-shootaddr").focus(); return; }
 
     knop.disabled = true;
     msg.textContent = "Sending...";
@@ -658,7 +805,9 @@ teken();
       shootDate: datum.value,
       shootDay: langeDatum(datum.value),
       name: naam, email: mail, phone: tel,
-      place: $("f-place").value.trim(),
+      business: $("f-biz").value.trim(),
+      businessAddress: bizAdres,
+      shootAddress: shootAdres,
       notes: $("f-note").value.trim(),
       website: $("f-gotcha").value
     };
