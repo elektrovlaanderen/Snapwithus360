@@ -528,18 +528,27 @@ teken();
     }
   }, { threshold: 0.6 });
 
+  /* Zodra er minstens één reel geladen is, verdwijnen de nummers zonder bestand.
+     Lege vakken met uitleg verschijnen alleen als er nog helemaal geen reels staan. */
+  function opruimen(ookWachtend) {
+    if (!geladen) return;
+    [...rail.children]
+      .filter((t) => t.classList.contains("empty") || (ookWachtend && !t.dataset.ratio))
+      .forEach((t) => t.remove());
+  }
+
   function afgerond() {
     klaar++;
-    if (klaar < aantal) return;
-    const leeg = [...rail.children].filter((t) => t.classList.contains("empty"));
-    if (geladen) {
-      leeg.forEach((t) => t.remove());
-    } else {
+    opruimen(false);
+    if (klaar >= aantal && !geladen) {
       $("shots-note").innerHTML = 'Your examples go here. Put your reels in the <code>' + map +
         '</code> folder next to this page, numbered <code>1' + ext + '</code>, <code>2' + ext + '</code>, ...';
     }
     schik();
   }
+
+  // sommige browsers melden een ontbrekend bestand nooit: na 8 seconden ruimen we die ook op
+  setTimeout(() => { opruimen(true); schik(); }, 8000);
 
   for (let n = 1; n <= aantal; n++) {
     const tegel = document.createElement("button");
