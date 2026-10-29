@@ -575,9 +575,12 @@ teken();
     return beste;
   }
 
-  // de hele sectie uit beeld: geluid uit
+  /* De sectie komt in beeld: opnieuw afspelen. Safari op iPhone zet filmpjes die buiten
+     beeld gestart worden meteen weer stil, dus bij het laden (sectie nog onder de vouw)
+     lukt het daar niet; hier wel. Uit beeld: geluid uit. */
   new IntersectionObserver((items) => {
-    if (!items[0].isIntersecting) zetGeluid(null, false);
+    if (items[0].isIntersecting) speel(actief || tegels()[0]);
+    else zetGeluid(null, false);
   }, { threshold: 0.15 }).observe(pane);
 
   /* Zodra er minstens één reel geladen is, verdwijnen de nummers zonder bestand. */
@@ -609,6 +612,7 @@ teken();
     film.muted = true; film.defaultMuted = true; film.loop = true; film.playsInline = true;
     film.setAttribute("muted", ""); film.setAttribute("playsinline", ""); film.setAttribute("webkit-playsinline", "");
     film.preload = n === 1 ? "auto" : "metadata";
+    if (n === 1) { film.autoplay = true; film.setAttribute("autoplay", ""); }
 
     const nr = document.createElement("span");
     nr.className = "no"; nr.textContent = pad(n);
@@ -648,10 +652,15 @@ teken();
         speel(tegel);
       } else {
         film.pause();
+        film.autoplay = false;
         tegel.dataset.stop = "1";
         tegel.classList.remove("playing");
       }
     });
+
+    // houdt het knopje in sync als de browser zelf start of stopt
+    film.addEventListener("playing", () => tegel.classList.add("playing"));
+    film.addEventListener("pause", () => tegel.classList.remove("playing"));
 
     // op een computer: de reel onder de muis speelt
     tegel.addEventListener("mouseenter", () => {
