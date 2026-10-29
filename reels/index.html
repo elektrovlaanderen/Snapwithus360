@@ -366,7 +366,7 @@
       <li><span>Filmed in one continuous take</span></li>
       <li><span>Up to 10 seconds per reel</span></li>
       <li><span>Made for social media</span></li>
-      <li><span><span id="inc-count">8</span> reels, filmed on one shoot day</span></li>
+      <li><span>All reels filmed on one shoot day</span></li>
     </ul>
   </section>
 
@@ -487,7 +487,6 @@ function teken() {
   $("total").textContent = geld(totaal);
   $("rate").textContent = geld(CONFIG.prijsPerReel);
   $("runtime").textContent = timecode(n);
-  $("inc-count").textContent = n;
   $("pick-count").textContent = n;
   $("pick-total").textContent = geld(totaal);
 
@@ -542,7 +541,7 @@ teken();
     el.textContent = (el.dataset.d ? el.textContent + " | " : "") + tekst;
     el.dataset.d = "1";
   };
-  if (debug) log("v13 " + navigator.userAgent.replace(/^Mozilla\/5\.0 /, "").slice(0, 90));
+  if (debug) log("v15 " + navigator.userAgent.replace(/^Mozilla\/5\.0 /, "").slice(0, 90));
 
   // speel deze reel af en zet alle andere stil
   function speel(tegel) {
@@ -662,7 +661,9 @@ teken();
 
     staat.addEventListener("click", () => {
       if (!film.isConnected) return;
-      if (film.paused) {
+      // alleen als hij echt beeld toont telt hij als spelend; anders betekent een tik: afspelen
+      const speeltEcht = !film.paused && tegel.classList.contains("playing");
+      if (!speeltEcht) {
         delete tegel.dataset.stop;
         speel(tegel);
       } else {
@@ -733,9 +734,13 @@ teken();
 
   /* Sommige telefoons (spaarstand, databesparing) laten filmpjes pas spelen na een
      aanraking. Bij de eerste tik of klik ergens op de pagina proberen we het opnieuw. */
-  const opnieuw = () => { if (actief) speel(actief); };
-  document.addEventListener("pointerdown", opnieuw, { once: true, capture: true });
-  document.addEventListener("touchend", opnieuw, { once: true, capture: true });
+  const opnieuw = () => {
+    if (!actief || actief.dataset.stop === "1") return;
+    const v = actief.querySelector("video");
+    if (v && v.paused) speel(actief);
+  };
+  // een tik buiten de reels (op een reel zelf regelt de knop het)
+  document.addEventListener("touchend", (e) => { if (!e.target.closest(".shot")) opnieuw(); }, { passive: true });
 
   let wacht;
   addEventListener("resize", () => { clearTimeout(wacht); wacht = setTimeout(schik, 120); });
