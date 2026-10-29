@@ -261,7 +261,8 @@ canvas{width:100%;height:170px;background:#FBF9F5;border:1px solid var(--line);
   <div class="doc" id="doc"></div>
 
   <div class="sign">
-    <label class="check"><input type="checkbox" id="akkoord"><span>Ik ga akkoord met de opdracht en de voorwaarden hierboven, en ik ben bevoegd om te tekenen.</span></label>
+    <label class="check"><input type="checkbox" id="voorwaardenGelezen"><span>Ik heb de algemene voorwaarden in dit document gelezen en ik aanvaard ze.</span></label>
+    <label class="check"><input type="checkbox" id="akkoord"><span>Ik ga akkoord met de opdracht hierboven, en ik ben bevoegd om te tekenen.</span></label>
     <div class="field" style="margin-bottom:10px">
       <label for="signName">Naam van de ondertekenaar</label>
       <input type="text" id="signName" autocomplete="name">
@@ -271,7 +272,7 @@ canvas{width:100%;height:170px;background:#FBF9F5;border:1px solid var(--line);
     <div class="signbar"><span>Teken met je muis of vinger</span><button type="button" id="clearPad">Wissen</button></div>
   </div>
 
-  <div class="err" id="e3">Vink het akkoord aan, vul je naam in en zet je handtekening.</div>
+  <div class="err" id="e3">Vink de algemene voorwaarden en het akkoord aan, vul je naam in en zet je handtekening.</div>
   <div class="nav"><button class="back" data-prev>Terug</button><button class="go" id="send">Onderteken en verstuur</button></div>
 </section>
 
@@ -723,7 +724,7 @@ function tekenDocument(){
     <dl>${extra.map(([l,w])=>`<dt>${esc(l)}</dt><dd>${esc(w)}</dd>`).join('')}</dl>` : ''}
     ${A.opmerking?`<p style="margin-top:10px"><strong>Opmerkingen:</strong> ${esc(A.opmerking)}</p>`:''}
 
-    <h4>Voorwaarden</h4>
+    <h4>Algemene voorwaarden</h4>
     <ol>${CONFIG.voorwaarden.map(v=>`<li>${esc(v)}</li>`).join('')}</ol>
   `;
 }
@@ -868,7 +869,7 @@ function handtekeningPng(){
    ============================================================ */
 $('#send').addEventListener('click', async ()=>{
   const naam = $('#signName').value.trim();
-  if(!$('#akkoord').checked || !naam || !getekend()){ $('#e3').classList.add('on'); return; }
+  if(!$('#voorwaardenGelezen').checked || !$('#akkoord').checked || !naam || !getekend()){ $('#e3').classList.add('on'); return; }
 
   const knop = $('#send');
   knop.disabled = true; knop.innerHTML = '<span class="spin"></span>Versturen…';
@@ -892,7 +893,10 @@ $('#send').addEventListener('click', async ()=>{
     labels: vragenLijst().reduce((a,v)=>(a[v.k]=v.label,a),{}),
     voorwaarden: CONFIG.voorwaarden,
     bedrijf: CONFIG.bedrijf,
-    documentHtml: $('#doc').innerHTML,
+    voorwaardenGelezen: true,
+    documentHtml: $('#doc').innerHTML +
+      '<p class="small" style="margin-top:14px">De opdrachtgever verklaart de algemene voorwaarden gelezen te hebben en ze te aanvaarden. ' +
+      'Ondertekend door ' + esc(naam) + ' op ' + new Date().toLocaleString('nl-BE',{day:'numeric',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'}) + '.</p>',
     handtekening: handtekeningPng(),
     foto: S.foto,
     ondertekenaar: naam
