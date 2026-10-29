@@ -533,6 +533,17 @@ teken();
 
   const tegels = () => [...rail.children].filter((t) => t.querySelector("video") && t.dataset.ratio);
 
+  /* Testmodus: open de pagina met ?debug=1 achter het adres. Onder de reels verschijnt
+     dan wat de browser antwoordt als we een reel proberen te starten. */
+  const debug = /[?&]debug=1/.test(location.search);
+  const log = (tekst) => {
+    if (!debug) return;
+    const el = $("shots-note");
+    el.textContent = (el.dataset.d ? el.textContent + " | " : "") + tekst;
+    el.dataset.d = "1";
+  };
+  if (debug) log("v13 " + navigator.userAgent.replace(/^Mozilla\/5\.0 /, "").slice(0, 90));
+
   // speel deze reel af en zet alle andere stil
   function speel(tegel) {
     if (!tegel) return;
@@ -541,7 +552,9 @@ teken();
       const v = t.querySelector("video");
       if (t === tegel) {
         if (stil.matches || t.dataset.stop === "1") continue;
-        v.play().then(() => t.classList.add("playing")).catch(() => t.classList.remove("playing"));
+        v.play()
+          .then(() => { t.classList.add("playing"); log("speelt " + pad(t.dataset.nr)); })
+          .catch((err) => { t.classList.remove("playing"); log("geweigerd " + pad(t.dataset.nr) + ": " + err.name + " (rs " + v.readyState + ")"); });
       } else {
         if (!v.muted) zetGeluid(t, false);
         v.pause();
@@ -607,6 +620,7 @@ teken();
   for (let n = 1; n <= aantal; n++) {
     const tegel = document.createElement("div");
     tegel.className = "shot";
+    tegel.dataset.nr = n;
 
     const film = document.createElement("video");
     film.muted = true; film.defaultMuted = true; film.loop = true; film.playsInline = true;
@@ -630,6 +644,7 @@ teken();
     film.addEventListener("loadedmetadata", () => {
       tegel.dataset.ratio = film.videoWidth / film.videoHeight;
       geladen++;
+      log("geladen " + pad(n));
       afgerond();
       // de eerste reel speelt meteen af zodra de pagina geladen is
       if (n === 1 || !actief) speel(tegels()[0]);
