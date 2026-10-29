@@ -530,7 +530,8 @@ teken();
   const ICOON_UIT = '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="m22 9-6 6M16 9l6 6"/></svg>';
   const ICOON_AAN = '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg>';
 
-  const tegels = () => [...rail.children].filter((t) => t.querySelector("video") && t.dataset.ratio);
+  // alle reels met een filmpje, ook als de browser het nog niet vooraf geladen heeft
+  const tegels = () => [...rail.children].filter((t) => t.querySelector("video"));
 
   /* Testmodus: open de pagina met ?debug=1 achter het adres. Onder de reels verschijnt
      dan wat de browser antwoordt als we een reel proberen te starten. */
@@ -541,7 +542,7 @@ teken();
     el.textContent = (el.dataset.d ? el.textContent + " | " : "") + tekst;
     el.dataset.d = "1";
   };
-  if (debug) log("v15 " + navigator.userAgent.replace(/^Mozilla\/5\.0 /, "").slice(0, 90));
+  if (debug) log("v17 " + navigator.userAgent.replace(/^Mozilla\/5\.0 /, "").slice(0, 90));
 
   // speel deze reel af en zet alle andere stil
   function speel(tegel) {
@@ -599,7 +600,12 @@ teken();
   function opruimen(ookWachtend) {
     if (!geladen) return;
     [...rail.children]
-      .filter((t) => t.classList.contains("empty") || (ookWachtend && !t.dataset.ratio))
+      .filter((t) => {
+        if (t.classList.contains("empty")) return true;
+        // alleen weg als de browser zeker geen bestand vond (niet als hij gewoon nog niet laadde)
+        const v = t.querySelector("video");
+        return ookWachtend && v && !t.dataset.ratio && v.networkState === 3;
+      })
       .forEach((t) => t.remove());
   }
 
@@ -622,10 +628,12 @@ teken();
     tegel.dataset.nr = n;
 
     const film = document.createElement("video");
-    film.muted = true; film.defaultMuted = true; film.loop = true; film.playsInline = true;
-    film.setAttribute("muted", ""); film.setAttribute("playsinline", ""); film.setAttribute("webkit-playsinline", "");
-    film.preload = n === 1 ? "auto" : "metadata";
-    if (n === 1) { film.autoplay = true; film.setAttribute("autoplay", ""); }
+    // dezelfde laad-instellingen als de versie die op iPhone wel laadde
+    film.muted = true; film.loop = true; film.playsInline = true;
+    film.setAttribute("muted", ""); film.setAttribute("playsinline", "");
+    film.preload = "metadata";
+    if (debug) ["loadstart", "stalled", "suspend", "canplay"].forEach((ev) =>
+      film.addEventListener(ev, () => log(ev + " " + pad(n)), { once: true }));
 
     const nr = document.createElement("span");
     nr.className = "no"; nr.textContent = pad(n);
@@ -650,6 +658,7 @@ teken();
     }, { once: true });
 
     film.addEventListener("error", () => {
+      log("fout " + pad(n) + " (code " + (film.error ? film.error.code : "?") + ")");
       film.remove();
       geluid.remove();
       tegel.classList.add("empty");
@@ -668,7 +677,6 @@ teken();
         speel(tegel);
       } else {
         film.pause();
-        film.autoplay = false;
         tegel.dataset.stop = "1";
         tegel.classList.remove("playing");
       }
@@ -688,15 +696,18 @@ teken();
     // #t=0.1 laat Safari meteen het eerste beeld tonen in plaats van een zwart vak
     film.src = map + n + ext + "#t=0.1";
   }
+  // meteen de juiste grootte, ook voor de browser iets geladen heeft
+  requestAnimationFrame(() => schik());
 
   /* Alle reels even hoog, elk in zijn eigen verhouding. */
   function schik() {
-    const lijst = [...rail.children].filter((t) => t.dataset.ratio);
+    const lijst = [...rail.children];
     const breedte = rail.clientWidth;
     if (!lijst.length || !breedte) return;
     const hoog = telefoon() ? Math.min(innerHeight * 0.55, 440) : 460;
     for (const t of lijst) {
-      const r = Number(t.dataset.ratio);
+      // nog niet geladen: we gaan uit van een staande reel (9:16)
+      const r = Number(t.dataset.ratio) || 9 / 16;
       const h = Math.round(Math.min(hoog, (breedte * 0.92) / r));
       Object.assign(t.style, { height: h + "px", width: Math.round(r * h) + "px", aspectRatio: "auto" });
     }
@@ -719,8 +730,28 @@ teken();
       ? lijst.find((t) => pos(t) > 8)
       : [...lijst].reverse().find((t) => pos(t) < -8);
     if (!doel) return;
-    rail.scrollTo({ left: rail.scrollLeft + pos(doel), behavior: stil.matches ? "auto" : "smooth" });
+    glijd(rail.scrollLeft + pos(doel));
   }
+  /* Safari negeert een vloeiende scrollTo op een strook die vastklikt (scroll-snap),
+     dus we schuiven zelf, met het vastklikken even uit. */
+  function glijd(naar) {
+    const van = rail.scrollLeft, weg = naar - van;
+    if (!weg) return;
+    rail.style.scrollSnapType = "none";
+    const klaar = () => { rail.scrollLeft = naar; rail.style.scrollSnapType = ""; pijlen(); speel(vooraan()); };
+    if (stil.matches) { klaar(); return; }
+    const begin = performance.now(), duur = 320;
+    const vangnet = setTimeout(klaar, duur + 200);
+    const stap = (nu) => {
+      const d = Math.min(1, (nu - begin) / duur);
+      const e = d < 0.5 ? 2 * d * d : 1 - Math.pow(-2 * d + 2, 2) / 2;
+      rail.scrollLeft = van + weg * e;
+      if (d < 1) requestAnimationFrame(stap);
+      else { clearTimeout(vangnet); klaar(); }
+    };
+    requestAnimationFrame(stap);
+  }
+
   vorige.addEventListener("click", () => verschuif(-1));
   volgende.addEventListener("click", () => verschuif(1));
 
