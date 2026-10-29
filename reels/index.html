@@ -204,10 +204,19 @@
     font-size: 1.1rem; text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
     transition: opacity 0.15s;
   }
+  .shot .state { border: 0; background: none; color: inherit; padding: 0; width: 100%; height: 100%; cursor: pointer; font-family: inherit; }
   .shot.playing .state { opacity: 0; }
-  .shot.empty { cursor: default; border-style: dashed; }
+  .geluid {
+    position: absolute; right: 0.45rem; top: 0.4rem; z-index: 2;
+    display: grid; place-items: center; width: 2.1rem; height: 2.1rem; padding: 0;
+    border: 1px solid rgba(243, 238, 231, 0.22); border-radius: 50%;
+    background: rgba(11, 10, 9, 0.55); color: var(--text); cursor: pointer;
+    -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px);
+  }
+  .geluid[aria-pressed="true"] { background: var(--gold); border-color: var(--gold); color: var(--on-gold); }
+  .geluid:focus-visible, .shot .state:focus-visible { outline: 2px solid var(--gold); outline-offset: -2px; }
+  .shot.empty, .shot.empty .state { cursor: default; } .shot.empty { border-style: dashed; }
   .shot.empty .state { font-family: var(--font-mono); font-size: 0.7rem; color: var(--faint); text-shadow: none; }
-  .shot:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
   .shots-nav { display: none; gap: 0.5rem; margin-top: 0.9rem; }
   .note { margin-top: 0.9rem; font-size: 0.85rem; color: var(--faint); }
   .note code { font-family: var(--font-mono); font-size: 0.8rem; color: var(--dim); }
@@ -348,7 +357,7 @@
       <button type="button" class="btn" id="shots-prev" aria-label="Previous reel">←</button>
       <button type="button" class="btn" id="shots-next" aria-label="Next reel">→</button>
     </div>
-    <p class="note" id="shots-note">Tap a reel to pause or play it. They play without sound, just like in the feed.</p>
+    <p class="note" id="shots-note">Tap a reel to pause or play it. Tap the speaker for sound.</p>
   </section>
 
   <section class="pane">
@@ -514,19 +523,46 @@ teken();
   const { map, aantal, ext } = CONFIG.voorbeelden;
   let klaar = 0, geladen = 0;
 
+  const ICOON_UIT = '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="m22 9-6 6M16 9l6 6"/></svg>';
+  const ICOON_AAN = '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg>';
+
+  /* Geluid kan alleen na een tik van de bezoeker. Er speelt altijd maar één reel met geluid. */
+  function zetGeluid(tegel, aan) {
+    for (const t of rail.children) {
+      const v = t.querySelector("video"), k = t.querySelector(".geluid");
+      if (!v || !k) continue;
+      const dit = aan && t === tegel;
+      v.muted = !dit;
+      k.setAttribute("aria-pressed", dit ? "true" : "false");
+      k.setAttribute("aria-label", (dit ? "Turn sound off" : "Turn sound on") + " for this reel");
+      k.innerHTML = dit ? ICOON_AAN : ICOON_UIT;
+    }
+    if (aan) {
+      const v = tegel.querySelector("video");
+      delete tegel.dataset.stop;
+      v.play().then(() => tegel.classList.add("playing")).catch(() => {});
+    }
+  }
+
   const kijker = new IntersectionObserver((items) => {
     for (const it of items) {
       const tegel = it.target, film = tegel.querySelector("video");
       if (!film) continue;
-      if (it.isIntersecting && !stil.matches && tegel.dataset.stop !== "1") {
-        film.play().then(() => tegel.classList.add("playing")).catch(() => {});
-      } else if (!it.isIntersecting) {
-        film.pause();
-        tegel.classList.remove("playing");
-        delete tegel.dataset.stop;
+      if (it.isIntersecting) {
+        if (!stil.matches && tegel.dataset.stop !== "1") {
+          film.play().then(() => tegel.classList.add("playing")).catch(() => {});
+        }
+      } else {
+        // uit beeld: geluid uit, en stoppen (behalve de eerste, die blijft stil doorspelen)
+        if (!film.muted) zetGeluid(tegel, false);
+        if (tegel.dataset.altijd !== "1") {
+          film.pause();
+          tegel.classList.remove("playing");
+          delete tegel.dataset.stop;
+        }
       }
     }
-  }, { threshold: 0.6 });
+  }, { threshold: 0.4 });
 
   /* Zodra er minstens één reel geladen is, verdwijnen de nummers zonder bestand.
      Lege vakken met uitleg verschijnen alleen als er nog helemaal geen reels staan. */
@@ -551,10 +587,8 @@ teken();
   setTimeout(() => { opruimen(true); schik(); }, 8000);
 
   for (let n = 1; n <= aantal; n++) {
-    const tegel = document.createElement("button");
-    tegel.type = "button";
+    const tegel = document.createElement("div");
     tegel.className = "shot";
-    tegel.setAttribute("aria-label", "Play or pause example " + n);
 
     const film = document.createElement("video");
     film.muted = true; film.loop = true; film.playsInline = true;
@@ -563,26 +597,40 @@ teken();
 
     const nr = document.createElement("span");
     nr.className = "no"; nr.textContent = pad(n);
-    const staat = document.createElement("span");
-    staat.className = "state"; staat.textContent = "▶";
+    const staat = document.createElement("button");
+    staat.type = "button"; staat.className = "state"; staat.textContent = "▶";
+    staat.setAttribute("aria-label", "Play or pause example " + n);
+
+    const geluid = document.createElement("button");
+    geluid.type = "button"; geluid.className = "geluid";
+    geluid.setAttribute("aria-pressed", "false");
+    geluid.setAttribute("aria-label", "Turn sound on for example " + n);
+    geluid.innerHTML = ICOON_UIT;
+    geluid.addEventListener("click", () => zetGeluid(tegel, film.muted));
 
     film.addEventListener("loadedmetadata", () => {
       tegel.dataset.ratio = film.videoWidth / film.videoHeight;
       geladen++;
       kijker.observe(tegel);
+      // de eerste reel speelt meteen af zodra de pagina geladen is
+      if (n === 1 && !stil.matches) {
+        tegel.dataset.altijd = "1";
+        film.play().then(() => tegel.classList.add("playing")).catch(() => {});
+      }
       afgerond();
     }, { once: true });
 
     film.addEventListener("error", () => {
       film.remove();
+      geluid.remove();
       tegel.classList.add("empty");
-      tegel.disabled = true;
+      staat.disabled = true;
       tegel.dataset.ratio = 9 / 16;
       staat.textContent = "Reel " + pad(n);
       afgerond();
     }, { once: true });
 
-    tegel.addEventListener("click", () => {
+    staat.addEventListener("click", () => {
       if (!film.isConnected) return;
       if (film.paused) {
         delete tegel.dataset.stop;
@@ -594,9 +642,10 @@ teken();
       }
     });
 
-    tegel.append(film, nr, staat);
+    tegel.append(film, nr, staat, geluid);
     rail.appendChild(tegel);
-    film.src = map + n + ext;
+    // #t=0.1 laat Safari meteen het eerste beeld tonen in plaats van een zwart vak
+    film.src = map + n + ext + "#t=0.1";
   }
 
   /* Rijen die van rand tot rand lopen: elke reel houdt zijn eigen verhouding,
