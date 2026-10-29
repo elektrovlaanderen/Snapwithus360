@@ -186,7 +186,13 @@
   .rhythm p { flex: 1 1 18rem; min-width: 0; color: var(--dim); font-size: 0.95rem; }
 
   /* ---------- voorbeelden ---------- */
-  .shots { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 1.2rem; }
+  /* één strook op elk scherm: alle reels even hoog, swipen of met de pijlen */
+  .shots {
+    display: flex; gap: 10px; margin-top: 1.2rem; align-items: center;
+    overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none;
+    -webkit-overflow-scrolling: touch; overscroll-behavior-x: contain;
+  }
+  .shots::-webkit-scrollbar { display: none; }
   .shot {
     position: relative; flex: 0 0 auto;
     width: 8rem; aspect-ratio: 9 / 16; max-width: 100%;
@@ -217,7 +223,8 @@
   .geluid:focus-visible, .shot .state:focus-visible { outline: 2px solid var(--gold); outline-offset: -2px; }
   .shot.empty, .shot.empty .state { cursor: default; } .shot.empty { border-style: dashed; }
   .shot.empty .state { font-family: var(--font-mono); font-size: 0.7rem; color: var(--faint); text-shadow: none; }
-  .shots-nav { display: none; gap: 0.5rem; margin-top: 0.9rem; }
+  .shot { scroll-snap-align: start; }
+  .shots-nav { display: flex; gap: 0.5rem; margin-top: 0.9rem; }
   .note { margin-top: 0.9rem; font-size: 0.85rem; color: var(--faint); }
   .note code { font-family: var(--font-mono); font-size: 0.8rem; color: var(--dim); }
 
@@ -290,13 +297,6 @@
     .ticks span:nth-child(even) { visibility: hidden; }
     .steps .btn { flex: 1; min-height: 2.9rem; }
     .inc, .form { grid-template-columns: minmax(0, 1fr); }
-    .shots {
-      flex-wrap: nowrap; justify-content: flex-start; align-items: center;
-      overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none;
-    }
-    .shots::-webkit-scrollbar { display: none; }
-    .shot { scroll-snap-align: center; }
-    .shots-nav { display: flex; }
     .shots-nav .btn { flex: 1; }
   }
 
@@ -515,16 +515,40 @@ teken();
 /* ---------- voorbeelden ----------
    Zet je reels in de map examples/ naast deze pagina, genummerd 1.mp4, 2.mp4, ...
    Een nummer zonder bestand verdwijnt vanzelf. Zolang er nog geen enkel bestand is,
-   tonen we lege vakken met een korte uitleg. */
+   tonen we lege vakken met een korte uitleg.
+
+   Er speelt altijd maar één reel tegelijk: bij het laden de eerste, daarna de reel
+   waar je naartoe swipet of bladert, of (op een computer) waar je muis op staat. */
 (function () {
   const rail = $("shots");
+  const pane = $("shots-pane");
   const telefoon = () => matchMedia("(max-width: 40rem)").matches;
+  const muis = matchMedia("(hover: hover) and (pointer: fine)");
   const stil = matchMedia("(prefers-reduced-motion: reduce)");
   const { map, aantal, ext } = CONFIG.voorbeelden;
-  let klaar = 0, geladen = 0;
+  let klaar = 0, geladen = 0, actief = null;
 
   const ICOON_UIT = '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="m22 9-6 6M16 9l6 6"/></svg>';
   const ICOON_AAN = '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg>';
+
+  const tegels = () => [...rail.children].filter((t) => t.querySelector("video") && t.dataset.ratio);
+
+  // speel deze reel af en zet alle andere stil
+  function speel(tegel) {
+    if (!tegel) return;
+    actief = tegel;
+    for (const t of tegels()) {
+      const v = t.querySelector("video");
+      if (t === tegel) {
+        if (stil.matches || t.dataset.stop === "1") continue;
+        v.play().then(() => t.classList.add("playing")).catch(() => t.classList.remove("playing"));
+      } else {
+        if (!v.muted) zetGeluid(t, false);
+        v.pause();
+        t.classList.remove("playing");
+      }
+    }
+  }
 
   /* Geluid kan alleen na een tik van de bezoeker. Er speelt altijd maar één reel met geluid. */
   function zetGeluid(tegel, aan) {
@@ -537,35 +561,26 @@ teken();
       k.setAttribute("aria-label", (dit ? "Turn sound off" : "Turn sound on") + " for this reel");
       k.innerHTML = dit ? ICOON_AAN : ICOON_UIT;
     }
-    if (aan) {
-      const v = tegel.querySelector("video");
-      delete tegel.dataset.stop;
-      v.play().then(() => tegel.classList.add("playing")).catch(() => {});
-    }
+    if (aan) { delete tegel.dataset.stop; speel(tegel); }
   }
 
-  const kijker = new IntersectionObserver((items) => {
-    for (const it of items) {
-      const tegel = it.target, film = tegel.querySelector("video");
-      if (!film) continue;
-      if (it.isIntersecting) {
-        if (!stil.matches && tegel.dataset.stop !== "1") {
-          film.play().then(() => tegel.classList.add("playing")).catch(() => {});
-        }
-      } else {
-        // uit beeld: geluid uit, en stoppen (behalve de eerste, die blijft stil doorspelen)
-        if (!film.muted) zetGeluid(tegel, false);
-        if (tegel.dataset.altijd !== "1") {
-          film.pause();
-          tegel.classList.remove("playing");
-          delete tegel.dataset.stop;
-        }
-      }
+  // de reel die vooraan in de strook staat
+  function vooraan() {
+    const links = rail.getBoundingClientRect().left;
+    let beste = null, afstand = Infinity;
+    for (const t of tegels()) {
+      const d = Math.abs(t.getBoundingClientRect().left - links);
+      if (d < afstand) { afstand = d; beste = t; }
     }
-  }, { threshold: 0.4 });
+    return beste;
+  }
 
-  /* Zodra er minstens één reel geladen is, verdwijnen de nummers zonder bestand.
-     Lege vakken met uitleg verschijnen alleen als er nog helemaal geen reels staan. */
+  // de hele sectie uit beeld: geluid uit
+  new IntersectionObserver((items) => {
+    if (!items[0].isIntersecting) zetGeluid(null, false);
+  }, { threshold: 0.15 }).observe(pane);
+
+  /* Zodra er minstens één reel geladen is, verdwijnen de nummers zonder bestand. */
   function opruimen(ookWachtend) {
     if (!geladen) return;
     [...rail.children]
@@ -591,9 +606,9 @@ teken();
     tegel.className = "shot";
 
     const film = document.createElement("video");
-    film.muted = true; film.loop = true; film.playsInline = true;
-    film.setAttribute("muted", ""); film.setAttribute("playsinline", "");
-    film.preload = "metadata";
+    film.muted = true; film.defaultMuted = true; film.loop = true; film.playsInline = true;
+    film.setAttribute("muted", ""); film.setAttribute("playsinline", ""); film.setAttribute("webkit-playsinline", "");
+    film.preload = n === 1 ? "auto" : "metadata";
 
     const nr = document.createElement("span");
     nr.className = "no"; nr.textContent = pad(n);
@@ -611,13 +626,9 @@ teken();
     film.addEventListener("loadedmetadata", () => {
       tegel.dataset.ratio = film.videoWidth / film.videoHeight;
       geladen++;
-      kijker.observe(tegel);
-      // de eerste reel speelt meteen af zodra de pagina geladen is
-      if (n === 1 && !stil.matches) {
-        tegel.dataset.altijd = "1";
-        film.play().then(() => tegel.classList.add("playing")).catch(() => {});
-      }
       afgerond();
+      // de eerste reel speelt meteen af zodra de pagina geladen is
+      if (n === 1 || !actief) speel(tegels()[0]);
     }, { once: true });
 
     film.addEventListener("error", () => {
@@ -634,12 +645,17 @@ teken();
       if (!film.isConnected) return;
       if (film.paused) {
         delete tegel.dataset.stop;
-        film.play().then(() => tegel.classList.add("playing")).catch(() => {});
+        speel(tegel);
       } else {
         film.pause();
         tegel.dataset.stop = "1";
         tegel.classList.remove("playing");
       }
+    });
+
+    // op een computer: de reel onder de muis speelt
+    tegel.addEventListener("mouseenter", () => {
+      if (muis.matches && film.isConnected && tegel.dataset.stop !== "1") speel(tegel);
     });
 
     tegel.append(film, nr, staat, geluid);
@@ -648,77 +664,58 @@ teken();
     film.src = map + n + ext + "#t=0.1";
   }
 
-  /* Rijen die van rand tot rand lopen: elke reel houdt zijn eigen verhouding,
-     de rij bepaalt de hoogte. Op een telefoon wordt het één rail om te swipen. */
+  /* Alle reels even hoog, elk in zijn eigen verhouding. */
   function schik() {
-    const tegels = [...rail.children].filter((t) => t.dataset.ratio);
+    const lijst = [...rail.children].filter((t) => t.dataset.ratio);
     const breedte = rail.clientWidth;
-    if (!tegels.length || !breedte) return;
-    const gap = 8;
-
-    if (telefoon()) {
-      const hoog = Math.min(innerHeight * 0.52, 420);
-      for (const t of tegels) {
-        const r = Number(t.dataset.ratio);
-        const h = Math.round(Math.min(hoog, breedte / r));
-        Object.assign(t.style, { height: h + "px", width: Math.round(r * h) + "px", aspectRatio: "auto" });
-      }
-      pijlen();
-      return;
+    if (!lijst.length || !breedte) return;
+    const hoog = telefoon() ? Math.min(innerHeight * 0.55, 440) : 460;
+    for (const t of lijst) {
+      const r = Number(t.dataset.ratio);
+      const h = Math.round(Math.min(hoog, (breedte * 0.92) / r));
+      Object.assign(t.style, { height: h + "px", width: Math.round(r * h) + "px", aspectRatio: "auto" });
     }
-
-    const doel = breedte < 768 ? 220 : 260;
-    let rij = [], som = 0;
-    const zet = (laatste) => {
-      if (!rij.length) return;
-      const ruimte = breedte - gap * (rij.length - 1);
-      let h = ruimte / som;
-      if (laatste) h = Math.min(h, doel * 1.25);
-      for (const t of rij) {
-        Object.assign(t.style, { height: Math.floor(h) + "px", width: Math.floor(Number(t.dataset.ratio) * h) + "px", aspectRatio: "auto" });
-      }
-      rij = []; som = 0;
-    };
-    for (const t of tegels) {
-      rij.push(t);
-      som += Number(t.dataset.ratio);
-      if ((breedte - gap * (rij.length - 1)) / som <= doel) zet(false);
-    }
-    zet(true);
+    pijlen();
   }
 
+  const nav = document.querySelector(".shots-nav");
   const vorige = $("shots-prev"), volgende = $("shots-next");
   function pijlen() {
     const ruimte = rail.scrollWidth - rail.clientWidth;
+    nav.hidden = ruimte <= 8;
     vorige.disabled = rail.scrollLeft < 8;
     volgende.disabled = rail.scrollLeft > ruimte - 8;
   }
   function verschuif(richting) {
-    const midden = rail.scrollLeft + rail.clientWidth / 2;
-    const tegels = [...rail.children];
-    const centrum = (t) => t.offsetLeft - rail.offsetLeft + t.offsetWidth / 2;
+    const links = rail.getBoundingClientRect().left;
+    const lijst = tegels();
+    const pos = (t) => t.getBoundingClientRect().left - links;
     const doel = richting > 0
-      ? tegels.find((t) => centrum(t) > midden + 8)
-      : [...tegels].reverse().find((t) => centrum(t) < midden - 8);
+      ? lijst.find((t) => pos(t) > 8)
+      : [...lijst].reverse().find((t) => pos(t) < -8);
     if (!doel) return;
-    rail.scrollTo({ left: centrum(doel) - rail.clientWidth / 2, behavior: stil.matches ? "auto" : "smooth" });
+    rail.scrollTo({ left: rail.scrollLeft + pos(doel), behavior: stil.matches ? "auto" : "smooth" });
   }
   vorige.addEventListener("click", () => verschuif(-1));
   volgende.addEventListener("click", () => verschuif(1));
-  rail.addEventListener("scroll", pijlen, { passive: true });
+
+  // na het swipen of bladeren: de reel vooraan speelt
+  let rust;
+  rail.addEventListener("scroll", () => {
+    pijlen();
+    clearTimeout(rust);
+    rust = setTimeout(() => speel(vooraan()), 140);
+  }, { passive: true });
+
+  /* Sommige telefoons (spaarstand, databesparing) laten filmpjes pas spelen na een
+     aanraking. Bij de eerste tik of klik ergens op de pagina proberen we het opnieuw. */
+  const opnieuw = () => { if (actief) speel(actief); };
+  document.addEventListener("pointerdown", opnieuw, { once: true, capture: true });
+  document.addEventListener("touchend", opnieuw, { once: true, capture: true });
 
   let wacht;
   addEventListener("resize", () => { clearTimeout(wacht); wacht = setTimeout(schik, 120); });
-  document.addEventListener("visibilitychange", () => {
-    if (document.hidden) return;
-    for (const t of rail.children) {
-      const v = t.querySelector("video");
-      const box = t.getBoundingClientRect();
-      if (v && !stil.matches && t.dataset.stop !== "1" && box.bottom > 0 && box.top < innerHeight) {
-        v.play().then(() => t.classList.add("playing")).catch(() => {});
-      }
-    }
-  });
+  document.addEventListener("visibilitychange", () => { if (!document.hidden) opnieuw(); });
 })();
 
 /* ---------- adressuggesties ----------
