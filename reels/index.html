@@ -1,689 +1,934 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="nl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>SNAP360 One-take reels US</title>
-<meta name="claude:viewport-fit-sides" content="cover">
-<meta name="description" content="Short reels filmed in one continuous take, on location at your business. $50 per reel, from 8 reels per shoot day.">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="snap360-versie" content="2026-10-29-reels">
+<title>One-taker reels — SNAP360</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Hanken+Grotesk:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  /* Layout: one narrow column of dark panes, a filmstrip as the reel counter,
-     gold used only for what moves (playhead, chosen frames, the send button). */
-  :root {
-    --bg: #0b0a09;
-    --pane: #141210;
-    --well: #0e0d0b;
-    --edge: #2a2621;
-    --edge-soft: #1f1c19;
-    --text: #f3eee7;
-    --dim: #a59d92;
-    --faint: #6e675e;
-    --gold: #dd9a3e;
-    --gold-soft: rgba(221, 154, 62, 0.16);
-    --on-gold: #1a1208;
-    --font-display: "Bricolage Grotesque", "Arial Narrow", system-ui, sans-serif;
-    --font-body: "Hanken Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
-    --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
-    color-scheme: dark;
-  }
+/* ============================================================
+   SNAP360 — one-taker reels
+   Zelfde huisstijl en werking als het video-opdrachtformulier.
+   ============================================================ */
+:root{
+  --ink:#12110F;--panel:#1C1A17;--panel-2:#242118;--line:#332F28;--line-soft:#282520;
+  --text:#EFEAE1;--muted:#9E978B;--gold:#D5943B;--gold-soft:rgba(213,148,59,.14);
+  --ok:#7FB069;--err:#D86A5A;--r:4px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--ink);color:var(--text);
+  font-family:'Archivo',system-ui,-apple-system,'Segoe UI',sans-serif;
+  font-size:16px;line-height:1.55;padding:0 20px 80px}
+.wrap{max-width:760px;margin:0 auto}
 
-  * { box-sizing: border-box; }
-  body {
-    margin: 0;
-    background: var(--bg);
-    color: var(--text);
-    font-family: var(--font-body);
-    font-size: 16px;
-    line-height: 1.6;
-    -webkit-font-smoothing: antialiased;
-    touch-action: manipulation;
-  }
-  p, h1, h2, ul { margin: 0; }
+header{padding:44px 0 30px;border-bottom:1px solid var(--line-soft)}
+.brand{font-size:13px;font-weight:700;letter-spacing:.22em;color:var(--gold)}
+h1{font-size:clamp(30px,6.2vw,46px);font-weight:600;line-height:1.06;
+  letter-spacing:-.025em;margin:16px 0 12px;max-width:14ch}
+header p{color:var(--muted);max-width:56ch;font-size:15px}
 
-  .wrap {
-    max-width: 48rem;
-    margin: 0 auto;
-    padding-left: max(16px, env(safe-area-inset-left, 0px));
-    padding-right: max(16px, env(safe-area-inset-right, 0px));
-    padding-block: 0 4.5rem;
-    display: grid;
-    gap: 1rem;
-  }
+.rail{display:flex;gap:2px;margin:26px 0 34px}
+.rail i{flex:1;height:3px;background:var(--line);transition:background .3s}
+.rail i.done{background:var(--gold)}
+.stepno{color:var(--muted);font-size:13px;font-weight:500;margin-bottom:10px}
 
-  .label {
-    font-family: var(--font-mono);
-    font-size: 0.68rem;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--faint);
-  }
+.step{display:none}
+.step.on{display:block;animation:in .25s ease-out}
+@keyframes in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.step.on{animation:none}*{transition:none!important}}
+h2{font-size:26px;font-weight:600;letter-spacing:-.02em;margin-bottom:8px}
+.lead{color:var(--muted);margin-bottom:26px;max-width:58ch;font-size:15px}
+.exclbtw{color:var(--muted);font-size:13.5px;margin:-14px 0 20px}
 
-  /* ---------- kop ---------- */
-  .head { padding-block: 4rem 2rem; display: grid; gap: 1.2rem; }
-  .brand { display: flex; align-items: center; gap: 0.6rem; }
-  .brand b { font-family: var(--font-display); font-weight: 700; font-size: 1rem; letter-spacing: 0.04em; color: var(--text); }
-  .brand b span { color: var(--gold); }
-  .title {
-    font-family: var(--font-display);
-    font-weight: 700;
-    font-size: clamp(2.3rem, 7vw, 4.2rem);
-    line-height: 0.98;
-    letter-spacing: -0.035em;
-    text-wrap: balance;
-  }
-  .intro { max-width: 44ch; color: var(--dim); font-size: 1.02rem; line-height: 1.7; }
-  .runtime {
-    justify-self: start;
-    display: inline-flex; gap: 0.7rem; align-items: center;
-    padding: 0.45rem 0.9rem;
-    border: 1px solid var(--edge);
-    border-radius: 6px;
-    font-family: var(--font-mono);
-    font-size: 0.72rem;
-    letter-spacing: 0.08em;
-    color: var(--dim);
-    font-variant-numeric: tabular-nums;
-  }
-  .runtime .rec { width: 7px; height: 7px; border-radius: 50%; background: var(--gold); }
-  .runtime b { color: var(--text); font-weight: 500; }
+/* ---------- aantal reels ---------- */
+.kiezer{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:26px 24px 20px}
+.teller{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.teller .getal{font-size:68px;font-weight:600;line-height:1;letter-spacing:-.03em;color:var(--gold);
+  font-variant-numeric:tabular-nums;min-width:1.2em}
+.teller .eenheid{font-size:20px;font-weight:600}
+.teller .dag{color:var(--muted);font-size:14px;margin-left:auto}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:4px;border-radius:2px;
+  background:linear-gradient(to right,var(--gold) var(--vul,0%),var(--line) var(--vul,0%));
+  margin:28px 0 12px;cursor:pointer}
+input[type=range]:focus{outline:none}
+input[type=range]:focus-visible{outline:2px solid var(--gold);outline-offset:10px}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:26px;height:26px;
+  border-radius:50%;background:var(--gold);border:4px solid var(--panel);box-shadow:0 0 0 1px var(--gold)}
+input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:var(--gold);
+  border:4px solid var(--panel);box-shadow:0 0 0 1px var(--gold)}
+.ticks{display:flex;justify-content:space-between;padding:0 8px;color:var(--muted);font-size:13px;
+  font-variant-numeric:tabular-nums}
+.ticks span{width:14px;text-align:center;cursor:pointer}
+.ticks span.on{color:var(--gold);font-weight:600}
 
-  /* ---------- panelen ---------- */
-  .pane {
-    background: var(--pane);
-    border: 1px solid var(--edge-soft);
-    border-radius: 14px;
-    padding: 1.8rem;
-    min-width: 0;
-  }
+.totaalbalk{border:1px solid var(--gold);border-radius:var(--r);background:var(--panel-2);
+  padding:18px 20px;margin-top:18px}
+.totaalbalk .regel{display:flex;justify-content:space-between;gap:12px;font-size:14.5px;color:var(--muted);margin-bottom:5px}
+.totaalbalk .som{display:flex;justify-content:space-between;gap:12px;font-size:18px;font-weight:600;
+  color:var(--text);padding-top:10px;border-top:1px solid var(--line);margin-top:6px}
+.totaalbalk .note{color:var(--muted);font-size:13.5px;margin-top:10px;line-height:1.45}
 
-  /* ---------- aantal en prijs ---------- */
-  .figures { display: flex; justify-content: space-between; align-items: flex-end; gap: 1.5rem; flex-wrap: wrap; }
-  .big {
-    font-family: var(--font-display);
-    font-weight: 500;
-    font-size: clamp(3.6rem, 12vw, 5.6rem);
-    line-height: 0.85;
-    letter-spacing: -0.04em;
-    font-variant-numeric: tabular-nums;
-  }
-  .figure { display: grid; gap: 0.6rem; }
-  .money { text-align: right; justify-items: end; }
-  .money .big { font-size: clamp(2.7rem, 8.5vw, 4.2rem); }
-  .rate { font-size: 0.9rem; color: var(--dim); }
-  .rate b { color: var(--text); font-weight: 600; }
+/* ---------- velden ---------- */
+.field{margin-bottom:20px}
+.field label{display:block;font-size:14px;font-weight:500;margin-bottom:6px}
+.field .hint{display:block;color:var(--muted);font-weight:400;font-size:13px;margin-top:2px}
+input[type=text],input[type=email],input[type=tel],input[type=date],textarea,select{
+  width:100%;background:var(--panel);border:1px solid var(--line);border-radius:var(--r);
+  color:var(--text);font:inherit;font-size:15px;padding:11px 13px}
+textarea{min-height:90px;resize:vertical;line-height:1.5}
+input:focus,textarea:focus,select:focus{outline:none;border-color:var(--gold)}
+input.bad,textarea.bad,select.bad{border-color:var(--err)}
+.row{display:grid;gap:14px;grid-template-columns:1fr 1fr}
+@media(max-width:560px){.row{grid-template-columns:1fr}}
+.check{display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:15px;cursor:pointer}
+.check input{margin-top:4px;accent-color:var(--gold);width:16px;height:16px;flex:none}
+.adres{display:grid;gap:10px;grid-template-columns:repeat(4,1fr)}
+.adres .straat{grid-column:span 3}
+.adres .nummer{grid-column:span 1}
+.adres .postcode{grid-column:span 1}
+.adres .gemeente{grid-column:span 3}
+@media(max-width:560px){.adres{grid-template-columns:1fr 1fr}
+  .adres .straat,.adres .gemeente{grid-column:span 2}
+  .adres .nummer,.adres .postcode{grid-column:span 1}}
 
-  /* ---------- filmstrook ---------- */
-  .strip-wrap { position: relative; margin-top: 2.2rem; }
-  .strip {
-    position: relative;
-    display: grid;
-    gap: 4px;
-    height: 6rem;
-    padding: 16px 6px;
-    border-radius: 8px;
-    background: var(--well);
-    border: 1px solid var(--edge);
-  }
-  /* de perforatie boven en onder, zoals op echte film */
-  .strip::before, .strip::after {
-    content: "";
-    position: absolute;
-    left: 10px; right: 10px;
-    height: 5px;
-    background: repeating-linear-gradient(90deg, var(--edge) 0 9px, transparent 9px 18px);
-    border-radius: 2px;
-  }
-  .strip::before { top: 5px; }
-  .strip::after { bottom: 5px; }
-  .frame { border-radius: 3px; background: rgba(243, 238, 231, 0.04); transition: background 0.18s ease; }
-  .frame.on { background: var(--gold-soft); box-shadow: inset 0 0 0 1px rgba(221, 154, 62, 0.35); }
+/* ---------- shotlijst ---------- */
+.shotbox{border:1px solid var(--gold);border-radius:var(--r);background:var(--panel-2);padding:20px;margin-bottom:22px}
+.shotbox h3{font-size:18px;font-weight:600;margin-bottom:4px}
+.shotbox p{color:var(--muted);font-size:14px;margin-bottom:14px}
+.shotadd{display:flex;gap:8px;flex-wrap:wrap}
+.shotadd input{flex:1 1 180px;min-width:0}
+.shotadd button{flex:none}
+.shots{list-style:none;margin-top:14px}
+.shots li{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-top:1px solid var(--line);font-size:15px}
+.shots .n{color:var(--gold);font-weight:600;font-size:13px;padding-top:2px;min-width:18px}
+.shots .x{margin-left:auto;background:none;border:none;color:var(--muted);cursor:pointer;font-size:18px;line-height:1;padding:0 4px}
+.shots .x:hover{color:var(--err)}
+.empty{color:var(--muted);font-size:14px;padding:12px 0 2px;border-top:1px solid var(--line);margin-top:14px}
 
-  .playhead {
-    position: absolute; top: -10px; bottom: -10px; width: 2px;
-    background: var(--gold);
-    transform: translateX(-1px);
-    transition: left 0.2s cubic-bezier(.2, .8, .2, 1);
-    pointer-events: none;
-  }
-  .playhead::before {
-    content: ""; position: absolute; top: -2px; left: 50%; margin-left: -6px;
-    border-style: solid; border-width: 8px 6px 0 6px;
-    border-color: var(--gold) transparent transparent transparent;
-  }
-  .strip-wrap input[type="range"] {
-    position: absolute; inset: 0; width: 100%; height: 100%; margin: 0;
-    opacity: 0; cursor: ew-resize; -webkit-appearance: none; appearance: none;
-    z-index: 2;
-  }
-  .strip-wrap input[type="range"]:focus-visible + .strip { outline: 2px solid var(--gold); outline-offset: 3px; }
+/* ---------- knoppen ---------- */
+.nav{display:flex;gap:10px;margin-top:32px;padding-top:24px;border-top:1px solid var(--line-soft)}
+button.go{background:var(--gold);color:#17140E;border:none;border-radius:var(--r);
+  padding:13px 26px;font:inherit;font-size:15px;font-weight:600;cursor:pointer}
+button.go:hover{background:#E3A44C}
+button.go:disabled{opacity:.5;cursor:not-allowed}
+button.back{background:none;border:1px solid var(--line);color:var(--muted);border-radius:var(--r);
+  padding:13px 20px;font:inherit;font-size:15px;cursor:pointer}
+button.back:hover{color:var(--text);border-color:#4A443A}
+button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+button.klein{background:none;border:1px solid var(--line);color:var(--text);border-radius:var(--r);
+  padding:10px 16px;font:inherit;font-size:14.5px;cursor:pointer}
+button.klein:hover{border-color:var(--gold);color:var(--gold)}
+.err{color:var(--err);font-size:14px;margin-top:12px;display:none}
+.err.on{display:block}
 
-  .ticks {
-    display: grid; gap: 4px; margin-top: 0.8rem; padding: 0 6px;
-    font-family: var(--font-mono); font-size: 0.7rem; color: var(--faint);
-    font-variant-numeric: tabular-nums;
-  }
-  .ticks span { text-align: center; }
-  .ticks span.now { color: var(--text); }
+/* ---------- foto ---------- */
+.fotoblok{border:1px solid var(--line);border-radius:var(--r);background:var(--panel);padding:18px 20px;margin-top:8px}
+.fotoblok h3{font-size:16px;font-weight:600;margin-bottom:4px}
+.fotoblok p{color:var(--muted);font-size:13.5px;margin-bottom:14px;max-width:56ch}
+.fotorij{display:flex;gap:14px;align-items:center;margin-top:14px;flex-wrap:wrap}
+.fotorij img{width:88px;height:88px;object-fit:cover;border-radius:var(--r);border:1px solid var(--line)}
+#camBox{margin-top:14px}
+#cam{width:100%;max-width:420px;border-radius:var(--r);border:1px solid var(--line);background:#000;display:block}
+.camrij{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.ofwel{color:var(--muted);font-size:13.5px;margin-top:10px}
+.ofwel button{background:none;border:none;color:var(--gold);font:inherit;font-size:13.5px;cursor:pointer;text-decoration:underline;padding:0}
 
-  .steps { display: flex; gap: 0.6rem; margin-top: 1.4rem; }
-  .btn {
-    min-width: 4.4rem; min-height: 2.6rem; padding: 0.55rem 1rem;
-    border: 1px solid var(--edge); border-radius: 999px;
-    background: rgba(243, 238, 231, 0.05); color: var(--text);
-    font-family: var(--font-mono); font-size: 0.8rem; cursor: pointer;
-    font-variant-numeric: tabular-nums;
-    transition: background 0.2s, border-color 0.2s;
-  }
-  .btn:hover:not(:disabled) { background: rgba(243, 238, 231, 0.1); border-color: #3a352f; }
-  .btn:disabled { opacity: 0.35; cursor: not-allowed; }
-  .btn:focus-visible, .chipish:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+/* ---------- document ---------- */
+.doc{background:#FBF9F5;color:#1A1815;border-radius:var(--r);padding:34px 32px;
+  font-size:14.5px;line-height:1.6;max-height:460px;overflow-y:auto}
+@media(max-width:560px){.doc{padding:24px 20px;font-size:14px}}
+.doc h3{font-size:20px;font-weight:600;letter-spacing:-.01em;margin-bottom:2px}
+.doc .ref{color:#6E675C;font-size:13px;margin-bottom:22px}
+.doc h4{font-size:13px;font-weight:700;letter-spacing:.06em;color:#8A6A2E;
+  margin:22px 0 8px;padding-bottom:5px;border-bottom:1px solid #E3DDD2}
+.doc p{margin-bottom:7px}
+.doc ul,.doc ol{margin:0 0 7px 18px}
+.doc li{margin-bottom:4px}
+.doc dl{display:grid;grid-template-columns:auto 1fr;gap:3px 16px;font-size:14px}
+.doc dt{color:#6E675C}
+.doc .total{margin-top:12px;padding-top:10px;border-top:1px solid #E3DDD2;font-weight:600;font-size:16px}
+.doc .small{font-size:13px;color:#55504A}
+.doc .pasfoto{width:92px;border:1px solid #E3DDD2;border-radius:3px;margin-top:6px}
 
-  .rhythm { display: flex; gap: 1.2rem 1.6rem; align-items: baseline; flex-wrap: wrap; }
-  .rhythm h2 { font-family: var(--font-display); font-weight: 500; font-size: 1.5rem; letter-spacing: -0.02em; }
-  .rhythm p { flex: 1 1 18rem; min-width: 0; color: var(--dim); font-size: 0.95rem; }
+/* ---------- handtekening ---------- */
+.sign{margin-top:26px}
+canvas{width:100%;height:170px;background:#FBF9F5;border:1px solid var(--line);
+  border-radius:var(--r);touch-action:none;display:block;cursor:crosshair}
+.signbar{display:flex;justify-content:space-between;align-items:center;margin-top:8px}
+.signbar span{color:var(--muted);font-size:13px}
+.signbar button{background:none;border:none;color:var(--muted);font:inherit;font-size:13px;cursor:pointer;text-decoration:underline}
+.signbar button:hover{color:var(--text)}
 
-  /* ---------- voorbeelden ---------- */
-  .shots { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 1.2rem; }
-  .shot {
-    position: relative; flex: 0 0 auto;
-    width: 8rem; aspect-ratio: 9 / 16; max-width: 100%;
-    padding: 0; border: 1px solid var(--edge); border-radius: 10px;
-    background: var(--well); overflow: hidden; cursor: pointer; color: var(--text);
-  }
-  .shot video { display: block; width: 100%; height: 100%; object-fit: cover; }
-  .shot .no {
-    position: absolute; left: 0.55rem; top: 0.45rem;
-    font-family: var(--font-mono); font-size: 0.66rem; letter-spacing: 0.1em;
-    color: rgba(243, 238, 231, 0.8); text-shadow: 0 1px 6px rgba(0, 0, 0, 0.7);
-  }
-  .shot .state {
-    position: absolute; inset: 0; display: grid; place-items: center;
-    font-size: 1.1rem; text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
-    transition: opacity 0.15s;
-  }
-  .shot.playing .state { opacity: 0; }
-  .shot.empty { cursor: default; border-style: dashed; }
-  .shot.empty .state { font-family: var(--font-mono); font-size: 0.7rem; color: var(--faint); text-shadow: none; }
-  .shot:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
-  .shots-nav { display: none; gap: 0.5rem; margin-top: 0.9rem; }
-  .note { margin-top: 0.9rem; font-size: 0.85rem; color: var(--faint); }
-  .note code { font-family: var(--font-mono); font-size: 0.8rem; color: var(--dim); }
-
-  /* ---------- inbegrepen ---------- */
-  .inc { list-style: none; padding: 0; margin-top: 1.1rem; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 2rem; }
-  .inc li { padding: 0.9rem 0; border-top: 1px solid var(--edge-soft); display: grid; grid-template-columns: 0.9rem 1fr; gap: 0.7rem; align-items: baseline; }
-  .inc li::before { content: ""; width: 7px; height: 7px; border-radius: 50%; border: 1px solid var(--gold); transform: translateY(-1px); }
-
-  /* ---------- aanvraag ---------- */
-  .pick { font-family: var(--font-display); font-weight: 500; font-size: clamp(1.35rem, 3.6vw, 2rem); line-height: 1.2; letter-spacing: -0.02em; text-wrap: balance; }
-  .pick em { font-style: normal; color: var(--gold); font-variant-numeric: tabular-nums; }
-  .lede { margin-top: 0.8rem; color: var(--dim); font-size: 0.95rem; }
-
-  .form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin-top: 1.6rem; }
-  .field { display: grid; gap: 0.45rem; min-width: 0; }
-  .field span { font-family: var(--font-mono); font-size: 0.66rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--dim); }
-  .field input, .field textarea {
-    width: 100%; padding: 0.85rem 1rem;
-    font: inherit; font-size: 1rem; color: var(--text);
-    background: var(--well); border: 1px solid var(--edge); border-radius: 10px;
-  }
-  .field textarea { resize: vertical; min-height: 5.5rem; }
-  .field input::placeholder, .field textarea::placeholder { color: var(--faint); }
-  .field input:focus, .field textarea:focus { outline: none; border-color: var(--gold); }
-  .wide { grid-column: 1 / -1; }
-  .hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
-
-  .send { display: flex; align-items: center; gap: 1.2rem; flex-wrap: wrap; margin-top: 0.4rem; }
-  .btn-send {
-    padding: 1rem 1.6rem; border: 0; border-radius: 999px;
-    background: var(--gold); color: var(--on-gold);
-    font-family: var(--font-mono); font-weight: 500; font-size: 0.8rem; letter-spacing: 0.14em; text-transform: uppercase;
-    cursor: pointer; transition: filter 0.2s;
-  }
-  .btn-send:hover:not(:disabled) { filter: brightness(1.08); }
-  .btn-send:disabled { opacity: 0.6; cursor: wait; }
-  .btn-send:focus-visible { outline: 2px solid var(--text); outline-offset: 3px; }
-  .msg { font-size: 0.9rem; color: var(--dim); min-height: 1.4rem; }
-  .done { margin-top: 1.4rem; font-size: 1rem; line-height: 1.7; }
-
-  .contact { margin-top: 1.4rem; display: flex; gap: 0.4rem 1.6rem; flex-wrap: wrap; font-size: 0.88rem; color: var(--dim); }
-  .contact b { font-weight: 500; color: var(--text); user-select: all; }
-  .privacy { margin-top: 1rem; font-size: 0.8rem; line-height: 1.55; color: var(--faint); }
-
-  @media (max-width: 40rem) {
-    .head { padding-top: 2.8rem; }
-    .pane { padding: 1.35rem; }
-    .figures { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1.4rem; }
-    .money { text-align: left; justify-items: start; }
-    .strip { height: 5rem; }
-    .ticks span:nth-child(even) { visibility: hidden; }
-    .steps .btn { flex: 1; min-height: 2.9rem; }
-    .inc, .form { grid-template-columns: minmax(0, 1fr); }
-    .shots {
-      flex-wrap: nowrap; justify-content: flex-start; align-items: center;
-      overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none;
-    }
-    .shots::-webkit-scrollbar { display: none; }
-    .shot { scroll-snap-align: center; }
-    .shots-nav { display: flex; }
-    .shots-nav .btn { flex: 1; }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .frame, .playhead, .shot .state { transition: none; }
-  }
+.done-panel{border:1px solid var(--gold);border-radius:var(--r);padding:34px 30px;background:var(--panel-2)}
+.done-panel h2{color:var(--gold)}
+.spin{display:inline-block;width:14px;height:14px;border:2px solid rgba(23,20,14,.3);border-top-color:#17140E;
+  border-radius:50%;animation:sp .7s linear infinite;vertical-align:-2px;margin-right:8px}
+@keyframes sp{to{transform:rotate(360deg)}}
 </style>
-
 </head>
 <body>
-<main class="wrap">
+<div class="wrap">
 
-  <header class="head">
-    <div class="brand"><b>SNAP<span>360</span></b><span class="label">One-take reels</span></div>
-    <h1 class="title">One take. Ten seconds. Ready to post.</h1>
-    <p class="intro">
-      Short reels filmed in one continuous shot, right where you work: your restaurant, your shop
-      or your studio. Affordable, ready to use and easy to post. Choose how many you want,
-      from <span id="intro-min">8</span> reels per shoot day.
-    </p>
-    <p class="runtime"><span class="rec" aria-hidden="true"></span>Total runtime up to <b id="runtime">00:01:20:00</b> · 1 shoot day</p>
-  </header>
+<header>
+  <div class="brand">SNAP360</div>
+  <h1>Jouw one-taker reels</h1>
+  <p>Kies hoeveel reels je wil, vertel ons wat er zeker in beeld moet, en onderteken de opdrachtbevestiging. Duurt ongeveer vijf minuten. Je krijgt het getekende document meteen in je mailbox.</p>
+</header>
 
-  <section class="pane" aria-label="Choose the number of reels">
-    <div class="figures" aria-live="polite">
-      <div class="figure">
-        <span class="big" id="count">8</span>
-        <span class="label">Reels</span>
+<div class="rail" id="rail"></div>
+<div class="stepno" id="stepno"></div>
+
+<!-- 0. AANTAL REELS -->
+<section class="step" data-step="0">
+  <h2>Hoeveel reels?</h2>
+  <p class="lead" id="aantalLead"></p>
+  <p class="exclbtw" id="btwTxt"></p>
+
+  <div class="kiezer">
+    <div class="teller">
+      <span class="getal" id="aantalGetal">8</span>
+      <span class="eenheid">reels</span>
+      <span class="dag" id="dagTxt"></span>
+    </div>
+    <input type="range" id="aantal" step="1" aria-label="Aantal reels">
+    <div class="ticks" id="ticks"></div>
+  </div>
+
+  <div class="totaalbalk" id="totaalBalk"></div>
+  <div class="nav"><button class="go" data-next>Verder</button></div>
+</section>
+
+<!-- 1. GEGEVENS -->
+<section class="step" data-step="1">
+  <h2>Je gegevens</h2>
+  <p class="lead">Deze komen op de opdrachtbevestiging en op de factuur.</p>
+  <div id="gegevens"></div>
+
+  <div class="fotoblok" id="fotoBlok">
+    <h3>Foto van de ondertekenaar</h3>
+    <p id="fotoUitleg">Zo weten we op de opnamedag meteen wie we voor ons hebben. De foto wordt enkel bij deze opdracht bewaard.</p>
+    <input type="file" accept="image/*" capture="user" id="fotoIn" style="display:none">
+    <button type="button" class="klein" id="fotoKnop">Foto nemen</button>
+    <div class="ofwel" id="fotoOfwel">of <button type="button" id="fotoBestand">kies een bestand van je toestel</button></div>
+    <div id="camBox" style="display:none">
+      <video id="cam" playsinline muted autoplay></video>
+      <div class="camrij">
+        <button type="button" class="go" id="camSnap">Neem de foto</button>
+        <button type="button" class="klein" id="camWissel">Andere camera</button>
+        <button type="button" class="klein" id="camStop">Annuleer</button>
       </div>
-      <div class="figure money">
-        <span class="big" id="total">$400</span>
-        <span class="rate"><b id="rate">$50</b> per reel · <span id="vat">plus tax</span></span>
-      </div>
     </div>
-
-    <div class="strip-wrap">
-      <input type="range" id="slider" min="8" max="16" step="1" value="8" aria-label="Number of reels">
-      <div class="strip" id="strip" aria-hidden="true"></div>
-      <div class="playhead" id="playhead" aria-hidden="true"></div>
+    <div class="fotorij" id="fotoVoor" style="display:none">
+      <img id="fotoImg" alt="Genomen foto">
+      <button type="button" class="klein" id="fotoWeg">Opnieuw</button>
     </div>
-    <div class="ticks" id="ticks" aria-hidden="true"></div>
+  </div>
 
-    <div class="steps">
-      <button class="btn" type="button" id="down" aria-label="One reel fewer">− 1</button>
-      <button class="btn" type="button" id="up" aria-label="One reel more">+ 1</button>
+  <div class="err" id="e1">Vul de verplichte velden in.</div>
+  <div class="nav"><button class="back" data-prev>Terug</button><button class="go" data-next>Verder</button></div>
+</section>
+
+<!-- 2. AANDACHTSPUNTEN -->
+<section class="step" data-step="2">
+  <h2>Aandachtspunten</h2>
+  <p class="lead">Dit is het belangrijkste deel. Alles wat je hier zet, staat mee in het document en wordt onze checklist op de dag zelf.</p>
+
+  <div class="shotbox">
+    <h3>Dit moet zeker in beeld</h3>
+    <p>Voeg één voor één toe wat er absoluut gefilmd moet worden. Wees concreet, en zeg er gerust bij hoe je het wil.</p>
+    <div class="shotadd">
+      <input type="text" id="shotIn" placeholder="Wat moet in beeld?" maxlength="120">
+      <input type="text" id="shotHoe" placeholder="Hoe? (mag leeg)" maxlength="120">
+      <button class="go" id="shotAdd" type="button">Voeg toe</button>
     </div>
-  </section>
+    <ul class="shots" id="shotList"></ul>
+    <div class="empty" id="shotEmpty">Nog niets toegevoegd.</div>
+  </div>
 
-  <section class="pane rhythm">
-    <h2 id="rhythm-title">About 2 a week</h2>
-    <p id="rhythm-text">Enough to post about twice a week for a month.</p>
-  </section>
+  <div id="vragen"></div>
+  <div class="err" id="e2">Voeg minstens één punt toe dat zeker in beeld moet.</div>
+  <div class="nav"><button class="back" data-prev>Terug</button><button class="go" data-next>Naar het document</button></div>
+</section>
 
-  <section class="pane" id="shots-pane">
-    <p class="label">Examples</p>
-    <div class="shots" id="shots"></div>
-    <div class="shots-nav">
-      <button type="button" class="btn" id="shots-prev" aria-label="Previous reel">←</button>
-      <button type="button" class="btn" id="shots-next" aria-label="Next reel">→</button>
+<!-- 3. DOCUMENT + HANDTEKENING -->
+<section class="step" data-step="3">
+  <h2>Opdrachtbevestiging</h2>
+  <p class="lead">Lees na en onderteken. Klopt er iets niet, ga dan terug en pas het aan.</p>
+  <div class="doc" id="doc"></div>
+
+  <div class="sign">
+    <label class="check"><input type="checkbox" id="voorwaardenGelezen"><span>Ik heb de algemene voorwaarden in dit document gelezen en ik aanvaard ze.</span></label>
+    <label class="check"><input type="checkbox" id="akkoord"><span>Ik ga akkoord met de opdracht hierboven, en ik ben bevoegd om te tekenen.</span></label>
+    <div class="field" style="margin-bottom:10px">
+      <label for="signName">Naam van de ondertekenaar</label>
+      <input type="text" id="signName" autocomplete="name">
     </div>
-    <p class="note" id="shots-note">Tap a reel to pause or play it. They play without sound, just like in the feed.</p>
-  </section>
+    <label style="display:block;font-size:14px;font-weight:500;margin-bottom:6px">Handtekening</label>
+    <canvas id="pad"></canvas>
+    <div class="signbar"><span>Teken met je muis of vinger</span><button type="button" id="clearPad">Wissen</button></div>
+  </div>
 
-  <section class="pane">
-    <p class="label">What you get</p>
-    <ul class="inc">
-      <li><span>Filmed in one continuous take</span></li>
-      <li><span>Up to 10 seconds per reel</span></li>
-      <li><span>Made for social media</span></li>
-      <li><span><span id="inc-count">8</span> reels, filmed on one shoot day</span></li>
-    </ul>
-  </section>
+  <div class="err" id="e3">Vink de algemene voorwaarden en het akkoord aan, vul je naam in en zet je handtekening.</div>
+  <div class="nav"><button class="back" data-prev>Terug</button><button class="go" id="send">Onderteken en verstuur</button></div>
+</section>
 
-  <section class="pane" id="aanvraag">
-    <p class="pick">Your selection: <em id="pick-count">8</em> reels for <em id="pick-total">$400</em> <span class="rate">plus tax</span></p>
-    <p class="lede" id="lede">Tell us which day you would like us to film. We will get in touch to confirm the shoot day.</p>
+<!-- 4. KLAAR -->
+<section class="step" data-step="4">
+  <div class="done-panel">
+    <h2>Getekend</h2>
+    <p class="lead" style="margin-bottom:0" id="doneTxt"></p>
+  </div>
+</section>
 
-    <form class="form" id="form" novalidate>
-      <label class="field"><span>Preferred shoot day</span>
-        <input type="date" id="f-date" required>
-      </label>
-      <label class="field"><span>Name</span>
-        <input type="text" id="f-name" maxlength="80" autocomplete="name" placeholder="Who are we filming for?" required>
-      </label>
-      <label class="field"><span>Email</span>
-        <input type="email" id="f-email" maxlength="120" autocomplete="email" placeholder="So we can confirm your request" required>
-      </label>
-      <label class="field"><span>Phone</span>
-        <input type="tel" id="f-phone" maxlength="30" autocomplete="tel" placeholder="The best number to reach you" required>
-      </label>
-      <label class="field wide"><span>Business and address (optional)</span>
-        <input type="text" id="f-place" maxlength="160" placeholder="Your business name and where we film">
-      </label>
-      <label class="field wide"><span>Ideas or notes (optional)</span>
-        <textarea id="f-note" maxlength="800" placeholder="What would you like us to capture?"></textarea>
-      </label>
-      <input type="text" id="f-gotcha" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
-      <div class="send wide">
-        <button class="btn-send" type="submit" id="f-btn">Request this shoot day</button>
-        <p class="msg" id="f-msg" role="status"></p>
-      </div>
-    </form>
-
-    <div class="contact">
-      <span>Email: <b id="c-mail">tom@snapwithus360.com</b></span>
-      <span>WhatsApp: <b id="c-phone">+1 (702) 881-0971</b></span>
-    </div>
-    <p class="privacy">We use your name, email and phone number only to follow up on your request.</p>
-  </section>
-
-</main>
+</div>
 
 <script>
-/* Alles wat je wil aanpassen staat hier. */
-const CONFIG = {
-  prijsPerReel: 50,
-  valuta: "$",
-  btw: "plus tax",
-  minReels: 8,          // = 1 draaidag
-  maxReels: 16,         // hoogste aantal op de strook
-  secPerReel: 10,       // max. lengte per reel
-  voorbeelden: { map: "examples/", aantal: 8, ext: ".mp4" },
-  formspree: "https://formspree.io/f/mdajlrde",
-  vroegsteDag: 1        // aantal dagen vanaf vandaag
+/* ============================================================
+   DE REELS — pas hier prijs, minimum en maximum aan
+   ============================================================ */
+const REELS = {
+  id:           "one-takers",
+  naam:         "One-taker reels",
+  omschrijving: "Reels gefilmd in één doorlopende take.",
+  prijs:        40,      // per reel, exclusief btw
+  min:          8,       // minimale aankoop
+  max:          15,      // hoogste stand van de slider
+  duur:         "1 draaidag"
 };
 
-const $ = (id) => document.getElementById(id);
-const pad = (n) => String(n).padStart(2, "0");
-const geld = (n) => CONFIG.valuta + n.toLocaleString("en-US");
-
-/* ---------- aantal, prijs en filmstrook ---------- */
-const slider = $("slider");
-slider.min = CONFIG.minReels;
-slider.max = CONFIG.maxReels;
-slider.value = CONFIG.minReels;
-$("intro-min").textContent = CONFIG.minReels;
-$("vat").textContent = CONFIG.btw;
-
-const AANTALLEN = [];
-for (let n = CONFIG.minReels; n <= CONFIG.maxReels; n++) AANTALLEN.push(n);
-const kolommen = "repeat(" + AANTALLEN.length + ", minmax(0, 1fr))";
-$("strip").style.gridTemplateColumns = kolommen;
-$("ticks").style.gridTemplateColumns = kolommen;
-$("strip").innerHTML = AANTALLEN.map(() => '<div class="frame"></div>').join("");
-$("ticks").innerHTML = AANTALLEN.map((n) => "<span>" + n + "</span>").join("");
-const frames = [...$("strip").children];
-const ticks = [...$("ticks").children];
-
-function timecode(aantal) {
-  const s = aantal * CONFIG.secPerReel;
-  return "00:" + pad(Math.floor(s / 60)) + ":" + pad(s % 60) + ":00";
-}
-
-function perWeek(aantal) {
-  const w = aantal / 4;
-  return Number.isInteger(w) ? String(w) : w.toLocaleString("en-US", { maximumFractionDigits: 1 });
-}
-
-function teken() {
-  const n = Number(slider.value);
-  const totaal = n * CONFIG.prijsPerReel;
-  const op = AANTALLEN.indexOf(n);
-
-  $("count").textContent = n;
-  $("total").textContent = geld(totaal);
-  $("rate").textContent = geld(CONFIG.prijsPerReel);
-  $("runtime").textContent = timecode(n);
-  $("inc-count").textContent = n;
-  $("pick-count").textContent = n;
-  $("pick-total").textContent = geld(totaal);
-
-  frames.forEach((f, i) => f.classList.toggle("on", i <= op));
-  ticks.forEach((t, i) => t.classList.toggle("now", i === op));
-  $("playhead").style.left = "calc(6px + " + ((op + 0.5) / AANTALLEN.length) + " * (100% - 12px))";
-
-  const w = perWeek(n);
-  $("rhythm-title").textContent = "About " + w + " a week";
-  $("rhythm-text").textContent = "Enough to post about " + w + " reels a week for a month.";
-
-  $("down").disabled = n <= CONFIG.minReels;
-  $("up").disabled = n >= CONFIG.maxReels;
-}
-
-const stap = (d) => {
-  slider.value = Math.min(CONFIG.maxReels, Math.max(CONFIG.minReels, Number(slider.value) + d));
-  teken();
+/* ============================================================
+   ALGEMENE INSTELLINGEN
+   Staat er een config.json naast dit bestand (uit beheer.html),
+   dan worden bedrijf, btw, voorschot, foto, endpoint, algemene
+   vragen en voorwaarden daaruit gehaald. Zo blijft alles gelijk
+   met het video-opdrachtformulier.
+   ============================================================ */
+let CONFIG = {
+  endpoint: "https://script.google.com/macros/s/AKfycbwE7v_hyD1bx9yJnEH4c65PlEiDDqndjF1-eKj5n6R_9TUtiSG1gjlr5lIXoFx5eC8mrg/exec",
+  bedrijf: {
+    naam:  "DE BACKER LLC — SNAP360",
+    adres: "Vijfstraten 163, 9100 Sint-Niklaas",
+    btwnr: "BE 0782.528.494",
+    email: "tom@snapwithus360.com",
+    tel:   "+32 476 61 10 99 · +1 (702) 881-0971",
+    web:   "snapwithus360.com"
+  },
+  btw: 0.21,
+  btwRegime: "vast",
+  munt: "€",
+  voorschot: 0.30,
+  foto: "optioneel",
+  algemeen: [
+    { k:"nietBeeld", label:"Wat mag zeker níét in beeld?", hint:"Buren, nummerplaten, een rommelhoek, bepaalde personen.", type:"textarea" },
+    { k:"formaat", label:"Waar ga je de video gebruiken?", type:"select", opties:["Instagram en TikTok (verticaal)","Website en YouTube (horizontaal)","Allebei"] },
+    { k:"sfeer", label:"Welke sfeer zoek je?", type:"select", opties:["Rustig en verzorgd","Energiek en snel","Warm en persoonlijk","Zakelijk en strak","Laat het aan jullie over"] },
+    { k:"referentie", label:"Heb je een voorbeeld dat je goed vindt?", hint:"Een link naar een video of een Instagram-account.", type:"text" },
+    { k:"muziek", label:"Muziekvoorkeur", hint:"Laat leeg als je ons laat kiezen.", type:"text" },
+    { k:"datum", label:"Gewenste opnamedatum", type:"date" },
+    { k:"deadline", label:"Wanneer heb je de video nodig?", hint:"Is er een harde deadline, zoals een beurs of een lancering?", type:"text" },
+    { k:"opmerking", label:"Nog iets dat we moeten weten?", type:"textarea" }
+  ],
+  voorwaarden: [
+    "De aandachtspunten in dit document zijn de checklist voor de opnamedag. Wat er niet in staat, kan niet gegarandeerd worden.",
+    "Luchtbeelden worden enkel gemaakt waar dat wettelijk toegelaten is en wanneer het weer het toelaat. Zijn ze niet mogelijk, dan wordt 10% op het pakket in mindering gebracht.",
+    "Eén feedbackronde is inbegrepen. Wijzigingen die daarna nog gevraagd worden, of wijzigingen aan de opdracht zelf, worden apart aangerekend.",
+    "De opdrachtgever zorgt dat de locatie toegankelijk en opgeruimd is op het afgesproken uur. Verloren wachttijd wordt aangerekend.",
+    "Verplaatsingen binnen een straal van 30 km zijn inbegrepen. Daarbuiten geldt een vergoeding per kilometer.",
+    "De opdrachtgever staat in voor de toestemming van iedereen die herkenbaar in beeld komt. Voor minderjarigen is een schriftelijke toestemming van de ouders vereist.",
+    "SNAP360 blijft auteursrechtelijk eigenaar van de beelden. De opdrachtgever krijgt een onbeperkt gebruiksrecht voor eigen commerciële en online communicatie. Doorverkoop aan derden is niet inbegrepen.",
+    "SNAP360 mag de beelden gebruiken als portfolio, tenzij hier uitdrukkelijk anders over afgesproken werd.",
+    "Annuleren kan kosteloos tot 72 uur voor de opname. Daarna wordt het voorschot ingehouden.",
+    "Wordt de opname door weer of overmacht verplaatst, dan wordt in overleg een nieuwe datum gekozen zonder extra kosten.",
+    "Facturen zijn betaalbaar binnen 14 dagen. De eindlevering gebeurt na betaling van het saldo.",
+    "Op deze overeenkomst is het Belgische recht van toepassing."
+  ]
 };
-slider.addEventListener("input", teken);
-$("down").addEventListener("click", () => stap(-1));
-$("up").addEventListener("click", () => stap(1));
-teken();
+const GEDEELD = ['endpoint','bedrijf','btw','btwRegime','munt','voorschot','foto','algemeen','voorwaarden'];
 
-/* ---------- voorbeelden ----------
-   Zet je reels in de map examples/ naast deze pagina, genummerd 1.mp4, 2.mp4, ...
-   Een nummer zonder bestand verdwijnt vanzelf. Zolang er nog geen enkel bestand is,
-   tonen we lege vakken met een korte uitleg. */
-(function () {
-  const rail = $("shots");
-  const telefoon = () => matchMedia("(max-width: 40rem)").matches;
-  const stil = matchMedia("(prefers-reduced-motion: reduce)");
-  const { map, aantal, ext } = CONFIG.voorbeelden;
-  let klaar = 0, geladen = 0;
-
-  const kijker = new IntersectionObserver((items) => {
-    for (const it of items) {
-      const tegel = it.target, film = tegel.querySelector("video");
-      if (!film) continue;
-      if (it.isIntersecting && !stil.matches && tegel.dataset.stop !== "1") {
-        film.play().then(() => tegel.classList.add("playing")).catch(() => {});
-      } else if (!it.isIntersecting) {
-        film.pause();
-        tegel.classList.remove("playing");
-        delete tegel.dataset.stop;
-      }
+(async function(){
+  try{
+    const r = await fetch('config.json', {cache:'no-store'});
+    if(r.ok){
+      const j = await r.json();
+      if(j && j.types && j.paketten) GEDEELD.forEach(k => { if(j[k] !== undefined) CONFIG[k] = j[k]; });
     }
-  }, { threshold: 0.6 });
-
-  function afgerond() {
-    klaar++;
-    if (klaar < aantal) return;
-    const leeg = [...rail.children].filter((t) => t.classList.contains("empty"));
-    if (geladen) {
-      leeg.forEach((t) => t.remove());
-    } else {
-      $("shots-note").innerHTML = 'Your examples go here. Put your reels in the <code>' + map +
-        '</code> folder next to this page, numbered <code>1' + ext + '</code>, <code>2' + ext + '</code>, ...';
-    }
-    schik();
-  }
-
-  for (let n = 1; n <= aantal; n++) {
-    const tegel = document.createElement("button");
-    tegel.type = "button";
-    tegel.className = "shot";
-    tegel.setAttribute("aria-label", "Play or pause example " + n);
-
-    const film = document.createElement("video");
-    film.muted = true; film.loop = true; film.playsInline = true;
-    film.setAttribute("muted", ""); film.setAttribute("playsinline", "");
-    film.preload = "metadata";
-
-    const nr = document.createElement("span");
-    nr.className = "no"; nr.textContent = pad(n);
-    const staat = document.createElement("span");
-    staat.className = "state"; staat.textContent = "▶";
-
-    film.addEventListener("loadedmetadata", () => {
-      tegel.dataset.ratio = film.videoWidth / film.videoHeight;
-      geladen++;
-      kijker.observe(tegel);
-      afgerond();
-    }, { once: true });
-
-    film.addEventListener("error", () => {
-      film.remove();
-      tegel.classList.add("empty");
-      tegel.disabled = true;
-      tegel.dataset.ratio = 9 / 16;
-      staat.textContent = "Reel " + pad(n);
-      afgerond();
-    }, { once: true });
-
-    tegel.addEventListener("click", () => {
-      if (!film.isConnected) return;
-      if (film.paused) {
-        delete tegel.dataset.stop;
-        film.play().then(() => tegel.classList.add("playing")).catch(() => {});
-      } else {
-        film.pause();
-        tegel.dataset.stop = "1";
-        tegel.classList.remove("playing");
-      }
-    });
-
-    tegel.append(film, nr, staat);
-    rail.appendChild(tegel);
-    film.src = map + n + ext;
-  }
-
-  /* Rijen die van rand tot rand lopen: elke reel houdt zijn eigen verhouding,
-     de rij bepaalt de hoogte. Op een telefoon wordt het één rail om te swipen. */
-  function schik() {
-    const tegels = [...rail.children].filter((t) => t.dataset.ratio);
-    const breedte = rail.clientWidth;
-    if (!tegels.length || !breedte) return;
-    const gap = 8;
-
-    if (telefoon()) {
-      const hoog = Math.min(innerHeight * 0.52, 420);
-      for (const t of tegels) {
-        const r = Number(t.dataset.ratio);
-        const h = Math.round(Math.min(hoog, breedte / r));
-        Object.assign(t.style, { height: h + "px", width: Math.round(r * h) + "px", aspectRatio: "auto" });
-      }
-      pijlen();
-      return;
-    }
-
-    const doel = breedte < 768 ? 220 : 260;
-    let rij = [], som = 0;
-    const zet = (laatste) => {
-      if (!rij.length) return;
-      const ruimte = breedte - gap * (rij.length - 1);
-      let h = ruimte / som;
-      if (laatste) h = Math.min(h, doel * 1.25);
-      for (const t of rij) {
-        Object.assign(t.style, { height: Math.floor(h) + "px", width: Math.floor(Number(t.dataset.ratio) * h) + "px", aspectRatio: "auto" });
-      }
-      rij = []; som = 0;
-    };
-    for (const t of tegels) {
-      rij.push(t);
-      som += Number(t.dataset.ratio);
-      if ((breedte - gap * (rij.length - 1)) / som <= doel) zet(false);
-    }
-    zet(true);
-  }
-
-  const vorige = $("shots-prev"), volgende = $("shots-next");
-  function pijlen() {
-    const ruimte = rail.scrollWidth - rail.clientWidth;
-    vorige.disabled = rail.scrollLeft < 8;
-    volgende.disabled = rail.scrollLeft > ruimte - 8;
-  }
-  function verschuif(richting) {
-    const midden = rail.scrollLeft + rail.clientWidth / 2;
-    const tegels = [...rail.children];
-    const centrum = (t) => t.offsetLeft - rail.offsetLeft + t.offsetWidth / 2;
-    const doel = richting > 0
-      ? tegels.find((t) => centrum(t) > midden + 8)
-      : [...tegels].reverse().find((t) => centrum(t) < midden - 8);
-    if (!doel) return;
-    rail.scrollTo({ left: centrum(doel) - rail.clientWidth / 2, behavior: stil.matches ? "auto" : "smooth" });
-  }
-  vorige.addEventListener("click", () => verschuif(-1));
-  volgende.addEventListener("click", () => verschuif(1));
-  rail.addEventListener("scroll", pijlen, { passive: true });
-
-  let wacht;
-  addEventListener("resize", () => { clearTimeout(wacht); wacht = setTimeout(schik, 120); });
-  document.addEventListener("visibilitychange", () => {
-    if (document.hidden) return;
-    for (const t of rail.children) {
-      const v = t.querySelector("video");
-      const box = t.getBoundingClientRect();
-      if (v && !stil.matches && t.dataset.stop !== "1" && box.bottom > 0 && box.top < innerHeight) {
-        v.play().then(() => t.classList.add("playing")).catch(() => {});
-      }
-    }
-  });
+  }catch(e){ /* geen config.json, we gebruiken de standaard hierboven */ }
+  start();
 })();
 
-/* ---------- aanvraag via Formspree ---------- */
-(function () {
-  const form = $("form"), datum = $("f-date");
-  const iso = (d) => d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate());
-  const vroegst = new Date();
-  vroegst.setDate(vroegst.getDate() + CONFIG.vroegsteDag);
-  datum.min = iso(vroegst);
+function start(){
 
-  const langeDatum = (v) => {
-    const d = new Date(v + "T12:00:00");
-    return isNaN(d) ? v : d.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric" });
+/* ============================================================
+   STATE
+   ============================================================ */
+const S = { aantal: REELS.min, klant:{}, antw:{}, shots:[], ref:maakRef(), foto:null };
+const volgorde = [0,1,2,3];
+let stap = 0;
+
+function maakRef(){
+  const d = new Date(), p = n => String(n).padStart(2,'0');
+  return "S360-" + d.getFullYear() + p(d.getMonth()+1) + p(d.getDate()) + "-" +
+         Math.random().toString(36).slice(2,6).toUpperCase();
+}
+const $  = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const esc = s => String(s??"").replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const geld = n => CONFIG.munt + n.toLocaleString('nl-BE',{minimumFractionDigits:2,maximumFractionDigits:2});
+const vragenLijst = () => CONFIG.algemeen || [];
+
+$('#rail').innerHTML = volgorde.map(()=>'<i></i>').join('');
+
+/* ============================================================
+   AANTAL REELS
+   ============================================================ */
+$('#aantalLead').textContent =
+  `Elke reel wordt in één doorlopende take gefilmd. Je betaalt per reel, met een minimum van ${REELS.min} reels: dat is ${REELS.duur}.`;
+$('#btwTxt').textContent = CONFIG.btwRegime === 'later'
+  ? 'Alle prijzen zijn exclusief btw. Het btw-tarief wordt bij de facturatie vastgesteld.'
+  : `Alle prijzen zijn exclusief btw. Er komt ${Math.round(CONFIG.btw*100)}% btw bij.`;
+$('#dagTxt').textContent = REELS.duur;
+
+const slider = $('#aantal');
+slider.min = REELS.min; slider.max = REELS.max; slider.value = S.aantal;
+const stappen = [];
+for(let i = REELS.min; i <= REELS.max; i++) stappen.push(i);
+$('#ticks').innerHTML = stappen.map(n=>`<span data-n="${n}">${n}</span>`).join('');
+$('#ticks').addEventListener('click', e=>{
+  const t = e.target.closest('[data-n]'); if(!t) return;
+  slider.value = t.dataset.n; zetAantal();
+});
+slider.addEventListener('input', zetAantal);
+
+function zetAantal(){
+  S.aantal = +slider.value;
+  $('#aantalGetal').textContent = S.aantal;
+  const vul = REELS.max === REELS.min ? 100 : (S.aantal-REELS.min)/(REELS.max-REELS.min)*100;
+  slider.style.setProperty('--vul', vul + '%');
+  $$('#ticks span').forEach(t => t.classList.toggle('on', +t.dataset.n === S.aantal));
+  tekenTotaal();
+}
+
+function bedragen(){
+  const ex = Math.round(S.aantal * REELS.prijs * 100) / 100;
+  const later = CONFIG.btwRegime === 'later';
+  const btw = later ? 0 : Math.round(ex * CONFIG.btw * 100) / 100;
+  const totaal = ex + btw;
+  return { aantal:S.aantal, prijsPerReel:REELS.prijs,
+           basis:ex, extra:0, pakketNaam:REELS.naam, opties:[], inbegrepen:[],
+           kortPct:0, kortLabel:'', kortBedrag:0,
+           ex, btw, in:totaal, later,
+           btwPct: later ? null : Math.round(CONFIG.btw*100),
+           voorschot: totaal * CONFIG.voorschot };
+}
+function pakket(){
+  return { id:REELS.id, naam:REELS.naam, prijs:S.aantal*REELS.prijs, duur:REELS.duur,
+           omschrijving:REELS.omschrijving,
+           levert:[ S.aantal + ' one-taker reels', 'Opname op ' + REELS.duur ] };
+}
+
+function tekenTotaal(){
+  const b = bedragen();
+  $('#totaalBalk').innerHTML =
+    `<div class="regel"><span>${b.aantal} reels × ${geld(REELS.prijs)}</span><span>${geld(b.ex)}</span></div>` +
+    (b.later ? '' : `<div class="regel"><span>Btw ${b.btwPct}%</span><span>${geld(b.btw)}</span></div>`) +
+    `<div class="som"><span>${b.later ? 'Totaal exclusief btw' : 'Totaal inclusief btw'}</span>
+       <span>${geld(b.later ? b.ex : b.in)}</span></div>`;
+}
+
+/* ============================================================
+   GEGEVENS
+   ============================================================ */
+const VELDEN = [
+  { k:"naam",    l:"Naam en voornaam", v:true, ac:"name", p:"Voor- en achternaam" },
+  { k:"bedrijf", l:"Bedrijf of organisatie", h:"Laat leeg als je geen bedrijfsnaam hebt.", ac:"organization", p:"Naam van de zaak" },
+  { k:"email",   l:"E-mailadres", v:true, t:"email", ac:"email", p:"naam@voorbeeld.be" },
+  { k:"tel",     l:"Telefoon", v:true, t:"tel", ac:"tel", p:"0470 12 34 56" },
+  { k:"straat",   l:"Straat", v:true, kl:"straat", ac:"address-line1", p:"Straatnaam" },
+  { k:"nummer",   l:"Nummer en bus", v:true, kl:"nummer", p:"12" },
+  { k:"postcode", l:"Postcode", v:true, kl:"postcode", ac:"postal-code", p:"9100" },
+  { k:"gemeente", l:"Gemeente", v:true, kl:"gemeente", ac:"address-level2", p:"Sint-Niklaas" },
+  { k:"land",     l:"Land", kl:"straat", ac:"country-name", p:"België" },
+  { k:"btw",     l:"Ondernemingsnummer of btw-nummer", v:true, h:"Bestel je als particulier? Vink dat bovenaan aan.", p:"BE 0123.456.749" }
+];
+function veld(f){
+  return `<div class="field ${f.kl||''}">
+    <label for="k_${f.k}">${esc(f.l)}${f.v?'':' <span class="hint" style="display:inline">(optioneel)</span>'}
+    ${f.h?`<span class="hint">${esc(f.h)}</span>`:''}</label>
+    <input type="${f.t||'text'}" id="k_${f.k}" data-klant="${f.k}"
+      ${f.p?`placeholder="${esc(f.p)}"`:''} ${f.ac?`autocomplete="${f.ac}"`:''}>
+  </div>`;
+}
+const perK = k => VELDEN.find(f=>f.k===k);
+$('#gegevens').innerHTML =
+  `<label class="check" style="margin-bottom:20px"><input type="checkbox" id="particulier"><span>Ik bestel als particulier, zonder ondernemingsnummer</span></label>` +
+  `<div class="row">${['naam','bedrijf'].map(k=>veld(perK(k))).join('')}</div>` +
+  `<div class="row">${['email','tel'].map(k=>veld(perK(k))).join('')}</div>` +
+  `<label style="display:block;font-size:14px;font-weight:500;margin-bottom:6px">Facturatieadres</label>` +
+  `<div class="adres" style="margin-bottom:20px">${['straat','nummer','postcode','gemeente','land']
+      .map(k=>veld(perK(k))).join('')}</div>` +
+  veld(perK('btw'));
+
+/* ---- controle ondernemingsnummer of btw-nummer ----
+   Belgisch nummer: 10 cijfers, begint met 0 of 1, en de laatste twee
+   cijfers moeten gelijk zijn aan 97 min (de eerste acht modulo 97).
+   Andere EU-landen: enkel het formaat per land wordt nagekeken.
+   Bij btwRegime "later" wordt enkel gekeken of het veld ingevuld is. */
+const EU_BTW = {
+  AT:/^U\d{8}$/, BG:/^\d{9,10}$/, CY:/^\d{8}[A-Z]$/, CZ:/^\d{8,10}$/, DE:/^\d{9}$/,
+  DK:/^\d{8}$/, EE:/^\d{9}$/, EL:/^\d{9}$/, ES:/^[0-9A-Z]\d{7}[0-9A-Z]$/, FI:/^\d{8}$/,
+  FR:/^[0-9A-Z]{2}\d{9}$/, HR:/^\d{11}$/, HU:/^\d{8}$/, IE:/^(\d{7}[A-Z]{1,2}|\d[A-Z+*]\d{5}[A-Z])$/,
+  IT:/^\d{11}$/, LT:/^(\d{9}|\d{12})$/, LU:/^\d{8}$/, LV:/^\d{11}$/, MT:/^\d{8}$/,
+  NL:/^\d{9}B\d{2}$/, PL:/^\d{10}$/, PT:/^\d{9}$/, RO:/^\d{2,10}$/, SE:/^\d{10}01$/,
+  SI:/^\d{8}$/, SK:/^\d{10}$/
+};
+function controleerBtw(ruw){
+  let s = String(ruw||'').toUpperCase().replace(/[\s.\-\/]/g,'');
+  if(/^\d+$/.test(s)) s = 'BE' + s;                 // enkel cijfers: Belgisch nummer
+  if(s.startsWith('GR')) s = 'EL' + s.slice(2);
+  const land = s.slice(0,2), rest = s.slice(2);
+  if(land === 'BE'){
+    const n = rest.length === 9 ? '0' + rest : rest;
+    if(!/^[01]\d{9}$/.test(n))
+      return { ok:false, fout:'Een Belgisch ondernemingsnummer heeft 10 cijfers en begint met 0 of 1, bijvoorbeeld BE 0123.456.749.' };
+    if(97 - (Number(n.slice(0,8)) % 97) !== Number(n.slice(8)))
+      return { ok:false, fout:'Dit ondernemingsnummer bestaat niet: de laatste twee cijfers passen niet bij de rest. Kijk het even na.' };
+    return { ok:true, waarde:'BE ' + n.slice(0,4) + '.' + n.slice(4,7) + '.' + n.slice(7) };
+  }
+  if(EU_BTW[land]){
+    if(!EU_BTW[land].test(rest))
+      return { ok:false, fout:'Dit btw-nummer heeft niet het juiste formaat voor ' + land + '. Kijk het even na.' };
+    return { ok:true, waarde: land + rest };
+  }
+  return { ok:false, fout:'Begin met de landcode, bijvoorbeeld BE 0123.456.749 of NL123456789B01.' };
+}
+$('#k_btw').insertAdjacentHTML('afterend', '<div class="err" id="btwFout" style="margin-top:6px"></div>');
+function controleerBtwVeld(toon = true){
+  const el = $('#k_btw'), box = $('#btwFout'), v = el.value.trim();
+  box.classList.remove('on');
+  if(!v || $('#particulier').checked || CONFIG.btwRegime === 'later') return true;
+  const c = controleerBtw(v);
+  if(c.ok){ el.value = c.waarde; el.classList.remove('bad'); return true; }
+  el.classList.add('bad');
+  if(toon){ box.textContent = c.fout; box.classList.add('on'); }
+  return false;
+}
+// Bij het verlaten van het veld enkel rood kleuren: een uitleg die hier verschijnt
+// duwt de Verder-knop weg op het moment dat erop geklikt wordt.
+$('#k_btw').addEventListener('blur', ()=> controleerBtwVeld(false));
+$('#k_btw').addEventListener('input', ()=>{ $('#btwFout').classList.remove('on'); $('#k_btw').classList.remove('bad'); });
+
+/* ---- particulier: geen bedrijf en geen btw-nummer nodig ---- */
+function zetParticulier(){
+  const p = $('#particulier').checked;
+  ['bedrijf','btw'].forEach(k=>{
+    const el = $('#k_'+k);
+    el.closest('.field').style.display = p ? 'none' : '';
+    if(p){ el.value = ''; el.classList.remove('bad'); }
+  });
+  $('#btwFout').classList.remove('on');
+}
+$('#particulier').addEventListener('change', zetParticulier);
+
+/* ============================================================
+   SHOTLIJST
+   ============================================================ */
+$('#shotAdd').addEventListener('click', ()=> voegShot($('#shotIn').value, $('#shotHoe').value));
+['#shotIn','#shotHoe'].forEach(sel => $(sel).addEventListener('keydown', e => {
+  if(e.key==='Enter'){ e.preventDefault(); voegShot($('#shotIn').value, $('#shotHoe').value); }
+}));
+function voegShot(w, h){
+  w = (w||'').trim(); if(!w) return;
+  S.shots.push({ w, h:(h||'').trim() });
+  $('#shotIn').value=''; $('#shotHoe').value='';
+  $('#shotIn').focus();
+  $('#e2').classList.remove('on');
+  tekenShots();
+}
+function tekenShots(){
+  $('#shotEmpty').style.display = S.shots.length ? 'none' : 'block';
+  $('#shotList').innerHTML = S.shots.map((s,i)=>
+    `<li><span class="n">${i+1}</span>
+      <span>${esc(s.w)}${s.h?` <em style="color:var(--muted);font-style:normal">— ${esc(s.h)}</em>`:''}</span>
+      <button class="x" type="button" data-i="${i}" aria-label="Verwijder">&times;</button></li>`).join('');
+}
+$('#shotList').addEventListener('click', e => {
+  const b = e.target.closest('[data-i]'); if(!b) return;
+  S.shots.splice(+b.dataset.i,1); tekenShots();
+});
+
+/* ============================================================
+   VRAGEN (de algemene vragen uit de generator)
+   ============================================================ */
+let vragenGetekend = false;
+function toonVragen(){
+  if(vragenGetekend) return;          // antwoorden niet wissen bij terugkeren
+  vragenGetekend = true;
+  $('#vragen').innerHTML = vragenLijst().map(v=>{
+    const id = 'v_'+v.k;
+    if(v.type==='check')
+      return `<label class="check"><input type="checkbox" id="${id}" data-v="${v.k}"><span>${esc(v.label)}</span></label>`;
+    const lab = `<label for="${id}">${esc(v.label)}${v.verplicht?'':' <span class="hint" style="display:inline">(optioneel)</span>'}
+      ${v.hint?`<span class="hint">${esc(v.hint)}</span>`:''}</label>`;
+    if(v.type==='textarea') return `<div class="field">${lab}<textarea id="${id}" data-v="${v.k}"></textarea></div>`;
+    if(v.type==='select')   return `<div class="field">${lab}<select id="${id}" data-v="${v.k}">
+      <option value="">Kies…</option>${(v.opties||[]).map(o=>`<option>${esc(o)}</option>`).join('')}</select></div>`;
+    if(v.type==='adres')    return `<div class="field">${lab}<div class="adres">
+      <input type="text" class="straat"   id="${id}_straat"   placeholder="Straat" autocomplete="off">
+      <input type="text" class="nummer"   id="${id}_nummer"   placeholder="Nr" autocomplete="off">
+      <input type="text" class="postcode" id="${id}_postcode" placeholder="Postcode" autocomplete="off">
+      <input type="text" class="gemeente" id="${id}_gemeente" placeholder="Gemeente" autocomplete="off">
+      </div></div>`;
+    return `<div class="field">${lab}<input type="${v.type==='date'?'date':'text'}" id="${id}" data-v="${v.k}"></div>`;
+  }).join('');
+}
+
+/* ============================================================
+   NAVIGATIE
+   ============================================================ */
+const pos = n => volgorde.indexOf(n);
+function ga(n){
+  if(n===2){ toonVragen(); tekenShots(); }
+  if(n===3) tekenDocument();
+  stap = n;
+  $$('.step').forEach(s => s.classList.toggle('on', +s.dataset.step===n));
+  if(n===3) requestAnimationFrame(()=>schaal());
+  const i = pos(n);
+  $$('#rail i').forEach((bar,ix) => bar.classList.toggle('done', i<0 ? true : ix < i));
+  $('#stepno').textContent = i<0 ? '' : `Stap ${i+1} van ${volgorde.length}`;
+  const terug = document.querySelector(`.step[data-step="${n}"] .back`);
+  if(terug) terug.style.display = i<=0 ? 'none' : '';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+$$('[data-next]').forEach(b => b.addEventListener('click', ()=>{
+  if(valideer(stap)) ga(volgorde[pos(stap)+1]);
+}));
+$$('[data-prev]').forEach(b => b.addEventListener('click', ()=> ga(volgorde[pos(stap)-1])));
+
+function valideer(n){
+  if(n===0) return S.aantal >= REELS.min && S.aantal <= REELS.max;
+  if(n===1){
+    let ok = true;
+    const part = $('#particulier').checked;
+    VELDEN.forEach(f=>{
+      const el = $('#k_'+f.k), val = el.value.trim();
+      const moet = f.v && !(part && f.k==='btw');
+      const slecht = moet && (!val || (f.t==='email' && !/^\S+@\S+\.\S+$/.test(val)));
+      el.classList.toggle('bad', slecht); if(slecht) ok=false; else S.klant[f.k]=val;
+    });
+    const btwGoed = controleerBtwVeld();
+    if(!btwGoed) ok = false;
+    S.klant.btw = part ? '' : $('#k_btw').value.trim();
+    S.klant.bedrijf = part ? '' : (S.klant.bedrijf || '');
+    S.klant.particulier = part;
+    let melding = 'Vul de verplichte velden in.';
+    if(!part && !S.klant.btw) melding = 'Vul je ondernemingsnummer in, of vink aan dat je als particulier bestelt.';
+    else if(!btwGoed) melding = 'Kijk het ondernemingsnummer na.';
+    S.klant.adres = [
+      [S.klant.straat, S.klant.nummer].filter(Boolean).join(' '),
+      [S.klant.postcode, S.klant.gemeente].filter(Boolean).join(' '),
+      S.klant.land || ''
+    ].filter(Boolean).join(', ');
+    if(fotoAan && fotoMoet && !S.foto){
+      if(ok) melding = 'Neem nog een foto van de ondertekenaar.';
+      ok = false;
+    }
+    $('#e1').textContent = melding;
+    $('#e1').classList.toggle('on', !ok); return ok;
+  }
+  if(n===2){
+    let ok = S.shots.length>0;
+    $('#e2').textContent = ok ? 'Vul de verplichte velden in.'
+                              : 'Voeg minstens één punt toe dat zeker in beeld moet.';
+    vragenLijst().forEach(v=>{
+      if(v.type==='adres'){
+        const delen = ['straat','nummer','postcode','gemeente']
+          .map(d => ({ d, el: $('#v_'+v.k+'_'+d) })).filter(x=>x.el);
+        if(!delen.length) return;
+        let mis = false;
+        delen.forEach(x=>{
+          const slecht = v.verplicht && !x.el.value.trim();
+          x.el.classList.toggle('bad', slecht); if(slecht) mis = true;
+        });
+        if(mis){ ok = false; return; }
+        const w = {}; delen.forEach(x => w[x.d] = x.el.value.trim());
+        S.antw[v.k] = [[w.straat, w.nummer].filter(Boolean).join(' '),
+                       [w.postcode, w.gemeente].filter(Boolean).join(' ')].filter(Boolean).join(', ');
+        return;
+      }
+      const el = $('#v_'+v.k); if(!el) return;
+      if(el.type==='checkbox'){ S.antw[v.k] = el.checked; return; }
+      const val = el.value.trim(), slecht = v.verplicht && !val;
+      el.classList.toggle('bad', slecht); if(slecht) ok=false; else S.antw[v.k]=val;
+    });
+    $('#e2').classList.toggle('on', !ok); return ok;
+  }
+  return true;
+}
+
+/* ============================================================
+   DOCUMENT
+   ============================================================ */
+function datumNL(iso){
+  if(!iso) return null;
+  return new Date(iso+'T00:00').toLocaleDateString('nl-BE',{day:'numeric',month:'long',year:'numeric'});
+}
+function tekenDocument(){
+  const b = bedragen(), A = S.antw, K = S.klant, pak = pakket();
+  const extra = vragenLijst()
+    .filter(v => v.k!=='nietBeeld' && v.k!=='opmerking')
+    .map(v => {
+      const w = A[v.k];
+      if(w===true) return [v.label,'Ja'];
+      if(w===false || !w) return null;
+      return [v.label, v.type==='date' ? datumNL(w) : w];
+    }).filter(Boolean);
+
+  $('#doc').innerHTML = `
+    <h3>Opdrachtbevestiging one-taker reels</h3>
+    <div class="ref">${esc(S.ref)} · opgemaakt op ${new Date().toLocaleDateString('nl-BE',{day:'numeric',month:'long',year:'numeric'})}</div>
+
+    <h4>Partijen</h4>
+    <p><strong>Uitvoerder</strong><br>${esc(CONFIG.bedrijf.naam)}<br>${esc(CONFIG.bedrijf.adres)}<br>
+       ${esc(CONFIG.bedrijf.btwnr)}<br>${esc(CONFIG.bedrijf.email)} · ${esc(CONFIG.bedrijf.tel)}</p>
+    <p style="margin-top:10px"><strong>Opdrachtgever</strong><br>${esc(K.naam)}${K.bedrijf?'<br>'+esc(K.bedrijf):''}<br>
+       ${esc(K.adres)}<br>${K.btw?esc(K.btw)+'<br>':(K.particulier?'Particulier<br>':'')}${esc(K.email)} · ${esc(K.tel)}</p>
+    ${S.foto?`<img class="pasfoto" src="${S.foto}" alt="Foto van de ondertekenaar">`:''}
+    <p class="small" style="margin-top:8px">Soort opdracht: ${esc(REELS.naam)}</p>
+
+    <h4>Opdracht</h4>
+    <p><strong>${esc(pak.naam)}</strong> — ${esc(pak.omschrijving)}<br>
+       <span class="small">Tijd ter plaatse: ${esc(pak.duur)}</span></p>
+    <p style="margin-top:8px"><strong>Wat je krijgt</strong></p>
+    <ul>${pak.levert.map(l=>`<li>${esc(l)}</li>`).join('')}</ul>
+    <dl style="margin-top:12px">
+      <dt>Aantal reels</dt><dd>${b.aantal}</dd>
+      <dt>Prijs per reel, exclusief btw</dt><dd>${geld(b.prijsPerReel)}</dd>
+      <dt>Totaal, exclusief btw</dt><dd>${geld(b.ex)}</dd>
+      ${b.later ? '' : `<dt>Btw ${b.btwPct}%</dt><dd>${geld(b.btw)}</dd>`}
+    </dl>
+    ${b.later
+      ? `<p class="total">Totaal exclusief btw: ${geld(b.ex)}</p>
+         <p class="small">Het btw-tarief wordt bij het opmaken van de factuur vastgesteld volgens het regime dat op deze opdracht van toepassing is.</p>`
+      : `<p class="total">Totaal inclusief btw: ${geld(b.in)}</p>`}
+    <p class="small">Voorschot bij bevestiging: ${geld(b.voorschot)}. Het saldo volgt na de opname.</p>
+
+    <h4>Dit moet zeker in beeld</h4>
+    <ol>${S.shots.map(s=>`<li>${esc(s.w)}${s.h?` <span class="small">— ${esc(s.h)}</span>`:''}</li>`).join('')}</ol>
+    ${A.nietBeeld?`<p style="margin-top:10px"><strong>Niet in beeld:</strong> ${esc(A.nietBeeld)}</p>`:''}
+
+    ${extra.length ? `<h4>Afspraken over de opname</h4>
+    <dl>${extra.map(([l,w])=>`<dt>${esc(l)}</dt><dd>${esc(w)}</dd>`).join('')}</dl>` : ''}
+    ${A.opmerking?`<p style="margin-top:10px"><strong>Opmerkingen:</strong> ${esc(A.opmerking)}</p>`:''}
+
+    <h4>Algemene voorwaarden</h4>
+    <ol>${CONFIG.voorwaarden.map(v=>`<li>${esc(v)}</li>`).join('')}</ol>
+  `;
+}
+
+/* ============================================================
+   FOTO VAN DE ONDERTEKENAAR
+   ============================================================ */
+const fotoAan = (CONFIG.foto || 'optioneel') !== 'uit';
+const fotoMoet = CONFIG.foto === 'verplicht';
+if(!fotoAan) $('#fotoBlok').style.display = 'none';
+else if(fotoMoet) $('#fotoUitleg').textContent =
+  'Zo weten we op de opnamedag meteen wie we voor ons hebben. Deze foto is nodig om verder te gaan.';
+
+let stroom = null, camKant = 'user';
+function zetFoto(dataUrl){
+  S.foto = dataUrl;
+  $('#fotoImg').src = dataUrl;
+  $('#fotoVoor').style.display = 'flex';
+  $('#fotoKnop').style.display = 'none';
+  $('#fotoOfwel').style.display = 'none';
+  $('#e1').classList.remove('on');
+}
+function stopCam(){
+  if(stroom){ stroom.getTracks().forEach(t=>t.stop()); stroom = null; }
+  $('#camBox').style.display = 'none';
+  $('#cam').srcObject = null;
+}
+async function startCam(){
+  if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) return false;
+  try{
+    stroom = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: camKant, width: { ideal: 1280 } }, audio: false });
+    const v = $('#cam'); v.srcObject = stroom; await v.play();
+    $('#camBox').style.display = 'block';
+    return true;
+  }catch(e){ stopCam(); return false; }
+}
+$('#fotoKnop').addEventListener('click', async ()=>{
+  const gelukt = await startCam();
+  if(!gelukt) $('#fotoIn').click();
+});
+$('#fotoBestand').addEventListener('click', ()=>{ stopCam(); $('#fotoIn').click(); });
+$('#camStop').addEventListener('click', stopCam);
+$('#camWissel').addEventListener('click', async ()=>{
+  camKant = camKant === 'user' ? 'environment' : 'user';
+  stopCam(); await startCam();
+});
+$('#camSnap').addEventListener('click', ()=>{
+  const v = $('#cam'), max = 800;
+  const s = Math.min(1, max/Math.max(v.videoWidth, v.videoHeight));
+  const c = document.createElement('canvas');
+  c.width = Math.round(v.videoWidth*s); c.height = Math.round(v.videoHeight*s);
+  const cc = c.getContext('2d');
+  if(camKant === 'user'){ cc.translate(c.width, 0); cc.scale(-1, 1); }
+  cc.drawImage(v, 0, 0, c.width, c.height);
+  zetFoto(c.toDataURL('image/jpeg', 0.72));
+  stopCam();
+});
+$('#fotoWeg').addEventListener('click', ()=>{
+  S.foto = null;
+  $('#fotoVoor').style.display = 'none';
+  $('#fotoKnop').style.display = '';
+  $('#fotoOfwel').style.display = '';
+  $('#fotoIn').value = '';
+});
+$('#fotoIn').addEventListener('change', e=>{
+  const f = e.target.files && e.target.files[0]; if(!f) return;
+  const lezer = new FileReader();
+  lezer.onload = ()=>{
+    const img = new Image();
+    img.onload = ()=>{
+      const max = 800, s = Math.min(1, max/Math.max(img.width, img.height));
+      const c = document.createElement('canvas');
+      c.width = Math.round(img.width*s); c.height = Math.round(img.height*s);
+      const cc = c.getContext('2d');
+      cc.fillStyle = '#FFFFFF'; cc.fillRect(0,0,c.width,c.height);
+      cc.drawImage(img, 0, 0, c.width, c.height);
+      zetFoto(c.toDataURL('image/jpeg', 0.72));
+    };
+    img.src = lezer.result;
+  };
+  lezer.readAsDataURL(f);
+});
+
+/* ============================================================
+   HANDTEKENING
+   ============================================================ */
+const pad = $('#pad'), ctx = pad.getContext('2d');
+let lijnen = [], huidig = null;
+const getekend = () => lijnen.some(l => l.length > 1);
+function schaal(){
+  const r = pad.getBoundingClientRect(), dpr = window.devicePixelRatio || 1;
+  if(!r.width) return;
+  pad.width = Math.round(r.width*dpr); pad.height = Math.round(r.height*dpr);
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  ctx.lineWidth = 2.2; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.strokeStyle = '#1A1815';
+  hertekenPad(ctx, r.width, r.height);
+}
+function hertekenPad(c, b, hh){
+  c.clearRect(0,0,b,hh);
+  lijnen.forEach(l=>{
+    if(l.length < 2) return;
+    c.beginPath(); c.moveTo(l[0][0]*b, l[0][1]*hh);
+    for(let i=1;i<l.length;i++) c.lineTo(l[i][0]*b, l[i][1]*hh);
+    c.stroke();
+  });
+}
+function punt(e){
+  const r = pad.getBoundingClientRect();
+  return [(e.clientX-r.left)/r.width, (e.clientY-r.top)/r.height];
+}
+pad.addEventListener('pointerdown', e=>{
+  pad.setPointerCapture(e.pointerId);
+  huidig = [punt(e)]; lijnen.push(huidig);
+  $('#e3').classList.remove('on');
+});
+pad.addEventListener('pointermove', e=>{
+  if(!huidig) return;
+  huidig.push(punt(e));
+  const r = pad.getBoundingClientRect(), n = huidig.length;
+  ctx.beginPath();
+  ctx.moveTo(huidig[n-2][0]*r.width, huidig[n-2][1]*r.height);
+  ctx.lineTo(huidig[n-1][0]*r.width, huidig[n-1][1]*r.height);
+  ctx.stroke();
+});
+['pointerup','pointercancel','pointerleave'].forEach(ev => pad.addEventListener(ev, ()=>{ huidig = null; }));
+$('#clearPad').addEventListener('click', ()=>{ lijnen = []; huidig = null; schaal(); });
+window.addEventListener('resize', schaal);
+function handtekeningPng(){
+  const b = 660, hh = 240, c = document.createElement('canvas');
+  c.width = b; c.height = hh;
+  const cc = c.getContext('2d');
+  cc.fillStyle = '#FFFFFF'; cc.fillRect(0,0,b,hh);
+  cc.lineWidth = 3; cc.lineCap = 'round'; cc.lineJoin = 'round'; cc.strokeStyle = '#1A1815';
+  hertekenPad(cc, b, hh);
+  return c.toDataURL('image/png');
+}
+
+/* ============================================================
+   VERSTUREN — zelfde opbouw als het video-opdrachtformulier,
+   zodat dezelfde Apps Script het verwerkt.
+   ============================================================ */
+$('#send').addEventListener('click', async ()=>{
+  const naam = $('#signName').value.trim();
+  if(!$('#voorwaardenGelezen').checked || !$('#akkoord').checked || !naam || !getekend()){ $('#e3').classList.add('on'); return; }
+
+  const knop = $('#send');
+  knop.disabled = true; knop.innerHTML = '<span class="spin"></span>Versturen…';
+
+  const pak = pakket();
+  const data = {
+    ref: S.ref,
+    tijdstip: new Date().toISOString(),
+    type: 'reels',
+    situatie: null,
+    typeLabel: REELS.naam,
+    herkomst: 'one-taker formulier',
+    pakket: pak,
+    gekozenPakket: pak.naam,
+    aantalReels: S.aantal,
+    optieModus: 'uit',
+    bedragen: bedragen(),
+    klant: S.klant,
+    shots: S.shots,
+    antwoorden: S.antw,
+    labels: vragenLijst().reduce((a,v)=>(a[v.k]=v.label,a),{}),
+    voorwaarden: CONFIG.voorwaarden,
+    bedrijf: CONFIG.bedrijf,
+    voorwaardenGelezen: true,
+    documentHtml: $('#doc').innerHTML +
+      '<p class="small" style="margin-top:14px">De opdrachtgever verklaart de algemene voorwaarden gelezen te hebben en ze te aanvaarden. ' +
+      'Ondertekend door ' + esc(naam) + ' op ' + new Date().toLocaleString('nl-BE',{day:'numeric',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'}) + '.</p>',
+    handtekening: handtekeningPng(),
+    foto: S.foto,
+    ondertekenaar: naam
   };
 
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const msg = $("f-msg"), knop = $("f-btn");
-    const n = Number(slider.value);
-    const naam = $("f-name").value.trim();
-    const mail = $("f-email").value.trim();
-    const tel = $("f-phone").value.trim();
-
-    if (!datum.value) { msg.textContent = "Pick the day you would like us to film."; datum.focus(); return; }
-    if (datum.value < datum.min) { msg.textContent = "Pick a shoot day from tomorrow onward."; datum.focus(); return; }
-    if (!naam) { msg.textContent = "Please add your name."; $("f-name").focus(); return; }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(mail)) { msg.textContent = "Please add a valid email address."; $("f-email").focus(); return; }
-    if (!/^[+(\d][\d\s()./-]{5,}$/.test(tel)) { msg.textContent = "Please add a phone number where we can reach you."; $("f-phone").focus(); return; }
-
-    knop.disabled = true;
-    msg.textContent = "Sending...";
-
-    const gegevens = {
-      _subject: "One-take reels request (US): " + n + " reels",
-      onderwerp: "One-take reels (US)",
-      aantal_reels: n,
-      totaal: geld(n * CONFIG.prijsPerReel) + " " + CONFIG.btw,
-      gewenste_draaidag: langeDatum(datum.value),
-      naam, email: mail, telefoon: tel,
-      zaak_en_adres: $("f-place").value.trim(),
-      opmerkingen: $("f-note").value.trim(),
-      _gotcha: $("f-gotcha").value
-    };
-
-    try {
-      const res = await fetch(CONFIG.formspree, {
-        method: "POST",
-        headers: { "Accept": "application/json", "Content-Type": "application/json" },
-        body: JSON.stringify(gegevens)
+  try{
+    if(CONFIG.endpoint && CONFIG.endpoint.startsWith('http')){
+      await fetch(CONFIG.endpoint, {
+        method:'POST',
+        headers:{'Content-Type':'text/plain;charset=utf-8'},
+        body: JSON.stringify(data)
       });
-      if (!res.ok) throw new Error("formspree " + res.status);
-      const klaar = document.createElement("p");
-      klaar.className = "done";
-      klaar.textContent = "Thanks, " + naam.split(" ")[0] + ". Your request for " + n + " reels on " +
-        langeDatum(datum.value) + " is in. We will get in touch to confirm the shoot day.";
-      form.replaceWith(klaar);
-      $("lede").textContent = "Your request has been sent.";
-    } catch (err) {
-      console.error(err);
-      msg.textContent = "Your request could not be sent right now. Try again in a moment, or email " + $("c-mail").textContent + ".";
-      knop.disabled = false;
+    } else {
+      console.log('Geen endpoint ingesteld. Data:', data);
+      await new Promise(r=>setTimeout(r,600));
     }
-  });
-})();
-</script>
+    $('#doneTxt').innerHTML =
+      `Bedankt, ${esc(naam)}. Je opdracht voor ${S.aantal} one-taker reels staat geregistreerd onder ${esc(S.ref)}.<br><br>` +
+      `De ondertekende opdrachtbevestiging is naar ${esc(S.klant.email)} verstuurd. ` +
+      `We nemen binnen twee werkdagen contact op om de opnamedatum vast te leggen.`;
+    ga(4);
+  }catch(err){
+    knop.disabled = false; knop.textContent = 'Onderteken en verstuur';
+    $('#e3').textContent = 'Het versturen lukte niet. Controleer je verbinding en probeer opnieuw, of mail ons op ' + CONFIG.bedrijf.email + '.';
+    $('#e3').classList.add('on');
+  }
+});
 
+zetAantal();
+ga(volgorde[0]);
+
+} /* einde start() */
+</script>
 </body>
 </html>
