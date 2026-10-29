@@ -1,1 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>SNAP360 One-take reels US</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Short reels filmed in one continuous take, on location at your business. $50 per reel, from 8 reels per shoot day.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Hanken+Grotesk:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  /* Layout: one narrow column of dark panes, a filmstrip as the reel counter,
+     gold used only for what moves (playhead, chosen frames, the send button). */
+  :root {
+    --bg: #0b0a09;
+    --pane: #141210;
+    --well: #0e0d0b;
+    --edge: #2a2621;
+    --edge-soft: #1f1c19;
+    --text: #f3eee7;
+    --dim: #a59d92;
+    --faint: #6e675e;
+    --gold: #dd9a3e;
+    --gold-soft: rgba(221, 154, 62, 0.16);
+    --on-gold: #1a1208;
+    --font-display: "Bricolage Grotesque", "Arial Narrow", system-ui, sans-serif;
+    --font-body: "Hanken Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+    color-scheme: dark;
+  }
 
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    touch-action: manipulation;
+  }
+  p, h1, h2, ul { margin: 0; }
+
+  .wrap {
+    max-width: 48rem;
+    margin: 0 auto;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+    padding-block: 0 4.5rem;
+    display: grid;
+    gap: 1rem;
+  }
+
+  .label {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--faint);
+  }
+
+  /* ---------- kop ---------- */
+  .head { padding-block: 4rem 2rem; display: grid; gap: 1.2rem; }
+  .brand { display: flex; align-items: center; gap: 0.6rem; }
+  .brand b { font-family: var(--font-display); font-weight: 700; font-size: 1rem; letter-spacing: 0.04em; color: var(--text); }
+  .brand b span { color: var(--gold); }
+  .title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(2.3rem, 7vw, 4.2rem);
+    line-height: 0.98;
+    letter-spacing: -0.035em;
+    text-wrap: balance;
+  }
+  .intro { max-width: 44ch; color: var(--dim); font-size: 1.02rem; line-height: 1.7; }
+  .runtime {
+    justify-self: start;
+    display: inline-flex; gap: 0.7rem; align-items: center;
+    padding: 0.45rem 0.9rem;
+    border: 1px solid var(--edge);
+    border-radius: 6px;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    color: var(--dim);
+    font-variant-numeric: tabular-nums;
+  }
+  .runtime .rec { width: 7px; height: 7px; border-radius: 50%; background: var(--gold); }
+  .runtime b { color: var(--text); font-weight: 500; }
+
+  /* ---------- panelen ---------- */
+  .pane {
+    background: var(--pane);
+    border: 1px solid var(--edge-soft);
+    border-radius: 14px;
+    padding: 1.8rem;
+    min-width: 0;
+  }
+
+  /* ---------- aantal en prijs ---------- */
+  .figures { display: flex; justify-content: space-between; align-items: flex-end; gap: 1.5rem; flex-wrap: wrap; }
+  .big {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(3.6rem, 12vw, 5.6rem);
+    line-height: 0.85;
+    letter-spacing: -0.04em;
+    font-variant-numeric: tabular-nums;
+  }
+  .figure { display: grid; gap: 0.6rem; }
+  .money { text-align: right; justify-items: end; }
+  .money .big { font-size: clamp(2.7rem, 8.5vw, 4.2rem); }
+  .rate { font-size: 0.9rem; color: var(--dim); }
+  .rate b { color: var(--text); font-weight: 600; }
+
+  /* ---------- filmstrook ---------- */
+  .strip-wrap { position: relative; margin-top: 2.2rem; }
+  .strip {
+    position: relative;
+    display: grid;
+    gap: 4px;
+    height: 6rem;
+    padding: 16px 6px;
+    border-radius: 8px;
+    background: var(--well);
+    border: 1px solid var(--edge);
+  }
+  /* de perforatie boven en onder, zoals op echte film */
+  .strip::before, .strip::after {
+    content: "";
+    position: absolute;
+    left: 10px; right: 10px;
+    height: 5px;
+    background: repeating-linear-gradient(90deg, var(--edge) 0 9px, transparent 9px 18px);
+    border-radius: 2px;
+  }
+  .strip::before { top: 5px; }
+  .strip::after { bottom: 5px; }
+  .frame { border-radius: 3px; background: rgba(243, 238, 231, 0.04); transition: background 0.18s ease; }
+  .frame.on { background: var(--gold-soft); box-shadow: inset 0 0 0 1px rgba(221, 154, 62, 0.35); }
+
+  .playhead {
+    position: absolute; top: -10px; bottom: -10px; width: 2px;
+    background: var(--gold);
+    transform: translateX(-1px);
+    transition: left 0.2s cubic-bezier(.2, .8, .2, 1);
+    pointer-events: none;
+  }
+  .playhead::before {
+    content: ""; position: absolute; top: -2px; left: 50%; margin-left: -6px;
+    border-style: solid; border-width: 8px 6px 0 6px;
+    border-color: var(--gold) transparent transparent transparent;
+  }
+  .strip-wrap input[type="range"] {
+    position: absolute; inset: 0; width: 100%; height: 100%; margin: 0;
+    opacity: 0; cursor: ew-resize; -webkit-appearance: none; appearance: none;
+    z-index: 2;
+  }
+  .strip-wrap input[type="range"]:focus-visible + .strip { outline: 2px solid var(--gold); outline-offset: 3px; }
+
+  .ticks {
+    display: grid; gap: 4px; margin-top: 0.8rem; padding: 0 6px;
+    font-family: var(--font-mono); font-size: 0.7rem; color: var(--faint);
+    font-variant-numeric: tabular-nums;
+  }
+  .ticks span { text-align: center; }
+  .ticks span.now { color: var(--text); }
+
+  .steps { display: flex; gap: 0.6rem; margin-top: 1.4rem; }
+  .btn {
+    min-width: 4.4rem; min-height: 2.6rem; padding: 0.55rem 1rem;
+    border: 1px solid var(--edge); border-radius: 999px;
+    background: rgba(243, 238, 231, 0.05); color: var(--text);
+    font-family: var(--font-mono); font-size: 0.8rem; cursor: pointer;
+    font-variant-numeric: tabular-nums;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .btn:hover:not(:disabled) { background: rgba(243, 238, 231, 0.1); border-color: #3a352f; }
+  .btn:disabled { opacity: 0.35; cursor: not-allowed; }
+  .btn:focus-visible, .chipish:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+
+  .rhythm { display: flex; gap: 1.2rem 1.6rem; align-items: baseline; flex-wrap: wrap; }
+  .rhythm h2 { font-family: var(--font-display); font-weight: 500; font-size: 1.5rem; letter-spacing: -0.02em; }
+  .rhythm p { flex: 1 1 18rem; min-width: 0; color: var(--dim); font-size: 0.95rem; }
+
+  /* ---------- voorbeelden ---------- */
+  .shots { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 1.2rem; }
+  .shot {
+    position: relative; flex: 0 0 auto;
+    width: 8rem; aspect-ratio: 9 / 16; max-width: 100%;
+    padding: 0; border: 1px solid var(--edge); border-radius: 10px;
+    background: var(--well); overflow: hidden; cursor: pointer; color: var(--text);
+  }
+  .shot video { display: block; width: 100%; height: 100%; object-fit: cover; }
+  .shot .no {
+    position: absolute; left: 0.55rem; top: 0.45rem;
+    font-family: var(--font-mono); font-size: 0.66rem; letter-spacing: 0.1em;
+    color: rgba(243, 238, 231, 0.8); text-shadow: 0 1px 6px rgba(0, 0, 0, 0.7);
+  }
+  .shot .state {
+    position: absolute; inset: 0; display: grid; place-items: center;
+    font-size: 1.1rem; text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+    transition: opacity 0.15s;
+  }
+  .shot.playing .state { opacity: 0; }
+  .shot.empty { cursor: default; border-style: dashed; }
+  .shot.empty .state { font-family: var(--font-mono); font-size: 0.7rem; color: var(--faint); text-shadow: none; }
+  .shot:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+  .shots-nav { display: none; gap: 0.5rem; margin-top: 0.9rem; }
+  .note { margin-top: 0.9rem; font-size: 0.85rem; color: var(--faint); }
+  .note code { font-family: var(--font-mono); font-size: 0.8rem; color: var(--dim); }
+
+  /* ---------- inbegrepen ---------- */
+  .inc { list-style: none; padding: 0; margin-top: 1.1rem; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 2rem; }
+  .inc li { padding: 0.9rem 0; border-top: 1px solid var(--edge-soft); display: grid; grid-template-columns: 0.9rem 1fr; gap: 0.7rem; align-items: baseline; }
+  .inc li::before { content: ""; width: 7px; height: 7px; border-radius: 50%; border: 1px solid var(--gold); transform: translateY(-1px); }
+
+  /* ---------- aanvraag ---------- */
+  .pick { font-family: var(--font-display); font-weight: 500; font-size: clamp(1.35rem, 3.6vw, 2rem); line-height: 1.2; letter-spacing: -0.02em; text-wrap: balance; }
+  .pick em { font-style: normal; color: var(--gold); font-variant-numeric: tabular-nums; }
+  .lede { margin-top: 0.8rem; color: var(--dim); font-size: 0.95rem; }
+
+  .form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin-top: 1.6rem; }
+  .field { display: grid; gap: 0.45rem; min-width: 0; }
+  .field span { font-family: var(--font-mono); font-size: 0.66rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--dim); }
+  .field input, .field textarea {
+    width: 100%; padding: 0.85rem 1rem;
+    font: inherit; font-size: 1rem; color: var(--text);
+    background: var(--well); border: 1px solid var(--edge); border-radius: 10px;
+  }
+  .field textarea { resize: vertical; min-height: 5.5rem; }
+  .field input::placeholder, .field textarea::placeholder { color: var(--faint); }
+  .field input:focus, .field textarea:focus { outline: none; border-color: var(--gold); }
+  .wide { grid-column: 1 / -1; }
+  .hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+
+  .send { display: flex; align-items: center; gap: 1.2rem; flex-wrap: wrap; margin-top: 0.4rem; }
+  .btn-send {
+    padding: 1rem 1.6rem; border: 0; border-radius: 999px;
+    background: var(--gold); color: var(--on-gold);
+    font-family: var(--font-mono); font-weight: 500; font-size: 0.8rem; letter-spacing: 0.14em; text-transform: uppercase;
+    cursor: pointer; transition: filter 0.2s;
+  }
+  .btn-send:hover:not(:disabled) { filter: brightness(1.08); }
+  .btn-send:disabled { opacity: 0.6; cursor: wait; }
+  .btn-send:focus-visible { outline: 2px solid var(--text); outline-offset: 3px; }
+  .msg { font-size: 0.9rem; color: var(--dim); min-height: 1.4rem; }
+  .done { margin-top: 1.4rem; font-size: 1rem; line-height: 1.7; }
+
+  .contact { margin-top: 1.4rem; display: flex; gap: 0.4rem 1.6rem; flex-wrap: wrap; font-size: 0.88rem; color: var(--dim); }
+  .contact b { font-weight: 500; color: var(--text); user-select: all; }
+  .privacy { margin-top: 1rem; font-size: 0.8rem; line-height: 1.55; color: var(--faint); }
+
+  @media (max-width: 40rem) {
+    .head { padding-top: 2.8rem; }
+    .pane { padding: 1.35rem; }
+    .figures { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1.4rem; }
+    .money { text-align: left; justify-items: start; }
+    .strip { height: 5rem; }
+    .ticks span:nth-child(even) { visibility: hidden; }
+    .steps .btn { flex: 1; min-height: 2.9rem; }
+    .inc, .form { grid-template-columns: minmax(0, 1fr); }
+    .shots {
+      flex-wrap: nowrap; justify-content: flex-start; align-items: center;
+      overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none;
+    }
+    .shots::-webkit-scrollbar { display: none; }
+    .shot { scroll-snap-align: center; }
+    .shots-nav { display: flex; }
+    .shots-nav .btn { flex: 1; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .frame, .playhead, .shot .state { transition: none; }
+  }
+</style>
+
+</head>
+<body>
+<main class="wrap">
+
+  <header class="head">
+    <div class="brand"><b>SNAP<span>360</span></b><span class="label">One-take reels</span></div>
+    <h1 class="title">One take. Ten seconds. Ready to post.</h1>
+    <p class="intro">
+      Short reels filmed in one continuous shot, right where you work: your restaurant, your shop
+      or your studio. Affordable, ready to use and easy to post. Choose how many you want,
+      from <span id="intro-min">8</span> reels per shoot day.
+    </p>
+    <p class="runtime"><span class="rec" aria-hidden="true"></span>Total runtime up to <b id="runtime">00:01:20:00</b> · 1 shoot day</p>
+  </header>
+
+  <section class="pane" aria-label="Choose the number of reels">
+    <div class="figures" aria-live="polite">
+      <div class="figure">
+        <span class="big" id="count">8</span>
+        <span class="label">Reels</span>
+      </div>
+      <div class="figure money">
+        <span class="big" id="total">$400</span>
+        <span class="rate"><b id="rate">$50</b> per reel · <span id="vat">plus tax</span></span>
+      </div>
+    </div>
+
+    <div class="strip-wrap">
+      <input type="range" id="slider" min="8" max="16" step="1" value="8" aria-label="Number of reels">
+      <div class="strip" id="strip" aria-hidden="true"></div>
+      <div class="playhead" id="playhead" aria-hidden="true"></div>
+    </div>
+    <div class="ticks" id="ticks" aria-hidden="true"></div>
+
+    <div class="steps">
+      <button class="btn" type="button" id="down" aria-label="One reel fewer">− 1</button>
+      <button class="btn" type="button" id="up" aria-label="One reel more">+ 1</button>
+    </div>
+  </section>
+
+  <section class="pane rhythm">
+    <h2 id="rhythm-title">About 2 a week</h2>
+    <p id="rhythm-text">Enough to post about twice a week for a month.</p>
+  </section>
+
+  <section class="pane" id="shots-pane">
+    <p class="label">Examples</p>
+    <div class="shots" id="shots"></div>
+    <div class="shots-nav">
+      <button type="button" class="btn" id="shots-prev" aria-label="Previous reel">←</button>
+      <button type="button" class="btn" id="shots-next" aria-label="Next reel">→</button>
+    </div>
+    <p class="note" id="shots-note">Tap a reel to pause or play it. They play without sound, just like in the feed.</p>
+  </section>
+
+  <section class="pane">
+    <p class="label">What you get</p>
+    <ul class="inc">
+      <li><span>Filmed in one continuous take</span></li>
+      <li><span>Up to 10 seconds per reel</span></li>
+      <li><span>Made for social media</span></li>
+      <li><span><span id="inc-count">8</span> reels, filmed on one shoot day</span></li>
+    </ul>
+  </section>
+
+  <section class="pane" id="aanvraag">
+    <p class="pick">Your selection: <em id="pick-count">8</em> reels for <em id="pick-total">$400</em> <span class="rate">plus tax</span></p>
+    <p class="lede" id="lede">Tell us which day you would like us to film. We will get in touch to confirm the shoot day.</p>
+
+    <form class="form" id="form" novalidate>
+      <label class="field"><span>Preferred shoot day</span>
+        <input type="date" id="f-date" required>
+      </label>
+      <label class="field"><span>Name</span>
+        <input type="text" id="f-name" maxlength="80" autocomplete="name" placeholder="Who are we filming for?" required>
+      </label>
+      <label class="field"><span>Email</span>
+        <input type="email" id="f-email" maxlength="120" autocomplete="email" placeholder="So we can confirm your request" required>
+      </label>
+      <label class="field"><span>Phone</span>
+        <input type="tel" id="f-phone" maxlength="30" autocomplete="tel" placeholder="The best number to reach you" required>
+      </label>
+      <label class="field wide"><span>Business and address (optional)</span>
+        <input type="text" id="f-place" maxlength="160" placeholder="Your business name and where we film">
+      </label>
+      <label class="field wide"><span>Ideas or notes (optional)</span>
+        <textarea id="f-note" maxlength="800" placeholder="What would you like us to capture?"></textarea>
+      </label>
+      <input type="text" id="f-gotcha" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <div class="send wide">
+        <button class="btn-send" type="submit" id="f-btn">Request this shoot day</button>
+        <p class="msg" id="f-msg" role="status"></p>
+      </div>
+    </form>
+
+    <div class="contact">
+      <span>Email: <b id="c-mail">tom@snapwithus360.com</b></span>
+      <span>WhatsApp: <b id="c-phone">+1 (702) 881-0971</b></span>
+    </div>
+    <p class="privacy">We use your name, email and phone number only to follow up on your request.</p>
+  </section>
+
+</main>
+
+<script>
+/* Alles wat je wil aanpassen staat hier. */
+const CONFIG = {
+  prijsPerReel: 50,
+  valuta: "$",
+  btw: "plus tax",
+  minReels: 8,          // = 1 draaidag
+  maxReels: 16,         // hoogste aantal op de strook
+  secPerReel: 10,       // max. lengte per reel
+  voorbeelden: { map: "examples/", aantal: 8, ext: ".mp4" },
+  formspree: "https://formspree.io/f/mdajlrde",
+  vroegsteDag: 1        // aantal dagen vanaf vandaag
+};
+
+const $ = (id) => document.getElementById(id);
+const pad = (n) => String(n).padStart(2, "0");
+const geld = (n) => CONFIG.valuta + n.toLocaleString("en-US");
+
+/* ---------- aantal, prijs en filmstrook ---------- */
+const slider = $("slider");
+slider.min = CONFIG.minReels;
+slider.max = CONFIG.maxReels;
+slider.value = CONFIG.minReels;
+$("intro-min").textContent = CONFIG.minReels;
+$("vat").textContent = CONFIG.btw;
+
+const AANTALLEN = [];
+for (let n = CONFIG.minReels; n <= CONFIG.maxReels; n++) AANTALLEN.push(n);
+const kolommen = "repeat(" + AANTALLEN.length + ", minmax(0, 1fr))";
+$("strip").style.gridTemplateColumns = kolommen;
+$("ticks").style.gridTemplateColumns = kolommen;
+$("strip").innerHTML = AANTALLEN.map(() => '<div class="frame"></div>').join("");
+$("ticks").innerHTML = AANTALLEN.map((n) => "<span>" + n + "</span>").join("");
+const frames = [...$("strip").children];
+const ticks = [...$("ticks").children];
+
+function timecode(aantal) {
+  const s = aantal * CONFIG.secPerReel;
+  return "00:" + pad(Math.floor(s / 60)) + ":" + pad(s % 60) + ":00";
+}
+
+function perWeek(aantal) {
+  const w = aantal / 4;
+  return Number.isInteger(w) ? String(w) : w.toLocaleString("en-US", { maximumFractionDigits: 1 });
+}
+
+function teken() {
+  const n = Number(slider.value);
+  const totaal = n * CONFIG.prijsPerReel;
+  const op = AANTALLEN.indexOf(n);
+
+  $("count").textContent = n;
+  $("total").textContent = geld(totaal);
+  $("rate").textContent = geld(CONFIG.prijsPerReel);
+  $("runtime").textContent = timecode(n);
+  $("inc-count").textContent = n;
+  $("pick-count").textContent = n;
+  $("pick-total").textContent = geld(totaal);
+
+  frames.forEach((f, i) => f.classList.toggle("on", i <= op));
+  ticks.forEach((t, i) => t.classList.toggle("now", i === op));
+  $("playhead").style.left = "calc(6px + " + ((op + 0.5) / AANTALLEN.length) + " * (100% - 12px))";
+
+  const w = perWeek(n);
+  $("rhythm-title").textContent = "About " + w + " a week";
+  $("rhythm-text").textContent = "Enough to post about " + w + " reels a week for a month.";
+
+  $("down").disabled = n <= CONFIG.minReels;
+  $("up").disabled = n >= CONFIG.maxReels;
+}
+
+const stap = (d) => {
+  slider.value = Math.min(CONFIG.maxReels, Math.max(CONFIG.minReels, Number(slider.value) + d));
+  teken();
+};
+slider.addEventListener("input", teken);
+$("down").addEventListener("click", () => stap(-1));
+$("up").addEventListener("click", () => stap(1));
+teken();
+
+/* ---------- voorbeelden ----------
+   Zet je reels in de map examples/ naast deze pagina, genummerd 1.mp4, 2.mp4, ...
+   Een nummer zonder bestand verdwijnt vanzelf. Zolang er nog geen enkel bestand is,
+   tonen we lege vakken met een korte uitleg. */
+(function () {
+  const rail = $("shots");
+  const telefoon = () => matchMedia("(max-width: 40rem)").matches;
+  const stil = matchMedia("(prefers-reduced-motion: reduce)");
+  const { map, aantal, ext } = CONFIG.voorbeelden;
+  let klaar = 0, geladen = 0;
+
+  const kijker = new IntersectionObserver((items) => {
+    for (const it of items) {
+      const tegel = it.target, film = tegel.querySelector("video");
+      if (!film) continue;
+      if (it.isIntersecting && !stil.matches && tegel.dataset.stop !== "1") {
+        film.play().then(() => tegel.classList.add("playing")).catch(() => {});
+      } else if (!it.isIntersecting) {
+        film.pause();
+        tegel.classList.remove("playing");
+        delete tegel.dataset.stop;
+      }
+    }
+  }, { threshold: 0.6 });
+
+  function afgerond() {
+    klaar++;
+    if (klaar < aantal) return;
+    const leeg = [...rail.children].filter((t) => t.classList.contains("empty"));
+    if (geladen) {
+      leeg.forEach((t) => t.remove());
+    } else {
+      $("shots-note").innerHTML = 'Your examples go here. Put your reels in the <code>' + map +
+        '</code> folder next to this page, numbered <code>1' + ext + '</code>, <code>2' + ext + '</code>, ...';
+    }
+    schik();
+  }
+
+  for (let n = 1; n <= aantal; n++) {
+    const tegel = document.createElement("button");
+    tegel.type = "button";
+    tegel.className = "shot";
+    tegel.setAttribute("aria-label", "Play or pause example " + n);
+
+    const film = document.createElement("video");
+    film.muted = true; film.loop = true; film.playsInline = true;
+    film.setAttribute("muted", ""); film.setAttribute("playsinline", "");
+    film.preload = "metadata";
+
+    const nr = document.createElement("span");
+    nr.className = "no"; nr.textContent = pad(n);
+    const staat = document.createElement("span");
+    staat.className = "state"; staat.textContent = "▶";
+
+    film.addEventListener("loadedmetadata", () => {
+      tegel.dataset.ratio = film.videoWidth / film.videoHeight;
+      geladen++;
+      kijker.observe(tegel);
+      afgerond();
+    }, { once: true });
+
+    film.addEventListener("error", () => {
+      film.remove();
+      tegel.classList.add("empty");
+      tegel.disabled = true;
+      tegel.dataset.ratio = 9 / 16;
+      staat.textContent = "Reel " + pad(n);
+      afgerond();
+    }, { once: true });
+
+    tegel.addEventListener("click", () => {
+      if (!film.isConnected) return;
+      if (film.paused) {
+        delete tegel.dataset.stop;
+        film.play().then(() => tegel.classList.add("playing")).catch(() => {});
+      } else {
+        film.pause();
+        tegel.dataset.stop = "1";
+        tegel.classList.remove("playing");
+      }
+    });
+
+    tegel.append(film, nr, staat);
+    rail.appendChild(tegel);
+    film.src = map + n + ext;
+  }
+
+  /* Rijen die van rand tot rand lopen: elke reel houdt zijn eigen verhouding,
+     de rij bepaalt de hoogte. Op een telefoon wordt het één rail om te swipen. */
+  function schik() {
+    const tegels = [...rail.children].filter((t) => t.dataset.ratio);
+    const breedte = rail.clientWidth;
+    if (!tegels.length || !breedte) return;
+    const gap = 8;
+
+    if (telefoon()) {
+      const hoog = Math.min(innerHeight * 0.52, 420);
+      for (const t of tegels) {
+        const r = Number(t.dataset.ratio);
+        const h = Math.round(Math.min(hoog, breedte / r));
+        Object.assign(t.style, { height: h + "px", width: Math.round(r * h) + "px", aspectRatio: "auto" });
+      }
+      pijlen();
+      return;
+    }
+
+    const doel = breedte < 768 ? 220 : 260;
+    let rij = [], som = 0;
+    const zet = (laatste) => {
+      if (!rij.length) return;
+      const ruimte = breedte - gap * (rij.length - 1);
+      let h = ruimte / som;
+      if (laatste) h = Math.min(h, doel * 1.25);
+      for (const t of rij) {
+        Object.assign(t.style, { height: Math.floor(h) + "px", width: Math.floor(Number(t.dataset.ratio) * h) + "px", aspectRatio: "auto" });
+      }
+      rij = []; som = 0;
+    };
+    for (const t of tegels) {
+      rij.push(t);
+      som += Number(t.dataset.ratio);
+      if ((breedte - gap * (rij.length - 1)) / som <= doel) zet(false);
+    }
+    zet(true);
+  }
+
+  const vorige = $("shots-prev"), volgende = $("shots-next");
+  function pijlen() {
+    const ruimte = rail.scrollWidth - rail.clientWidth;
+    vorige.disabled = rail.scrollLeft < 8;
+    volgende.disabled = rail.scrollLeft > ruimte - 8;
+  }
+  function verschuif(richting) {
+    const midden = rail.scrollLeft + rail.clientWidth / 2;
+    const tegels = [...rail.children];
+    const centrum = (t) => t.offsetLeft - rail.offsetLeft + t.offsetWidth / 2;
+    const doel = richting > 0
+      ? tegels.find((t) => centrum(t) > midden + 8)
+      : [...tegels].reverse().find((t) => centrum(t) < midden - 8);
+    if (!doel) return;
+    rail.scrollTo({ left: centrum(doel) - rail.clientWidth / 2, behavior: stil.matches ? "auto" : "smooth" });
+  }
+  vorige.addEventListener("click", () => verschuif(-1));
+  volgende.addEventListener("click", () => verschuif(1));
+  rail.addEventListener("scroll", pijlen, { passive: true });
+
+  let wacht;
+  addEventListener("resize", () => { clearTimeout(wacht); wacht = setTimeout(schik, 120); });
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) return;
+    for (const t of rail.children) {
+      const v = t.querySelector("video");
+      const box = t.getBoundingClientRect();
+      if (v && !stil.matches && t.dataset.stop !== "1" && box.bottom > 0 && box.top < innerHeight) {
+        v.play().then(() => t.classList.add("playing")).catch(() => {});
+      }
+    }
+  });
+})();
+
+/* ---------- aanvraag via Formspree ---------- */
+(function () {
+  const form = $("form"), datum = $("f-date");
+  const iso = (d) => d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate());
+  const vroegst = new Date();
+  vroegst.setDate(vroegst.getDate() + CONFIG.vroegsteDag);
+  datum.min = iso(vroegst);
+
+  const langeDatum = (v) => {
+    const d = new Date(v + "T12:00:00");
+    return isNaN(d) ? v : d.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric" });
+  };
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const msg = $("f-msg"), knop = $("f-btn");
+    const n = Number(slider.value);
+    const naam = $("f-name").value.trim();
+    const mail = $("f-email").value.trim();
+    const tel = $("f-phone").value.trim();
+
+    if (!datum.value) { msg.textContent = "Pick the day you would like us to film."; datum.focus(); return; }
+    if (datum.value < datum.min) { msg.textContent = "Pick a shoot day from tomorrow onward."; datum.focus(); return; }
+    if (!naam) { msg.textContent = "Please add your name."; $("f-name").focus(); return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(mail)) { msg.textContent = "Please add a valid email address."; $("f-email").focus(); return; }
+    if (!/^[+(\d][\d\s()./-]{5,}$/.test(tel)) { msg.textContent = "Please add a phone number where we can reach you."; $("f-phone").focus(); return; }
+
+    knop.disabled = true;
+    msg.textContent = "Sending...";
+
+    const gegevens = {
+      _subject: "One-take reels request (US): " + n + " reels",
+      onderwerp: "One-take reels (US)",
+      aantal_reels: n,
+      totaal: geld(n * CONFIG.prijsPerReel) + " " + CONFIG.btw,
+      gewenste_draaidag: langeDatum(datum.value),
+      naam, email: mail, telefoon: tel,
+      zaak_en_adres: $("f-place").value.trim(),
+      opmerkingen: $("f-note").value.trim(),
+      _gotcha: $("f-gotcha").value
+    };
+
+    try {
+      const res = await fetch(CONFIG.formspree, {
+        method: "POST",
+        headers: { "Accept": "application/json", "Content-Type": "application/json" },
+        body: JSON.stringify(gegevens)
+      });
+      if (!res.ok) throw new Error("formspree " + res.status);
+      const klaar = document.createElement("p");
+      klaar.className = "done";
+      klaar.textContent = "Thanks, " + naam.split(" ")[0] + ". Your request for " + n + " reels on " +
+        langeDatum(datum.value) + " is in. We will get in touch to confirm the shoot day.";
+      form.replaceWith(klaar);
+      $("lede").textContent = "Your request has been sent.";
+    } catch (err) {
+      console.error(err);
+      msg.textContent = "Your request could not be sent right now. Try again in a moment, or email " + $("c-mail").textContent + ".";
+      knop.disabled = false;
+    }
+  });
+})();
+</script>
+
+</body>
+</html>
