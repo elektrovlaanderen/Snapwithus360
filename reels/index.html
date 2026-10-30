@@ -264,6 +264,7 @@
   .wide { grid-column: 1 / -1; }
   .hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
   .field input[readonly] { color: var(--dim); }
+  .field input[aria-invalid="true"] { border-color: #d4664f; }
 
   /* adressuggesties */
   .ac { position: relative; }
@@ -554,7 +555,7 @@ teken();
     el.textContent = (el.dataset.d ? el.textContent + " | " : "") + tekst;
     el.dataset.d = "1";
   };
-  if (debug) log("v17 " + navigator.userAgent.replace(/^Mozilla\/5\.0 /, "").slice(0, 90));
+  if (debug) log("v19 " + navigator.userAgent.replace(/^Mozilla\/5\.0 /, "").slice(0, 90));
 
   // speel deze reel af en zet alle andere stil
   function speel(tegel) {
@@ -815,6 +816,8 @@ teken();
       const it = items[i];
       if (!it) return;
       input.value = it.formatted;
+      input.dataset.gekozen = it.formatted;   // dit adres komt uit de suggesties
+      delete input.dataset.vrij;
       sluit();
       input.dispatchEvent(new Event("change", { bubbles: true }));
     };
@@ -856,14 +859,23 @@ teken();
         const data = await res.json();
         if (document.activeElement !== input) return;
         items = (data.results || []).filter((r) => r.formatted);
+        // vindt de dienst niets voor een volledig getypt adres, dan mag de klant het zelf invullen
+        if (!items.length && q.length >= 6) input.dataset.vrij = "1";
+        else delete input.dataset.vrij;
         toon();
       } catch (err) {
-        if (err.name !== "AbortError") { console.error(err); sluit(); }
+        if (err.name !== "AbortError") {
+          console.error(err);
+          input.dataset.vrij = "1";   // dienst werkt even niet: niemand mag vastlopen
+          sluit();
+        }
       }
     }
 
     input.addEventListener("input", () => {
       clearTimeout(timer);
+      delete input.dataset.gekozen;   // verder getypt: opnieuw een suggestie kiezen
+      input.removeAttribute("aria-invalid");
       const q = input.value.trim();
       if (input.readOnly || q.length < 3 || !sleutel()) { sluit(); return; }
       timer = setTimeout(() => zoek(q), 250);
@@ -881,6 +893,14 @@ teken();
   const biz = $("f-bizaddr"), shoot = $("f-shootaddr"), zelfde = $("f-same");
   adresVeld(biz);
   adresVeld(shoot);
+
+  /* Een adres telt pas als het uit de suggesties gekozen is. Uitzonderingen: geen key,
+     de dienst werkt niet, of hij vond niets (bv. nieuwbouw). */
+  const geldig = (input) => !sleutel() || input.dataset.vrij === "1" ||
+    (!!input.dataset.gekozen && input.dataset.gekozen === input.value.trim());
+  window.snapAdresGeldig = (welk) => welk === "shoot"
+    ? (zelfde.checked ? geldig(biz) : geldig(shoot))
+    : geldig(biz);
 
   // "We film at the business address": het shootadres volgt het bedrijfsadres
   const volg = () => {
@@ -921,7 +941,15 @@ teken();
     const bizAdres = $("f-bizaddr").value.trim();
     const shootAdres = $("f-shootaddr").value.trim();
     if (bizAdres.length < 5) { msg.textContent = "Please add your business address."; $("f-bizaddr").focus(); return; }
+    if (!window.snapAdresGeldig("biz")) {
+      msg.textContent = "Please choose your business address from the suggestions that appear as you type.";
+      $("f-bizaddr").setAttribute("aria-invalid", "true"); $("f-bizaddr").focus(); return;
+    }
     if (shootAdres.length < 5) { msg.textContent = "Please add the address where the shoot will take place."; $("f-shootaddr").focus(); return; }
+    if (!window.snapAdresGeldig("shoot")) {
+      msg.textContent = "Please choose the shoot location from the suggestions that appear as you type.";
+      $("f-shootaddr").setAttribute("aria-invalid", "true"); $("f-shootaddr").focus(); return;
+    }
 
     knop.disabled = true;
     msg.textContent = "Sending...";
@@ -951,7 +979,7 @@ teken();
       const klaar = document.createElement("p");
       klaar.className = "done";
       klaar.textContent = "Thanks, " + naam.split(" ")[0] + ". Your request for " + n + " reels on " +
-        langeDatum(datum.value) + " is in. We will get in touch to confirm the shoot day.";
+        langeDatum(datum.value) + " is in. We will get in touch to confirm the shoot day. Our confirmation comes from " + $("c-mail").textContent + ": if you don't see it, check your spam folder.";
       form.replaceWith(klaar);
       $("lede").textContent = "Your request has been sent.";
     } catch (err) {
