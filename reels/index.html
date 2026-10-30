@@ -265,6 +265,13 @@
   .hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
   .field input[readonly] { color: var(--dim); }
   .field input[aria-invalid="true"] { border-color: #d4664f; }
+  .field input[data-status="ok"] { border-color: #5f9e6e; }
+  .addr-hint { min-height: 1.2rem; margin: 0; font-size: 0.85rem; line-height: 1.4; color: var(--dim); }
+  .addr-hint[data-status="ok"] { color: #7fc08f; }
+  .addr-hint[data-status="fout"] { color: #e5826d; }
+  .ac-list .ac-skip { margin-top: 4px; padding: 0.65rem 0.75rem; border-top: 1px solid var(--edge-soft); color: var(--gold); font-size: 0.88rem; cursor: pointer; border-radius: 0 0 6px 6px; }
+  .ac-list .ac-skip:hover { background: rgba(243, 238, 231, 0.05); }
+  .addr-skip { margin-left: 0.25rem; padding: 0; border: 0; background: none; font: inherit; color: var(--gold); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
 
   /* adressuggesties */
   .ac { position: relative; }
@@ -411,6 +418,7 @@
             placeholder="Start typing, e.g. 2711 Main St">
           <ul class="ac-list" id="f-bizaddr-list" role="listbox" hidden></ul>
         </div>
+        <p class="addr-hint" id="f-bizaddr-hint" aria-live="polite"></p>
       </div>
       <label class="check wide"><input type="checkbox" id="f-same"> We film at the business address</label>
       <div class="field wide">
@@ -421,6 +429,7 @@
             placeholder="Where the shoot will take place">
           <ul class="ac-list" id="f-shootaddr-list" role="listbox" hidden></ul>
         </div>
+        <p class="addr-hint" id="f-shootaddr-hint" aria-live="polite"></p>
       </div>
       <label class="field wide"><span>Ideas or notes (optional)</span>
         <textarea id="f-note" maxlength="800" placeholder="What would you like us to capture?"></textarea>
@@ -456,7 +465,9 @@ const CONFIG = {
   vroegsteDag: 1,       // aantal dagen vanaf vandaag
   // adressuggesties via Geoapify (gratis key op geoapify.com); zonder key werkt het veld als gewoon tekstveld
   adresKey: "b4e0359717804fc3b3c329847609e7b9",
-  adresLand: "us"
+  adresLand: "us",
+  // adressen dicht bij deze plek (lengte,breedte) komen eerst: Corona, CA. Verder weg blijft vindbaar.
+  adresRondom: "-117.5664,33.8753"
 };
 
 const $ = (id) => document.getElementById(id);
@@ -555,7 +566,7 @@ teken();
     el.textContent = (el.dataset.d ? el.textContent + " | " : "") + tekst;
     el.dataset.d = "1";
   };
-  if (debug) log("v19 " + navigator.userAgent.replace(/^Mozilla\/5\.0 /, "").slice(0, 90));
+  if (debug) log("v22 " + navigator.userAgent.replace(/^Mozilla\/5\.0 /, "").slice(0, 90));
 
   // speel deze reel af en zet alle andere stil
   function speel(tegel) {
@@ -818,6 +829,7 @@ teken();
       input.value = it.formatted;
       input.dataset.gekozen = it.formatted;   // dit adres komt uit de suggesties
       delete input.dataset.vrij;
+      status(input, "ok");
       sluit();
       input.dispatchEvent(new Event("change", { bubbles: true }));
     };
@@ -838,6 +850,20 @@ teken();
         li.addEventListener("mousedown", (e) => { e.preventDefault(); kies(i); });
         lijst.appendChild(li);
       });
+      // onderaan de lijst: het eigen adres staat er niet tussen
+      const eigen = document.createElement("li");
+      eigen.className = "ac-skip";
+      eigen.setAttribute("role", "presentation");
+      eigen.textContent = "My address isn't listed, use what I typed";
+      eigen.addEventListener("mousedown", (e) => {
+        e.preventDefault();
+        input.dataset.vrij = "1";
+        status(input, "vrij");
+        sluit();
+        input.dispatchEvent(new Event("change", { bubbles: true }));
+      });
+      lijst.appendChild(eigen);
+
       const bron = document.createElement("li");
       bron.className = "ac-credit";
       bron.setAttribute("role", "presentation");
@@ -852,7 +878,8 @@ teken();
       if (ctrl) ctrl.abort();
       ctrl = new AbortController();
       const url = "https://api.geoapify.com/v1/geocode/autocomplete?text=" + encodeURIComponent(q) +
-        "&filter=countrycode:" + CONFIG.adresLand + "&format=json&limit=5&lang=en&apiKey=" + encodeURIComponent(CONFIG.adresKey);
+        "&filter=countrycode:" + CONFIG.adresLand + "&bias=proximity:" + CONFIG.adresRondom +
+        "&format=json&limit=7&lang=en&apiKey=" + encodeURIComponent(CONFIG.adresKey);
       try {
         const res = await fetch(url, { signal: ctrl.signal });
         if (!res.ok) throw new Error("geoapify " + res.status);
@@ -862,11 +889,13 @@ teken();
         // vindt de dienst niets voor een volledig getypt adres, dan mag de klant het zelf invullen
         if (!items.length && q.length >= 6) input.dataset.vrij = "1";
         else delete input.dataset.vrij;
+        if (!input.dataset.gekozen) status(input, items.length ? "kies" : (input.dataset.vrij ? "vrij" : "typ"));
         toon();
       } catch (err) {
         if (err.name !== "AbortError") {
           console.error(err);
           input.dataset.vrij = "1";   // dienst werkt even niet: niemand mag vastlopen
+          status(input, "");
           sluit();
         }
       }
@@ -877,6 +906,7 @@ teken();
       delete input.dataset.gekozen;   // verder getypt: opnieuw een suggestie kiezen
       input.removeAttribute("aria-invalid");
       const q = input.value.trim();
+      if (sleutel() && !input.readOnly) status(input, !q ? "" : q.length < 3 ? "typ" : "zoekt");
       if (input.readOnly || q.length < 3 || !sleutel()) { sluit(); return; }
       timer = setTimeout(() => zoek(q), 250);
     });
@@ -888,7 +918,54 @@ teken();
       else if (e.key === "Escape") { sluit(); }
     });
     input.addEventListener("blur", () => setTimeout(sluit, 150));
+
+    /* Een adres dat er al staat (autofill van de browser, of terug in het vak geklikt)
+       maar niet uit de lijst komt: meteen de suggesties tonen om het te bevestigen. */
+    const bevestigBestaand = () => {
+      const q = input.value.trim();
+      if (!sleutel() || input.readOnly || input.dataset.gekozen === q || q.length < 3) return;
+      clearTimeout(timer);
+      timer = setTimeout(() => zoek(q), 50);
+    };
+    input.addEventListener("focus", bevestigBestaand);
+    input.addEventListener("change", () => { if (document.activeElement === input) bevestigBestaand(); });
   }
+
+  /* De regel onder een adresvak: zegt in gewone woorden wat er nog moet gebeuren. */
+  const TEKST = {
+    typ: "Type at least 3 characters to see matching addresses.",
+    zoekt: "Looking up addresses…",
+    kies: "Pick your address from the list to continue.",
+    ok: "✓ Address confirmed",
+    vrij: "We'll use the address as you typed it. Please make sure it's complete.",
+    fout: "Choose your address from the list below the field. Don't see it? Keep typing the full address.",
+    zelfde: "Same as the business address."
+  };
+  function status(input, s) {
+    const hint = $(input.id + "-hint");
+    if (!hint) return;
+    hint.textContent = TEKST[s] || "";
+    hint.dataset.status = s;
+    // staat het juiste adres er niet tussen, dan mag de klant het zelf ingeven
+    if (s === "kies" || s === "fout") {
+      const knop = document.createElement("button");
+      knop.type = "button";
+      knop.className = "addr-skip";
+      knop.textContent = "My address isn't listed";
+      knop.addEventListener("mousedown", (e) => e.preventDefault());
+      knop.addEventListener("click", () => {
+        input.dataset.vrij = "1";
+        status(input, "vrij");
+        $(input.getAttribute("aria-controls")).hidden = true;
+        input.setAttribute("aria-expanded", "false");
+        input.dispatchEvent(new Event("change", { bubbles: true }));
+      });
+      hint.append(" ", knop);
+    }
+    if (s === "ok") input.dataset.status = "ok"; else delete input.dataset.status;
+    if (s === "fout") input.setAttribute("aria-invalid", "true"); else input.removeAttribute("aria-invalid");
+  }
+  window.snapAdresStatus = status;
 
   const biz = $("f-bizaddr"), shoot = $("f-shootaddr"), zelfde = $("f-same");
   adresVeld(biz);
@@ -904,8 +981,8 @@ teken();
 
   // "We film at the business address": het shootadres volgt het bedrijfsadres
   const volg = () => {
-    if (zelfde.checked) { shoot.value = biz.value; shoot.readOnly = true; }
-    else { shoot.readOnly = false; }
+    if (zelfde.checked) { shoot.value = biz.value; shoot.readOnly = true; status(shoot, "zelfde"); }
+    else { shoot.readOnly = false; if ($("f-shootaddr-hint").dataset.status === "zelfde") status(shoot, ""); }
   };
   zelfde.addEventListener("change", () => { if (!zelfde.checked) shoot.value = ""; volg(); if (!zelfde.checked) shoot.focus(); });
   biz.addEventListener("input", volg);
@@ -942,13 +1019,15 @@ teken();
     const shootAdres = $("f-shootaddr").value.trim();
     if (bizAdres.length < 5) { msg.textContent = "Please add your business address."; $("f-bizaddr").focus(); return; }
     if (!window.snapAdresGeldig("biz")) {
-      msg.textContent = "Please choose your business address from the suggestions that appear as you type.";
-      $("f-bizaddr").setAttribute("aria-invalid", "true"); $("f-bizaddr").focus(); return;
+      msg.textContent = "Please confirm your business address (see the note under that field).";
+      window.snapAdresStatus($("f-bizaddr"), "fout");
+      $("f-bizaddr").scrollIntoView({ block: "center" }); $("f-bizaddr").focus(); return;
     }
     if (shootAdres.length < 5) { msg.textContent = "Please add the address where the shoot will take place."; $("f-shootaddr").focus(); return; }
     if (!window.snapAdresGeldig("shoot")) {
-      msg.textContent = "Please choose the shoot location from the suggestions that appear as you type.";
-      $("f-shootaddr").setAttribute("aria-invalid", "true"); $("f-shootaddr").focus(); return;
+      msg.textContent = "Please confirm the shoot location (see the note under that field).";
+      window.snapAdresStatus($("f-shootaddr"), "fout");
+      $("f-shootaddr").scrollIntoView({ block: "center" }); $("f-shootaddr").focus(); return;
     }
 
     knop.disabled = true;
