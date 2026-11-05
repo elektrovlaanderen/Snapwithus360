@@ -446,10 +446,16 @@ let CONFIG = {
       levert:["Everything in The Story","Professional photo reportage of the property, delivered within 24 hours","Aerial drone video of the property and its surroundings"],
       inbegrepen:["aerialVideoAdd"],
       opties:["matterport","aerialPhotos","aerialVideoAdd","twilight","detached","plan2d","plan2dKleur","plan3d"] },
-    losseDiensten: { id:"tour-and-aerial", naam:"3D Tour & Aerial", prijs:0, los:true,
-      omschrijving:"Just a Matterport 3D tour and/or aerial photos and video, without a film.",
-      levert:["Choose your services on the next step","Matterport 3D tour priced by square footage","Add the story later at any time"],
-      opties:["matterport","aerialPhotos","aerialVideoFull","twilight","detached","plan2d","plan2dKleur","plan3d"] },
+    tour3d: { id:"3d-tour", naam:"3D Tour", inbegrepen:["matterport"],
+      banden:[{tot:1999,p:250},{tot:2999,p:300},{tot:3999,p:350},{tot:4999,p:400},{tot:5999,p:450},
+              {tot:6999,p:500},{tot:7999,p:550},{tot:8999,p:600},{tot:9999,p:650}],
+      omschrijving:"A Matterport 3D tour of the home, without a film.",
+      levert:["Matterport 3D walkthrough buyers can explore on their own","Priced by square footage"],
+      opties:["detached","plan2d","plan2dKleur","plan3d"] },
+    aerial: { id:"aerial", naam:"Aerial", prijs:0, los:true,
+      omschrijving:"Aerial photos and/or video of the property, without a film.",
+      levert:["Choose aerial photos, aerial video or both on the next step","Priced by square footage"],
+      opties:["aerialPhotos","aerialVideoFull","twilight"] },
 
     /* ---------- enkel foto's (prijzen volgens Click) ---------- */
     photoEssentials: { id:"photo-essentials", naam:"Essentials", basis:true,
@@ -458,20 +464,20 @@ let CONFIG = {
       omschrijving:"Everything a listing needs to go live.",
       levert:["25 to 30 interior and exterior photos","6 aerial drone photos","2D floor plan","Delivered within 24 hours"],
       inbegrepen:["aerialPhotos","plan2d"],
-      opties:["matterport","aerialPhotos","aerialVideoAdd","twilight","detached","plan2d","plan2dKleur","plan3d"] },
+      opties:["matterport","aerialPhotos","aerialVideoAdd","detached","plan2d","plan2dKleur","plan3d"] },
     photoSignature: { id:"photo-signature", naam:"Signature", basis:true,
       banden:[{tot:1499,p:415},{tot:2199,p:460},{tot:2999,p:480},{tot:3799,p:520},{tot:4599,p:555},
               {tot:5499,p:595},{tot:6499,p:630},{tot:7499,p:670},{tot:8499,p:725},{tot:9499,p:780},{tot:10499,p:845}],
       omschrijving:"More photos, plus a reel for social media.",
       levert:["35 to 45 interior and exterior photos","Vertical property reel for social media","6 aerial drone photos","2D floor plan","Delivered within 24 hours"],
       inbegrepen:["aerialPhotos","plan2d"],
-      opties:["matterport","aerialPhotos","aerialVideoAdd","twilight","detached","plan2d","plan2dKleur","plan3d"] },
+      opties:["matterport","aerialPhotos","aerialVideoAdd","detached","plan2d","plan2dKleur","plan3d"] },
     photoPrestige: { id:"photo-prestige", naam:"Prestige Luxury", basis:true, minSqft:4600,
       banden:[{tot:4599,p:null},{tot:5499,p:1225},{tot:6499,p:1265},{tot:7499,p:1415},{tot:8499,p:1620},{tot:9499,p:1675},{tot:10499,p:1925}],
       omschrijving:"For luxury homes from 4,600 sq ft.",
-      levert:["45+ interior and exterior photos","Cinematic property film","6 twilight photos","Vertical property reel for social media","Aerial drone photos and video","2D floor plan","Delivered within 24 hours"],
+      levert:["45+ interior and exterior photos","Cinematic property film","Vertical property reel for social media","Aerial drone photos and video","2D floor plan","Delivered within 24 hours"],
       inbegrepen:["aerialPhotos","aerialVideoAdd","plan2d"],
-      opties:["matterport","aerialPhotos","aerialVideoAdd","twilight","detached","plan2d","plan2dKleur","plan3d"] },
+      opties:["matterport","aerialPhotos","aerialVideoAdd","detached","plan2d","plan2dKleur","plan3d"] },
 
     /* ---------- de agent zelf ---------- */
     agentReels: { id:"agent-reels", naam:"Agent Reels", duur:"One shoot day", basis:true,
@@ -493,17 +499,18 @@ let CONFIG = {
    aantal:  keuzelijst 1..n, prijs x aantal
    vanaf:   "vanaf"-prijs
    vereist: kan enkel samen met die andere add-on (of als die in het pakket zit)
+   sqftToeslag: vaste prijs + toeslag per stap boven een oppervlakte (als de sq ft gekend is)
    ================================================================ */
   opties: {
     matterport: { naam:"Matterport 3D tour",
       uitleg:"A virtual walkthrough buyers can explore on their own. Priced by the home's square footage.",
       banden:[{tot:1999,p:250},{tot:2999,p:300},{tot:3999,p:350},{tot:4999,p:400},{tot:5999,p:450},
               {tot:6999,p:500},{tot:7999,p:550},{tot:8999,p:600},{tot:9999,p:650}] },
-    aerialPhotos: { naam:"Aerial photos", prijs:195,
+    aerialPhotos: { naam:"Aerial photos", prijs:195, sqftToeslag:{ vanaf:3000, per:500, prijs:40 },
       uitleg:"6 aerial drone photos of the property and its surroundings, where legally permitted." },
-    aerialVideoAdd: { naam:"Aerial video add-on", prijs:145,
+    aerialVideoAdd: { naam:"Aerial video add-on", prijs:145, sqftToeslag:{ vanaf:3000, per:500, prijs:40 },
       uitleg:"15 to 30 seconds of aerial drone video, where legally permitted." },
-    aerialVideoFull: { naam:"Aerial video", prijs:245,
+    aerialVideoFull: { naam:"Aerial video", prijs:245, sqftToeslag:{ vanaf:3000, per:500, prijs:40 },
       uitleg:"An aerial drone video of 1 to 2 minutes, where legally permitted." },
     twilight: { naam:"Aerial virtual twilight", prijs:50, aantal:6, aantalLabel:"Number of images", vereist:"aerialPhotos",
       uitleg:"Aerial photos turned into a twilight scene. Price per image." },
@@ -535,7 +542,7 @@ let CONFIG = {
           sub: "One home, told by you on camera",
           lead: "Every package is per listing. More listings coming up? Mention it in the notes and we'll set up a package together.",
           sqft: true,
-          pakketten: ["story","storyComplete","losseDiensten"],
+          pakketten: ["story","storyComplete","tour3d","aerial"],
           suggesties: ["You at the front door","The front of the home and the driveway","The living room","The kitchen","The backyard","The neighborhood from the air"],
           vragen: [
             { k:"pandAdres", label:"Property address", type:"adres", verplicht:true },
@@ -735,16 +742,26 @@ function pakDetail(p){
 
 /* Prijs van één add-on binnen het gekozen pakket.
    Geeft { basis, prijs, korting, vanaf, opAanvraag, detail } terug. */
-function optiePrijs(id){
+function optieBasis(id){
   const o = CONFIG.opties[id];
   let basis = o.prijs, detail = '';
   if(o.banden){
     basis = bandPrijs(o.banden, S.sqft); detail = sqftTekst(S.sqft);
+  } else if(o.sqftToeslag && metSqft() && basis != null){
+    const z = o.sqftToeslag;
+    if(S.sqft >= 10500) basis = null;
+    else if(S.sqft >= z.vanaf) basis += z.prijs * (Math.floor((S.sqft - z.vanaf) / z.per) + 1);
+    detail = sqftTekst(S.sqft);
   } else if(o.aantal){
     const n = S.keuze[id] || 1;
     basis = o.prijs == null ? null : o.prijs * n;
     detail = n + ' × ' + geld(o.prijs);
   }
+  return { basis, detail };
+}
+function optiePrijs(id){
+  const o = CONFIG.opties[id];
+  const { basis, detail } = optieBasis(id);
   const opAanvraag = (basis === null || basis === undefined);
   const pct = addonPct();
   const korting = !opAanvraag && pct > 0;
@@ -801,8 +818,8 @@ function prijsLabel(p){
   if(p.los){
     const min = Math.min(...(p.opties || [])
       .map(id => CONFIG.opties[id]).filter(o => o && !o.vereist)
-      .map(o => o.banden ? bandPrijs(o.banden, S.sqft) : o.prijs).filter(x => x != null));
-    return isFinite(min) ? `from ${geld(min)}<em>excl. tax</em>` : 'Custom';
+      .map(o => optieBasis(Object.keys(CONFIG.opties).find(k => CONFIG.opties[k] === o)).basis).filter(x => x != null));
+    return isFinite(min) ? `from ${geld(min)}<em>excl. tax</em>` : (metSqft() ? 'Quoted individually' : 'Custom');
   }
   if(pr === null || pr === undefined) return (p.banden || p.sqftToeslag) ? 'Quoted individually' : 'Custom';
   return `${p.vanaf ? 'from ' : ''}${geld(pr)}<em>excl. tax</em>`;
