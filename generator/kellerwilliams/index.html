@@ -1,0 +1,1278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="snap360-versie" content="2026-11-05-kw">
+<title>Book your story — SNAP360 × Keller Williams</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   SNAP360 — video-opdrachtformulier
+   ============================================================ */
+:root{
+  --ink:#12110F;
+  --panel:#1C1A17;
+  --panel-2:#242118;
+  --line:#332F28;
+  --line-soft:#282520;
+  --text:#EFEAE1;
+  --muted:#9E978B;
+  --gold:#D5943B;
+  --gold-soft:rgba(213,148,59,.14);
+  --ok:#7FB069;
+  --err:#D86A5A;
+  --r:4px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{
+  background:var(--ink);
+  color:var(--text);
+  font-family:'Archivo',system-ui,-apple-system,'Segoe UI',sans-serif;
+  font-size:16px;line-height:1.55;
+  padding:0 20px 80px;
+}
+.wrap{max-width:760px;margin:0 auto}
+
+/* ---------- kop ---------- */
+header{padding:44px 0 30px;border-bottom:1px solid var(--line-soft)}
+.brand{
+  font-size:13px;font-weight:700;letter-spacing:.22em;color:var(--gold);
+}
+h1{
+  font-size:clamp(30px,6.2vw,46px);font-weight:600;line-height:1.06;
+  letter-spacing:-.025em;margin:16px 0 12px;max-width:14ch;
+}
+header p{color:var(--muted);max-width:56ch;font-size:15px}
+
+/* ---------- voortgang ---------- */
+.rail{display:flex;gap:2px;margin:26px 0 34px}
+.rail i{flex:1;height:3px;background:var(--line);transition:background .3s}
+.rail i.done{background:var(--gold)}
+.stepno{color:var(--muted);font-size:13px;font-weight:500;margin-bottom:10px}
+
+/* ---------- stappen ---------- */
+.step{display:none}
+.step.on{display:block;animation:in .25s ease-out}
+@keyframes in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.step.on{animation:none}*{transition:none!important}}
+h2{font-size:26px;font-weight:600;letter-spacing:-.02em;margin-bottom:8px}
+.lead{color:var(--muted);margin-bottom:26px;max-width:58ch;font-size:15px}
+
+/* ---------- keuzekaarten ---------- */
+.opts{display:grid;gap:10px}
+.opts.two{grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+.opt{
+  display:block;background:var(--panel);border:1px solid var(--line);
+  border-radius:var(--r);padding:18px 20px;cursor:pointer;text-align:left;
+  color:inherit;font:inherit;width:100%;transition:border-color .15s,background .15s;
+}
+.opt:hover{border-color:#4A443A}
+.opt:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.opt[aria-pressed="true"]{border-color:var(--gold);background:var(--panel-2)}
+.opt b{display:block;font-size:17px;font-weight:600;margin-bottom:4px}
+.opt small{display:block;color:var(--muted);font-size:14px;line-height:1.45}
+.opt .price{
+  float:right;color:var(--gold);font-weight:600;font-size:16px;margin-left:12px;text-align:right;
+}
+.opt .price em{display:block;font-style:normal;font-weight:400;font-size:12px;color:var(--muted);margin-top:1px}
+.opt .price s{display:block;font-weight:400;font-size:13px;color:var(--muted);text-decoration:line-through}
+.exclbtw{color:var(--muted);font-size:13.5px;margin:-14px 0 20px}
+.optie{display:flex;gap:12px;align-items:flex-start;background:var(--panel);border:1px solid var(--line);
+  border-radius:var(--r);padding:15px 17px;margin-bottom:8px;cursor:pointer}
+.optie:hover{border-color:#4A443A}
+.optie.aan{border-color:var(--gold);background:var(--panel-2)}
+.optie.vast{cursor:default;opacity:.85}
+.optie input{width:17px;height:17px;flex:none;margin-top:3px;accent-color:var(--gold)}
+.optie .tekst{flex:1}
+.optie b{display:block;font-size:15.5px;font-weight:600}
+.optie small{display:block;color:var(--muted);font-size:13.5px;margin-top:2px;line-height:1.45}
+.optie .bedrag{color:var(--gold);font-weight:600;font-size:15px;white-space:nowrap;margin-left:6px}
+.optie .bedrag.inb{color:var(--muted);font-weight:400;font-size:13px}
+.totaalbalk{border:1px solid var(--gold);border-radius:var(--r);background:var(--panel-2);
+  padding:18px 20px;margin-top:18px}
+.totaalbalk .regel{display:flex;justify-content:space-between;gap:12px;font-size:14.5px;color:var(--muted);margin-bottom:5px}
+.totaalbalk .som{display:flex;justify-content:space-between;gap:12px;font-size:18px;font-weight:600;
+  color:var(--text);padding-top:10px;border-top:1px solid var(--line)}
+.totaalbalk .note{color:var(--gold);font-size:13.5px;margin-top:10px;line-height:1.45}
+.opt ul{margin:12px 0 0;padding-left:16px;color:var(--muted);font-size:14px}
+.opt li{margin-bottom:3px}
+
+/* ---------- velden ---------- */
+.field{margin-bottom:20px}
+.field label{display:block;font-size:14px;font-weight:500;margin-bottom:6px}
+.field .hint{display:block;color:var(--muted);font-weight:400;font-size:13px;margin-top:2px}
+input[type=text],input[type=email],input[type=tel],input[type=date],textarea,select{
+  width:100%;background:var(--panel);border:1px solid var(--line);border-radius:var(--r);
+  color:var(--text);font:inherit;font-size:15px;padding:11px 13px;
+}
+textarea{min-height:90px;resize:vertical;line-height:1.5}
+input:focus,textarea:focus,select:focus{outline:none;border-color:var(--gold)}
+input.bad,textarea.bad{border-color:var(--err)}
+.row{display:grid;gap:14px;grid-template-columns:1fr 1fr}
+@media(max-width:560px){.row{grid-template-columns:1fr}}
+.check{display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:15px;cursor:pointer}
+.check input{margin-top:4px;accent-color:var(--gold);width:16px;height:16px;flex:none}
+
+/* ---------- shotlijst ---------- */
+.shotbox{border:1px solid var(--gold);border-radius:var(--r);background:var(--panel-2);padding:20px;margin-bottom:22px}
+.shotbox h3{font-size:18px;font-weight:600;margin-bottom:4px}
+.shotbox p{color:var(--muted);font-size:14px;margin-bottom:14px}
+.shotadd{display:flex;gap:8px}
+.shotadd input{flex:1}
+.shots{list-style:none;margin-top:14px}
+.shots li{
+  display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-top:1px solid var(--line);
+  font-size:15px;
+}
+.shots .n{color:var(--gold);font-weight:600;font-size:13px;padding-top:2px;min-width:18px}
+.shots .x{
+  margin-left:auto;background:none;border:none;color:var(--muted);cursor:pointer;
+  font-size:18px;line-height:1;padding:0 4px;
+}
+.shots .x:hover{color:var(--err)}
+.empty{color:var(--muted);font-size:14px;padding:12px 0 2px;border-top:1px solid var(--line);margin-top:14px}
+.sug{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.sug button{
+  background:none;border:1px dashed var(--line);color:var(--muted);border-radius:99px;
+  padding:5px 11px;font:inherit;font-size:13px;cursor:pointer;
+}
+.sug button:hover{border-color:var(--gold);color:var(--gold)}
+
+/* ---------- knoppen ---------- */
+.nav{display:flex;gap:10px;margin-top:32px;padding-top:24px;border-top:1px solid var(--line-soft)}
+button.go{
+  background:var(--gold);color:#17140E;border:none;border-radius:var(--r);
+  padding:13px 26px;font:inherit;font-size:15px;font-weight:600;cursor:pointer;
+}
+button.go:hover{background:#E3A44C}
+button.go:disabled{opacity:.5;cursor:not-allowed}
+button.back{
+  background:none;border:1px solid var(--line);color:var(--muted);border-radius:var(--r);
+  padding:13px 20px;font:inherit;font-size:15px;cursor:pointer;
+}
+button.back:hover{color:var(--text);border-color:#4A443A}
+button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.err{color:var(--err);font-size:14px;margin-top:12px;display:none}
+.err.on{display:block}
+
+/* ---------- document ---------- */
+.doc{
+  background:#FBF9F5;color:#1A1815;border-radius:var(--r);padding:34px 32px;
+  font-size:14.5px;line-height:1.6;max-height:460px;overflow-y:auto;
+}
+@media(max-width:560px){.doc{padding:24px 20px;font-size:14px}}
+.doc h3{font-size:20px;font-weight:600;letter-spacing:-.01em;margin-bottom:2px}
+.doc .ref{color:#6E675C;font-size:13px;margin-bottom:22px}
+.doc h4{
+  font-size:13px;font-weight:700;letter-spacing:.06em;color:#8A6A2E;
+  margin:22px 0 8px;padding-bottom:5px;border-bottom:1px solid #E3DDD2;
+}
+.doc p{margin-bottom:7px}
+.doc ul,.doc ol{margin:0 0 7px 18px}
+.doc li{margin-bottom:4px}
+.doc dl{display:grid;grid-template-columns:auto 1fr;gap:3px 16px;font-size:14px}
+.doc dt{color:#6E675C}
+.doc .total{
+  margin-top:12px;padding-top:10px;border-top:1px solid #E3DDD2;
+  font-weight:600;font-size:16px;
+}
+.doc .small{font-size:13px;color:#55504A}
+
+/* ---------- handtekening ---------- */
+.sign{margin-top:26px}
+canvas{
+  width:100%;height:170px;background:#FBF9F5;border:1px solid var(--line);
+  border-radius:var(--r);touch-action:none;display:block;cursor:crosshair;
+}
+.signbar{display:flex;justify-content:space-between;align-items:center;margin-top:8px}
+.signbar span{color:var(--muted);font-size:13px}
+.signbar button{background:none;border:none;color:var(--muted);font:inherit;font-size:13px;cursor:pointer;text-decoration:underline}
+.signbar button:hover{color:var(--text)}
+
+/* ---------- klaar ---------- */
+.done-panel{border:1px solid var(--gold);border-radius:var(--r);padding:34px 30px;background:var(--panel-2)}
+.done-panel h2{color:var(--gold)}
+.spin{display:inline-block;width:14px;height:14px;border:2px solid rgba(23,20,14,.3);border-top-color:#17140E;border-radius:50%;animation:sp .7s linear infinite;vertical-align:-2px;margin-right:8px}
+@keyframes sp{to{transform:rotate(360deg)}}
+
+button.klein{background:none;border:1px solid var(--line);color:var(--text);border-radius:var(--r);
+  padding:10px 16px;font:inherit;font-size:14.5px;cursor:pointer}
+button.klein:hover{border-color:var(--gold);color:var(--gold)}
+.fotoblok{border:1px solid var(--line);border-radius:var(--r);background:var(--panel);padding:18px 20px;margin-top:8px}
+.fotoblok h3{font-size:16px;font-weight:600;margin-bottom:4px}
+.fotoblok p{color:var(--muted);font-size:13.5px;margin-bottom:14px;max-width:56ch}
+.fotorij{display:flex;gap:14px;align-items:center;margin-top:14px;flex-wrap:wrap}
+#camBox{margin-top:14px}
+#cam{width:100%;max-width:420px;border-radius:var(--r);border:1px solid var(--line);background:#000;display:block}
+.camrij{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.ofwel{color:var(--muted);font-size:13.5px;margin-top:10px}
+.ofwel button{background:none;border:none;color:var(--gold);font:inherit;font-size:13.5px;
+  cursor:pointer;text-decoration:underline;padding:0}
+.adres{display:grid;gap:10px;grid-template-columns:repeat(4,1fr)}
+.adres .straat{grid-column:span 3}
+.adres .nummer{grid-column:span 1}
+.adres .postcode{grid-column:span 1}
+.adres .gemeente{grid-column:span 3}
+@media(max-width:560px){.adres{grid-template-columns:1fr 1fr}
+  .adres .straat,.adres .gemeente{grid-column:span 2}
+  .adres .nummer,.adres .postcode{grid-column:span 1}}
+.fotorij img{width:88px;height:88px;object-fit:cover;border-radius:var(--r);border:1px solid var(--line)}
+.doc .pasfoto{width:92px;border:1px solid #E3DDD2;border-radius:3px;margin-top:6px}
+.shotadd{display:flex;gap:8px;flex-wrap:wrap}
+.shotadd input{flex:1 1 180px;min-width:0}
+.shotadd button{flex:none}
+/* ---------- KW: extra's ---------- */
+.optwrap{margin-bottom:8px}
+.optwrap .optie{margin-bottom:0}
+.optwrap.metkeuze .optie.aan{border-bottom-left-radius:0;border-bottom-right-radius:0}
+.keuzerij{background:var(--panel-2);border:1px solid var(--gold);border-top:none;
+  border-radius:0 0 var(--r) var(--r);padding:12px 17px 14px 46px}
+.keuzerij label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
+.optie.uit{cursor:not-allowed;opacity:.5}
+.optie .bedrag s{display:block;color:var(--muted);font-weight:400;font-size:12.5px;text-align:right}
+.optie .bedrag em{display:block;color:var(--muted);font-style:normal;font-weight:400;font-size:12px;text-align:right}
+.totaalbalk .regel span:last-child{white-space:nowrap}
+.totaalbalk .regel em{font-style:normal;color:var(--gold);font-size:13px;margin-left:6px}
+.adres.us .stad{grid-column:span 2}
+.adres.us .staat{grid-column:span 1}
+.adres.us .zip{grid-column:span 1}
+@media(max-width:560px){.adres.us .stad{grid-column:span 2}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="brand">SNAP360 × KELLER WILLIAMS</div>
+  <h1>Book your story</h1>
+  <p>Pick your package, tell us what has to be on camera, and sign the booking confirmation. It takes about five minutes, and the signed document lands in your inbox.</p>
+</header>
+
+<div class="rail" id="rail"></div>
+<div class="stepno" id="stepno"></div>
+
+<!-- 0. TYPE (vast bij één type) -->
+<section class="step" data-step="0">
+  <h2>Who are we filming?</h2>
+  <p class="lead">We only show the packages and questions that fit.</p>
+  <div class="opts two" id="typeOpts"></div>
+  <div class="err" id="e0">Pick one first.</div>
+  <div class="nav"><button class="go" data-next>Next</button></div>
+</section>
+
+<!-- 1. SITUATIE -->
+<section class="step" data-step="1">
+  <h2>What are we making?</h2>
+  <p class="lead">Pick what fits best. You can always tell us more later on.</p>
+  <div class="opts two" id="sitOpts"></div>
+  <div class="err" id="e1">Pick one first.</div>
+  <div class="nav"><button class="back" data-prev>Back</button><button class="go" data-next>Next</button></div>
+</section>
+
+<!-- 2. PAKKET -->
+<section class="step" data-step="2">
+  <h2>Which package?</h2>
+  <p class="lead" id="pakLead"></p>
+  <p class="exclbtw" id="pakBtw">All prices exclude sales tax, if applicable.</p>
+  <div class="opts" id="pakOpts"></div>
+  <div class="err" id="e2">Pick a package.</div>
+  <div class="nav"><button class="back" data-prev>Back</button><button class="go" data-next>Next</button></div>
+</section>
+
+<!-- 3. ADD-ONS -->
+<section class="step" data-step="3">
+  <h2 id="optTitel">Add-ons</h2>
+  <p class="lead" id="optLead"></p>
+  <div id="optLijst"></div>
+  <div class="totaalbalk" id="totaalBalk"></div>
+  <div class="err" id="e3">Pick at least one service.</div>
+  <div class="nav"><button class="back" data-prev>Back</button><button class="go" data-next>Next</button></div>
+</section>
+
+<!-- 4. GEGEVENS -->
+<section class="step" data-step="4">
+  <h2>Your details</h2>
+  <p class="lead">These go on the booking confirmation and the invoice.</p>
+  <div id="gegevens"></div>
+
+  <div class="fotoblok" id="fotoBlok">
+    <h3>Photo of the signer</h3>
+    <p id="fotoUitleg">So we know right away who we're meeting on the shoot day. The photo is only stored with this booking.</p>
+    <input type="file" accept="image/*" capture="user" id="fotoIn" style="display:none">
+    <button type="button" class="klein" id="fotoKnop">Take a photo</button>
+    <div class="ofwel" id="fotoOfwel">or <button type="button" id="fotoBestand">choose a file from your device</button></div>
+
+    <div id="camBox" style="display:none">
+      <video id="cam" playsinline muted autoplay></video>
+      <div class="camrij">
+        <button type="button" class="go" id="camSnap">Take the photo</button>
+        <button type="button" class="klein" id="camWissel">Switch camera</button>
+        <button type="button" class="klein" id="camStop">Cancel</button>
+      </div>
+    </div>
+
+    <div class="fotorij" id="fotoVoor" style="display:none">
+      <img id="fotoImg" alt="Photo taken">
+      <button type="button" class="klein" id="fotoWeg">Retake</button>
+    </div>
+  </div>
+
+  <div class="err" id="e4">Please fill in the required fields.</div>
+  <div class="nav"><button class="back" data-prev>Back</button><button class="go" data-next>Next</button></div>
+</section>
+
+<!-- 5. AANDACHTSPUNTEN -->
+<section class="step" data-step="5">
+  <h2>The details that matter</h2>
+  <p class="lead">This is the most important part. Everything you add here goes into the document and becomes our checklist on the shoot day.</p>
+
+  <div class="shotbox">
+    <h3>Must be on camera</h3>
+    <p>Add what absolutely has to be filmed, one item at a time. Be specific, and feel free to say how you want it.</p>
+    <div class="shotadd">
+      <input type="text" id="shotIn" placeholder="What has to be on camera?" maxlength="120">
+      <input type="text" id="shotHoe" placeholder="How? (optional)" maxlength="120">
+      <button class="go" id="shotAdd" type="button">Add</button>
+    </div>
+    <div class="sug" id="sug"></div>
+    <ul class="shots" id="shotList"></ul>
+    <div class="empty" id="shotEmpty">Nothing added yet.</div>
+  </div>
+
+  <div id="vragen"></div>
+  <div class="err" id="e5">Add at least one thing that has to be on camera.</div>
+  <div class="nav"><button class="back" data-prev>Back</button><button class="go" data-next>To the document</button></div>
+</section>
+
+<!-- 6. DOCUMENT + HANDTEKENING -->
+<section class="step" data-step="6">
+  <h2>Booking confirmation</h2>
+  <p class="lead">Read it over and sign. Something not right? Go back and change it.</p>
+  <div class="doc" id="doc"></div>
+
+  <div class="sign">
+    <label class="check"><input type="checkbox" id="akkoord"><span>I agree to the booking and the terms above, and I am authorized to sign.</span></label>
+    <div class="field" style="margin-bottom:10px">
+      <label for="signName">Name of the signer</label>
+      <input type="text" id="signName" autocomplete="name">
+    </div>
+    <label style="display:block;font-size:14px;font-weight:500;margin-bottom:6px">Signature</label>
+    <canvas id="pad"></canvas>
+    <div class="signbar"><span>Sign with your mouse or finger</span><button type="button" id="clearPad">Clear</button></div>
+  </div>
+
+  <div class="err" id="e6">Check the box, fill in your name and sign.</div>
+  <div class="nav"><button class="back" data-prev>Back</button><button class="go" id="send">Sign and send</button></div>
+</section>
+
+<!-- 7. KLAAR -->
+<section class="step" data-step="7">
+  <div class="done-panel">
+    <h2>Signed</h2>
+    <p class="lead" style="margin-bottom:0" id="doneTxt"></p>
+  </div>
+</section>
+
+</div>
+
+<script>
+/* ============================================================
+   CONFIGURATIE — Keller Williams-versie (Engels, US)
+   Opbouw: type > situatie > pakket > add-ons
+   prijs: null = "op aanvraag" / "op maat"
+   ============================================================ */
+let CONFIG = {
+
+  // Webapp-URL van je Apps Script (zelfde als het Belgische formulier)
+  endpoint: "https://script.google.com/macros/s/AKfycbwE7v_hyD1bx9yJnEH4c65PlEiDDqndjF1-eKj5n6R_9TUtiSG1gjlr5lIXoFx5eC8mrg/exec",
+  taal: "en",
+
+  bedrijf: {
+    naam:  "DE BACKER LLC — SNAP360",
+    adres: "1070 W Horizon Ridge Pkwy, Ste 111, Henderson, NV 89012",
+    email: "tom@snapwithus360.com",
+    tel:   "+1 (702) 881-0971",
+    web:   "snapwithus360.com"
+  },
+
+  munt: "$",
+  voorschot: 0.30,       // 30% voorschot bij bevestiging
+  addonKorting: 0.15,    // korting op Matterport en drone wanneer ze bij een story-pakket komen
+  foto: "optioneel",     // "optioneel", "verplicht" of "uit"
+
+/* ================================================================
+   PAKKETTEN
+   basis:true = productiepakket, add-ons met korting:true krijgen
+                daar de add-on-korting
+   los:true   = enkel losse diensten, klant kiest ze bij de add-ons
+   ================================================================ */
+  paketten: {
+    agentReels: { id:"agent-reels", naam:"Agent Reels", prijs:400, duur:"One shoot day",
+      omschrijving:"The easy way in: short one-take reels with you as the face.",
+      levert:["8 one-take reels, filmed in one shoot day","Up to 10 seconds per reel","Made for social media"],
+      opties:[] },
+    story: { id:"the-story", naam:"The Story", prijs:1000, basis:true,
+      omschrijving:"You tell the story of the home. We bring it to life.",
+      levert:["1 main cinematic film: your interview combined with cinematic footage of the home","3 social media reels cut from the same shoot","1 short teaser to announce the listing"] },
+    storyComplete: { id:"the-story-complete", naam:"The Story Complete", prijs:1399, basis:true,
+      omschrijving:"Everything for the listing in one production.",
+      levert:["Everything in The Story","Professional photo reportage of the property, delivered within 24 hours","Drone footage of the property and its surroundings"],
+      inbegrepen:["drone"] },
+    losseDiensten: { id:"tour-and-drone", naam:"3D Tour & Drone", prijs:0, los:true,
+      omschrijving:"Just a Matterport 3D tour and/or drone footage, without a film.",
+      levert:["Choose your services on the next step","Matterport 3D tour priced by square footage","Add the story later at any time"] },
+    officeProfile: { id:"office-profile", naam:"Office Profile", prijs:null,
+      omschrijving:"A film that puts your office and its agents in the spotlight.",
+      levert:["Scope and price tailored to your office"], opties:[] }
+  },
+
+/* ================================================================
+   ADD-ONS
+   tiers:   keuzelijst met prijs per niveau (Matterport per sq ft)
+   aantal:  keuzelijst 1..n, prijs x aantal
+   vanaf:   "vanaf"-prijs
+   vereist: kan enkel samen met die andere add-on
+   korting: krijgt de add-on-korting bij een basis-pakket
+   ================================================================ */
+  opties: {
+    matterport: { naam:"Matterport 3D tour", korting:true,
+      uitleg:"A virtual walkthrough buyers can explore on their own. Priced by the home's square footage.",
+      tierLabel:"Size of the home",
+      tiers:[
+        { l:"Up to 1,999 sq ft",     p:250 },
+        { l:"2,000 – 2,999 sq ft",   p:300 },
+        { l:"3,000 – 3,999 sq ft",   p:350 },
+        { l:"4,000 – 4,999 sq ft",   p:400 },
+        { l:"5,000 – 5,999 sq ft",   p:450 },
+        { l:"6,000 – 6,999 sq ft",   p:500 },
+        { l:"7,000 – 7,999 sq ft",   p:550 },
+        { l:"8,000 – 8,999 sq ft",   p:600 },
+        { l:"9,000 – 9,999 sq ft",   p:650 },
+        { l:"10,000 sq ft or more",  p:null }
+      ] },
+    drone: { naam:"Drone footage", prijs:null, korting:true,
+      uitleg:"Aerial footage of the property and its surroundings, where legally permitted." },
+    detached: { naam:"Detached scan", prijs:50, vereist:"matterport", aantal:4, aantalLabel:"Number of structures",
+      uitleg:"An extra scan of a detached structure, like an ADU or a garage. Price per structure." },
+    plan2d: { naam:"2D floor plan", prijs:100, vanaf:true, vereist:"matterport",
+      uitleg:"A floor plan drawn from the 3D scan." },
+    plan2dKleur: { naam:"2D color floor plan", prijs:150, vanaf:true, vereist:"matterport",
+      uitleg:"A color floor plan drawn from the 3D scan." },
+    plan3d: { naam:"3D floor plan", prijs:200, vanaf:true, vereist:"matterport",
+      uitleg:"A 3D floor plan built from the scan." }
+  },
+
+/* ================================================================
+   TYPES EN SITUATIES
+   ================================================================ */
+  types: {
+    kw: {
+      label: "Keller Williams agent",
+      sub: "A listing, your personal brand or your office",
+      pakketten: ["story","storyComplete"],
+      opties: ["matterport","drone","detached","plan2d","plan2dKleur","plan3d"],
+      suggesties: [],
+      vragen: [],
+      situaties: {
+        listing: {
+          label: "A listing",
+          sub: "One home, told as a story",
+          lead: "Every package is per listing. More listings coming up? Mention it in the notes and we'll set up a package together.",
+          pakketten: ["story","storyComplete","losseDiensten"],
+          suggesties: ["You at the front door","The front of the home and the driveway","The living room","The kitchen","The backyard","The neighborhood from the air"],
+          vragen: [
+            { k:"pandAdres", label:"Property address", type:"adres", verplicht:true },
+            { k:"pandType", label:"What kind of property is it?", type:"select", opties:["Single-family home","Condo or townhouse","Luxury home","Ranch or estate","Land","Commercial"] },
+            { k:"bewoond", label:"Is the home occupied?", type:"select", opties:["Vacant","Owner-occupied","Tenant-occupied","New construction"] },
+            { k:"toegang", label:"How do we get in?", hint:"Lockbox, key, or someone on site.", type:"text", verplicht:true },
+            { k:"troef", label:"What makes this home special?", hint:"We build the story around it.", type:"textarea", verplicht:true },
+            { k:"styling", label:"Will the home be cleaned up or staged for the shoot?", type:"select", opties:["Yes, it'll be ready","Partly","No"] }
+          ]
+        },
+        brand: {
+          label: "My personal brand",
+          sub: "Short reels with you as the face",
+          lead: "Eight short one-take reels in one shoot day. The easiest way to start showing up on social media.",
+          pakketten: ["agentReels"],
+          suggesties: ["You at one of your listings","You at the office","You in the neighborhood","You with a client"],
+          vragen: [
+            { k:"locatie", label:"Where do we film?", type:"adres", verplicht:true },
+            { k:"onderwerpen", label:"What should the reels be about?", hint:"Just listed, market updates, neighborhood tips, introducing yourself.", type:"textarea", verplicht:true },
+            { k:"socials", label:"Your Instagram or TikTok handle", type:"text" }
+          ]
+        },
+        office: {
+          label: "Our office",
+          sub: "The office and its agents in the spotlight",
+          lead: "Not a home, but your people. Scope and price are tailored to your office.",
+          pakketten: ["officeProfile"],
+          suggesties: ["The office and the entrance","The team at work","A meeting with a client","The team leader on camera","Homes the team has sold"],
+          vragen: [
+            { k:"locatie", label:"Where do we film?", type:"adres", verplicht:true },
+            { k:"inBeeld", label:"Who will be on camera?", hint:"Names and roles.", type:"textarea", verplicht:true },
+            { k:"boodschap", label:"Why would a seller choose your office?", hint:"This becomes the thread of the film.", type:"textarea", verplicht:true },
+            { k:"huisstijl", label:"I'll provide our logo and brand guidelines", type:"check" }
+          ]
+        }
+      }
+    }
+  },
+
+/* ================================================================
+   ALGEMENE VRAGEN — bij elke opdracht
+   ================================================================ */
+  algemeen: [
+    { k:"nietBeeld", label:"What must NOT be on camera?", hint:"Neighbors, license plates, a messy corner, certain people.", type:"textarea" },
+    { k:"formaat", label:"Where will you use the videos?", type:"select", opties:["Instagram and TikTok (vertical)","Website and YouTube (horizontal)","Both"] },
+    { k:"sfeer", label:"What mood are you going for?", type:"select", opties:["Calm and polished","Energetic and fast","Warm and personal","Clean and corporate","Up to you"] },
+    { k:"referentie", label:"Do you have an example you like?", hint:"A link to a video or an Instagram account.", type:"text" },
+    { k:"muziek", label:"Music preference", hint:"Leave empty and we'll choose.", type:"text" },
+    { k:"datum", label:"Preferred shoot date", type:"date" },
+    { k:"deadline", label:"When do you need it?", hint:"Is there a hard deadline, like an open house or a listing launch?", type:"text" },
+    { k:"opmerking", label:"Anything else we should know?", type:"textarea" }
+  ],
+
+/* ================================================================
+   VOORWAARDEN IN HET DOCUMENT
+   ================================================================ */
+  voorwaarden: [
+    "All prices exclude sales tax, if applicable.",
+    "The must-have shots in this document are the checklist for the shoot day. Anything not listed cannot be guaranteed.",
+    "Drone footage is only captured where legally permitted and when the weather allows. If it is not possible, 10% is deducted from the package.",
+    "One round of feedback is included. Changes requested after that, or changes to the assignment itself, are billed separately.",
+    "The client makes sure the location is accessible and tidy at the agreed time. Waiting time is billed.",
+    "The client is responsible for the consent of everyone who is recognizable on camera, including the property owner. For minors, written consent from a parent is required.",
+    "SNAP360 remains the copyright owner of the footage. The client receives an unlimited right to use it in their own commercial and online communication. Resale to third parties is not included.",
+    "SNAP360 may use the footage in its portfolio, unless explicitly agreed otherwise.",
+    "The Matterport tour link can be renewed for $75 per 6 months.",
+    "Cancellation is free of charge up to 72 hours before the shoot. After that, the deposit is retained.",
+    "If the shoot is moved because of weather or force majeure, a new date is chosen together at no extra cost.",
+    "Invoices are payable within 14 days. Final delivery follows payment of the balance."
+  ]
+};
+
+(async function(){
+  try{
+    const r = await fetch('config.json', {cache:'no-store'});
+    if(r.ok){
+      const j = await r.json();
+      if(j && j.types && j.paketten) CONFIG = j;
+    }
+  }catch(e){ /* geen config.json: we gebruiken bovenstaande */ }
+  window.CONFIG = CONFIG;
+  start();
+})();
+
+function start(){
+
+/* ============================================================
+   STATE
+   ============================================================ */
+const S = { type:null, situatie:null, pakket:null, klant:{}, antw:{},
+            shots:[], ref:maakRef(), foto:null, opties:[], keuze:{} };
+let stap = 0;
+let volgorde = [0,1,2,3,4,5,6];
+const VAST = { type:false };
+
+function maakRef(){
+  const d = new Date();
+  const p = n => String(n).padStart(2,'0');
+  return "S360-KW-" + d.getFullYear() + p(d.getMonth()+1) + p(d.getDate()) + "-" +
+         Math.random().toString(36).slice(2,6).toUpperCase();
+}
+const $  = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const esc = s => String(s??"").replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const geld = n => CONFIG.munt + Number(n).toLocaleString('en-US',
+  {minimumFractionDigits: Number(n)%1 ? 2 : 0, maximumFractionDigits:2});
+const rond = n => Math.round(n*100)/100;
+const kortPct = () => Math.round((CONFIG.addonKorting||0)*100);
+
+/* Eén type? Dan slaan we die stap over. */
+const typeKeys = Object.keys(CONFIG.types);
+if(typeKeys.length === 1){ S.type = typeKeys[0]; VAST.type = true; }
+
+/* ---- afgeleide lijsten ---- */
+const typeObj = () => CONFIG.types[S.type];
+const sitLijst = () => Object.entries(typeObj().situaties || {});
+const sitObj  = () => (S.situatie && typeObj().situaties) ? typeObj().situaties[S.situatie] : null;
+
+function pakLijst(){
+  const ids = (sitObj() && sitObj().pakketten) || typeObj().pakketten;
+  return ids.map(id => CONFIG.paketten[id]).filter(Boolean);
+}
+function vragenLijst(){
+  const uit = [];
+  const zet = v => {
+    const i = uit.findIndex(x => x.k === v.k);
+    if(i >= 0) uit[i] = v; else uit.push(v);
+  };
+  (typeObj().vragen || []).forEach(zet);
+  ((sitObj() && sitObj().vragen) || []).forEach(zet);
+  CONFIG.algemeen.forEach(zet);
+  return uit;
+}
+function optieLijst(){
+  const pak = S.pakket;
+  const s = sitObj();
+  const ids = (pak && pak.opties) || (s && s.opties) || typeObj().opties || [];
+  return ids.map(id => Object.assign({ id }, CONFIG.opties[id])).filter(o => o.naam);
+}
+const zitIn = (pak, id) => !!pak && (pak.inbegrepen || []).includes(id);
+const extraOpties = () => S.opties.filter(id => !zitIn(S.pakket, id));
+
+/* Prijs van één add-on binnen het gekozen pakket.
+   Geeft { basis, prijs, korting, vanaf, opAanvraag, detail } terug. */
+function optiePrijs(id){
+  const o = CONFIG.opties[id];
+  let basis = o.prijs, detail = '';
+  if(o.tiers){
+    const t = o.tiers[S.keuze[id] || 0];
+    basis = t.p; detail = t.l;
+  } else if(o.aantal){
+    const n = S.keuze[id] || 1;
+    basis = o.prijs == null ? null : o.prijs * n;
+    detail = n + ' × ' + geld(o.prijs);
+  }
+  const opAanvraag = (basis === null || basis === undefined);
+  const korting = !opAanvraag && !!o.korting && !!(S.pakket && S.pakket.basis) && CONFIG.addonKorting > 0;
+  const prijs = opAanvraag ? null : (korting ? rond(basis * (1 - CONFIG.addonKorting)) : basis);
+  return { basis, prijs, korting, vanaf: !!o.vanaf, opAanvraag, detail };
+}
+
+/* ============================================================
+   STAPPEN BEPALEN
+   ============================================================ */
+function herbereken(){
+  const v = [];
+  if(!VAST.type) v.push(0);
+  const lijst = S.type ? sitLijst() : [[0],[1]];
+  if(lijst.length > 1) v.push(1);
+  else if(lijst.length === 1) S.situatie = lijst[0][0];
+  v.push(2,3,4,5,6);
+  if(S.type && !optieLijst().length) v.splice(v.indexOf(3),1);
+  volgorde = v;
+  $('#rail').innerHTML = v.map(()=>'<i></i>').join('');
+}
+const pos = n => volgorde.indexOf(n);
+
+/* ============================================================
+   OPBOUW VAN DE SCHERMEN
+   ============================================================ */
+$('#typeOpts').innerHTML = Object.entries(CONFIG.types).map(([k,t])=>
+  `<button type="button" class="opt" aria-pressed="false" data-type="${k}">
+     <b>${esc(t.label)}</b><small>${esc(t.sub)}</small></button>`).join('');
+$('#typeOpts').addEventListener('click', e => {
+  const b = e.target.closest('[data-type]'); if(!b) return;
+  S.type = b.dataset.type; S.situatie = null; S.pakket = null;
+  $$('#typeOpts .opt').forEach(o => o.setAttribute('aria-pressed', o===b));
+  $('#e0').classList.remove('on');
+  herbereken();
+});
+
+function toonSituaties(){
+  $('#sitOpts').innerHTML = sitLijst().map(([k,s])=>
+    `<button type="button" class="opt" aria-pressed="${S.situatie===k}" data-sit="${k}">
+       <b>${esc(s.label)}</b><small>${esc(s.sub)}</small></button>`).join('');
+}
+$('#sitOpts').addEventListener('click', e => {
+  const b = e.target.closest('[data-sit]'); if(!b) return;
+  if(S.situatie !== b.dataset.sit){ S.pakket = null; S.opties = []; S.keuze = {}; }
+  S.situatie = b.dataset.sit;
+  $$('#sitOpts .opt').forEach(o => o.setAttribute('aria-pressed', o===b));
+  $('#e1').classList.remove('on');
+});
+
+function prijsLabel(p){
+  if(p.prijs === null || p.prijs === undefined) return 'Custom';
+  if(p.los){
+    const min = Math.min(...(p.opties || typeObj().opties || [])
+      .map(id => CONFIG.opties[id]).filter(o => o && !o.vereist)
+      .map(o => o.tiers ? o.tiers[0].p : o.prijs).filter(x => x != null));
+    return isFinite(min) ? `from ${geld(min)}<em>excl. tax</em>` : 'Custom';
+  }
+  return `${geld(p.prijs)}<em>excl. tax</em>`;
+}
+function toonPakketten(){
+  const lijst = pakLijst();
+  const enkel = lijst.length === 1;
+  const s = sitObj();
+  $('.step[data-step="2"] h2').textContent = enkel ? 'Your package' : 'Which package?';
+  $('#pakLead').textContent = enkel
+    ? 'This is the package that fits. Read what is included and continue.'
+    : (s && s.lead) || '';
+  $('#pakOpts').innerHTML = lijst.map(p=>`
+    <button type="button" class="opt" aria-pressed="${enkel || S.pakket===p}" data-pak="${esc(p.id)}">
+      <span class="price">${prijsLabel(p)}</span>
+      <b>${esc(p.naam)}</b>
+      <small>${esc(p.omschrijving)}${p.duur ? ' · ' + esc(p.duur) : ''}</small>
+      <ul>${p.levert.map(l=>`<li>${esc(l)}</li>`).join('')}</ul>
+    </button>`).join('');
+  if(enkel) S.pakket = lijst[0];
+}
+$('#pakOpts').addEventListener('click', e => {
+  const b = e.target.closest('[data-pak]'); if(!b) return;
+  const nieuw = pakLijst().find(p => p.id === b.dataset.pak);
+  if(nieuw !== S.pakket){ S.opties = []; S.keuze = {}; }
+  S.pakket = nieuw;
+  $$('#pakOpts .opt').forEach(o => o.setAttribute('aria-pressed', o===b));
+  $('#e2').classList.remove('on');
+});
+
+/* ---- add-ons ---- */
+function toonOpties(){
+  const lijst = optieLijst();
+  const pak = S.pakket;
+  const korting = pak.basis && CONFIG.addonKorting > 0 && lijst.some(o => o.korting);
+  $('#optTitel').textContent = pak.los ? 'Pick your services' : 'Add-ons';
+  $('#optLead').textContent = pak.los
+    ? 'Choose what you need. The total updates as you go.'
+    : 'Add what you need. The total updates as you go.' +
+      (korting ? ` Matterport and drone get ${kortPct()}% off when you add them to ${pak.naam}.` : '');
+
+  $('#optLijst').innerHTML = lijst.map(o=>{
+    const gekozen = S.opties.includes(o.id);
+    const inbeg = zitIn(pak, o.id);
+    const geblokt = o.vereist && !S.opties.includes(o.vereist) && !zitIn(pak, o.vereist);
+    const pr = optiePrijs(o.id);
+    let bedrag;
+    if(inbeg) bedrag = '<span class="bedrag inb">included</span>';
+    else if(pr.opAanvraag) bedrag = '<span class="bedrag inb">price on request</span>';
+    else bedrag = `<span class="bedrag">${pr.vanaf ? 'from ' : '+ '}${geld(pr.prijs)}` +
+      (pr.korting ? `<s>${geld(pr.basis)}</s><em>${kortPct()}% off</em>` : '') + '</span>';
+    const uitleg = geblokt
+      ? 'Needs the ' + esc(CONFIG.opties[o.vereist].naam) + '.'
+      : esc(o.uitleg || '');
+
+    let keuze = '';
+    if(gekozen && !inbeg && o.tiers){
+      keuze = `<div class="keuzerij"><label for="k_${o.id}">${esc(o.tierLabel || 'Choose')}</label>
+        <select id="k_${o.id}" data-keuze="${o.id}">${o.tiers.map((t,i)=>
+          `<option value="${i}" ${(S.keuze[o.id]||0)===i?'selected':''}>${esc(t.l)}${t.p==null?' (price on request)':''}</option>`).join('')}
+        </select></div>`;
+    } else if(gekozen && !inbeg && o.aantal){
+      keuze = `<div class="keuzerij"><label for="k_${o.id}">${esc(o.aantalLabel || 'How many?')}</label>
+        <select id="k_${o.id}" data-keuze="${o.id}">${Array.from({length:o.aantal},(_,i)=>i+1).map(n=>
+          `<option value="${n}" ${(S.keuze[o.id]||1)===n?'selected':''}>${n}</option>`).join('')}
+        </select></div>`;
+    }
+    return `<div class="optwrap ${keuze?'metkeuze':''}">
+      <label class="optie ${gekozen||inbeg?'aan':''} ${geblokt?'uit':''}">
+        <input type="checkbox" data-o="${esc(o.id)}" ${gekozen||inbeg?'checked':''} ${inbeg||geblokt?'disabled':''}>
+        <span class="tekst"><b>${esc(o.naam)}</b><small>${uitleg}</small></span>
+        ${bedrag}</label>${keuze}</div>`;
+  }).join('') || '<p class="lead">There are no add-ons for this package.</p>';
+
+  tekenTotaal();
+}
+
+$('#optLijst').addEventListener('change', e=>{
+  const sel = e.target.closest('[data-keuze]');
+  if(sel){
+    S.keuze[sel.dataset.keuze] = Number(sel.value);
+    toonOpties(); return;
+  }
+  const cb = e.target.closest('[data-o]'); if(!cb) return;
+  const id = cb.dataset.o;
+  const i = S.opties.indexOf(id);
+  if(cb.checked && i < 0) S.opties.push(id);
+  if(!cb.checked && i >= 0){
+    S.opties.splice(i,1);
+    // wat van deze add-on afhangt, valt mee weg
+    S.opties = S.opties.filter(x => (CONFIG.opties[x]||{}).vereist !== id);
+  }
+  $('#e3').classList.remove('on');
+  toonOpties();
+});
+
+function tekenTotaal(){
+  const b = bedragen();
+  if(!b){
+    $('#totaalBalk').innerHTML =
+      '<div class="som"><span>Custom price</span><span></span></div>' +
+      '<p class="note">You will receive a quote based on what you choose here.</p>';
+    return;
+  }
+  const pak = S.pakket;
+  const regels =
+    (pak.los ? '' : `<div class="regel"><span>${esc(pak.naam)}</span><span>${geld(pak.prijs)}</span></div>`) +
+    b.opties.map(o=>`<div class="regel"><span>${esc(o.naam)}${o.detail?' · '+esc(o.detail):''}${o.korting?`<em>${kortPct()}% off</em>`:''}</span>
+      <span>${o.opAanvraag ? 'on request' : (o.vanaf?'from ':'+ ') + geld(o.prijs)}</span></div>`).join('');
+  $('#totaalBalk').innerHTML = regels +
+    `<div class="som"><span>${b.vanaf ? 'Total from' : 'Total'}</span><span>${geld(b.ex)}</span></div>
+     <p class="note" style="color:var(--muted)">Excluding sales tax, if applicable.</p>` +
+    (b.besparing ? `<p class="note">You save ${geld(b.besparing)} by adding these to ${esc(pak.naam)}.</p>` : '') +
+    (b.opAanvraag.length ? `<p class="note">${esc(b.opAanvraag.join(' and '))}: price on request, we'll confirm it before the shoot.</p>` : '');
+}
+
+/* ---- gegevens ---- */
+const VELDEN = [
+  { k:"naam",    l:"Full name", v:true, ac:"name", p:"First and last name" },
+  { k:"bedrijf", l:"Brokerage or team", ac:"organization", p:"Keller Williams Realty" },
+  { k:"email",   l:"Email", v:true, t:"email", ac:"email", p:"name@kw.com" },
+  { k:"tel",     l:"Phone", v:true, t:"tel", ac:"tel", p:"(951) 555-0123" },
+  { k:"straat",  l:"Street address", v:true, kl:"straat", ac:"address-line1", p:"Street and number" },
+  { k:"suite",   l:"Suite or unit", kl:"nummer", ac:"address-line2", p:"Suite" },
+  { k:"stad",    l:"City", v:true, kl:"stad", ac:"address-level2", p:"Corona" },
+  { k:"staat",   l:"State", v:true, kl:"staat", ac:"address-level1", p:"CA" },
+  { k:"zip",     l:"ZIP", v:true, kl:"zip", ac:"postal-code", p:"92882" }
+];
+function veld(f){
+  return `<div class="field ${f.kl||''}">
+    <label for="k_${f.k}">${esc(f.l)}${f.v?'':' <span class="hint" style="display:inline">(optional)</span>'}
+    ${f.h?`<span class="hint">${esc(f.h)}</span>`:''}</label>
+    <input type="${f.t||'text'}" id="k_${f.k}" data-klant="${f.k}"
+      ${f.p?`placeholder="${esc(f.p)}"`:''} ${f.ac?`autocomplete="${f.ac}"`:''}>
+  </div>`;
+}
+const perK = k => VELDEN.find(f=>f.k===k);
+$('#gegevens').innerHTML =
+  `<div class="row">${['naam','bedrijf'].map(k=>veld(perK(k))).join('')}</div>` +
+  `<div class="row">${['email','tel'].map(k=>veld(perK(k))).join('')}</div>` +
+  `<label style="display:block;font-size:14px;font-weight:500;margin-bottom:6px">Billing address</label>` +
+  `<div class="adres us" style="margin-bottom:20px">${['straat','suite','stad','staat','zip']
+      .map(k=>veld(perK(k))).join('')}</div>`;
+$('#k_staat').value = 'CA';
+
+/* ---- shotlijst ---- */
+function suggestieLijst(){
+  const s = sitObj();
+  return (s && s.suggesties) ? s.suggesties : (typeObj().suggesties || []);
+}
+function toonSuggesties(){
+  $('#sug').innerHTML = suggestieLijst()
+    .filter(s => !S.shots.some(x => x.w === s))
+    .map(s=>`<button type="button" data-s="${esc(s)}">+ ${esc(s)}</button>`).join('');
+}
+$('#sug').addEventListener('click', e => {
+  const b = e.target.closest('[data-s]'); if(!b) return;
+  voegShot(b.dataset.s, ''); b.remove();
+});
+$('#shotAdd').addEventListener('click', ()=> voegShot($('#shotIn').value, $('#shotHoe').value));
+['#shotIn','#shotHoe'].forEach(sel => $(sel).addEventListener('keydown', e => {
+  if(e.key==='Enter'){ e.preventDefault(); voegShot($('#shotIn').value, $('#shotHoe').value); }
+}));
+function voegShot(w, h){
+  w = (w||'').trim(); if(!w) return;
+  S.shots.push({ w, h:(h||'').trim() });
+  $('#shotIn').value=''; $('#shotHoe').value='';
+  $('#shotIn').focus();
+  $('#e5').classList.remove('on');
+  tekenShots();
+}
+function tekenShots(){
+  $('#shotEmpty').style.display = S.shots.length ? 'none' : 'block';
+  $('#shotList').innerHTML = S.shots.map((s,i)=>
+    `<li><span class="n">${i+1}</span>
+      <span>${esc(s.w)}${s.h?` <em style="color:var(--muted);font-style:normal">— ${esc(s.h)}</em>`:''}</span>
+      <button class="x" type="button" data-i="${i}" aria-label="Remove">&times;</button></li>`).join('');
+}
+$('#shotList').addEventListener('click', e => {
+  const b = e.target.closest('[data-i]'); if(!b) return;
+  S.shots.splice(+b.dataset.i,1); tekenShots(); toonSuggesties();
+});
+
+/* ---- vragen ---- */
+function toonVragen(){
+  $('#vragen').innerHTML = vragenLijst().map(v=>{
+    const id = 'v_'+v.k;
+    if(v.type==='check')
+      return `<label class="check"><input type="checkbox" id="${id}" data-v="${v.k}"><span>${esc(v.label)}</span></label>`;
+    const lab = `<label for="${id}">${esc(v.label)}${v.verplicht?'':' <span class="hint" style="display:inline">(optional)</span>'}
+      ${v.hint?`<span class="hint">${esc(v.hint)}</span>`:''}</label>`;
+    if(v.type==='textarea') return `<div class="field">${lab}<textarea id="${id}" data-v="${v.k}"></textarea></div>`;
+    if(v.type==='select')   return `<div class="field">${lab}<select id="${id}" data-v="${v.k}">
+      <option value="">Choose…</option>${v.opties.map(o=>`<option>${esc(o)}</option>`).join('')}</select></div>`;
+    if(v.type==='adres')    return `<div class="field">${lab}<div class="adres us">
+      <input class="straat" id="${id}_straat" data-va="${v.k}" placeholder="Street address" autocomplete="off">
+      <input class="nummer" id="${id}_suite"  data-va="${v.k}" placeholder="Unit" autocomplete="off">
+      <input class="stad"   id="${id}_stad"   data-va="${v.k}" placeholder="City" autocomplete="off">
+      <input class="staat"  id="${id}_staat"  data-va="${v.k}" placeholder="State" value="CA" autocomplete="off">
+      <input class="zip"    id="${id}_zip"    data-va="${v.k}" placeholder="ZIP" autocomplete="off">
+      </div></div>`;
+    return `<div class="field">${lab}<input type="${v.type==='date'?'date':'text'}" id="${id}" data-v="${v.k}"></div>`;
+  }).join('');
+}
+
+/* ============================================================
+   NAVIGATIE
+   ============================================================ */
+function ga(n){
+  if(n===1) toonSituaties();
+  if(n===2) toonPakketten();
+  if(n===3) toonOpties();
+  if(n===5){ toonSuggesties(); if(!$('#vragen').dataset.voor || $('#vragen').dataset.voor !== S.situatie){
+    toonVragen(); $('#vragen').dataset.voor = S.situatie; } tekenShots(); }
+  if(n===6) tekenDocument();
+  stap = n;
+  $$('.step').forEach(s => s.classList.toggle('on', +s.dataset.step===n));
+  if(n===6) requestAnimationFrame(()=>schaal());
+  const i = pos(n);
+  $$('#rail i').forEach((bar,ix) => bar.classList.toggle('done', i<0 ? true : ix < i));
+  $('#stepno').textContent = i<0 ? '' : `Step ${i+1} of ${volgorde.length}`;
+  const terug = document.querySelector(`.step[data-step="${n}"] .back`);
+  if(terug) terug.style.display = i<=0 ? 'none' : '';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+$$('[data-next]').forEach(b => b.addEventListener('click', ()=>{
+  if(valideer(stap)) ga(volgorde[pos(stap)+1]);
+}));
+$$('[data-prev]').forEach(b => b.addEventListener('click', ()=> ga(volgorde[pos(stap)-1])));
+
+const adresTekst = (w) => [
+  [w.straat, w.suite].filter(Boolean).join(', '),
+  [w.stad, [w.staat, w.zip].filter(Boolean).join(' ')].filter(Boolean).join(', ')
+].filter(Boolean).join(', ');
+
+function valideer(n){
+  if(n===0){ if(!S.type){ $('#e0').classList.add('on'); return false; } return true; }
+  if(n===1){ if(!S.situatie){ $('#e1').classList.add('on'); return false; } herbereken(); return true; }
+  if(n===2){
+    if(!S.pakket){ $('#e2').classList.add('on'); return false; }
+    herbereken();
+    return true;
+  }
+  if(n===3){
+    if(S.pakket.los && !S.opties.length){ $('#e3').classList.add('on'); return false; }
+    return true;
+  }
+  if(n===4){
+    let ok = true;
+    VELDEN.forEach(f=>{
+      const el = $('#k_'+f.k), val = el.value.trim();
+      const slecht = f.v && (!val || (f.t==='email' && !/^\S+@\S+\.\S+$/.test(val)));
+      el.classList.toggle('bad', slecht); if(slecht) ok=false; else S.klant[f.k]=val;
+    });
+    S.klant.adres = adresTekst(S.klant);
+    if(fotoAan && fotoMoet && !S.foto){
+      ok = false;
+      $('#e4').textContent = 'Please take a photo of the signer.';
+    } else if(ok){
+      $('#e4').textContent = 'Please fill in the required fields.';
+    }
+    $('#e4').classList.toggle('on', !ok); return ok;
+  }
+  if(n===5){
+    let ok = S.shots.length>0;
+    $('#e5').textContent = ok ? 'Please fill in the required fields.'
+                              : 'Add at least one thing that has to be on camera.';
+    vragenLijst().forEach(v=>{
+      if(v.type==='adres'){
+        const delen = ['straat','suite','stad','staat','zip']
+          .map(d => ({ d, el: $('#v_'+v.k+'_'+d) })).filter(x=>x.el);
+        if(!delen.length) return;
+        let mis = false;
+        delen.forEach(x=>{
+          const slecht = v.verplicht && x.d !== 'suite' && !x.el.value.trim();
+          x.el.classList.toggle('bad', slecht);
+          if(slecht) mis = true;
+        });
+        if(mis){ ok = false; return; }
+        const w = {};
+        delen.forEach(x => w[x.d] = x.el.value.trim());
+        S.antw[v.k] = adresTekst(w);
+        return;
+      }
+      const el = $('#v_'+v.k); if(!el) return;
+      if(el.type==='checkbox'){ S.antw[v.k] = el.checked; return; }
+      const val = el.value.trim(), slecht = v.verplicht && !val;
+      el.classList.toggle('bad', slecht); if(slecht) ok=false; else S.antw[v.k]=val;
+    });
+    $('#e5').classList.toggle('on', !ok); return ok;
+  }
+  return true;
+}
+
+/* ============================================================
+   BEDRAGEN EN DOCUMENT
+   ============================================================ */
+function bedragen(){
+  const pak = S.pakket;
+  if(pak.prijs===null || pak.prijs===undefined) return null;
+  const opties = extraOpties().map(id => Object.assign(
+    { id, naam: CONFIG.opties[id].naam }, optiePrijs(id)));
+  const bekend = opties.filter(o => !o.opAanvraag);
+  const extra = bekend.reduce((t,o)=> t + o.prijs, 0);
+  const ex = rond(pak.prijs + extra);
+  if(pak.los && ex === 0) return null;     // enkel diensten op aanvraag
+  const besparing = rond(bekend.filter(o=>o.korting).reduce((t,o)=> t + (o.basis - o.prijs), 0));
+  return { pakketNaam: pak.naam, opties, extra, ex, besparing,
+           vanaf: bekend.some(o => o.vanaf),
+           opAanvraag: opties.filter(o => o.opAanvraag).map(o => o.naam),
+           inbegrepen: S.opties.filter(id => zitIn(pak,id)).map(id => CONFIG.opties[id].naam),
+           voorschot: rond(ex * CONFIG.voorschot) };
+}
+const datumEN = iso => iso ? new Date(iso+'T00:00').toLocaleDateString('en-US',
+  {month:'long',day:'numeric',year:'numeric'}) : null;
+function opdrachtLabel(){
+  const s = sitObj();
+  return typeObj().label + (s ? ' · ' + s.label : '');
+}
+function tekenDocument(){
+  const b = bedragen(), A = S.antw, K = S.klant;
+  const pak = S.pakket;
+  const extra = vragenLijst()
+    .filter(v => v.k!=='nietBeeld' && v.k!=='opmerking')
+    .map(v => {
+      const w = A[v.k];
+      if(w===true) return [v.label,'Yes'];
+      if(w===false || !w) return null;
+      return [v.label, v.type==='date' ? datumEN(w) : w];
+    }).filter(Boolean);
+  const optieRegel = o => `<li>${esc(o.naam)}${o.detail?' ('+esc(o.detail)+')':''} — ${
+    o.opAanvraag ? 'price on request' :
+    (o.vanaf?'from ':'') + geld(o.prijs) + (o.korting ? ` <span class="small">(${kortPct()}% package discount, regular ${geld(o.basis)})</span>` : '')}</li>`;
+
+  $('#doc').innerHTML = `
+    <h3>Booking confirmation</h3>
+    <div class="ref">${esc(S.ref)} · created ${datumEN(new Date().toISOString().slice(0,10))}</div>
+
+    <h4>PARTIES</h4>
+    <p><strong>Provider</strong><br>${esc(CONFIG.bedrijf.naam)}<br>${esc(CONFIG.bedrijf.adres)}<br>
+       ${esc(CONFIG.bedrijf.email)} · ${esc(CONFIG.bedrijf.tel)}</p>
+    <p style="margin-top:10px"><strong>Client</strong><br>${esc(K.naam)}${K.bedrijf?'<br>'+esc(K.bedrijf):''}<br>
+       ${esc(K.adres)}<br>${esc(K.email)} · ${esc(K.tel)}</p>
+    ${S.foto?`<img class="pasfoto" src="${S.foto}" alt="Photo of the signer">`:''}
+    <p class="small" style="margin-top:8px">Type of booking: ${esc(opdrachtLabel())}</p>
+
+    <h4>PACKAGE</h4>
+    <p><strong>${esc(pak.naam)}</strong> — ${esc(pak.omschrijving)}
+       ${pak.duur?`<br><span class="small">${esc(pak.duur)}</span>`:''}</p>
+    ${pak.los ? '' : `<p style="margin-top:8px"><strong>What you get</strong></p>
+    <ul>${pak.levert.map(l=>`<li>${esc(l)}</li>`).join('')}</ul>`}
+    ${(b && b.opties.length) || (!b && extraOpties().length) ? `<p style="margin-top:8px"><strong>${pak.los?'Services':'Add-ons'}</strong></p>
+      <ul>${(b ? b.opties : extraOpties().map(id => Object.assign({naam:CONFIG.opties[id].naam}, optiePrijs(id)))).map(optieRegel).join('')}</ul>` : ''}
+    ${b ? `<dl style="margin-top:12px">
+        ${pak.los ? '' : `<dt>${esc(pak.naam)}</dt><dd>${geld(pak.prijs)}</dd>`}
+        ${b.opties.filter(o=>!o.opAanvraag).map(o=>`<dt>${esc(o.naam)}</dt><dd>${o.vanaf?'from ':''}${geld(o.prijs)}</dd>`).join('')}
+      </dl>
+      <p class="total">${b.vanaf?'Total from':'Total'}, excluding tax: ${geld(b.ex)}</p>
+      ${b.vanaf ? '<p class="small">Floor plan prices are starting prices. We confirm the final price before the shoot.</p>' : ''}
+      ${b.opAanvraag.length ? `<p class="small">${esc(b.opAanvraag.join(' and '))}: price on request, confirmed before the shoot and not included in the total above.</p>` : ''}
+      <p class="small">Deposit on confirmation: ${geld(b.voorschot)}. The balance is due after the shoot.</p>`
+    : `<p class="total">Custom price</p>
+       <p class="small">You'll receive a quote within two business days based on this document. Work only starts after you approve the quote. All prices exclude sales tax, if applicable.</p>`}
+
+    <h4>MUST BE ON CAMERA</h4>
+    <ol>${S.shots.map(s=>`<li>${esc(s.w)}${s.h?` <span class="small">— ${esc(s.h)}</span>`:''}</li>`).join('')}</ol>
+    ${A.nietBeeld?`<p style="margin-top:10px"><strong>Not on camera:</strong> ${esc(A.nietBeeld)}</p>`:''}
+
+    <h4>SHOOT DETAILS</h4>
+    <dl>${extra.map(([l,w])=>`<dt>${esc(l)}</dt><dd>${esc(w)}</dd>`).join('')}</dl>
+    ${A.opmerking?`<p style="margin-top:10px"><strong>Notes:</strong> ${esc(A.opmerking)}</p>`:''}
+
+    <h4>TERMS</h4>
+    <ol>${CONFIG.voorwaarden.map(v=>`<li>${esc(v)}</li>`).join('')}</ol>
+  `;
+}
+
+/* ============================================================
+   FOTO VAN DE ONDERTEKENAAR
+   ============================================================ */
+const fotoAan = (CONFIG.foto || 'optioneel') !== 'uit';
+const fotoMoet = CONFIG.foto === 'verplicht';
+if(!fotoAan) $('#fotoBlok').style.display = 'none';
+else if(fotoMoet) $('#fotoUitleg').textContent =
+  "So we know right away who we're meeting on the shoot day. This photo is required to continue.";
+
+let stroom = null, camKant = 'user';
+function zetFoto(dataUrl){
+  S.foto = dataUrl;
+  $('#fotoImg').src = dataUrl;
+  $('#fotoVoor').style.display = 'flex';
+  $('#fotoKnop').style.display = 'none';
+  $('#fotoOfwel').style.display = 'none';
+  $('#e4').classList.remove('on');
+}
+function stopCam(){
+  if(stroom){ stroom.getTracks().forEach(t=>t.stop()); stroom = null; }
+  $('#camBox').style.display = 'none';
+  $('#cam').srcObject = null;
+}
+async function startCam(){
+  if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) return false;
+  try{
+    stroom = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: camKant, width: { ideal: 1280 } }, audio: false });
+    const v = $('#cam');
+    v.srcObject = stroom; await v.play();
+    $('#camBox').style.display = 'block';
+    $('#camWissel').style.display = (navigator.mediaDevices.enumerateDevices ? '' : 'none');
+    return true;
+  }catch(e){ stopCam(); return false; }
+}
+$('#fotoKnop').addEventListener('click', async ()=>{
+  const gelukt = await startCam();
+  if(!gelukt) $('#fotoIn').click();
+});
+$('#fotoBestand').addEventListener('click', ()=>{ stopCam(); $('#fotoIn').click(); });
+$('#camStop').addEventListener('click', stopCam);
+$('#camWissel').addEventListener('click', async ()=>{
+  camKant = camKant === 'user' ? 'environment' : 'user';
+  stopCam(); await startCam();
+});
+$('#camSnap').addEventListener('click', ()=>{
+  const v = $('#cam');
+  const max = 800;
+  const s = Math.min(1, max/Math.max(v.videoWidth, v.videoHeight));
+  const c = document.createElement('canvas');
+  c.width = Math.round(v.videoWidth*s); c.height = Math.round(v.videoHeight*s);
+  const cc = c.getContext('2d');
+  if(camKant === 'user'){ cc.translate(c.width, 0); cc.scale(-1, 1); }
+  cc.drawImage(v, 0, 0, c.width, c.height);
+  zetFoto(c.toDataURL('image/jpeg', 0.72));
+  stopCam();
+});
+$('#fotoWeg').addEventListener('click', ()=>{
+  S.foto = null;
+  $('#fotoVoor').style.display = 'none';
+  $('#fotoKnop').style.display = '';
+  $('#fotoOfwel').style.display = '';
+  $('#fotoIn').value = '';
+});
+$('#fotoIn').addEventListener('change', e=>{
+  const f = e.target.files && e.target.files[0]; if(!f) return;
+  const lezer = new FileReader();
+  lezer.onload = ()=>{
+    const img = new Image();
+    img.onload = ()=>{
+      const max = 800;
+      const s = Math.min(1, max/Math.max(img.width, img.height));
+      const c = document.createElement('canvas');
+      c.width = Math.round(img.width*s); c.height = Math.round(img.height*s);
+      const cc = c.getContext('2d');
+      cc.fillStyle = '#FFFFFF'; cc.fillRect(0,0,c.width,c.height);
+      cc.drawImage(img, 0, 0, c.width, c.height);
+      zetFoto(c.toDataURL('image/jpeg', 0.72));
+    };
+    img.src = lezer.result;
+  };
+  lezer.readAsDataURL(f);
+});
+
+/* ============================================================
+   HANDTEKENING
+   ============================================================ */
+const pad = $('#pad'), ctx = pad.getContext('2d');
+let lijnen = [], huidig = null;
+const getekend = () => lijnen.some(l => l.length > 1);
+function schaal(){
+  const r = pad.getBoundingClientRect(), dpr = window.devicePixelRatio || 1;
+  if(!r.width) return;
+  pad.width = Math.round(r.width*dpr); pad.height = Math.round(r.height*dpr);
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  ctx.lineWidth = 2.2; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.strokeStyle = '#1A1815';
+  hertekenPad(ctx, r.width, r.height);
+}
+function hertekenPad(c, b, hh){
+  c.clearRect(0,0,b,hh);
+  lijnen.forEach(l=>{
+    if(l.length < 2) return;
+    c.beginPath();
+    c.moveTo(l[0][0]*b, l[0][1]*hh);
+    for(let i=1;i<l.length;i++) c.lineTo(l[i][0]*b, l[i][1]*hh);
+    c.stroke();
+  });
+}
+function punt(e){
+  const r = pad.getBoundingClientRect();
+  return [(e.clientX-r.left)/r.width, (e.clientY-r.top)/r.height];
+}
+pad.addEventListener('pointerdown', e=>{
+  pad.setPointerCapture(e.pointerId);
+  huidig = [punt(e)]; lijnen.push(huidig);
+  $('#e6').classList.remove('on');
+});
+pad.addEventListener('pointermove', e=>{
+  if(!huidig) return;
+  huidig.push(punt(e));
+  const r = pad.getBoundingClientRect();
+  const n = huidig.length;
+  ctx.beginPath();
+  ctx.moveTo(huidig[n-2][0]*r.width, huidig[n-2][1]*r.height);
+  ctx.lineTo(huidig[n-1][0]*r.width, huidig[n-1][1]*r.height);
+  ctx.stroke();
+});
+['pointerup','pointercancel','pointerleave'].forEach(ev =>
+  pad.addEventListener(ev, ()=>{ huidig = null; }));
+$('#clearPad').addEventListener('click', ()=>{ lijnen = []; huidig = null; schaal(); });
+window.addEventListener('resize', schaal);
+function handtekeningPng(){
+  const b = 660, hh = 240;
+  const c = document.createElement('canvas');
+  c.width = b; c.height = hh;
+  const cc = c.getContext('2d');
+  cc.fillStyle = '#FFFFFF'; cc.fillRect(0,0,b,hh);
+  cc.lineWidth = 3; cc.lineCap = 'round'; cc.lineJoin = 'round'; cc.strokeStyle = '#1A1815';
+  hertekenPad(cc, b, hh);
+  return c.toDataURL('image/png');
+}
+
+/* ============================================================
+   VERSTUREN
+   ============================================================ */
+$('#send').addEventListener('click', async ()=>{
+  const naam = $('#signName').value.trim();
+  if(!$('#akkoord').checked || !naam || !getekend()){ $('#e6').classList.add('on'); return; }
+
+  const knop = $('#send');
+  knop.disabled = true; knop.innerHTML = '<span class="spin"></span>Sending…';
+
+  const data = {
+    ref: S.ref,
+    taal: CONFIG.taal || 'en',
+    tijdstip: new Date().toISOString(),
+    type: S.type,
+    situatie: S.situatie,
+    typeLabel: opdrachtLabel(),
+    herkomst: 'Keller Williams-formulier',
+    pakket: S.pakket,
+    gekozenPakket: S.pakket.naam,
+    optieModus: 'prijzen',
+    bedragen: bedragen(),
+    klant: S.klant,
+    shots: S.shots,
+    antwoorden: S.antw,
+    labels: vragenLijst().reduce((a,v)=>(a[v.k]=v.label,a),{}),
+    voorwaarden: CONFIG.voorwaarden,
+    bedrijf: CONFIG.bedrijf,
+    documentHtml: $('#doc').innerHTML,
+    handtekening: handtekeningPng(),
+    foto: S.foto,
+    ondertekenaar: naam
+  };
+
+  try{
+    if(CONFIG.endpoint.startsWith('http')){
+      await fetch(CONFIG.endpoint, {
+        method:'POST',
+        headers:{'Content-Type':'text/plain;charset=utf-8'},
+        body: JSON.stringify(data)
+      });
+    } else {
+      console.log('Geen endpoint ingesteld. Data:', data);
+      await new Promise(r=>setTimeout(r,600));
+    }
+    $('#doneTxt').innerHTML =
+      `Thank you, ${esc(naam)}. Your booking is registered under ${esc(S.ref)}.<br><br>` +
+      `The signed booking confirmation has been sent to ${esc(S.klant.email)}. ` +
+      `We'll reach out within two business days to set the shoot date.`;
+    ga(7);
+  }catch(err){
+    knop.disabled = false; knop.textContent = 'Sign and send';
+    $('#e6').textContent = "Sending didn't work. Check your connection and try again, or email us at " + CONFIG.bedrijf.email + '.';
+    $('#e6').classList.add('on');
+  }
+});
+
+herbereken();
+ga(volgorde[0]);
+
+} /* einde start() */
+</script>
+</body>
+</html>
