@@ -291,6 +291,7 @@ button.klein:hover{border-color:var(--gold);color:var(--gold)}
   <div id="pakVoor"></div>
   <div class="opts" id="pakOpts"></div>
   <div id="pakNa"></div>
+  <div id="pakRetainer" style="margin-top:14px"></div>
   <div class="err" id="e2">Pick a package.</div>
   <div class="nav"><button class="back" data-prev>Back</button><button class="go" data-next>Next</button></div>
 </section>
@@ -417,6 +418,9 @@ let CONFIG = {
   foto: "optioneel",     // "optioneel", "verplicht" of "uit"
   sqftStart: 2000,       // beginwaarde van de sq ft-schuif
 
+  // Vinkje op het pakketscherm: maandelijkse retainer
+  retainer: { korting:0.20, minMaanden:3 },
+
 /* ================================================================
    PAKKETTEN
    basis:true  = add-ons krijgen hier de add-on-korting
@@ -424,16 +428,20 @@ let CONFIG = {
    banden      = prijs volgens sq ft: { tot: bovengrens, p: prijs }
                  boven de laatste band = op maat
    minSqft     = pas beschikbaar vanaf die oppervlakte
+   sqftToeslag = vaste prijs + toeslag per stap boven een oppervlakte
+   geenRetainer:true = geen retainer-vinkje bij dit pakket
    teller      = schuif voor het aantal (prijs x aantal); {n} in levert
    vanaf:true  = "vanaf"-prijs
    ================================================================ */
   paketten: {
     /* ---------- verhaal ---------- */
     story: { id:"the-story", naam:"The Story", prijs:1000, basis:true,
+      sqftToeslag:{ vanaf:3000, per:500, prijs:150 },
       omschrijving:"You tell the story of the home. We bring it to life.",
       levert:["1 main cinematic film: your interview combined with cinematic footage of the home","3 social media reels cut from the same shoot","1 short teaser to announce the listing"],
       opties:["matterport","aerialPhotos","aerialVideoAdd","twilight","detached","plan2d","plan2dKleur","plan3d"] },
     storyComplete: { id:"the-story-complete", naam:"The Story Complete", prijs:1399, basis:true,
+      sqftToeslag:{ vanaf:3000, per:500, prijs:150 },
       omschrijving:"Everything for the listing in one production.",
       levert:["Everything in The Story","Professional photo reportage of the property, delivered within 24 hours","Aerial drone video of the property and its surroundings"],
       inbegrepen:["aerialVideoAdd"],
@@ -448,14 +456,14 @@ let CONFIG = {
       banden:[{tot:1499,p:240},{tot:2199,p:275},{tot:2999,p:295},{tot:3799,p:335},{tot:4599,p:370},
               {tot:5499,p:410},{tot:6499,p:445},{tot:7499,p:485},{tot:8499,p:540},{tot:9499,p:595},{tot:10499,p:660}],
       omschrijving:"Everything a listing needs to go live.",
-      levert:["25 to 30 interior and exterior photos","6 aerial drone photos","2D floor plan","Sky, grass, TV and window enhancement","Delivered within 24 hours"],
+      levert:["25 to 30 interior and exterior photos","6 aerial drone photos","2D floor plan","Delivered within 24 hours"],
       inbegrepen:["aerialPhotos","plan2d"],
       opties:["matterport","aerialPhotos","aerialVideoAdd","twilight","detached","plan2d","plan2dKleur","plan3d"] },
     photoSignature: { id:"photo-signature", naam:"Signature", basis:true,
       banden:[{tot:1499,p:415},{tot:2199,p:460},{tot:2999,p:480},{tot:3799,p:520},{tot:4599,p:555},
               {tot:5499,p:595},{tot:6499,p:630},{tot:7499,p:670},{tot:8499,p:725},{tot:9499,p:780},{tot:10499,p:845}],
       omschrijving:"More photos, plus a reel for social media.",
-      levert:["35 to 45 interior and exterior photos","Vertical property reel for social media","6 aerial drone photos","2D floor plan","Sky, grass, TV and window enhancement","Delivered within 24 hours"],
+      levert:["35 to 45 interior and exterior photos","Vertical property reel for social media","6 aerial drone photos","2D floor plan","Delivered within 24 hours"],
       inbegrepen:["aerialPhotos","plan2d"],
       opties:["matterport","aerialPhotos","aerialVideoAdd","twilight","detached","plan2d","plan2dKleur","plan3d"] },
     photoPrestige: { id:"photo-prestige", naam:"Prestige Luxury", basis:true, minSqft:4600,
@@ -466,14 +474,14 @@ let CONFIG = {
       opties:["matterport","aerialPhotos","aerialVideoAdd","twilight","detached","plan2d","plan2dKleur","plan3d"] },
 
     /* ---------- de agent zelf ---------- */
-    agentReels: { id:"agent-reels", naam:"Agent Reels", duur:"One shoot day",
+    agentReels: { id:"agent-reels", naam:"Agent Reels", duur:"One shoot day", basis:true,
       teller:{ min:8, max:15, prijs:50, label:"Number of reels", eenheid:"reels" },
       omschrijving:"Short one-take reels that promote you as the agent.",
       levert:["{n} one-take reels, filmed in one shoot day","Up to 10 seconds per reel","Made for social media"],
-      opties:[] },
+      opties:["matterport","aerialPhotos","aerialVideoAdd","twilight","detached","plan2d","plan2dKleur","plan3d"] },
 
     /* ---------- het kantoor ---------- */
-    officePromo: { id:"office-promo", naam:"Office Promo", prijs:2500, vanaf:true,
+    officePromo: { id:"office-promo", naam:"Office Promo", prijs:2500, vanaf:true, geenRetainer:true,
       omschrijving:"A promo film that puts your Keller Williams office in the spotlight.",
       levert:["2-minute promo film of your Keller Williams office","Bonus: 25% off every other SNAP360 package your office books in the same month"],
       opties:[] }
@@ -606,6 +614,7 @@ let CONFIG = {
     "Aerial photos and video are only captured where legally permitted and when the weather allows. If they are not possible, 10% is deducted from the package.",
     "Aerial add-ons are only available together with an on-site photo or video shoot.",
     "Prices based on square footage use the size given in this document. Homes above 10,500 sq ft are quoted individually.",
+    "With a monthly retainer, the package in this document is booked every month for at least 3 months. During the retainer, the package and every add-on get 20% off. Package and add-on discounts do not stack.",
     "When an office books the Office Promo, every other SNAP360 package booked by that office in the same calendar month gets 25% off.",
     "One round of feedback is included. Changes requested after that, or changes to the assignment itself, are billed separately.",
     "The client makes sure the location is accessible and tidy at the agreed time. Waiting time is billed.",
@@ -655,7 +664,6 @@ const esc = s => String(s??"").replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;',
 const geld = n => CONFIG.munt + Number(n).toLocaleString('en-US',
   {minimumFractionDigits: Number(n)%1 ? 2 : 0, maximumFractionDigits:2});
 const rond = n => Math.round(n*100)/100;
-const kortPct = () => Math.round((CONFIG.addonKorting||0)*100);
 
 /* Eén type? Dan slaan we die stap over. */
 const typeKeys = Object.keys(CONFIG.types);
@@ -702,12 +710,26 @@ const pakBeschikbaar = p => !(p.minSqft && S.sqft < p.minSqft);
 function pakPrijs(p){
   if(p.teller) return pakTeller(p) * p.teller.prijs;
   if(p.banden) return bandPrijs(p.banden, S.sqft);
+  if(p.sqftToeslag && metSqft()){
+    const z = p.sqftToeslag;
+    if(S.sqft >= 10500) return null;                 // boven 10,500 sq ft: op maat
+    if(S.sqft < z.vanaf) return p.prijs;
+    return p.prijs + z.prijs * (Math.floor((S.sqft - z.vanaf) / z.per) + 1);
+  }
   return p.prijs;
+}
+/* ---- retainer ---- */
+const retainerMag = () => !!(CONFIG.retainer && S.pakket && !S.pakket.geenRetainer);
+const retainerAan = () => !!S.retainer && retainerMag();
+function addonPct(){
+  const pak = S.pakket; if(!pak) return 0;
+  const a = pak.basis ? (CONFIG.addonKorting || 0) : 0;
+  return retainerAan() ? Math.max(a, CONFIG.retainer.korting) : a;
 }
 const pakLevert = p => p.levert.map(l => l.replace('{n}', pakTeller(p)));
 function pakDetail(p){
   if(p.teller) return pakTeller(p) + ' ' + (p.teller.eenheid || '');
-  if(p.banden) return sqftTekst(S.sqft);
+  if(p.banden || (p.sqftToeslag && metSqft())) return sqftTekst(S.sqft);
   return '';
 }
 
@@ -724,9 +746,10 @@ function optiePrijs(id){
     detail = n + ' × ' + geld(o.prijs);
   }
   const opAanvraag = (basis === null || basis === undefined);
-  const korting = !opAanvraag && !!(S.pakket && S.pakket.basis) && CONFIG.addonKorting > 0;
-  const prijs = opAanvraag ? null : (korting ? rond(basis * (1 - CONFIG.addonKorting)) : basis);
-  return { basis, prijs, korting, vanaf: !!o.vanaf, opAanvraag, detail };
+  const pct = addonPct();
+  const korting = !opAanvraag && pct > 0;
+  const prijs = opAanvraag ? null : (korting ? rond(basis * (1 - pct)) : basis);
+  return { basis, prijs, korting, pct: Math.round(pct*100), vanaf: !!o.vanaf, opAanvraag, detail };
 }
 
 /* ============================================================
@@ -781,7 +804,7 @@ function prijsLabel(p){
       .map(o => o.banden ? bandPrijs(o.banden, S.sqft) : o.prijs).filter(x => x != null));
     return isFinite(min) ? `from ${geld(min)}<em>excl. tax</em>` : 'Custom';
   }
-  if(pr === null || pr === undefined) return p.banden ? 'Quoted individually' : 'Custom';
+  if(pr === null || pr === undefined) return (p.banden || p.sqftToeslag) ? 'Quoted individually' : 'Custom';
   return `${p.vanaf ? 'from ' : ''}${geld(pr)}<em>excl. tax</em>`;
 }
 
@@ -810,6 +833,7 @@ function tekenPakKaarten(zonderSchuif){
     </button>`;}).join('');
   if(enkel && pakBeschikbaar(lijst[0])) S.pakket = lijst[0];
   // schuif voor het aantal (Agent Reels) onder de kaarten
+  tekenRetainer();
   const p = S.pakket;
   if(zonderSchuif){
     if(p && p.teller && $('#teller_uit'))
@@ -822,6 +846,19 @@ function tekenPakKaarten(zonderSchuif){
       + `<p class="schuifnote">${geld(p.teller.prijs)} per reel, excluding tax. ${p.teller.min} to ${p.teller.max} reels in one shoot day.</p>`
     : '';
 }
+function tekenRetainer(){
+  const p = S.pakket, r = CONFIG.retainer;
+  if(!r || !p || p.geenRetainer){ $('#pakRetainer').innerHTML = ''; return; }
+  const pct = Math.round(r.korting*100), pr = pakPrijs(p);
+  $('#pakRetainer').innerHTML = `<label class="optie ${S.retainer?'aan':''}">
+    <input type="checkbox" id="retainerCb" ${S.retainer?'checked':''}>
+    <span class="tekst"><b>Monthly retainer</b><small>Book ${esc(p.naam)} every month for at least ${r.minMaanden} months and get ${pct}% off the package and every add-on.</small></span>
+    ${pr ? `<span class="bedrag">− ${geld(rond(pr*r.korting))}<em>per month</em></span>` : ''}</label>`;
+}
+$('#pakRetainer').addEventListener('change', e=>{
+  if(e.target.id !== 'retainerCb') return;
+  S.retainer = e.target.checked; tekenRetainer();
+});
 function toonPakketten(){
   const lijst = pakLijst();
   const enkel = lijst.length === 1;
@@ -860,12 +897,12 @@ $('#pakOpts').addEventListener('click', e => {
 function toonOpties(){
   const lijst = optieLijst();
   const pak = S.pakket;
-  const korting = pak.basis && CONFIG.addonKorting > 0;
+  const korting = addonPct() > 0;
   $('#optTitel').textContent = pak.los ? 'Pick your services' : 'Add-ons';
   $('#optLead').textContent = (pak.los
     ? 'Choose what you need. The total updates as you go.'
     : 'Add what you need. The total updates as you go.' +
-      (korting ? ` Every add-on gets ${kortPct()}% off because you're booking ${pak.naam}.` : '')) +
+      (korting ? ` Every add-on gets ${Math.round(addonPct()*100)}% off${retainerAan() ? ' with your retainer' : " because you're booking " + pak.naam}.` : '')) +
     (metSqft() && lijst.some(o => o.banden) ? ` Matterport is priced for ${sqftLabel(S.sqft)}.` : '');
 
   $('#optLijst').innerHTML = lijst.map(o=>{
@@ -877,13 +914,16 @@ function toonOpties(){
     if(inbeg) bedrag = '<span class="bedrag inb">included</span>';
     else if(pr.opAanvraag) bedrag = '<span class="bedrag inb">price on request</span>';
     else bedrag = `<span class="bedrag">${pr.vanaf ? 'from ' : '+ '}${geld(pr.prijs)}` +
-      (pr.korting ? `<s>${geld(pr.basis)}</s><em>${kortPct()}% off</em>` : '') + '</span>';
+      (pr.korting ? `<s>${geld(pr.basis)}</s><em>${pr.pct}% off</em>` : '') + '</span>';
     const uitleg = geblokt
       ? 'Needs the ' + esc(CONFIG.opties[o.vereist].naam) + '.'
       : esc(o.uitleg || '');
 
     let keuze = '';
-    if(gekozen && !inbeg && o.aantal){
+    if(gekozen && !inbeg && o.banden && !metSqft()){
+      keuze = `<div class="keuzerij">${schuif('sq_'+o.id, 'Size of the home (living area)', 500, 10500, 100,
+        Math.min(S.sqft, 10500), sqftLabel(S.sqft))}</div>`;
+    } else if(gekozen && !inbeg && o.aantal){
       keuze = `<div class="keuzerij"><label for="k_${o.id}">${esc(o.aantalLabel || 'How many?')}</label>
         <select id="k_${o.id}" data-keuze="${o.id}">${Array.from({length:o.aantal},(_,i)=>i+1).map(n=>
           `<option value="${n}" ${(S.keuze[o.id]||1)===n?'selected':''}>${n}</option>`).join('')}
@@ -899,7 +939,14 @@ function toonOpties(){
   tekenTotaal();
 }
 
+$('#optLijst').addEventListener('input', e=>{
+  if(e.target.type !== 'range') return;
+  S.sqft = Number(e.target.value);
+  const uit = document.getElementById(e.target.id + '_uit');
+  if(uit) uit.textContent = sqftLabel(S.sqft);
+});
 $('#optLijst').addEventListener('change', e=>{
+  if(e.target.type === 'range'){ toonOpties(); const r = document.getElementById(e.target.id); if(r) r.focus(); return; }
   const sel = e.target.closest('[data-keuze]');
   if(sel){
     S.keuze[sel.dataset.keuze] = Number(sel.value);
@@ -929,12 +976,13 @@ function tekenTotaal(){
   const pak = S.pakket;
   const regels =
     (pak.los ? '' : `<div class="regel"><span>${esc(pak.naam)}${pakDetail(pak)?' · '+esc(pakDetail(pak)):''}</span><span>${pak.vanaf?'from ':''}${geld(pakPrijs(pak))}</span></div>`) +
-    b.opties.map(o=>`<div class="regel"><span>${esc(o.naam)}${o.detail?' · '+esc(o.detail):''}${o.korting?`<em>${kortPct()}% off</em>`:''}</span>
+    (b.retKorting ? `<div class="regel"><span>Monthly retainer<em>${Math.round(CONFIG.retainer.korting*100)}% off</em></span><span>− ${geld(b.retKorting)}</span></div>` : '') +
+    b.opties.map(o=>`<div class="regel"><span>${esc(o.naam)}${o.detail?' · '+esc(o.detail):''}${o.korting?`<em>${o.pct}% off</em>`:''}</span>
       <span>${o.opAanvraag ? 'on request' : (o.vanaf?'from ':'+ ') + geld(o.prijs)}</span></div>`).join('');
   $('#totaalBalk').innerHTML = regels +
     `<div class="som"><span>${b.vanaf ? 'Total from' : 'Total'}</span><span>${geld(b.ex)}</span></div>
      <p class="note" style="color:var(--muted)">Excluding sales tax, if applicable.</p>` +
-    (b.besparing ? `<p class="note">You save ${geld(b.besparing)} by adding these to ${esc(pak.naam)}.</p>` : '') +
+    (b.besparing ? `<p class="note">You save ${geld(b.besparing)}${b.retainer ? ' per month with your retainer' : ' by adding these to ' + esc(pak.naam)}.</p>` : '') +
     (b.opAanvraag.length ? `<p class="note">${esc(b.opAanvraag.join(' and '))}: price on request, we'll confirm it before the shoot.</p>` : '');
 }
 
@@ -1127,10 +1175,11 @@ function bedragen(){
     { id, naam: CONFIG.opties[id].naam }, optiePrijs(id)));
   const bekend = opties.filter(o => !o.opAanvraag);
   const extra = bekend.reduce((t,o)=> t + o.prijs, 0);
-  const ex = rond(pakBedrag + extra);
+  const retKorting = retainerAan() ? rond(pakBedrag * CONFIG.retainer.korting) : 0;
+  const ex = rond(pakBedrag - retKorting + extra);
   if(pak.los && ex === 0) return null;     // enkel diensten op aanvraag
-  const besparing = rond(bekend.filter(o=>o.korting).reduce((t,o)=> t + (o.basis - o.prijs), 0));
-  return { pakketNaam: pak.naam, pakBedrag, pakDetail: pakDetail(pak), opties, extra, ex, besparing,
+  const besparing = rond(retKorting + bekend.filter(o=>o.korting).reduce((t,o)=> t + (o.basis - o.prijs), 0));
+  return { pakketNaam: pak.naam, pakBedrag, retKorting, retainer: retainerAan(), pakDetail: pakDetail(pak), opties, extra, ex, besparing,
            vanaf: !!pak.vanaf || bekend.some(o => o.vanaf),
            vanafPlan: bekend.some(o => o.vanaf),
            sqft: metSqft() ? S.sqft : null,
@@ -1157,7 +1206,7 @@ function tekenDocument(){
     }).filter(Boolean);
   const optieRegel = o => `<li>${esc(o.naam)}${o.detail?' ('+esc(o.detail)+')':''} — ${
     o.opAanvraag ? 'price on request' :
-    (o.vanaf?'from ':'') + geld(o.prijs) + (o.korting ? ` <span class="small">(${kortPct()}% package discount, regular ${geld(o.basis)})</span>` : '')}</li>`;
+    (o.vanaf?'from ':'') + geld(o.prijs) + (o.korting ? ` <span class="small">(${o.pct}% discount, regular ${geld(o.basis)})</span>` : '')}</li>`;
 
   $('#doc').innerHTML = `
     <h3>Booking confirmation</h3>
@@ -1181,12 +1230,14 @@ function tekenDocument(){
       <ul>${(b ? b.opties : extraOpties().map(id => Object.assign({naam:CONFIG.opties[id].naam}, optiePrijs(id)))).map(optieRegel).join('')}</ul>` : ''}
     ${b ? `<dl style="margin-top:12px">
         ${pak.los ? '' : `<dt>${esc(pak.naam)}${b.pakDetail?' ('+esc(b.pakDetail)+')':''}</dt><dd>${pak.vanaf?'from ':''}${geld(b.pakBedrag)}</dd>`}
+        ${b.retKorting ? `<dt>Monthly retainer ${Math.round(CONFIG.retainer.korting*100)}%</dt><dd>− ${geld(b.retKorting)}</dd>` : ''}
         ${b.opties.filter(o=>!o.opAanvraag).map(o=>`<dt>${esc(o.naam)}</dt><dd>${o.vanaf?'from ':''}${geld(o.prijs)}</dd>`).join('')}
       </dl>
       <p class="total">${b.vanaf?'Total from':'Total'}, excluding tax: ${geld(b.ex)}</p>
       ${b.vanafPlan ? '<p class="small">Floor plan prices are starting prices. We confirm the final price before the shoot.</p>' : ''}
       ${pak.vanaf ? '<p class="small">This is a starting price. We confirm the final price with you before the shoot.</p>' : ''}
-      ${b.besparing ? `<p class="small">Package discount on add-ons: ${geld(b.besparing)}.</p>` : ''}
+      ${b.besparing ? `<p class="small">Total discount: ${geld(b.besparing)}.</p>` : ''}
+      ${b.retainer ? `<p class="small"><strong>Monthly retainer:</strong> this package is booked every month for at least ${CONFIG.retainer.minMaanden} months, at ${Math.round(CONFIG.retainer.korting*100)}% off the package and every add-on.</p>` : ''}
       ${b.opAanvraag.length ? `<p class="small">${esc(b.opAanvraag.join(' and '))}: price on request, confirmed before the shoot and not included in the total above.</p>` : ''}
       <p class="small">Deposit on confirmation: ${geld(b.voorschot)}. The balance is due after the shoot.</p>`
     : `<p class="total">Custom price</p>
@@ -1379,7 +1430,8 @@ $('#send').addEventListener('click', async ()=>{
     handtekening: handtekeningPng(),
     foto: S.foto,
     ondertekenaar: naam,
-    sqft: metSqft() ? S.sqft : null
+    sqft: metSqft() ? S.sqft : null,
+    retainer: retainerAan() ? { maanden: CONFIG.retainer.minMaanden, korting: CONFIG.retainer.korting } : null
   };
 
   try{
