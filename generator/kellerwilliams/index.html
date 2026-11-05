@@ -455,7 +455,7 @@ let CONFIG = {
       opties:["detached","plan2d","plan2dKleur","plan3d"] },
     aerial: { id:"aerial", naam:"Aerial", prijs:0, los:true,
       omschrijving:"Aerial photos and/or video of the property, without a film.",
-      levert:["Choose aerial photos, aerial video or both on the next step","Priced by square footage"],
+      levert:["Choose aerial photos, aerial video or both on the next step","Fixed prices, whatever the size of the home"],
       opties:["aerialPhotos","aerialVideoFull","twilight"] },
 
     /* ---------- enkel foto's (prijzen volgens Click) ---------- */
@@ -507,11 +507,11 @@ let CONFIG = {
       uitleg:"A virtual walkthrough buyers can explore on their own. Priced by the home's square footage.",
       banden:[{tot:1999,p:250},{tot:2999,p:300},{tot:3999,p:350},{tot:4999,p:400},{tot:5999,p:450},
               {tot:6999,p:500},{tot:7999,p:550},{tot:8999,p:600},{tot:9999,p:650}] },
-    aerialPhotos: { naam:"Aerial photos", prijs:195, sqftToeslag:{ vanaf:3000, per:500, prijs:40 },
+    aerialPhotos: { naam:"Aerial photos", prijs:195,
       uitleg:"6 aerial drone photos of the property and its surroundings, where legally permitted." },
-    aerialVideoAdd: { naam:"Aerial video add-on", prijs:145, sqftToeslag:{ vanaf:3000, per:500, prijs:40 },
+    aerialVideoAdd: { naam:"Aerial video add-on", prijs:145,
       uitleg:"15 to 30 seconds of aerial drone video, where legally permitted." },
-    aerialVideoFull: { naam:"Aerial video", prijs:245, sqftToeslag:{ vanaf:3000, per:500, prijs:40 },
+    aerialVideoFull: { naam:"Aerial video", prijs:245,
       uitleg:"An aerial drone video of 1 to 2 minutes, where legally permitted." },
     twilight: { naam:"Aerial virtual twilight", prijs:50, aantal:6, aantalLabel:"Number of images", vereist:"aerialPhotos",
       uitleg:"Aerial photos turned into a twilight scene. Price per image." },
