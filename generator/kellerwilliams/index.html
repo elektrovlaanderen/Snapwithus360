@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="snap360-versie" content="2026-11-05-kw">
-<title>Book your story — SNAP360 × Keller Williams</title>
+<title>Book your shoot — SNAP360 × Keller Williams</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -239,6 +239,16 @@ button.klein:hover{border-color:var(--gold);color:var(--gold)}
 .totaalbalk .regel em{font-style:normal;color:var(--gold);font-size:13px;margin-left:6px}
 .adres.us .stad{grid-column:span 2}
 .adres.us .staat{grid-column:span 1}
+.schuif{border:1px solid var(--line);border-radius:var(--r);background:var(--panel);padding:16px 18px 12px;margin-bottom:6px}
+#pakNa .schuif{margin-top:14px}
+.schuifkop{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:10px}
+.schuifkop label{font-size:14px;font-weight:500}
+.schuifkop output{color:var(--gold);font-weight:600;font-size:16px;white-space:nowrap}
+.schuif input[type=range]{width:100%;accent-color:var(--gold);height:22px;cursor:pointer}
+.schuifnote{color:var(--muted);font-size:13px;margin:0 0 18px}
+#pakNa .schuifnote{margin-top:6px}
+.opt.uit{opacity:.45;cursor:not-allowed}
+.opt.uit:hover{border-color:var(--line)}
 .adres.us .zip{grid-column:span 1}
 @media(max-width:560px){.adres.us .stad{grid-column:span 2}}
 </style>
@@ -248,7 +258,7 @@ button.klein:hover{border-color:var(--gold);color:var(--gold)}
 
 <header>
   <div class="brand">SNAP360 × KELLER WILLIAMS</div>
-  <h1>Book your story</h1>
+  <h1>Book your shoot</h1>
   <p>Pick your package, tell us what has to be on camera, and sign the booking confirmation. It takes about five minutes, and the signed document lands in your inbox.</p>
 </header>
 
@@ -278,7 +288,9 @@ button.klein:hover{border-color:var(--gold);color:var(--gold)}
   <h2>Which package?</h2>
   <p class="lead" id="pakLead"></p>
   <p class="exclbtw" id="pakBtw">All prices exclude sales tax, if applicable.</p>
+  <div id="pakVoor"></div>
   <div class="opts" id="pakOpts"></div>
+  <div id="pakNa"></div>
   <div class="err" id="e2">Pick a package.</div>
   <div class="nav"><button class="back" data-prev>Back</button><button class="go" data-next>Next</button></div>
 </section>
@@ -401,61 +413,92 @@ let CONFIG = {
 
   munt: "$",
   voorschot: 0.30,       // 30% voorschot bij bevestiging
-  addonKorting: 0.15,    // korting op Matterport en drone wanneer ze bij een story-pakket komen
+  addonKorting: 0.20,    // korting op elke add-on die bij een pakket (basis:true) komt
   foto: "optioneel",     // "optioneel", "verplicht" of "uit"
+  sqftStart: 2000,       // beginwaarde van de sq ft-schuif
 
 /* ================================================================
    PAKKETTEN
-   basis:true = productiepakket, add-ons met korting:true krijgen
-                daar de add-on-korting
-   los:true   = enkel losse diensten, klant kiest ze bij de add-ons
+   basis:true  = add-ons krijgen hier de add-on-korting
+   los:true    = enkel losse diensten, klant kiest ze bij de add-ons
+   banden      = prijs volgens sq ft: { tot: bovengrens, p: prijs }
+                 boven de laatste band = op maat
+   minSqft     = pas beschikbaar vanaf die oppervlakte
+   teller      = schuif voor het aantal (prijs x aantal); {n} in levert
+   vanaf:true  = "vanaf"-prijs
    ================================================================ */
   paketten: {
-    agentReels: { id:"agent-reels", naam:"Agent Reels", prijs:400, duur:"One shoot day",
-      omschrijving:"The easy way in: short one-take reels with you as the face.",
-      levert:["8 one-take reels, filmed in one shoot day","Up to 10 seconds per reel","Made for social media"],
-      opties:[] },
+    /* ---------- verhaal ---------- */
     story: { id:"the-story", naam:"The Story", prijs:1000, basis:true,
       omschrijving:"You tell the story of the home. We bring it to life.",
-      levert:["1 main cinematic film: your interview combined with cinematic footage of the home","3 social media reels cut from the same shoot","1 short teaser to announce the listing"] },
+      levert:["1 main cinematic film: your interview combined with cinematic footage of the home","3 social media reels cut from the same shoot","1 short teaser to announce the listing"],
+      opties:["matterport","aerialPhotos","aerialVideoAdd","twilight","detached","plan2d","plan2dKleur","plan3d"] },
     storyComplete: { id:"the-story-complete", naam:"The Story Complete", prijs:1399, basis:true,
       omschrijving:"Everything for the listing in one production.",
-      levert:["Everything in The Story","Professional photo reportage of the property, delivered within 24 hours","Drone footage of the property and its surroundings"],
-      inbegrepen:["drone"] },
-    losseDiensten: { id:"tour-and-drone", naam:"3D Tour & Drone", prijs:0, los:true,
-      omschrijving:"Just a Matterport 3D tour and/or drone footage, without a film.",
-      levert:["Choose your services on the next step","Matterport 3D tour priced by square footage","Add the story later at any time"] },
-    officeProfile: { id:"office-profile", naam:"Office Profile", prijs:null,
-      omschrijving:"A film that puts your office and its agents in the spotlight.",
-      levert:["Scope and price tailored to your office"], opties:[] }
+      levert:["Everything in The Story","Professional photo reportage of the property, delivered within 24 hours","Aerial drone video of the property and its surroundings"],
+      inbegrepen:["aerialVideoAdd"],
+      opties:["matterport","aerialPhotos","aerialVideoAdd","twilight","detached","plan2d","plan2dKleur","plan3d"] },
+    losseDiensten: { id:"tour-and-aerial", naam:"3D Tour & Aerial", prijs:0, los:true,
+      omschrijving:"Just a Matterport 3D tour and/or aerial photos and video, without a film.",
+      levert:["Choose your services on the next step","Matterport 3D tour priced by square footage","Add the story later at any time"],
+      opties:["matterport","aerialPhotos","aerialVideoFull","twilight","detached","plan2d","plan2dKleur","plan3d"] },
+
+    /* ---------- enkel foto's (prijzen volgens Click) ---------- */
+    photoEssentials: { id:"photo-essentials", naam:"Essentials", basis:true,
+      banden:[{tot:1499,p:240},{tot:2199,p:275},{tot:2999,p:295},{tot:3799,p:335},{tot:4599,p:370},
+              {tot:5499,p:410},{tot:6499,p:445},{tot:7499,p:485},{tot:8499,p:540},{tot:9499,p:595},{tot:10499,p:660}],
+      omschrijving:"Everything a listing needs to go live.",
+      levert:["25 to 30 interior and exterior photos","6 aerial drone photos","2D floor plan","Sky, grass, TV and window enhancement","Delivered within 24 hours"],
+      inbegrepen:["aerialPhotos","plan2d"],
+      opties:["matterport","aerialPhotos","aerialVideoAdd","twilight","detached","plan2d","plan2dKleur","plan3d"] },
+    photoSignature: { id:"photo-signature", naam:"Signature", basis:true,
+      banden:[{tot:1499,p:415},{tot:2199,p:460},{tot:2999,p:480},{tot:3799,p:520},{tot:4599,p:555},
+              {tot:5499,p:595},{tot:6499,p:630},{tot:7499,p:670},{tot:8499,p:725},{tot:9499,p:780},{tot:10499,p:845}],
+      omschrijving:"More photos, plus a reel for social media.",
+      levert:["35 to 45 interior and exterior photos","Vertical property reel for social media","6 aerial drone photos","2D floor plan","Sky, grass, TV and window enhancement","Delivered within 24 hours"],
+      inbegrepen:["aerialPhotos","plan2d"],
+      opties:["matterport","aerialPhotos","aerialVideoAdd","twilight","detached","plan2d","plan2dKleur","plan3d"] },
+    photoPrestige: { id:"photo-prestige", naam:"Prestige Luxury", basis:true, minSqft:4600,
+      banden:[{tot:4599,p:null},{tot:5499,p:1225},{tot:6499,p:1265},{tot:7499,p:1415},{tot:8499,p:1620},{tot:9499,p:1675},{tot:10499,p:1925}],
+      omschrijving:"For luxury homes from 4,600 sq ft.",
+      levert:["45+ interior and exterior photos","Cinematic property film","6 twilight photos","Vertical property reel for social media","Aerial drone photos and video","2D floor plan","Delivered within 24 hours"],
+      inbegrepen:["aerialPhotos","aerialVideoAdd","plan2d"],
+      opties:["matterport","aerialPhotos","aerialVideoAdd","twilight","detached","plan2d","plan2dKleur","plan3d"] },
+
+    /* ---------- de agent zelf ---------- */
+    agentReels: { id:"agent-reels", naam:"Agent Reels", duur:"One shoot day",
+      teller:{ min:8, max:15, prijs:50, label:"Number of reels", eenheid:"reels" },
+      omschrijving:"Short one-take reels that promote you as the agent.",
+      levert:["{n} one-take reels, filmed in one shoot day","Up to 10 seconds per reel","Made for social media"],
+      opties:[] },
+
+    /* ---------- het kantoor ---------- */
+    officePromo: { id:"office-promo", naam:"Office Promo", prijs:2500, vanaf:true,
+      omschrijving:"A promo film that puts your Keller Williams office in the spotlight.",
+      levert:["2-minute promo film of your Keller Williams office","Bonus: 25% off every other SNAP360 package your office books in the same month"],
+      opties:[] }
   },
 
 /* ================================================================
    ADD-ONS
-   tiers:   keuzelijst met prijs per niveau (Matterport per sq ft)
+   banden:  prijs volgens de sq ft van de schuif
    aantal:  keuzelijst 1..n, prijs x aantal
    vanaf:   "vanaf"-prijs
-   vereist: kan enkel samen met die andere add-on
-   korting: krijgt de add-on-korting bij een basis-pakket
+   vereist: kan enkel samen met die andere add-on (of als die in het pakket zit)
    ================================================================ */
   opties: {
-    matterport: { naam:"Matterport 3D tour", korting:true,
+    matterport: { naam:"Matterport 3D tour",
       uitleg:"A virtual walkthrough buyers can explore on their own. Priced by the home's square footage.",
-      tierLabel:"Size of the home",
-      tiers:[
-        { l:"Up to 1,999 sq ft",     p:250 },
-        { l:"2,000 – 2,999 sq ft",   p:300 },
-        { l:"3,000 – 3,999 sq ft",   p:350 },
-        { l:"4,000 – 4,999 sq ft",   p:400 },
-        { l:"5,000 – 5,999 sq ft",   p:450 },
-        { l:"6,000 – 6,999 sq ft",   p:500 },
-        { l:"7,000 – 7,999 sq ft",   p:550 },
-        { l:"8,000 – 8,999 sq ft",   p:600 },
-        { l:"9,000 – 9,999 sq ft",   p:650 },
-        { l:"10,000 sq ft or more",  p:null }
-      ] },
-    drone: { naam:"Drone footage", prijs:null, korting:true,
-      uitleg:"Aerial footage of the property and its surroundings, where legally permitted." },
+      banden:[{tot:1999,p:250},{tot:2999,p:300},{tot:3999,p:350},{tot:4999,p:400},{tot:5999,p:450},
+              {tot:6999,p:500},{tot:7999,p:550},{tot:8999,p:600},{tot:9999,p:650}] },
+    aerialPhotos: { naam:"Aerial photos", prijs:195,
+      uitleg:"6 aerial drone photos of the property and its surroundings, where legally permitted." },
+    aerialVideoAdd: { naam:"Aerial video add-on", prijs:145,
+      uitleg:"15 to 30 seconds of aerial drone video, where legally permitted." },
+    aerialVideoFull: { naam:"Aerial video", prijs:245,
+      uitleg:"An aerial drone video of 1 to 2 minutes, where legally permitted." },
+    twilight: { naam:"Aerial virtual twilight", prijs:50, aantal:6, aantalLabel:"Number of images", vereist:"aerialPhotos",
+      uitleg:"Aerial photos turned into a twilight scene. Price per image." },
     detached: { naam:"Detached scan", prijs:50, vereist:"matterport", aantal:4, aantalLabel:"Number of structures",
       uitleg:"An extra scan of a detached structure, like an ADU or a garage. Price per structure." },
     plan2d: { naam:"2D floor plan", prijs:100, vanaf:true, vereist:"matterport",
@@ -468,20 +511,22 @@ let CONFIG = {
 
 /* ================================================================
    TYPES EN SITUATIES
+   sqft:true = op het pakketscherm verschijnt de sq ft-schuif
    ================================================================ */
   types: {
     kw: {
       label: "Keller Williams agent",
-      sub: "A listing, your personal brand or your office",
+      sub: "A listing, yourself as an agent, or your office",
       pakketten: ["story","storyComplete"],
-      opties: ["matterport","drone","detached","plan2d","plan2dKleur","plan3d"],
+      opties: [],
       suggesties: [],
       vragen: [],
       situaties: {
         listing: {
-          label: "A listing",
-          sub: "One home, told as a story",
+          label: "A listing story",
+          sub: "One home, told by you on camera",
           lead: "Every package is per listing. More listings coming up? Mention it in the notes and we'll set up a package together.",
+          sqft: true,
           pakketten: ["story","storyComplete","losseDiensten"],
           suggesties: ["You at the front door","The front of the home and the driveway","The living room","The kitchen","The backyard","The neighborhood from the air"],
           vragen: [
@@ -493,23 +538,39 @@ let CONFIG = {
             { k:"styling", label:"Will the home be cleaned up or staged for the shoot?", type:"select", opties:["Yes, it'll be ready","Partly","No"] }
           ]
         },
+        photos: {
+          label: "Listing photos",
+          sub: "Photos only, priced by square footage",
+          lead: "Set the square footage and pick a package. Prices step up in bands, so you always know what you pay.",
+          sqft: true,
+          pakketten: ["photoEssentials","photoSignature","photoPrestige"],
+          suggesties: ["The front of the home","The living room","The kitchen","The primary bedroom","The backyard","The view"],
+          vragen: [
+            { k:"pandAdres", label:"Property address", type:"adres", verplicht:true },
+            { k:"pandType", label:"What kind of property is it?", type:"select", opties:["Single-family home","Condo or townhouse","Luxury home","Ranch or estate","Land","Commercial"] },
+            { k:"bewoond", label:"Is the home occupied?", type:"select", opties:["Vacant","Owner-occupied","Tenant-occupied","New construction"] },
+            { k:"toegang", label:"How do we get in?", hint:"Lockbox, key, or someone on site.", type:"text", verplicht:true },
+            { k:"troef", label:"What should buyers notice first?", type:"textarea" },
+            { k:"styling", label:"Will the home be cleaned up or staged for the shoot?", type:"select", opties:["Yes, it'll be ready","Partly","No"] }
+          ]
+        },
         brand: {
-          label: "My personal brand",
-          sub: "Short reels with you as the face",
-          lead: "Eight short one-take reels in one shoot day. The easiest way to start showing up on social media.",
+          label: "Promote myself as an agent",
+          sub: "Short reels that put you in front of buyers and sellers",
+          lead: "Short one-take reels with you as the face, all filmed in one shoot day. Choose from 8 to 15 reels.",
           pakketten: ["agentReels"],
           suggesties: ["You at one of your listings","You at the office","You in the neighborhood","You with a client"],
           vragen: [
             { k:"locatie", label:"Where do we film?", type:"adres", verplicht:true },
-            { k:"onderwerpen", label:"What should the reels be about?", hint:"Just listed, market updates, neighborhood tips, introducing yourself.", type:"textarea", verplicht:true },
+            { k:"onderwerpen", label:"What should the reels be about?", hint:"Just listed, just sold, market updates, neighborhood tips, introducing yourself.", type:"textarea", verplicht:true },
             { k:"socials", label:"Your Instagram or TikTok handle", type:"text" }
           ]
         },
         office: {
           label: "Our office",
-          sub: "The office and its agents in the spotlight",
-          lead: "Not a home, but your people. Scope and price are tailored to your office.",
-          pakketten: ["officeProfile"],
+          sub: "A 2-minute promo film of your Keller Williams office",
+          lead: "Not a home, but your office and your people. Book it, and every other package your office books that month gets 25% off.",
+          pakketten: ["officePromo"],
           suggesties: ["The office and the entrance","The team at work","A meeting with a client","The team leader on camera","Homes the team has sold"],
           vragen: [
             { k:"locatie", label:"Where do we film?", type:"adres", verplicht:true },
@@ -542,7 +603,10 @@ let CONFIG = {
   voorwaarden: [
     "All prices exclude sales tax, if applicable.",
     "The must-have shots in this document are the checklist for the shoot day. Anything not listed cannot be guaranteed.",
-    "Drone footage is only captured where legally permitted and when the weather allows. If it is not possible, 10% is deducted from the package.",
+    "Aerial photos and video are only captured where legally permitted and when the weather allows. If they are not possible, 10% is deducted from the package.",
+    "Aerial add-ons are only available together with an on-site photo or video shoot.",
+    "Prices based on square footage use the size given in this document. Homes above 10,500 sq ft are quoted individually.",
+    "When an office books the Office Promo, every other SNAP360 package booked by that office in the same calendar month gets 25% off.",
     "One round of feedback is included. Changes requested after that, or changes to the assignment itself, are billed separately.",
     "The client makes sure the location is accessible and tidy at the agreed time. Waiting time is billed.",
     "The client is responsible for the consent of everyone who is recognizable on camera, including the property owner. For minors, written consent from a parent is required.",
@@ -573,7 +637,8 @@ function start(){
    STATE
    ============================================================ */
 const S = { type:null, situatie:null, pakket:null, klant:{}, antw:{},
-            shots:[], ref:maakRef(), foto:null, opties:[], keuze:{} };
+            shots:[], ref:maakRef(), foto:null, opties:[], keuze:{},
+            sqft: CONFIG.sqftStart || 2000, teller:{} };
 let stap = 0;
 let volgorde = [0,1,2,3,4,5,6];
 const VAST = { type:false };
@@ -625,21 +690,41 @@ function optieLijst(){
 const zitIn = (pak, id) => !!pak && (pak.inbegrepen || []).includes(id);
 const extraOpties = () => S.opties.filter(id => !zitIn(S.pakket, id));
 
+/* ---- prijzen volgens sq ft en tellers ---- */
+const sqftTekst = n => Number(n).toLocaleString('en-US') + ' sq ft';
+const metSqft = () => !!(sitObj() && sitObj().sqft);
+function bandPrijs(banden, sqft){
+  const b = banden.find(x => sqft <= x.tot);
+  return b ? b.p : null;                    // boven de laatste band: op maat
+}
+const pakTeller = p => p.teller ? (S.teller[p.id] || p.teller.min) : null;
+const pakBeschikbaar = p => !(p.minSqft && S.sqft < p.minSqft);
+function pakPrijs(p){
+  if(p.teller) return pakTeller(p) * p.teller.prijs;
+  if(p.banden) return bandPrijs(p.banden, S.sqft);
+  return p.prijs;
+}
+const pakLevert = p => p.levert.map(l => l.replace('{n}', pakTeller(p)));
+function pakDetail(p){
+  if(p.teller) return pakTeller(p) + ' ' + (p.teller.eenheid || '');
+  if(p.banden) return sqftTekst(S.sqft);
+  return '';
+}
+
 /* Prijs van één add-on binnen het gekozen pakket.
    Geeft { basis, prijs, korting, vanaf, opAanvraag, detail } terug. */
 function optiePrijs(id){
   const o = CONFIG.opties[id];
   let basis = o.prijs, detail = '';
-  if(o.tiers){
-    const t = o.tiers[S.keuze[id] || 0];
-    basis = t.p; detail = t.l;
+  if(o.banden){
+    basis = bandPrijs(o.banden, S.sqft); detail = sqftTekst(S.sqft);
   } else if(o.aantal){
     const n = S.keuze[id] || 1;
     basis = o.prijs == null ? null : o.prijs * n;
     detail = n + ' × ' + geld(o.prijs);
   }
   const opAanvraag = (basis === null || basis === undefined);
-  const korting = !opAanvraag && !!o.korting && !!(S.pakket && S.pakket.basis) && CONFIG.addonKorting > 0;
+  const korting = !opAanvraag && !!(S.pakket && S.pakket.basis) && CONFIG.addonKorting > 0;
   const prijs = opAanvraag ? null : (korting ? rond(basis * (1 - CONFIG.addonKorting)) : basis);
   return { basis, prijs, korting, vanaf: !!o.vanaf, opAanvraag, detail };
 }
@@ -688,51 +773,100 @@ $('#sitOpts').addEventListener('click', e => {
 });
 
 function prijsLabel(p){
-  if(p.prijs === null || p.prijs === undefined) return 'Custom';
+  if(!pakBeschikbaar(p)) return `<em>from ${sqftTekst(p.minSqft)}</em>`;
+  const pr = pakPrijs(p);
   if(p.los){
-    const min = Math.min(...(p.opties || typeObj().opties || [])
+    const min = Math.min(...(p.opties || [])
       .map(id => CONFIG.opties[id]).filter(o => o && !o.vereist)
-      .map(o => o.tiers ? o.tiers[0].p : o.prijs).filter(x => x != null));
+      .map(o => o.banden ? bandPrijs(o.banden, S.sqft) : o.prijs).filter(x => x != null));
     return isFinite(min) ? `from ${geld(min)}<em>excl. tax</em>` : 'Custom';
   }
-  return `${geld(p.prijs)}<em>excl. tax</em>`;
+  if(pr === null || pr === undefined) return p.banden ? 'Quoted individually' : 'Custom';
+  return `${p.vanaf ? 'from ' : ''}${geld(pr)}<em>excl. tax</em>`;
+}
+
+/* Schuif: één bouwsteen voor sq ft en voor het aantal reels */
+function schuif(id, label, min, max, stap, waarde, tekst){
+  return `<div class="schuif">
+    <div class="schuifkop"><label for="${id}">${esc(label)}</label><output id="${id}_uit">${esc(tekst)}</output></div>
+    <input type="range" id="${id}" min="${min}" max="${max}" step="${stap}" value="${waarde}">
+  </div>`;
+}
+const sqftMax = 10500;
+const sqftLabel = n => n >= sqftMax ? '10,500+ sq ft' : sqftTekst(n);
+
+function tekenPakKaarten(zonderSchuif){
+  const lijst = pakLijst();
+  const enkel = lijst.length === 1;
+  if(S.pakket && !pakBeschikbaar(S.pakket)) S.pakket = null;
+  $('#pakOpts').innerHTML = lijst.map(p=>{
+    const uit = !pakBeschikbaar(p);
+    return `<button type="button" class="opt ${uit?'uit':''}" aria-pressed="${!uit && (enkel || S.pakket===p)}"
+      ${uit?'aria-disabled="true"':''} data-pak="${esc(p.id)}">
+      <span class="price">${prijsLabel(p)}</span>
+      <b>${esc(p.naam)}</b>
+      <small>${esc(p.omschrijving)}${p.duur ? ' · ' + esc(p.duur) : ''}</small>
+      <ul>${pakLevert(p).map(l=>`<li>${esc(l)}</li>`).join('')}</ul>
+    </button>`;}).join('');
+  if(enkel && pakBeschikbaar(lijst[0])) S.pakket = lijst[0];
+  // schuif voor het aantal (Agent Reels) onder de kaarten
+  const p = S.pakket;
+  if(zonderSchuif){
+    if(p && p.teller && $('#teller_uit'))
+      $('#teller_uit').textContent = pakTeller(p) + ' ' + p.teller.eenheid + ' · ' + geld(pakPrijs(p));
+    return;
+  }
+  $('#pakNa').innerHTML = (p && p.teller)
+    ? schuif('teller', p.teller.label, p.teller.min, p.teller.max, 1, pakTeller(p),
+        pakTeller(p) + ' ' + p.teller.eenheid + ' · ' + geld(pakPrijs(p)))
+      + `<p class="schuifnote">${geld(p.teller.prijs)} per reel, excluding tax. ${p.teller.min} to ${p.teller.max} reels in one shoot day.</p>`
+    : '';
 }
 function toonPakketten(){
   const lijst = pakLijst();
   const enkel = lijst.length === 1;
   const s = sitObj();
   $('.step[data-step="2"] h2').textContent = enkel ? 'Your package' : 'Which package?';
-  $('#pakLead').textContent = enkel
-    ? 'This is the package that fits. Read what is included and continue.'
-    : (s && s.lead) || '';
-  $('#pakOpts').innerHTML = lijst.map(p=>`
-    <button type="button" class="opt" aria-pressed="${enkel || S.pakket===p}" data-pak="${esc(p.id)}">
-      <span class="price">${prijsLabel(p)}</span>
-      <b>${esc(p.naam)}</b>
-      <small>${esc(p.omschrijving)}${p.duur ? ' · ' + esc(p.duur) : ''}</small>
-      <ul>${p.levert.map(l=>`<li>${esc(l)}</li>`).join('')}</ul>
-    </button>`).join('');
-  if(enkel) S.pakket = lijst[0];
+  $('#pakLead').textContent = (s && s.lead) || (enkel
+    ? 'This is the package that fits. Read what is included and continue.' : '');
+  $('#pakVoor').innerHTML = metSqft()
+    ? schuif('sqft', 'Size of the home (living area)', 500, sqftMax, 100, Math.min(S.sqft, sqftMax), sqftLabel(S.sqft))
+      + '<p class="schuifnote">Round to the nearest hundred. Prices step up in bands as the square footage rises.</p>'
+    : '';
+  tekenPakKaarten();
 }
+$('#pakVoor').addEventListener('input', e => {
+  if(e.target.id !== 'sqft') return;
+  S.sqft = Number(e.target.value);
+  $('#sqft_uit').textContent = sqftLabel(S.sqft);
+  tekenPakKaarten(true);
+});
+$('#pakNa').addEventListener('input', e => {
+  if(e.target.id !== 'teller' || !S.pakket) return;
+  S.teller[S.pakket.id] = Number(e.target.value);
+  tekenPakKaarten(true);
+});
 $('#pakOpts').addEventListener('click', e => {
   const b = e.target.closest('[data-pak]'); if(!b) return;
   const nieuw = pakLijst().find(p => p.id === b.dataset.pak);
+  if(!pakBeschikbaar(nieuw)) return;
   if(nieuw !== S.pakket){ S.opties = []; S.keuze = {}; }
   S.pakket = nieuw;
-  $$('#pakOpts .opt').forEach(o => o.setAttribute('aria-pressed', o===b));
   $('#e2').classList.remove('on');
+  tekenPakKaarten();
 });
 
 /* ---- add-ons ---- */
 function toonOpties(){
   const lijst = optieLijst();
   const pak = S.pakket;
-  const korting = pak.basis && CONFIG.addonKorting > 0 && lijst.some(o => o.korting);
+  const korting = pak.basis && CONFIG.addonKorting > 0;
   $('#optTitel').textContent = pak.los ? 'Pick your services' : 'Add-ons';
-  $('#optLead').textContent = pak.los
+  $('#optLead').textContent = (pak.los
     ? 'Choose what you need. The total updates as you go.'
     : 'Add what you need. The total updates as you go.' +
-      (korting ? ` Matterport and drone get ${kortPct()}% off when you add them to ${pak.naam}.` : '');
+      (korting ? ` Every add-on gets ${kortPct()}% off because you're booking ${pak.naam}.` : '')) +
+    (metSqft() && lijst.some(o => o.banden) ? ` Matterport is priced for ${sqftLabel(S.sqft)}.` : '');
 
   $('#optLijst').innerHTML = lijst.map(o=>{
     const gekozen = S.opties.includes(o.id);
@@ -749,12 +883,7 @@ function toonOpties(){
       : esc(o.uitleg || '');
 
     let keuze = '';
-    if(gekozen && !inbeg && o.tiers){
-      keuze = `<div class="keuzerij"><label for="k_${o.id}">${esc(o.tierLabel || 'Choose')}</label>
-        <select id="k_${o.id}" data-keuze="${o.id}">${o.tiers.map((t,i)=>
-          `<option value="${i}" ${(S.keuze[o.id]||0)===i?'selected':''}>${esc(t.l)}${t.p==null?' (price on request)':''}</option>`).join('')}
-        </select></div>`;
-    } else if(gekozen && !inbeg && o.aantal){
+    if(gekozen && !inbeg && o.aantal){
       keuze = `<div class="keuzerij"><label for="k_${o.id}">${esc(o.aantalLabel || 'How many?')}</label>
         <select id="k_${o.id}" data-keuze="${o.id}">${Array.from({length:o.aantal},(_,i)=>i+1).map(n=>
           `<option value="${n}" ${(S.keuze[o.id]||1)===n?'selected':''}>${n}</option>`).join('')}
@@ -799,7 +928,7 @@ function tekenTotaal(){
   }
   const pak = S.pakket;
   const regels =
-    (pak.los ? '' : `<div class="regel"><span>${esc(pak.naam)}</span><span>${geld(pak.prijs)}</span></div>`) +
+    (pak.los ? '' : `<div class="regel"><span>${esc(pak.naam)}${pakDetail(pak)?' · '+esc(pakDetail(pak)):''}</span><span>${pak.vanaf?'from ':''}${geld(pakPrijs(pak))}</span></div>`) +
     b.opties.map(o=>`<div class="regel"><span>${esc(o.naam)}${o.detail?' · '+esc(o.detail):''}${o.korting?`<em>${kortPct()}% off</em>`:''}</span>
       <span>${o.opAanvraag ? 'on request' : (o.vanaf?'from ':'+ ') + geld(o.prijs)}</span></div>`).join('');
   $('#totaalBalk').innerHTML = regels +
@@ -932,7 +1061,7 @@ function valideer(n){
   if(n===0){ if(!S.type){ $('#e0').classList.add('on'); return false; } return true; }
   if(n===1){ if(!S.situatie){ $('#e1').classList.add('on'); return false; } herbereken(); return true; }
   if(n===2){
-    if(!S.pakket){ $('#e2').classList.add('on'); return false; }
+    if(!S.pakket || !pakBeschikbaar(S.pakket)){ $('#e2').classList.add('on'); return false; }
     herbereken();
     return true;
   }
@@ -992,16 +1121,19 @@ function valideer(n){
    ============================================================ */
 function bedragen(){
   const pak = S.pakket;
-  if(pak.prijs===null || pak.prijs===undefined) return null;
+  const pakBedrag = pakPrijs(pak);
+  if(pakBedrag===null || pakBedrag===undefined) return null;
   const opties = extraOpties().map(id => Object.assign(
     { id, naam: CONFIG.opties[id].naam }, optiePrijs(id)));
   const bekend = opties.filter(o => !o.opAanvraag);
   const extra = bekend.reduce((t,o)=> t + o.prijs, 0);
-  const ex = rond(pak.prijs + extra);
+  const ex = rond(pakBedrag + extra);
   if(pak.los && ex === 0) return null;     // enkel diensten op aanvraag
   const besparing = rond(bekend.filter(o=>o.korting).reduce((t,o)=> t + (o.basis - o.prijs), 0));
-  return { pakketNaam: pak.naam, opties, extra, ex, besparing,
-           vanaf: bekend.some(o => o.vanaf),
+  return { pakketNaam: pak.naam, pakBedrag, pakDetail: pakDetail(pak), opties, extra, ex, besparing,
+           vanaf: !!pak.vanaf || bekend.some(o => o.vanaf),
+           vanafPlan: bekend.some(o => o.vanaf),
+           sqft: metSqft() ? S.sqft : null,
            opAanvraag: opties.filter(o => o.opAanvraag).map(o => o.naam),
            inbegrepen: S.opties.filter(id => zitIn(pak,id)).map(id => CONFIG.opties[id].naam),
            voorschot: rond(ex * CONFIG.voorschot) };
@@ -1041,17 +1173,20 @@ function tekenDocument(){
 
     <h4>PACKAGE</h4>
     <p><strong>${esc(pak.naam)}</strong> — ${esc(pak.omschrijving)}
-       ${pak.duur?`<br><span class="small">${esc(pak.duur)}</span>`:''}</p>
+       ${pak.duur?`<br><span class="small">${esc(pak.duur)}</span>`:''}
+       ${metSqft()?`<br><span class="small">Home size: ${esc(sqftLabel(S.sqft))}</span>`:''}</p>
     ${pak.los ? '' : `<p style="margin-top:8px"><strong>What you get</strong></p>
-    <ul>${pak.levert.map(l=>`<li>${esc(l)}</li>`).join('')}</ul>`}
+    <ul>${pakLevert(pak).map(l=>`<li>${esc(l)}</li>`).join('')}</ul>`}
     ${(b && b.opties.length) || (!b && extraOpties().length) ? `<p style="margin-top:8px"><strong>${pak.los?'Services':'Add-ons'}</strong></p>
       <ul>${(b ? b.opties : extraOpties().map(id => Object.assign({naam:CONFIG.opties[id].naam}, optiePrijs(id)))).map(optieRegel).join('')}</ul>` : ''}
     ${b ? `<dl style="margin-top:12px">
-        ${pak.los ? '' : `<dt>${esc(pak.naam)}</dt><dd>${geld(pak.prijs)}</dd>`}
+        ${pak.los ? '' : `<dt>${esc(pak.naam)}${b.pakDetail?' ('+esc(b.pakDetail)+')':''}</dt><dd>${pak.vanaf?'from ':''}${geld(b.pakBedrag)}</dd>`}
         ${b.opties.filter(o=>!o.opAanvraag).map(o=>`<dt>${esc(o.naam)}</dt><dd>${o.vanaf?'from ':''}${geld(o.prijs)}</dd>`).join('')}
       </dl>
       <p class="total">${b.vanaf?'Total from':'Total'}, excluding tax: ${geld(b.ex)}</p>
-      ${b.vanaf ? '<p class="small">Floor plan prices are starting prices. We confirm the final price before the shoot.</p>' : ''}
+      ${b.vanafPlan ? '<p class="small">Floor plan prices are starting prices. We confirm the final price before the shoot.</p>' : ''}
+      ${pak.vanaf ? '<p class="small">This is a starting price. We confirm the final price with you before the shoot.</p>' : ''}
+      ${b.besparing ? `<p class="small">Package discount on add-ons: ${geld(b.besparing)}.</p>` : ''}
       ${b.opAanvraag.length ? `<p class="small">${esc(b.opAanvraag.join(' and '))}: price on request, confirmed before the shoot and not included in the total above.</p>` : ''}
       <p class="small">Deposit on confirmation: ${geld(b.voorschot)}. The balance is due after the shoot.</p>`
     : `<p class="total">Custom price</p>
@@ -1243,7 +1378,8 @@ $('#send').addEventListener('click', async ()=>{
     documentHtml: $('#doc').innerHTML,
     handtekening: handtekeningPng(),
     foto: S.foto,
-    ondertekenaar: naam
+    ondertekenaar: naam,
+    sqft: metSqft() ? S.sqft : null
   };
 
   try{
