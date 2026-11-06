@@ -247,6 +247,10 @@ button.klein:hover{border-color:var(--gold);color:var(--gold)}
 .schuif input[type=range]{width:100%;accent-color:var(--gold);height:22px;cursor:pointer}
 .schuifnote{color:var(--muted);font-size:13px;margin:0 0 18px}
 #pakNa .schuifnote{margin-top:6px}
+.pakwrap .opt{width:100%}
+.vb{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;padding:8px 4px 2px;font-size:13.5px;color:var(--muted)}
+.vb a{color:var(--gold);text-decoration:none;font-weight:500;white-space:nowrap}
+.vb a:hover{text-decoration:underline}
 .opt.uit{opacity:.45;cursor:not-allowed}
 .opt.uit:hover{border-color:var(--line)}
 .adres.us .zip{grid-column:span 1}
@@ -414,6 +418,15 @@ let CONFIG = {
   },
 
   munt: "$",
+
+  // Voorbeelden van werk (Dropbox), gekoppeld aan pakketten via voorbeelden:[...]
+  voorbeelden: {
+    interview: { l:"Interview",         url:"https://www.dropbox.com/scl/fi/vwl0shiaqnisziarzds9f/test.mov?rlkey=dahkso3lb3da6g6oa1mztypxk&st=cqskcb4b&dl=0" },
+    film1:     { l:"Property film",     url:"https://www.dropbox.com/scl/fi/h5dwuqa6ud8ymma0ufxfc/2026-11-06_024123FORCLICKmp4?rlkey=nt2huclq1gf3cx2cj7z7s7jqp&st=mucjhfq1&dl=0" },
+    film2:     { l:"Property film 2",   url:"https://www.dropbox.com/scl/fi/gn99jk7sbrcvk1k556wvh/Iron-MansionFORCLICK.mp4?rlkey=ik0cj3wtr1zeuh7zok8nng8e2&st=83yfaw71&dl=0" },
+    onetake:   { l:"One-take reel",     url:"https://www.dropbox.com/scl/fi/ilofwclkxg3baadj4hmi9/1.mp4?rlkey=vk8pj1r59c8ev9wtpk0paog22&st=40leylca&dl=0" },
+    reel:      { l:"Reel",              url:"https://www.dropbox.com/scl/fi/g7wlvtf55fuhwgzdj1kss/4.mp4?rlkey=u6t2kyuxsjxwmew3apfx7r19q&st=5c4e214c&dl=0" }
+  },
   voorschot: 0.30,       // 30% voorschot bij bevestiging
   addonKorting: 0.20,    // korting op elke add-on die bij een pakket (basis:true) komt
   foto: "optioneel",     // "optioneel", "verplicht" of "uit"
@@ -433,14 +446,15 @@ let CONFIG = {
    geenRetainer:true = geen retainer-vinkje bij dit pakket
    teller      = schuif voor het aantal (prijs x aantal); {n} in levert
    vanaf:true  = "vanaf"-prijs
+   voorbeelden = sleutels uit CONFIG.voorbeelden, getoond als "Watch an example"
    ================================================================ */
   paketten: {
     /* ---------- verhaal ---------- */
-    story: { id:"the-story", naam:"The Story", prijs:1000, basis:true,
+    story: { id:"the-story", naam:"The Story", prijs:1000, basis:true, voorbeelden:["interview"],
       omschrijving:"You tell the story of the home. We bring it to life.",
       levert:["1 main cinematic film: your interview combined with cinematic footage of the home","3 social media reels cut from the same shoot","1 short teaser to announce the listing"],
       opties:["matterport","aerialPhotos","aerialVideoAdd","twilight","detached","plan2d","plan2dKleur","plan3d"] },
-    storyComplete: { id:"the-story-complete", naam:"The Story Complete", prijs:1399, basis:true,
+    storyComplete: { id:"the-story-complete", naam:"The Story Complete", prijs:1399, basis:true, voorbeelden:["interview","film1","film2"],
       sqftToeslag:{ vanaf:3000, per:500, prijs:150 },
       omschrijving:"Everything for the listing in one production.",
       levert:["Everything in The Story","Professional photo reportage of the property, delivered within 24 hours","Aerial drone video of the property and its surroundings"],
@@ -472,7 +486,7 @@ let CONFIG = {
       levert:["35 to 45 interior and exterior photos","Vertical property reel for social media","6 aerial drone photos","2D floor plan","Delivered within 24 hours"],
       inbegrepen:["aerialPhotos","plan2d"],
       opties:["matterport","aerialPhotos","aerialVideoAdd","detached","plan2d","plan2dKleur","plan3d"] },
-    photoPrestige: { id:"photo-prestige", naam:"Prestige Luxury", basis:true, minSqft:4600,
+    photoPrestige: { id:"photo-prestige", naam:"Prestige Luxury", basis:true, minSqft:4600, voorbeelden:["film1","film2"],
       banden:[{tot:4599,p:null},{tot:5499,p:1225},{tot:6499,p:1265},{tot:7499,p:1415},{tot:8499,p:1620},{tot:9499,p:1675},{tot:10499,p:1925}],
       omschrijving:"For luxury homes from 4,600 sq ft.",
       levert:["45+ interior and exterior photos","Cinematic property film","Vertical property reel for social media","Aerial drone photos and video","2D floor plan","Delivered within 24 hours"],
@@ -480,7 +494,7 @@ let CONFIG = {
       opties:["matterport","aerialPhotos","aerialVideoAdd","detached","plan2d","plan2dKleur","plan3d"] },
 
     /* ---------- de agent zelf ---------- */
-    agentReels: { id:"agent-reels", naam:"Agent Reels", duur:"One shoot day", basis:true,
+    agentReels: { id:"agent-reels", naam:"Agent Reels", duur:"One shoot day", basis:true, voorbeelden:["onetake","reel"],
       teller:{ min:8, max:15, prijs:50, label:"Number of reels", eenheid:"reels" },
       omschrijving:"Short one-take reels that promote you as the agent.",
       levert:["{n} one-take reels, filmed in one shoot day","Up to 10 seconds per reel","Made for social media"],
@@ -841,13 +855,15 @@ function tekenPakKaarten(zonderSchuif){
   if(S.pakket && !pakBeschikbaar(S.pakket)) S.pakket = null;
   $('#pakOpts').innerHTML = lijst.map(p=>{
     const uit = !pakBeschikbaar(p);
-    return `<button type="button" class="opt ${uit?'uit':''}" aria-pressed="${!uit && (enkel || S.pakket===p)}"
+    const vb = (p.voorbeelden || []).map(k => (CONFIG.voorbeelden || {})[k]).filter(Boolean);
+    return `<div class="pakwrap"><button type="button" class="opt ${uit?'uit':''}" aria-pressed="${!uit && (enkel || S.pakket===p)}"
       ${uit?'aria-disabled="true"':''} data-pak="${esc(p.id)}">
       <span class="price">${prijsLabel(p)}</span>
       <b>${esc(p.naam)}</b>
       <small>${esc(p.omschrijving)}${p.duur ? ' · ' + esc(p.duur) : ''}</small>
       <ul>${pakLevert(p).map(l=>`<li>${esc(l)}</li>`).join('')}</ul>
-    </button>`;}).join('');
+    </button>${vb.length ? `<div class="vb"><span>Watch an example:</span>${vb.map(v =>
+      `<a href="${esc(v.url)}" target="_blank" rel="noopener">&#9654; ${esc(v.l)}</a>`).join('')}</div>` : ''}</div>`;}).join('');
   if(enkel && pakBeschikbaar(lijst[0])) S.pakket = lijst[0];
   // schuif voor het aantal (Agent Reels) onder de kaarten
   tekenRetainer();
