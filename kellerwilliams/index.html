@@ -274,11 +274,11 @@ button.klein:hover{border-color:var(--gold);color:var(--gold)}
     <div class="brand">SNAP360 × KELLER WILLIAMS</div>
     <h2 id="poortTitel">Welcome</h2>
     <p>Enter your email to explore our packages and prices. We only use it so we know who to follow up with.</p>
-    <div class="field"><label for="poortNaam">Name <span class="hint" style="display:inline">(optional)</span></label>
-      <input type="text" id="poortNaam" autocomplete="name"></div>
+    <div class="field"><label for="poortNaam">Name</label>
+      <input type="text" id="poortNaam" autocomplete="name" placeholder="First and last name" required></div>
     <div class="field"><label for="poortEmail">Email</label>
       <input type="email" id="poortEmail" autocomplete="email" placeholder="name@example.com" required></div>
-    <div class="err" id="poortErr">Please enter a valid email address.</div>
+    <div class="err" id="poortErr">Please enter your name and a valid email address.</div>
     <button type="submit" class="go" style="width:100%">Explore the packages</button>
   </form>
 </div>
@@ -1597,7 +1597,7 @@ function logBezoek(actie, detail){
   if(!L || !bezoeker || !L.endpoint || !L.endpoint.startsWith('http')) return;
   try{
     fetch(L.endpoint, { method:'POST', mode:'no-cors', headers:{'Content-Type':'text/plain;charset=utf-8'},
-      body: JSON.stringify({ email: bezoeker.email, naam: bezoeker.naam, pagina: L.pagina, actie, detail: detail || '' }) })
+      body: JSON.stringify({ email: bezoeker.email, naam: bezoeker.naam, pagina: L.pagina, groep: L.groep || L.pagina, actie, detail: detail || '' }) })
       .catch(()=>{});
   }catch(e){}
 }
@@ -1614,13 +1614,17 @@ function toonPoort(){
   setTimeout(()=>{ const i = $('#poortEmail'); if(i) i.focus(); }, 50);
 }
 if(CONFIG.login && CONFIG.login.endpoint){   // login pas actief zodra het bezoekers-Sheet gekoppeld is
-  try{ const o = JSON.parse(localStorage.getItem(loginSleutel()) || 'null'); if(o && o.email) bezoeker = o; }catch(e){}
+  try{ const o = JSON.parse(localStorage.getItem(loginSleutel()) || 'null'); if(o && o.email && o.naam) bezoeker = o; }catch(e){}
   if(bezoeker){ vulBezoekerIn(); logBezoek('bezoek', 'terug'); }
   else toonPoort();
   $('#poortForm').addEventListener('submit', e=>{
     e.preventDefault();
     const email = $('#poortEmail').value.trim(), naam = $('#poortNaam').value.trim();
-    if(!/^\S+@\S+\.\S+$/.test(email)){ $('#poortErr').classList.add('on'); $('#poortEmail').classList.add('bad'); return; }
+    const naamFout = naam.length < 2, mailFout = !/^\S+@\S+\.\S+$/.test(email);
+    $('#poortNaam').classList.toggle('bad', naamFout);
+    $('#poortEmail').classList.toggle('bad', mailFout);
+    if(naamFout || mailFout){ $('#poortErr').classList.add('on'); return; }
+    $('#poortErr').classList.remove('on');
     bezoeker = { email, naam };
     try{ localStorage.setItem(loginSleutel(), JSON.stringify(bezoeker)); }catch(e){}
     $('#poort').style.display = 'none';
