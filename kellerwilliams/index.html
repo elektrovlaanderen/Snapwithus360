@@ -483,7 +483,7 @@ let CONFIG = {
       upgrade:{ naar:"photoEssentials" },
       omschrijving:"For homes up to 1,500 sq ft.",
       levert:["Up to 15 professional photos","Interior and exterior","Professional post-processing","Same day delivery","Ready for portals and brochures"],
-      opties:["droneUpgrade","matterport","detached","plan2d","plan2dKleur","plan3d"] },
+      opties:["droneUpgrade","shortReel","matterport","detached","plan2d","plan2dKleur","plan3d"] },
     photoBasic: { id:"photo-basic", naam:"Basic", prijs:299, basis:true, maxSqft:2000,
       upgrade:{ naar:"photoSignature" },
       omschrijving:"For homes up to 2,000 sq ft.",
@@ -533,8 +533,11 @@ let CONFIG = {
    vanaf:   "vanaf"-prijs
    vereist: kan enkel samen met die andere add-on (of als die in het pakket zit)
    sqftToeslag: vaste prijs + toeslag per stap boven een oppervlakte (als de sq ft gekend is)
+   vastePrijs: bundelprijs, krijgt geen add-on- of retainerkorting
    ================================================================ */
   opties: {
+    shortReel: { naam:"Short reel (20 sec)", prijs:100, vastePrijs:true,
+      uitleg:"A 20-second vertical reel of the property for social media. Bundle price with Starter: $250 for both." },
     droneUpgrade: { naam:"Add drone photos", upgradeOptie:true,
       uitleg:"Drone photos come with a bigger package. We move you up automatically." },
     matterport: { naam:"Matterport 3D tour",
@@ -799,7 +802,7 @@ function optiePrijs(id){
   const o = CONFIG.opties[id];
   const { basis, detail } = optieBasis(id);
   const opAanvraag = (basis === null || basis === undefined);
-  const pct = addonPct();
+  const pct = o.vastePrijs ? 0 : addonPct();
   const korting = !opAanvraag && pct > 0;
   const prijs = opAanvraag ? null : (korting ? rond(basis * (1 - pct)) : basis);
   return { basis, prijs, korting, pct: Math.round(pct*100), vanaf: !!o.vanaf, opAanvraag, detail };
