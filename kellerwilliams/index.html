@@ -251,6 +251,9 @@ button.klein:hover{border-color:var(--gold);color:var(--gold)}
 .vb{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;padding:8px 4px 2px;font-size:13.5px;color:var(--muted)}
 .vb a{color:var(--gold);text-decoration:none;font-weight:500;white-space:nowrap}
 .vb a:hover{text-decoration:underline}
+.upgradebalk{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;
+  border:1px solid var(--gold);border-radius:var(--r);padding:12px 16px;margin-bottom:12px;font-size:14px;
+  background:rgba(213,148,59,.08)}
 .opt.uit{opacity:.45;cursor:not-allowed}
 .opt.uit:hover{border-color:var(--line)}
 .adres.us .zip{grid-column:span 1}
@@ -441,7 +444,8 @@ let CONFIG = {
    los:true    = enkel losse diensten, klant kiest ze bij de add-ons
    banden      = prijs volgens sq ft: { tot: bovengrens, p: prijs }
                  boven de laatste band = op maat
-   minSqft     = pas beschikbaar vanaf die oppervlakte
+   upgrade     = { naar: pakket } — de add-on "upgradeOptie" zet de klant over naar dat pakket
+   minSqft     = pas beschikbaar vanaf die oppervlakte (minLabel = tekst op de grijze kaart)
    maxSqft     = enkel beschikbaar tot en met die oppervlakte
    sqftToeslag = vaste prijs + toeslag per stap boven een oppervlakte
    geenRetainer:true = geen retainer-vinkje bij dit pakket
@@ -474,26 +478,28 @@ let CONFIG = {
 
     /* ---------- enkel foto's: kleine woningen (prijzen van de website) ---------- */
     photoStarter: { id:"photo-starter", naam:"Starter", prijs:150, basis:true, maxSqft:1000,
+      upgrade:{ naar:"photoEssentials" },
       omschrijving:"For homes up to 1,000 sq ft.",
       levert:["Up to 15 professional photos","Interior and exterior","Professional post-processing","Same day delivery","Ready for portals and brochures"],
-      opties:["matterport","aerialPhotos","aerialVideoAdd","detached","plan2d","plan2dKleur","plan3d"] },
+      opties:["droneUpgrade","matterport","detached","plan2d","plan2dKleur","plan3d"] },
     photoBasic: { id:"photo-basic", naam:"Basic", prijs:299, basis:true, maxSqft:2000,
+      upgrade:{ naar:"photoSignature" },
       omschrijving:"For homes up to 2,000 sq ft.",
       levert:["Up to 30 professional photos","Interior and exterior","Professional post-processing","Same day delivery","Ready for portals and brochures"],
-      opties:["matterport","aerialPhotos","aerialVideoAdd","detached","plan2d","plan2dKleur","plan3d"] },
+      opties:["droneUpgrade","matterport","detached","plan2d","plan2dKleur","plan3d"] },
 
     /* ---------- enkel foto's: vanaf 2,000 sq ft (prijzen volgens Click) ---------- */
-    photoEssentials: { id:"photo-essentials", naam:"Essentials", basis:true, minSqft:2000,
+    photoEssentials: { id:"photo-essentials", naam:"Essentials", basis:true, minSqft:2100, minLabel:"above 2,000 sq ft",
       banden:[{tot:1499,p:240},{tot:2199,p:275},{tot:2999,p:295},{tot:3799,p:335},{tot:4599,p:370},
               {tot:5499,p:410},{tot:6499,p:445},{tot:7499,p:485},{tot:8499,p:540},{tot:9499,p:595},{tot:10499,p:660}],
-      omschrijving:"Everything a listing needs to go live. From 2,000 sq ft.",
+      omschrijving:"Everything a listing needs to go live.",
       levert:["25 to 30 interior and exterior photos","6 aerial drone photos","2D floor plan","Delivered within 24 hours"],
       inbegrepen:["aerialPhotos","plan2d"],
       opties:["matterport","aerialPhotos","aerialVideoAdd","detached","plan2d","plan2dKleur","plan3d"] },
-    photoSignature: { id:"photo-signature", naam:"Signature", basis:true, minSqft:2000,
+    photoSignature: { id:"photo-signature", naam:"Signature", basis:true, minSqft:2100, minLabel:"above 2,000 sq ft",
       banden:[{tot:1499,p:415},{tot:2199,p:460},{tot:2999,p:480},{tot:3799,p:520},{tot:4599,p:555},
               {tot:5499,p:595},{tot:6499,p:630},{tot:7499,p:670},{tot:8499,p:725},{tot:9499,p:780},{tot:10499,p:845}],
-      omschrijving:"More photos, plus a reel for social media. From 2,000 sq ft.",
+      omschrijving:"More photos, plus a reel for social media.",
       levert:["35 to 45 interior and exterior photos","Vertical property reel for social media","6 aerial drone photos","2D floor plan","Delivered within 24 hours"],
       inbegrepen:["aerialPhotos","plan2d"],
       opties:["matterport","aerialPhotos","aerialVideoAdd","detached","plan2d","plan2dKleur","plan3d"] },
@@ -527,6 +533,8 @@ let CONFIG = {
    sqftToeslag: vaste prijs + toeslag per stap boven een oppervlakte (als de sq ft gekend is)
    ================================================================ */
   opties: {
+    droneUpgrade: { naam:"Add drone photos", upgradeOptie:true,
+      uitleg:"Drone photos come with a bigger package. We move you up automatically." },
     matterport: { naam:"Matterport 3D tour",
       uitleg:"A virtual walkthrough buyers can explore on their own. Priced by the home's square footage.",
       banden:[{tot:1999,p:250},{tot:2999,p:300},{tot:3999,p:350},{tot:4999,p:400},{tot:5999,p:450},
@@ -679,7 +687,7 @@ function start(){
    ============================================================ */
 const S = { type:null, situatie:null, pakket:null, klant:{}, antw:{},
             shots:[], ref:maakRef(), foto:null, opties:[], keuze:{},
-            sqft: CONFIG.sqftStart || 2000, teller:{} };
+            sqft: CONFIG.sqftStart || 2000, teller:{}, upgrade:null };
 let stap = 0;
 let volgorde = [0,1,2,3,4,5,6];
 const VAST = { type:false };
@@ -738,7 +746,8 @@ function bandPrijs(banden, sqft){
   return b ? b.p : null;                    // boven de laatste band: op maat
 }
 const pakTeller = p => p.teller ? (S.teller[p.id] || p.teller.min) : null;
-const pakBeschikbaar = p => !(p.minSqft && S.sqft < p.minSqft) && !(p.maxSqft && S.sqft > p.maxSqft);
+const pakBeschikbaar = p => (S.upgrade && S.pakket === p && pakBeschikbaar(S.upgrade.van)) ||
+  (!(p.minSqft && S.sqft < p.minSqft) && !(p.maxSqft && S.sqft > p.maxSqft));
 function pakPrijs(p){
   if(p.teller) return pakTeller(p) * p.teller.prijs;
   if(p.banden) return bandPrijs(p.banden, S.sqft);
@@ -831,14 +840,14 @@ function toonSituaties(){
 }
 $('#sitOpts').addEventListener('click', e => {
   const b = e.target.closest('[data-sit]'); if(!b) return;
-  if(S.situatie !== b.dataset.sit){ S.pakket = null; S.opties = []; S.keuze = {}; }
+  if(S.situatie !== b.dataset.sit){ S.pakket = null; S.opties = []; S.keuze = {}; S.upgrade = null; }
   S.situatie = b.dataset.sit;
   $$('#sitOpts .opt').forEach(o => o.setAttribute('aria-pressed', o===b));
   $('#e1').classList.remove('on');
 });
 
 function prijsLabel(p){
-  if(!pakBeschikbaar(p)) return (p.maxSqft && S.sqft > p.maxSqft) ? `<em>up to ${sqftTekst(p.maxSqft)}</em>` : `<em>from ${sqftTekst(p.minSqft)}</em>`;
+  if(!pakBeschikbaar(p)) return (p.maxSqft && S.sqft > p.maxSqft) ? `<em>up to ${sqftTekst(p.maxSqft)}</em>` : `<em>${p.minLabel || 'from ' + sqftTekst(p.minSqft)}</em>`;
   const pr = pakPrijs(p);
   if(p.los){
     const min = Math.min(...(p.opties || [])
@@ -863,6 +872,7 @@ const sqftLabel = n => n >= sqftMax ? '10,500+ sq ft' : sqftTekst(n);
 function tekenPakKaarten(zonderSchuif){
   const lijst = pakLijst();
   const enkel = lijst.length === 1;
+  if(S.upgrade && !pakBeschikbaar(S.upgrade.van)){ S.upgrade = null; S.pakket = null; }
   if(S.pakket && !pakBeschikbaar(S.pakket)) S.pakket = null;
   $('#pakOpts').innerHTML = lijst.map(p=>{
     const uit = !pakBeschikbaar(p);
@@ -932,7 +942,7 @@ $('#pakOpts').addEventListener('click', e => {
   const nieuw = pakLijst().find(p => p.id === b.dataset.pak);
   if(!pakBeschikbaar(nieuw)) return;
   if(nieuw !== S.pakket){ S.opties = []; S.keuze = {}; }
-  S.pakket = nieuw;
+  S.pakket = nieuw; S.upgrade = null;
   $('#e2').classList.remove('on');
   tekenPakKaarten();
 });
@@ -953,6 +963,15 @@ function toonOpties(){
     const gekozen = S.opties.includes(o.id);
     const inbeg = zitIn(pak, o.id);
     const geblokt = o.vereist && !S.opties.includes(o.vereist) && !zitIn(pak, o.vereist);
+    if(o.upgradeOptie){
+      const doel = pak.upgrade && CONFIG.paketten[pak.upgrade.naar];
+      if(!doel) return '';
+      const verschil = pakPrijs(doel) - pakPrijs(pak);
+      return `<div class="optwrap"><label class="optie">
+        <input type="checkbox" data-o="${esc(o.id)}">
+        <span class="tekst"><b>${esc(o.naam)}</b><small>Moves you up to ${esc(doel.naam)}, with ${esc(doel.levert.slice(0,3).join(', '))}.</small></span>
+        <span class="bedrag">${verschil >= 0 ? '+ ' : '− '}${geld(Math.abs(verschil))}<em>${esc(doel.naam)}</em></span></label></div>`;
+    }
     const pr = optiePrijs(o.id);
     let bedrag;
     if(inbeg) bedrag = '<span class="bedrag inb">included</span>';
@@ -979,10 +998,21 @@ function toonOpties(){
         <span class="tekst"><b>${esc(o.naam)}</b><small>${uitleg}</small></span>
         ${bedrag}</label>${keuze}</div>`;
   }).join('') || '<p class="lead">There are no add-ons for this package.</p>';
-
+  if(S.upgrade){
+    $('#optLijst').insertAdjacentHTML('afterbegin', `<div class="upgradebalk">
+      <span>You added drone photos, so we moved you from ${esc(S.upgrade.van.naam)} to <strong>${esc(pak.naam)}</strong>. Drone photos and a 2D floor plan are included.</span>
+      <button type="button" class="klein" id="upgradeTerug">Back to ${esc(S.upgrade.van.naam)}</button></div>`);
+  }
   tekenTotaal();
 }
 
+$('#optLijst').addEventListener('click', e=>{
+  if(e.target.id !== 'upgradeTerug' || !S.upgrade) return;
+  const van = S.upgrade.van;
+  S.pakket = van; S.upgrade = null;
+  S.opties = S.opties.filter(x => (van.opties || []).includes(x));
+  toonOpties();
+});
 $('#optLijst').addEventListener('input', e=>{
   if(e.target.type !== 'range') return;
   S.sqft = Number(e.target.value);
@@ -998,6 +1028,14 @@ $('#optLijst').addEventListener('change', e=>{
   }
   const cb = e.target.closest('[data-o]'); if(!cb) return;
   const id = cb.dataset.o;
+  if((CONFIG.opties[id] || {}).upgradeOptie && cb.checked){
+    const van = S.pakket, doel = CONFIG.paketten[van.upgrade.naar];
+    S.upgrade = { van };
+    S.pakket = doel;
+    S.opties = S.opties.filter(x => (doel.opties || []).includes(x) && x !== id);
+    $('#e3').classList.remove('on');
+    toonOpties(); return;
+  }
   const i = S.opties.indexOf(id);
   if(cb.checked && i < 0) S.opties.push(id);
   if(!cb.checked && i >= 0){
