@@ -413,6 +413,7 @@ let CONFIG = {
   // Webapp-URL van je Apps Script (zelfde als het Belgische formulier)
   endpoint: "https://script.google.com/macros/s/AKfycbwE7v_hyD1bx9yJnEH4c65PlEiDDqndjF1-eKj5n6R_9TUtiSG1gjlr5lIXoFx5eC8mrg/exec",
   taal: "en",
+  demo: false,          // true = demo: er wordt niets verstuurd
 
   bedrijf: {
     naam:  "DE BACKER LLC — SNAP360",
@@ -1534,6 +1535,13 @@ $('#send').addEventListener('click', async ()=>{
   };
 
   try{
+    if(CONFIG.demo){
+      await new Promise(r=>setTimeout(r,600));
+      $('#doneTxt').innerHTML =
+        `Thank you, ${esc(naam)}. This was a demo, so nothing has been sent or booked.<br><br>` +
+        `Want to book for real? Email us at ${esc(CONFIG.bedrijf.email)} or WhatsApp ${esc(CONFIG.bedrijf.tel)}.`;
+      ga(7); return;
+    }
     if(CONFIG.endpoint.startsWith('http')){
       await fetch(CONFIG.endpoint, {
         method:'POST',
