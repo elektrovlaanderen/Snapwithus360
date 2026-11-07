@@ -488,7 +488,7 @@ let CONFIG = {
       upgrade:{ naar:"photoSignature" },
       omschrijving:"For homes up to 2,000 sq ft.",
       levert:["Up to 30 professional photos","Interior and exterior","Professional post-processing","Same day delivery","Ready for portals and brochures"],
-      opties:["droneUpgrade","matterport","detached","plan2d","plan2dKleur","plan3d"] },
+      opties:["droneUpgrade","shortReel","matterport","detached","plan2d","plan2dKleur","plan3d"] },
 
     /* ---------- enkel foto's: vanaf 2,000 sq ft (prijzen volgens Click) ---------- */
     photoEssentials: { id:"photo-essentials", naam:"Essentials", basis:true, minSqft:2100, minLabel:"above 2,000 sq ft",
@@ -497,7 +497,7 @@ let CONFIG = {
       omschrijving:"Everything a listing needs to go live.",
       levert:["25 to 30 interior and exterior photos","6 aerial drone photos","2D floor plan","Delivered within 24 hours"],
       inbegrepen:["aerialPhotos","plan2d"],
-      opties:["matterport","aerialPhotos","aerialVideoAdd","detached","plan2d","plan2dKleur","plan3d"] },
+      opties:["shortReel","matterport","aerialPhotos","aerialVideoAdd","detached","plan2d","plan2dKleur","plan3d"] },
     photoSignature: { id:"photo-signature", naam:"Signature", basis:true, minSqft:2100, minLabel:"above 2,000 sq ft",
       banden:[{tot:1499,p:415},{tot:2199,p:460},{tot:2999,p:480},{tot:3799,p:520},{tot:4599,p:555},
               {tot:5499,p:595},{tot:6499,p:630},{tot:7499,p:670},{tot:8499,p:725},{tot:9499,p:780},{tot:10499,p:845}],
@@ -537,7 +537,7 @@ let CONFIG = {
    ================================================================ */
   opties: {
     shortReel: { naam:"Short reel (20 sec)", prijs:100, vastePrijs:true,
-      uitleg:"A 20-second vertical reel of the property for social media. Bundle price with Starter: $250 for both." },
+      uitleg:"A 20-second vertical reel of the property for social media, at a bundle price with your photo package." },
     droneUpgrade: { naam:"Add drone photos", upgradeOptie:true,
       uitleg:"Drone photos come with a bigger package. We move you up automatically." },
     matterport: { naam:"Matterport 3D tour",
