@@ -256,6 +256,12 @@ button.klein:hover{border-color:var(--gold);color:var(--gold)}
   background:rgba(213,148,59,.08)}
 .upnote{display:block;margin-top:12px;padding:9px 12px;border-left:3px solid var(--gold);background:rgba(213,148,59,.08);
   font-size:13.5px;color:var(--text);line-height:1.45;border-radius:0 6px 6px 0}
+.poort{position:fixed;inset:0;z-index:50;background:rgba(10,9,8,.92);display:flex;align-items:center;justify-content:center;padding:16px;overflow:auto}
+.poortbox{width:100%;max-width:420px;background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:26px 22px}
+.poortbox h2{margin:8px 0 8px}
+.poortbox p{color:var(--muted);font-size:14.5px;margin:0 0 18px}
+.ingelogd{color:var(--muted);font-size:13px;margin-top:10px}
+.ingelogd button{background:none;border:none;color:var(--gold);cursor:pointer;font:inherit;padding:0;text-decoration:underline}
 .opt.uit{opacity:.45;cursor:not-allowed}
 .opt.uit:hover{border-color:var(--line)}
 .adres.us .zip{grid-column:span 1}
@@ -263,6 +269,19 @@ button.klein:hover{border-color:var(--gold);color:var(--gold)}
 </style>
 </head>
 <body>
+<div class="poort" id="poort" style="display:none" role="dialog" aria-modal="true" aria-labelledby="poortTitel">
+  <form class="poortbox" id="poortForm" novalidate>
+    <div class="brand">SNAP360 × REALTY ONE GROUP</div>
+    <h2 id="poortTitel">Welcome</h2>
+    <p>Enter your email to explore our packages and prices. We only use it so we know who to follow up with.</p>
+    <div class="field"><label for="poortNaam">Name <span class="hint" style="display:inline">(optional)</span></label>
+      <input type="text" id="poortNaam" autocomplete="name"></div>
+    <div class="field"><label for="poortEmail">Email</label>
+      <input type="email" id="poortEmail" autocomplete="email" placeholder="name@example.com" required></div>
+    <div class="err" id="poortErr">Please enter a valid email address.</div>
+    <button type="submit" class="go" style="width:100%">Explore the packages</button>
+  </form>
+</div>
 <div class="wrap">
 
 <header>
@@ -414,6 +433,8 @@ let CONFIG = {
   endpoint: "https://script.google.com/macros/s/AKfycbwE7v_hyD1bx9yJnEH4c65PlEiDDqndjF1-eKj5n6R_9TUtiSG1gjlr5lIXoFx5eC8mrg/exec",
   taal: "en",
   demo: false,          // true = demo: er wordt niets verstuurd
+  // E-mail-login: null = geen login. endpoint = webapp-URL van het bezoekers-Sheet.
+  login: { endpoint:"", pagina:"realtyonegroup" },
 
   bedrijf: {
     naam:  "DE BACKER LLC — SNAP360",
@@ -961,6 +982,7 @@ $('#pakOpts').addEventListener('click', e => {
   if(!pakBeschikbaar(nieuw)) return;
   if(nieuw !== S.pakket){ S.opties = []; S.keuze = {}; }
   S.pakket = nieuw; S.upgrade = null;
+  if(typeof logBezoek === 'function') logBezoek('pakket', nieuw.naam + (metSqft() ? ' · ' + sqftTekst(S.sqft) : ''));
   $('#e2').classList.remove('on');
   tekenPakKaarten();
 });
@@ -1552,6 +1574,7 @@ $('#send').addEventListener('click', async ()=>{
       console.log('Geen endpoint ingesteld. Data:', data);
       await new Promise(r=>setTimeout(r,600));
     }
+    logBezoek('boeking', S.ref + ' · ' + S.pakket.naam);
     $('#doneTxt').innerHTML =
       `Thank you, ${esc(naam)}. Your booking is registered under ${esc(S.ref)}.<br><br>` +
       `The signed booking confirmation has been sent to ${esc(S.klant.email)}. ` +
@@ -1563,6 +1586,55 @@ $('#send').addEventListener('click', async ()=>{
     $('#e6').classList.add('on');
   }
 });
+
+/* ============================================================
+   E-MAIL-LOGIN (enkel als CONFIG.login ingesteld is)
+   ============================================================ */
+let bezoeker = null;
+const loginSleutel = () => 's360_login_' + ((CONFIG.login && CONFIG.login.pagina) || 'pagina');
+function logBezoek(actie, detail){
+  const L = CONFIG.login;
+  if(!L || !bezoeker || !L.endpoint || !L.endpoint.startsWith('http')) return;
+  try{
+    fetch(L.endpoint, { method:'POST', mode:'no-cors', headers:{'Content-Type':'text/plain;charset=utf-8'},
+      body: JSON.stringify({ email: bezoeker.email, naam: bezoeker.naam, pagina: L.pagina, actie, detail: detail || '' }) })
+      .catch(()=>{});
+  }catch(e){}
+}
+function vulBezoekerIn(){
+  if(!bezoeker) return;
+  if(!$('#k_email').value) $('#k_email').value = bezoeker.email;
+  if(bezoeker.naam && !$('#k_naam').value) $('#k_naam').value = bezoeker.naam;
+  let r = $('#ingelogd');
+  if(!r){ r = document.createElement('p'); r.className = 'ingelogd'; r.id = 'ingelogd'; $('header').appendChild(r); }
+  r.innerHTML = `Signed in as ${esc(bezoeker.email)} · <button type="button" id="nietIk">Not you?</button>`;
+}
+function toonPoort(){
+  $('#poort').style.display = 'flex';
+  setTimeout(()=>{ const i = $('#poortEmail'); if(i) i.focus(); }, 50);
+}
+if(CONFIG.login && CONFIG.login.endpoint){   // login pas actief zodra het bezoekers-Sheet gekoppeld is
+  try{ const o = JSON.parse(localStorage.getItem(loginSleutel()) || 'null'); if(o && o.email) bezoeker = o; }catch(e){}
+  if(bezoeker){ vulBezoekerIn(); logBezoek('bezoek', 'terug'); }
+  else toonPoort();
+  $('#poortForm').addEventListener('submit', e=>{
+    e.preventDefault();
+    const email = $('#poortEmail').value.trim(), naam = $('#poortNaam').value.trim();
+    if(!/^\S+@\S+\.\S+$/.test(email)){ $('#poortErr').classList.add('on'); $('#poortEmail').classList.add('bad'); return; }
+    bezoeker = { email, naam };
+    try{ localStorage.setItem(loginSleutel(), JSON.stringify(bezoeker)); }catch(e){}
+    $('#poort').style.display = 'none';
+    vulBezoekerIn();
+    logBezoek('bezoek', 'nieuw');
+  });
+  document.addEventListener('click', e=>{
+    if(e.target.id !== 'nietIk') return;
+    try{ localStorage.removeItem(loginSleutel()); }catch(err){}
+    bezoeker = null; $('#poortEmail').value = ''; $('#poortNaam').value = '';
+    const r = $('#ingelogd'); if(r) r.remove();
+    toonPoort();
+  });
+}
 
 herbereken();
 ga(volgorde[0]);
