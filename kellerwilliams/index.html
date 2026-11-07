@@ -442,6 +442,7 @@ let CONFIG = {
    banden      = prijs volgens sq ft: { tot: bovengrens, p: prijs }
                  boven de laatste band = op maat
    minSqft     = pas beschikbaar vanaf die oppervlakte
+   maxSqft     = enkel beschikbaar tot en met die oppervlakte
    sqftToeslag = vaste prijs + toeslag per stap boven een oppervlakte
    geenRetainer:true = geen retainer-vinkje bij dit pakket
    teller      = schuif voor het aantal (prijs x aantal); {n} in levert
@@ -471,18 +472,28 @@ let CONFIG = {
       levert:["Choose aerial photos, aerial video or both on the next step","Fixed prices, whatever the size of the home"],
       opties:["aerialPhotos","aerialVideoFull","twilight"] },
 
-    /* ---------- enkel foto's (prijzen volgens Click) ---------- */
-    photoEssentials: { id:"photo-essentials", naam:"Essentials", basis:true,
+    /* ---------- enkel foto's: kleine woningen (prijzen van de website) ---------- */
+    photoStarter: { id:"photo-starter", naam:"Starter", prijs:150, basis:true, maxSqft:1000,
+      omschrijving:"For homes up to 1,000 sq ft.",
+      levert:["Up to 15 professional photos","Interior and exterior","Professional post-processing","Same day delivery","Ready for portals and brochures"],
+      opties:["matterport","aerialPhotos","aerialVideoAdd","detached","plan2d","plan2dKleur","plan3d"] },
+    photoBasic: { id:"photo-basic", naam:"Basic", prijs:299, basis:true, maxSqft:2000,
+      omschrijving:"For homes up to 2,000 sq ft.",
+      levert:["Up to 30 professional photos","Interior and exterior","Professional post-processing","Same day delivery","Ready for portals and brochures"],
+      opties:["matterport","aerialPhotos","aerialVideoAdd","detached","plan2d","plan2dKleur","plan3d"] },
+
+    /* ---------- enkel foto's: vanaf 2,000 sq ft (prijzen volgens Click) ---------- */
+    photoEssentials: { id:"photo-essentials", naam:"Essentials", basis:true, minSqft:2000,
       banden:[{tot:1499,p:240},{tot:2199,p:275},{tot:2999,p:295},{tot:3799,p:335},{tot:4599,p:370},
               {tot:5499,p:410},{tot:6499,p:445},{tot:7499,p:485},{tot:8499,p:540},{tot:9499,p:595},{tot:10499,p:660}],
-      omschrijving:"Everything a listing needs to go live.",
+      omschrijving:"Everything a listing needs to go live. From 2,000 sq ft.",
       levert:["25 to 30 interior and exterior photos","6 aerial drone photos","2D floor plan","Delivered within 24 hours"],
       inbegrepen:["aerialPhotos","plan2d"],
       opties:["matterport","aerialPhotos","aerialVideoAdd","detached","plan2d","plan2dKleur","plan3d"] },
-    photoSignature: { id:"photo-signature", naam:"Signature", basis:true,
+    photoSignature: { id:"photo-signature", naam:"Signature", basis:true, minSqft:2000,
       banden:[{tot:1499,p:415},{tot:2199,p:460},{tot:2999,p:480},{tot:3799,p:520},{tot:4599,p:555},
               {tot:5499,p:595},{tot:6499,p:630},{tot:7499,p:670},{tot:8499,p:725},{tot:9499,p:780},{tot:10499,p:845}],
-      omschrijving:"More photos, plus a reel for social media.",
+      omschrijving:"More photos, plus a reel for social media. From 2,000 sq ft.",
       levert:["35 to 45 interior and exterior photos","Vertical property reel for social media","6 aerial drone photos","2D floor plan","Delivered within 24 hours"],
       inbegrepen:["aerialPhotos","plan2d"],
       opties:["matterport","aerialPhotos","aerialVideoAdd","detached","plan2d","plan2dKleur","plan3d"] },
@@ -570,9 +581,9 @@ let CONFIG = {
         photos: {
           label: "Listing photos",
           sub: "Photos only, priced by square footage",
-          lead: "Set the square footage and pick a package. Prices step up in bands, so you always know what you pay.",
+          lead: "Set the square footage and pick a package. Smaller homes start with Starter or Basic. From 2,000 sq ft, prices step up in bands, so you always know what you pay.",
           sqft: true,
-          pakketten: ["photoEssentials","photoSignature","photoPrestige"],
+          pakketten: ["photoStarter","photoBasic","photoEssentials","photoSignature","photoPrestige"],
           suggesties: ["The front of the home","The living room","The kitchen","The primary bedroom","The backyard","The view"],
           vragen: [
             { k:"pandAdres", label:"Property address", type:"adres", verplicht:true },
@@ -727,7 +738,7 @@ function bandPrijs(banden, sqft){
   return b ? b.p : null;                    // boven de laatste band: op maat
 }
 const pakTeller = p => p.teller ? (S.teller[p.id] || p.teller.min) : null;
-const pakBeschikbaar = p => !(p.minSqft && S.sqft < p.minSqft);
+const pakBeschikbaar = p => !(p.minSqft && S.sqft < p.minSqft) && !(p.maxSqft && S.sqft > p.maxSqft);
 function pakPrijs(p){
   if(p.teller) return pakTeller(p) * p.teller.prijs;
   if(p.banden) return bandPrijs(p.banden, S.sqft);
@@ -827,7 +838,7 @@ $('#sitOpts').addEventListener('click', e => {
 });
 
 function prijsLabel(p){
-  if(!pakBeschikbaar(p)) return `<em>from ${sqftTekst(p.minSqft)}</em>`;
+  if(!pakBeschikbaar(p)) return (p.maxSqft && S.sqft > p.maxSqft) ? `<em>up to ${sqftTekst(p.maxSqft)}</em>` : `<em>from ${sqftTekst(p.minSqft)}</em>`;
   const pr = pakPrijs(p);
   if(p.los){
     const min = Math.min(...(p.opties || [])
