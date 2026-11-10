@@ -743,7 +743,7 @@ footer{background:var(--gold);padding:56px 5% 32px}
       <div class="rx-ticks" id="rxTicks" aria-hidden="true"></div>
       <div class="rx-steps"><button class="rx-btn" type="button" id="rxDown" aria-label="One reel fewer">− 1</button><button class="rx-btn" type="button" id="rxUp" aria-label="One reel more">+ 1</button><span class="rx-run">max. <b id="rxRun">1:20</b> of footage · 1 shoot day · 1 location</span></div>
       <ul class="rx-inc"><li>Up to 10 seconds per reel</li><li>Every reel filmed in one continuous take</li><li>Minimum 8 reels, all filmed on 1 shoot day at 1 location</li><li>Script and guidance included</li></ul>
-      <button type="button" class="btn btn-gold rx-cta" id="rxBook">Book and pay deposit →</button>
+            <button type="button" class="btn btn-gold rx-cta" id="rxBook">Book and pay deposit →</button>
       <a href="#contact" class="rx-ask" id="rxCta">Have a question first? Send us a message →</a>
       <a href="/preview/us/social-media/#reels" class="rx-more">Watch examples of one-take reels →</a>
       <form class="rx-form" id="rxForm" hidden novalidate>
@@ -1218,7 +1218,7 @@ const step=d=>{sl.value=Math.min(mx,Math.max(mn,+sl.value+d));draw()};sl.addEven
 const ask=()=>{const n=+sl.value,sel=document.querySelector('#contact select[name="service"]'),ta=document.querySelector('#contact textarea');
 if(sel){[...sel.options].forEach(o=>{if(o.text===OPT)o.selected=true})}if(ta){const line=MSG.replace("{n}",n).replace("{t}",geld(n*P));ta.value=ta.value?line+"\n"+ta.value.replace(/^.*one-take reels.*\n?/,""):line;}};
 $("rxCta").addEventListener("click",ask);
-const cents=v=>Math.round(v);const money=c=>C+(c/100).toLocaleString(C=="$"?"en-US":"nl-BE",{minimumFractionDigits:2,maximumFractionDigits:2});
+if($("rxForm")){const cents=v=>Math.round(v);const money=c=>C+(c/100).toLocaleString(C=="$"?"en-US":"nl-BE",{minimumFractionDigits:2,maximumFractionDigits:2});
 const sums=()=>{const n=+sl.value,sub=n*P*100,tot=cents(sub*(1+CFG.VAT)),dep=cents(tot*.3);$("rxSum").innerHTML=CFG.SUM.replace("{n}",n).replace("{t}",money(tot)).replace("{d}",money(dep));};
 sl.addEventListener("input",sums);$("rxDown").addEventListener("click",sums);$("rxUp").addEventListener("click",sums);sums();
 const d=$("rxDate");const t=new Date();t.setDate(t.getDate()+2);d.min=t.toISOString().slice(0,10);
@@ -1230,7 +1230,7 @@ if(!$("rxTerms").checked){msg.textContent=CFG.T.err_terms;return}
 btn.disabled=true;const old=btn.textContent;btn.textContent=CFG.T.sending;
 try{const res=await fetch(CFG.EP,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({type:"reels",market:CFG.MK,count:+sl.value,date,name,email,phone:v("rxPhone"),business:v("rxBiz"),location:v("rxLoc"),notes:v("rxNotes"),website:v("rxHp"),page:location.pathname,preview:location.pathname.indexOf("/preview/")===0})});
 const out=await res.json().catch(()=>({}));if(!out.ok||!out.url)throw new Error(out.error||"server");location.href=out.url;}
-catch(err){msg.textContent=CFG.T.err_server;btn.disabled=false;btn.textContent=old}});
+catch(err){msg.textContent=CFG.T.err_server;btn.disabled=false;btn.textContent=old}});}
 const rail=$("rxRail");if(!rail)return;const shots=[...rail.querySelectorAll(".rx-shot")];
 const play=f=>{shots.forEach(o=>{if(o!==f){o.querySelector("video").pause();o.classList.add("paused")}});const v=f.querySelector("video");if(f.dataset.stop==="1")return;v.play().then(()=>f.classList.remove("paused")).catch(()=>f.classList.add("paused"))};
 const io=new IntersectionObserver(es=>{const vis=es.filter(e=>e.isIntersecting&&e.intersectionRatio>=.6).map(e=>e.target);if(vis.length)play(vis[0])},{root:rail,threshold:[.6]});
