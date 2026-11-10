@@ -416,6 +416,17 @@ footer{background:var(--gold);padding:56px 5% 32px}
 .hub .choice:nth-child(1){animation-delay:1.75s}.hub .choice:nth-child(2){animation-delay:2.05s}.hub .choice:nth-child(3){animation-delay:2.35s}
 .choice:hover{transform:none;translate:0 -4px}
 .choice{transition:translate .25s,border-color .25s}
+.hub .hero-vline{display:none}
+.hero.hub{padding-top:110px;padding-bottom:30px}
+@media(max-width:900px){.hero.hub{padding-top:96px}}
+@media(max-width:900px){.hero-vline{display:none}}
+.hub .hero-inner{margin:0 auto;text-align:center}
+.hub .hero-eyebrow{justify-content:center}
+.hub .hero-eyebrow::after{content:'';width:28px;height:1px;background:var(--gold)}
+.hub .logo-anim{margin-left:auto;margin-right:auto}
+.hub .logo-words{justify-content:center}
+.hub .choice{align-items:center;text-align:center}
+.hub .choice-go{align-self:center}
 @media(prefers-reduced-motion:reduce){.la-snap,.la-tag{clip-path:none;animation:none}.la-360,.logo-words span,.logo-words i,.hub .choice,.hub .choice-q,.hub .choice-hint{opacity:1;transform:none;animation:none}}
 
 </style>
