@@ -409,7 +409,7 @@ footer{background:var(--gold);padding:56px 5% 32px}
 .logo-words>*:nth-child(3){animation-delay:2.05s}.logo-words>*:nth-child(4){animation-delay:2.25s}
 .logo-words>*:nth-child(5){animation-delay:2.35s}
 @keyframes lwIn{to{opacity:1;transform:none}}
-@media(max-width:600px){.logo-words{font-size:clamp(15px,4.8vw,21px);gap:6px 8px;flex-wrap:nowrap;margin-bottom:26px}.logo-anim{width:min(78vw,340px)}}
+@media(max-width:600px){.logo-words{font-size:clamp(13px,var(--lw,4.8vw),21px);gap:6px 8px;flex-wrap:nowrap;margin-bottom:26px}.logo-anim{width:min(78vw,340px)}}
 .hub .choice-q,.hub .choice-hint{animation-delay:1.5s}
 .hub .choice-grid{opacity:1;animation:none}
 .hub .choice{opacity:0;animation:fuUp .6s ease-out forwards}
@@ -429,6 +429,13 @@ footer{background:var(--gold);padding:56px 5% 32px}
 .hub .choice-go{align-self:center}
 @media(prefers-reduced-motion:reduce){.la-snap,.la-tag{clip-path:none;animation:none}.la-360,.logo-words span,.logo-words i,.hub .choice,.hub .choice-q,.hub .choice-hint{opacity:1;transform:none;animation:none}}
 
+.hero-sm .hero-vline{display:none}
+.hero-sm .hero-inner{margin:0 auto;text-align:center}
+.hero-sm .hero-eyebrow{justify-content:center}
+.hero-sm .hero-eyebrow::after{content:'';width:28px;height:1px;background:var(--gold)}
+.hero-sm .hero-desc{margin-left:auto;margin-right:auto}
+.hero-sm .hero-btns{justify-content:center}
+.logo-words span{white-space:nowrap}
 </style>
 </head>
 <body>
@@ -580,7 +587,7 @@ footer{background:var(--gold);padding:56px 5% 32px}
   </div>
   <div class="footer-bottom">
     <span class="footer-copy">© 2025 SNAPWITHUS360.com — DE BACKER LLC. Alle rechten voorbehouden.</span>
-    <div class="footer-legal"><a href="/us/">🇺🇸 USA</a><a href="#">Privacybeleid</a><a href="#">Algemene voorwaarden</a></div>
+    <div class="footer-legal"><a href="/preview/us/">🇺🇸 USA</a><a href="#">Privacybeleid</a><a href="#">Algemene voorwaarden</a></div>
   </div>
 </footer>
 
@@ -726,6 +733,6 @@ document.querySelectorAll('.gallery-item').forEach((el, i) => {
 </div>
 
 <script>document.querySelectorAll(".choice").forEach((c,i)=>{const w=document.querySelectorAll(".logo-words span")[i];if(!w)return;c.addEventListener("mouseenter",()=>w.classList.add("on"));c.addEventListener("mouseleave",()=>w.classList.remove("on"))})</script>
-<a href="/be/" style="position:fixed;left:12px;bottom:12px;z-index:9999;background:#DD9A3E;color:#000;font:700 11px/1 sans-serif;letter-spacing:.12em;text-transform:uppercase;padding:9px 12px;border-radius:3px;text-decoration:none;box-shadow:0 2px 10px rgba(0,0,0,.4)" title="Terug naar de huidige site">Testversie</a>
+<a href="/" style="position:fixed;left:12px;bottom:12px;z-index:9999;background:#DD9A3E;color:#000;font:700 11px/1 sans-serif;letter-spacing:.12em;text-transform:uppercase;padding:9px 12px;border-radius:3px;text-decoration:none;box-shadow:0 2px 10px rgba(0,0,0,.4)" title="Terug naar de huidige site">Testversie</a>
 </body>
 </html>
