@@ -481,6 +481,7 @@ footer{background:var(--gold);padding:56px 5% 32px}
 .hero-sm .hero-desc{margin-left:auto;margin-right:auto}
 .hero-sm .hero-btns{justify-content:center}
 .logo-words span{white-space:nowrap}
+.pkg-from{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;margin-right:4px;color:var(--muted-l)}.pkg-featured .pkg-from{color:rgba(255,255,255,.7)}
 </style>
 </head>
 <body>
@@ -500,8 +501,8 @@ footer{background:var(--gold);padding:56px 5% 32px}
         <div class="nav-dropdown-label">Packages</div>
         <a href="/preview/us/real-estate/#packages">Starter – $150</a>
         <a href="/preview/us/real-estate/#packages">Basic – $299</a>
-        <a href="/preview/us/real-estate/#packages">Pro – $499 ★</a>
-        <a href="/preview/us/real-estate/#packages">Full – $799</a>
+        <a href="/preview/us/real-estate/#packages">Pro – from $499 ★</a>
+        <a href="/preview/us/real-estate/#packages">Full – from $799</a>
       </div>
     </div>
     
@@ -581,7 +582,7 @@ footer{background:var(--gold);padding:56px 5% 32px}
         <li><span class="pkg-check"><svg viewBox="0 0 12 12"><polyline points="2 6 5 9 10 3"/></svg></span>Ready for portals &amp; brochures</li>
       </ul>
       <a href="#contact" class="btn btn-black" style="text-align:center;width:100%">Book Starter</a>
-      <p class="pkg-note">Best for properties up to 1,000 sq ft</p>
+      <p class="pkg-note">Best for homes up to 1,500 sq ft</p>
     </div>
 
     <!-- BASIC -->
@@ -599,7 +600,7 @@ footer{background:var(--gold);padding:56px 5% 32px}
         <li><span class="pkg-check"><svg viewBox="0 0 12 12"><polyline points="2 6 5 9 10 3"/></svg></span>Ready for portals &amp; brochures</li>
       </ul>
       <a href="#contact" class="btn btn-black" style="text-align:center;width:100%">Book Basic</a>
-      <p class="pkg-note">Best for properties 1,000 – 2,000 sq ft</p>
+      <p class="pkg-note">Best for homes up to 2,000 sq ft</p>
     </div>
 
     <!-- PRO — featured -->
@@ -607,8 +608,8 @@ footer{background:var(--gold);padding:56px 5% 32px}
       <div class="pkg-badge">Most popular</div>
       <div class="pkg-tier">Pro</div>
       <div class="pkg-name">Visibility</div>
-      <div class="pkg-price"><span class="pkg-currency">$</span><span class="pkg-amount">499</span></div>
-      <div class="pkg-vat">excl. tax · per property</div>
+      <div class="pkg-price"><span class="pkg-from">from</span><span class="pkg-currency">$</span><span class="pkg-amount">499</span></div>
+      <div class="pkg-vat">excl. tax · priced by square footage</div>
       <div class="pkg-divider"></div>
       <ul class="pkg-features">
         <li><span class="pkg-check"><svg viewBox="0 0 12 12"><polyline points="2 6 5 9 10 3"/></svg></span>Up to 50 professional photos</li>
@@ -619,15 +620,15 @@ footer{background:var(--gold);padding:56px 5% 32px}
         <li><span class="pkg-check"><svg viewBox="0 0 12 12"><polyline points="2 6 5 9 10 3"/></svg></span>Ready for all channels</li>
       </ul>
       <a href="#contact" class="btn btn-gold" style="text-align:center;width:100%">Book Pro</a>
-      <p class="pkg-note">Best for properties 2,000 – 4,000 sq ft</p>
+      <p class="pkg-note">For homes above 2,000 sq ft</p>
     </div>
 
     <!-- FULL -->
     <div class="pkg">
       <div class="pkg-tier">Full</div>
       <div class="pkg-name">All-In</div>
-      <div class="pkg-price"><span class="pkg-currency">$</span><span class="pkg-amount">799</span></div>
-      <div class="pkg-vat">excl. tax · per property</div>
+      <div class="pkg-price"><span class="pkg-from">from</span><span class="pkg-currency">$</span><span class="pkg-amount">799</span></div>
+      <div class="pkg-vat">excl. tax · priced by square footage</div>
       <div class="pkg-divider"></div>
       <ul class="pkg-features">
         <li><span class="pkg-check"><svg viewBox="0 0 12 12"><polyline points="2 6 5 9 10 3"/></svg></span>Everything in Pro</li>
@@ -638,12 +639,12 @@ footer{background:var(--gold);padding:56px 5% 32px}
         <li><span class="pkg-check"><svg viewBox="0 0 12 12"><polyline points="2 6 5 9 10 3"/></svg></span>Personal guidance</li>
       </ul>
       <a href="#contact" class="btn btn-black" style="text-align:center;width:100%">Book All-In</a>
-      <p class="pkg-note">Best for 4,000+ sq ft, luxury &amp; commercial</p>
+      <p class="pkg-note">Luxury homes &amp; commercial</p>
     </div>
 
   </div>
   </div>
-  <p style="text-align:center;margin-top:20px;font-size:13px;color:var(--muted-l)">Need a custom quote? <a href="#contact" style="color:var(--gold-dark);font-weight:600;text-decoration:none">Contact us for a tailored proposal →</a></p>
+  <p style="text-align:center;margin-top:20px;font-size:13px;color:var(--muted-l)">Pro and All-In are priced by the size of the home; you get the exact price with your quote. Need something else? <a href="#contact" style="color:var(--gold-dark);font-weight:600;text-decoration:none">Contact us for a tailored proposal →</a></p>
 </div>
 
 <!-- SPORT -->
@@ -775,7 +776,7 @@ Henderson, NV 89012, USA</div></div></div>
           <div class="fg"><label>Category</label>
             <select name="service">
               <option value="">Choose a service...</option>
-              <optgroup label="Real Estate"><option>Starter – Essentials ($150)</option><option>Basic – Comfort ($299)</option><option>Pro – Visibility ($499)</option><option>Full – All-In ($799)</option><option>Custom / quote</option></optgroup>
+              <optgroup label="Real Estate"><option>Starter – Essentials ($150)</option><option>Basic – Comfort ($299)</option><option>Pro – Visibility (from $499)</option><option>Full – All-In (from $799)</option><option>Custom / quote</option></optgroup>
               <optgroup label="Sport & Media"><option>Sport Portraits</option><option>Social Media Production</option><option>Monthly Content Package</option></optgroup>
             </select>
           </div>
