@@ -924,7 +924,7 @@ function closeJob(e) {
   </div>
 </div>
 
-<script>(function(){const EP="",T=["Thank you!", "Thanks for <br><span class=\"g\">your booking.</span>", "Checking your payment…", "Your deposit is paid. We'll confirm your shoot day as soon as possible; you'll also get an email.", "We haven't received your payment yet. Did you see an error? Please get in touch.", "Booking", "Service", "reels", "Preferred shoot day", "Deposit paid", "Total", "Back to the site"];const sid=new URLSearchParams(location.search).get("session_id"),msg=document.getElementById("tyMsg"),box=document.getElementById("tyBox");
+<script>(function(){const EP="https://script.google.com/macros/s/AKfycbwPU1uT9DAzCknY5xmg5aRO_Nl6_I_ePAhxAuF1V6z08aWRocv9xZ4cKn8BRGMew0VT/exec",T=["Thank you!", "Thanks for <br><span class=\"g\">your booking.</span>", "Checking your payment…", "Your deposit is paid. We'll confirm your shoot day as soon as possible; you'll also get an email.", "We haven't received your payment yet. Did you see an error? Please get in touch.", "Booking", "Service", "reels", "Preferred shoot day", "Deposit paid", "Total", "Back to the site"];const sid=new URLSearchParams(location.search).get("session_id"),msg=document.getElementById("tyMsg"),box=document.getElementById("tyBox");
 if(!EP||!sid){msg.textContent=T[3];return}
 fetch(EP+"?action=confirm&session_id="+encodeURIComponent(sid)).then(r=>r.json()).then(o=>{
 if(o&&o.ok&&o.paid){msg.textContent=T[3];const row=(k,v)=>"<div><b>"+k+":</b> "+String(v).replace(/[<>&]/g,"")+"</div>";
