@@ -436,6 +436,59 @@ footer{background:var(--gold);padding:56px 5% 32px}
 .hero-sm .hero-desc{margin-left:auto;margin-right:auto}
 .hero-sm .hero-btns{justify-content:center}
 .logo-words span{white-space:nowrap}
+/* ---- begeleiding ---- */
+.gd{background:var(--gray)}
+.gd-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-top:8px}
+.gd-step{background:var(--white);padding:34px 28px;border-top:3px solid var(--gold)}
+.gd-step span{font-family:'Bebas Neue',sans-serif;font-size:40px;color:var(--gold);line-height:1;display:block;margin-bottom:14px}
+.gd-step h4{font-size:16px;font-weight:700;letter-spacing:.02em;margin-bottom:8px;color:var(--black)}
+.gd-step p{font-size:14px;line-height:1.75;color:var(--muted-l);font-weight:300}
+@media(max-width:820px){.gd-grid{grid-template-columns:1fr}}
+/* ---- one-take reels ---- */
+.rx{background:#0A0A0A}
+.rx-grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:18px;align-items:start}
+.rx-grid.solo{grid-template-columns:minmax(0,760px)}
+.rx-pane{background:#141210;border:1px solid #1f1c19;border-radius:12px;padding:28px;min-width:0}
+.rx-figs{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap}
+.rx-figs>div{display:grid;gap:6px}
+.rx-big{font-family:'Bebas Neue',sans-serif;font-size:clamp(56px,7vw,84px);line-height:.85;color:#fff;font-variant-numeric:tabular-nums}
+.rx-money{text-align:right;justify-items:end}
+.rx-money .rx-big{color:var(--gold)}
+.rx-lab{font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.45)}
+.rx-rate{font-size:13px;color:rgba(255,255,255,.6)}
+.rx-strip-wrap{position:relative;margin-top:28px}
+.rx-strip{position:relative;display:grid;gap:4px;height:84px;padding:16px 6px;border-radius:8px;background:#0e0d0b;border:1px solid #2a2621}
+.rx-strip::before,.rx-strip::after{content:'';position:absolute;left:10px;right:10px;height:5px;background:repeating-linear-gradient(90deg,#2a2621 0 9px,transparent 9px 18px);border-radius:2px}
+.rx-strip::before{top:5px}.rx-strip::after{bottom:5px}
+.rx-frame{border-radius:3px;background:rgba(255,255,255,.04);transition:background .18s}
+.rx-frame.on{background:rgba(221,154,62,.18);box-shadow:inset 0 0 0 1px rgba(221,154,62,.4)}
+.rx-play{position:absolute;top:-10px;bottom:-10px;width:2px;background:var(--gold);transform:translateX(-1px);transition:left .2s cubic-bezier(.2,.8,.2,1);pointer-events:none}
+.rx-play::before{content:'';position:absolute;top:-2px;left:50%;margin-left:-6px;border-style:solid;border-width:8px 6px 0 6px;border-color:var(--gold) transparent transparent transparent}
+.rx-strip-wrap input[type=range]{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;cursor:ew-resize;-webkit-appearance:none;appearance:none;z-index:2}
+.rx-strip-wrap input[type=range]:focus-visible+.rx-strip{outline:2px solid var(--gold);outline-offset:3px}
+.rx-ticks{display:grid;gap:4px;margin-top:10px;padding:0 6px;font-size:11px;color:rgba(255,255,255,.35);font-variant-numeric:tabular-nums}
+.rx-ticks span{text-align:center}.rx-ticks span.now{color:#fff;font-weight:700}
+.rx-steps{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:18px}
+.rx-btn{min-width:64px;min-height:40px;padding:8px 14px;border:1px solid #2a2621;border-radius:999px;background:rgba(255,255,255,.05);color:#fff;font:600 13px 'Outfit',sans-serif;cursor:pointer}
+.rx-btn:hover:not(:disabled){background:rgba(255,255,255,.1)}
+.rx-btn:disabled{opacity:.35;cursor:not-allowed}
+.rx-run{font-size:12px;color:rgba(255,255,255,.55);margin-left:auto}
+.rx-run b{color:#fff;font-weight:600;font-variant-numeric:tabular-nums}
+.rx-inc{list-style:none;display:grid;gap:10px;margin:24px 0 26px;padding:0}
+.rx-inc li{font-size:14px;color:rgba(255,255,255,.78);padding-left:22px;position:relative;font-weight:300}
+.rx-inc li::before{content:'';position:absolute;left:0;top:.55em;width:10px;height:10px;border-radius:50%;background:rgba(221,154,62,.25);box-shadow:inset 0 0 0 2px var(--gold)}
+.rx-cta{display:block;text-align:center}
+.rx-more{display:block;margin-top:14px;font-size:13px;color:var(--gold);text-decoration:none;text-align:center}
+.rx-rail{display:grid;grid-auto-flow:column;grid-auto-columns:min(62%,240px);gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding-bottom:4px}
+.rx-rail::-webkit-scrollbar{display:none}
+.rx-shot{position:relative;margin:0;aspect-ratio:9/16;border-radius:10px;overflow:hidden;background:#000;scroll-snap-align:start;cursor:pointer}
+.rx-shot video{width:100%;height:100%;object-fit:cover;display:block}
+.rx-shot::after{content:'';position:absolute;inset:auto 0 0 0;height:30%;background:linear-gradient(to top,rgba(0,0,0,.55),transparent);pointer-events:none}
+.rx-shot .rx-snd{position:absolute;right:10px;bottom:10px;z-index:2;width:34px;height:34px;border-radius:50%;border:0;background:rgba(0,0,0,.55);color:#fff;font-size:14px;cursor:pointer}
+.rx-shot.paused::before{content:'▶';position:absolute;inset:0;display:grid;place-items:center;color:#fff;font-size:34px;z-index:2;background:rgba(0,0,0,.25)}
+.rx-nav{display:flex;gap:10px;margin-top:14px}
+.rx-note{font-size:12px;color:rgba(255,255,255,.45);margin-top:10px}
+@media(max-width:900px){.rx-grid{grid-template-columns:minmax(0,1fr)}.rx-pane{padding:22px}.rx-run{margin-left:0;width:100%}}
 </style>
 </head>
 <body>
@@ -627,6 +680,31 @@ footer{background:var(--gold);padding:56px 5% 32px}
 
 
 <!-- PORTFOLIO -->
+<section id="begeleiding" class="on-white sec gd">
+  <div class="section-label rv">Volledige begeleiding</div>
+  <h2 class="sec-h rv d1">Wij begeleiden je <em>van A tot Z</em></h2>
+  <p class="sec-sub rv d2">Je hoeft geen ervaring te hebben voor de camera. We schrijven het script mee en staan naast je op de draaidag.</p>
+  <div class="gd-grid rv d2"><div class="gd-step"><span>01</span><h4>Script</h4><p>We bespreken je verhaal en schrijven samen het script en de shotlijst.</p></div><div class="gd-step"><span>02</span><h4>Voorbereiding</h4><p>We plannen de draaidag, de locatie en alles wat zeker in beeld moet.</p></div><div class="gd-step"><span>03</span><h4>Begeleiding op de set</h4><p>Volledige regie op de dag zelf: we zeggen je wat je doet en zegt, take per take.</p></div></div>
+</section>
+
+<section id="reels" class="on-black sec rx">
+  <div class="section-label rv">One-take reels</div>
+  <h2 class="sec-h rv d1" style="color:#fff">Korte reels, <em>één draaidag</em></h2>
+  <p class="sec-sub rv d2">Reels van maximaal 10 seconden, elk in één take gefilmd in je zaak. Kies vanaf 8 reels: we filmen ze allemaal op één dag en op één locatie.</p>
+  <div class="rx-grid"><div class="rx-pane">
+      <div class="rx-figs" aria-live="polite"><div><span class="rx-big" id="rxCount">8</span><span class="rx-lab">Reels</span></div>
+        <div class="rx-money"><span class="rx-big" id="rxTotal"></span><span class="rx-rate"><b id="rxRate"></b> per reel · excl. btw</span></div></div>
+      <div class="rx-strip-wrap"><input type="range" id="rxSlider" min="8" max="15" step="1" value="8" aria-label="Aantal reels"><div class="rx-strip" id="rxStrip" aria-hidden="true"></div><div class="rx-play" id="rxPlay" aria-hidden="true"></div></div>
+      <div class="rx-ticks" id="rxTicks" aria-hidden="true"></div>
+      <div class="rx-steps"><button class="rx-btn" type="button" id="rxDown" aria-label="Eén reel minder">− 1</button><button class="rx-btn" type="button" id="rxUp" aria-label="Eén reel meer">+ 1</button><span class="rx-run">max. <b id="rxRun">1:20</b> beeld · 1 draaidag · 1 locatie</span></div>
+      <ul class="rx-inc"><li>Maximaal 10 seconden per reel</li><li>Elke reel in één take gefilmd</li><li>Minimum 8 reels, allemaal op 1 draaidag en 1 locatie</li><li>Script en begeleiding inbegrepen</li></ul>
+      <a href="#contact" class="btn btn-gold rx-cta" id="rxCta">Vraag deze reels aan →</a>
+      
+    </div><div class="rx-pane"><p class="rx-lab" style="margin-bottom:14px">Voorbeelden</p><div class="rx-rail" id="rxRail"><figure class="rx-shot paused"><video muted playsinline loop preload="none" poster="/Assets/reels/poster-1.jpg" src="/reels/examples/1.mp4"></video><button class="rx-snd" type="button" aria-label="Sound">🔇</button></figure><figure class="rx-shot paused"><video muted playsinline loop preload="none" poster="/Assets/reels/poster-2.jpg" src="/reels/examples/2.mp4"></video><button class="rx-snd" type="button" aria-label="Sound">🔇</button></figure><figure class="rx-shot paused"><video muted playsinline loop preload="none" poster="/Assets/reels/poster-3.jpg" src="/reels/examples/3.mp4"></video><button class="rx-snd" type="button" aria-label="Sound">🔇</button></figure><figure class="rx-shot paused"><video muted playsinline loop preload="none" poster="/Assets/reels/poster-4.jpg" src="/reels/examples/4.mp4"></video><button class="rx-snd" type="button" aria-label="Sound">🔇</button></figure><figure class="rx-shot paused"><video muted playsinline loop preload="none" poster="/Assets/reels/poster-5.jpg" src="/reels/examples/5.mp4"></video><button class="rx-snd" type="button" aria-label="Sound">🔇</button></figure></div>
+      <div class="rx-nav"><button class="rx-btn" type="button" id="rxPrev" aria-label="Vorige reel">←</button><button class="rx-btn" type="button" id="rxNext" aria-label="Volgende reel">→</button></div>
+      <p class="rx-note">Tik op een reel om te pauzeren of af te spelen. Tik op het luidsprekertje voor geluid.</p></div></div>
+</section>
+
 <section id="contact" class="on-black sec" style="background:var(--black)">
   <div class="section-label rv on-black">Neem contact op</div>
   <h2 class="sec-h rv d1">Start jouw <em>project</em></h2>
@@ -660,7 +738,7 @@ footer{background:var(--gold);padding:56px 5% 32px}
             <select name="service">
               <option value="">Kies een service...</option>
               <optgroup label="Vastgoed"><option>Starter – Essentials (€150)</option><option>Basic – Comfort (€299)</option><option>Pro – Visibility (€499)</option><option>Full – All-In (€799)</option><option>Op maat / offerte</option></optgroup>
-              <optgroup label="Sport & Media"><option>Sportportretten</option><option selected>Social Media Production</option><option>Monthly Content Pakket</option></optgroup>
+              <optgroup label="Sport & Media"><option>Sportportretten</option><option selected>Social Media Production</option><option>One-take reels</option><option>Monthly Content Pakket</option></optgroup>
             </select>
           </div>
         </div>
@@ -831,6 +909,25 @@ document.querySelectorAll('.gallery-item').forEach((el, i) => {
   <div class="lb-caption" id="lb-caption"></div>
 </div>
 
+<script>(function(){const P=40,C="\u20ac",MSG="Ik wil graag {n} one-take reels ({t} excl. btw).",OPT="One-take reels";
+const $=id=>document.getElementById(id);const sl=$("rxSlider");if(!sl)return;const mn=+sl.min,mx=+sl.max,N=[];for(let n=mn;n<=mx;n++)N.push(n);
+const cols="repeat("+N.length+",minmax(0,1fr))";$("rxStrip").style.gridTemplateColumns=cols;$("rxTicks").style.gridTemplateColumns=cols;
+$("rxStrip").innerHTML=N.map(()=>'<div class="rx-frame"></div>').join("");$("rxTicks").innerHTML=N.map(n=>"<span>"+n+"</span>").join("");
+const fr=[...$("rxStrip").children],tk=[...$("rxTicks").children];const geld=v=>C+v.toLocaleString(C=="$"?"en-US":"nl-BE");
+function draw(){const n=+sl.value,i=N.indexOf(n),s=n*10;$("rxCount").textContent=n;$("rxTotal").textContent=geld(n*P);$("rxRate").textContent=geld(P);
+$("rxRun").textContent=Math.floor(s/60)+":"+String(s%60).padStart(2,"0");fr.forEach((f,j)=>f.classList.toggle("on",j<=i));tk.forEach((t,j)=>t.classList.toggle("now",j===i));
+$("rxPlay").style.left="calc(6px + "+((i+.5)/N.length)+" * (100% - 12px))";$("rxDown").disabled=n<=mn;$("rxUp").disabled=n>=mx;}
+const step=d=>{sl.value=Math.min(mx,Math.max(mn,+sl.value+d));draw()};sl.addEventListener("input",draw);$("rxDown").onclick=()=>step(-1);$("rxUp").onclick=()=>step(1);draw();
+$("rxCta").addEventListener("click",()=>{const n=+sl.value,sel=document.querySelector('#contact select[name="service"]'),ta=document.querySelector('#contact textarea');
+if(sel){[...sel.options].forEach(o=>{if(o.text===OPT)o.selected=true})}if(ta){const line=MSG.replace("{n}",n).replace("{t}",geld(n*P));ta.value=ta.value?line+"\n"+ta.value.replace(/^.*one-take reels.*\n?/,""):line;}});
+const rail=$("rxRail");if(!rail)return;const shots=[...rail.querySelectorAll(".rx-shot")];
+const play=f=>{shots.forEach(o=>{if(o!==f){o.querySelector("video").pause();o.classList.add("paused")}});const v=f.querySelector("video");if(f.dataset.stop==="1")return;v.play().then(()=>f.classList.remove("paused")).catch(()=>f.classList.add("paused"))};
+const io=new IntersectionObserver(es=>{const vis=es.filter(e=>e.isIntersecting&&e.intersectionRatio>=.6).map(e=>e.target);if(vis.length)play(vis[0])},{root:rail,threshold:[.6]});
+const outer=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){shots.forEach(s=>io.observe(s))}else{io.disconnect();shots.forEach(s=>{s.querySelector("video").pause();s.classList.add("paused")})}})},{threshold:.25});outer.observe(rail);
+shots.forEach(f=>{const v=f.querySelector("video");f.addEventListener("click",e=>{if(e.target.closest(".rx-snd"))return;if(v.paused){f.dataset.stop="";play(f)}else{v.pause();f.dataset.stop="1";f.classList.add("paused")}});
+f.querySelector(".rx-snd").addEventListener("click",()=>{const on=v.muted;shots.forEach(o=>{o.querySelector("video").muted=true;o.querySelector(".rx-snd").textContent="🔇"});v.muted=!on;f.querySelector(".rx-snd").textContent=on?"🔊":"🔇";f.dataset.stop="";play(f)})});
+const by=d=>rail.scrollBy({left:d*(shots[0].getBoundingClientRect().width+12),behavior:"smooth"});$("rxPrev").onclick=()=>by(-1);$("rxNext").onclick=()=>by(1);
+})();</script>
 <a href="/" style="position:fixed;left:12px;bottom:12px;z-index:9999;background:#DD9A3E;color:#000;font:700 11px/1 sans-serif;letter-spacing:.12em;text-transform:uppercase;padding:9px 12px;border-radius:3px;text-decoration:none;box-shadow:0 2px 10px rgba(0,0,0,.4)" title="Terug naar de huidige site">Testversie</a>
 </body>
 </html>
