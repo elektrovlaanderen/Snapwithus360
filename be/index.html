@@ -492,6 +492,30 @@ footer{background:var(--gold);padding:56px 5% 32px}
 .rx-nav{display:flex;gap:10px;margin-top:14px}
 .rx-note{font-size:12px;color:rgba(255,255,255,.45);margin-top:10px}
 @media(max-width:900px){.rx-grid{grid-template-columns:minmax(0,1fr)}.rx-pane{padding:22px}.rx-run{margin-left:0;width:100%}}
+/* ---- boeken + voorschot ---- */
+.rx-ask{display:block;margin-top:12px;font-size:13px;color:rgba(255,255,255,.6);text-decoration:none;text-align:center}
+.rx-ask:hover{color:var(--gold)}
+.rx-form{margin-top:22px;border-top:1px solid #2a2621;padding-top:22px;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.rx-form[hidden]{display:none}
+.rx-sum{grid-column:1/-1;background:#0e0d0b;border:1px solid #2a2621;border-radius:8px;padding:14px 16px;font-size:14px;color:rgba(255,255,255,.8);line-height:1.7}
+.rx-sum b{color:#fff}.rx-sum .dep{color:var(--gold);font-weight:700}
+.rx-f{display:grid;gap:6px;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.5)}
+.rx-f.wide{grid-column:1/-1}
+.rx-f input,.rx-f textarea{background:#0e0d0b;border:1px solid #2a2621;border-radius:6px;color:#fff;padding:11px 12px;font:400 14px 'Outfit',sans-serif;letter-spacing:0;text-transform:none;color-scheme:dark}
+.rx-f input:focus,.rx-f textarea:focus{outline:none;border-color:var(--gold)}
+.rx-f textarea{min-height:80px;resize:vertical}
+.rx-check{grid-column:1/-1;display:flex;gap:10px;align-items:flex-start;font-size:13px;color:rgba(255,255,255,.7);line-height:1.6}
+.rx-check input{margin-top:4px;accent-color:#DD9A3E}
+.rx-pay{grid-column:1/-1;text-align:center;border:0;cursor:pointer}
+.rx-pay:disabled{opacity:.6;cursor:wait}
+.rx-msg{grid-column:1/-1;font-size:13px;color:#ff9b8a;min-height:1em}
+.rx-secure{grid-column:1/-1;font-size:12px;color:rgba(255,255,255,.45);text-align:center}
+.rx-hp{position:absolute;left:-5000px;width:1px;height:1px;overflow:hidden}
+@media(max-width:600px){.rx-form{grid-template-columns:1fr}}
+.ty{min-height:70vh}
+.ty .hero-desc{max-width:620px}
+.ty-box{max-width:620px;margin:0 auto 10px;background:#141210;border:1px solid #1f1c19;border-radius:12px;padding:22px 24px;text-align:left;font-size:15px;line-height:1.9;color:rgba(255,255,255,.8)}
+.ty-box b{color:#fff}
 </style>
 </head>
 <body>

@@ -489,6 +489,30 @@ footer{background:var(--gold);padding:56px 5% 32px}
 .rx-nav{display:flex;gap:10px;margin-top:14px}
 .rx-note{font-size:12px;color:rgba(255,255,255,.45);margin-top:10px}
 @media(max-width:900px){.rx-grid{grid-template-columns:minmax(0,1fr)}.rx-pane{padding:22px}.rx-run{margin-left:0;width:100%}}
+/* ---- boeken + voorschot ---- */
+.rx-ask{display:block;margin-top:12px;font-size:13px;color:rgba(255,255,255,.6);text-decoration:none;text-align:center}
+.rx-ask:hover{color:var(--gold)}
+.rx-form{margin-top:22px;border-top:1px solid #2a2621;padding-top:22px;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.rx-form[hidden]{display:none}
+.rx-sum{grid-column:1/-1;background:#0e0d0b;border:1px solid #2a2621;border-radius:8px;padding:14px 16px;font-size:14px;color:rgba(255,255,255,.8);line-height:1.7}
+.rx-sum b{color:#fff}.rx-sum .dep{color:var(--gold);font-weight:700}
+.rx-f{display:grid;gap:6px;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.5)}
+.rx-f.wide{grid-column:1/-1}
+.rx-f input,.rx-f textarea{background:#0e0d0b;border:1px solid #2a2621;border-radius:6px;color:#fff;padding:11px 12px;font:400 14px 'Outfit',sans-serif;letter-spacing:0;text-transform:none;color-scheme:dark}
+.rx-f input:focus,.rx-f textarea:focus{outline:none;border-color:var(--gold)}
+.rx-f textarea{min-height:80px;resize:vertical}
+.rx-check{grid-column:1/-1;display:flex;gap:10px;align-items:flex-start;font-size:13px;color:rgba(255,255,255,.7);line-height:1.6}
+.rx-check input{margin-top:4px;accent-color:#DD9A3E}
+.rx-pay{grid-column:1/-1;text-align:center;border:0;cursor:pointer}
+.rx-pay:disabled{opacity:.6;cursor:wait}
+.rx-msg{grid-column:1/-1;font-size:13px;color:#ff9b8a;min-height:1em}
+.rx-secure{grid-column:1/-1;font-size:12px;color:rgba(255,255,255,.45);text-align:center}
+.rx-hp{position:absolute;left:-5000px;width:1px;height:1px;overflow:hidden}
+@media(max-width:600px){.rx-form{grid-template-columns:1fr}}
+.ty{min-height:70vh}
+.ty .hero-desc{max-width:620px}
+.ty-box{max-width:620px;margin:0 auto 10px;background:#141210;border:1px solid #1f1c19;border-radius:12px;padding:22px 24px;text-align:left;font-size:15px;line-height:1.9;color:rgba(255,255,255,.8)}
+.ty-box b{color:#fff}
 </style>
 </head>
 <body>
@@ -671,8 +695,24 @@ footer{background:var(--gold);padding:56px 5% 32px}
       <div class="rx-ticks" id="rxTicks" aria-hidden="true"></div>
       <div class="rx-steps"><button class="rx-btn" type="button" id="rxDown" aria-label="Eén reel minder">− 1</button><button class="rx-btn" type="button" id="rxUp" aria-label="Eén reel meer">+ 1</button><span class="rx-run">max. <b id="rxRun">1:20</b> beeld · 1 draaidag · 1 locatie</span></div>
       <ul class="rx-inc"><li>Maximaal 10 seconden per reel</li><li>Elke reel in één take gefilmd</li><li>Minimum 8 reels, allemaal op 1 draaidag en 1 locatie</li><li>Script en begeleiding inbegrepen</li></ul>
-      <a href="#contact" class="btn btn-gold rx-cta" id="rxCta">Vraag deze reels aan →</a>
+      <button type="button" class="btn btn-gold rx-cta" id="rxBook">Boek en betaal voorschot →</button>
+      <a href="#contact" class="rx-ask" id="rxCta">Liever eerst een vraag? Stuur ons een bericht →</a>
       <a href="/be/social-media/#reels" class="rx-more">Bekijk voorbeelden van one-take reels →</a>
+      <form class="rx-form" id="rxForm" hidden novalidate>
+        <div class="rx-sum" id="rxSum"></div>
+        <label class="rx-f">Gewenste draaidag<input type="date" id="rxDate" required></label>
+        <label class="rx-f">Naam<input type="text" id="rxName" maxlength="80" autocomplete="name" required></label>
+        <label class="rx-f">E-mail<input type="email" id="rxEmail" maxlength="120" autocomplete="email" required></label>
+        <label class="rx-f">Telefoon<input type="tel" id="rxPhone" maxlength="30" autocomplete="tel"></label>
+        <label class="rx-f">Naam van je zaak<input type="text" id="rxBiz" maxlength="120" autocomplete="organization"></label>
+        <label class="rx-f">Adres van de opname<input type="text" id="rxLoc" maxlength="200" autocomplete="street-address"></label>
+        <label class="rx-f wide">Ideeën of opmerkingen (optioneel)<textarea id="rxNotes" maxlength="1000"></textarea></label>
+        <div class="rx-hp" aria-hidden="true"><input type="text" id="rxHp" tabindex="-1" autocomplete="off"></div>
+        <label class="rx-check"><input type="checkbox" id="rxTerms"><span>Ik ga akkoord: 30% voorschot nu, het saldo na de opname. Annuleren kan kosteloos tot 72 uur voor de opname, daarna wordt het voorschot ingehouden. Lukt de gekozen dag niet, dan zoeken we samen een andere dag of storten we het voorschot terug.</span></label>
+        <button type="submit" class="btn btn-gold rx-pay" id="rxPay">Betaal voorschot via Stripe →</button>
+        <p class="rx-msg" id="rxMsg" role="alert"></p>
+        <p class="rx-secure">🔒 Veilig betalen via Stripe met kaart, Apple Pay, Google Pay of Bancontact.</p>
+      </form>
     </div></div>
 </section>
 
@@ -975,7 +1015,7 @@ document.querySelectorAll('.gallery-item').forEach((el, i) => {
   <div class="lb-caption" id="lb-caption"></div>
 </div>
 
-<script>(function(){const P=40,C="\u20ac",MSG="Ik wil graag {n} one-take reels ({t} excl. btw).",OPT="One-take reels";
+<script>(function(){const CFG={"P": 40, "C": "€", "MSG": "Ik wil graag {n} one-take reels ({t} excl. btw).", "OPT": "One-take reels", "EP": "", "MK": "be", "VAT": 0.21, "SUM": "<b>{n} one-take reels</b> · totaal <b>{t}</b> incl. btw<br>Voorschot nu (30%): <span class=\"dep\">{d}</span> · saldo na de opname", "T": {"sending": "Even geduld, we openen de betaalpagina…", "err_fields": "Vul je naam, een geldig e-mailadres en een draaidag in de toekomst in.", "err_terms": "Vink de voorwaarden aan om verder te gaan.", "err_server": "Er liep iets mis. Probeer opnieuw of stuur ons een bericht."}},P=CFG.P,C=CFG.C,MSG=CFG.MSG,OPT=CFG.OPT;
 const $=id=>document.getElementById(id);const sl=$("rxSlider");if(!sl)return;const mn=+sl.min,mx=+sl.max,N=[];for(let n=mn;n<=mx;n++)N.push(n);
 const cols="repeat("+N.length+",minmax(0,1fr))";$("rxStrip").style.gridTemplateColumns=cols;$("rxTicks").style.gridTemplateColumns=cols;
 $("rxStrip").innerHTML=N.map(()=>'<div class="rx-frame"></div>').join("");$("rxTicks").innerHTML=N.map(n=>"<span>"+n+"</span>").join("");
@@ -984,8 +1024,22 @@ function draw(){const n=+sl.value,i=N.indexOf(n),s=n*10;$("rxCount").textContent
 $("rxRun").textContent=Math.floor(s/60)+":"+String(s%60).padStart(2,"0");fr.forEach((f,j)=>f.classList.toggle("on",j<=i));tk.forEach((t,j)=>t.classList.toggle("now",j===i));
 $("rxPlay").style.left="calc(6px + "+((i+.5)/N.length)+" * (100% - 12px))";$("rxDown").disabled=n<=mn;$("rxUp").disabled=n>=mx;}
 const step=d=>{sl.value=Math.min(mx,Math.max(mn,+sl.value+d));draw()};sl.addEventListener("input",draw);$("rxDown").onclick=()=>step(-1);$("rxUp").onclick=()=>step(1);draw();
-$("rxCta").addEventListener("click",()=>{const n=+sl.value,sel=document.querySelector('#contact select[name="service"]'),ta=document.querySelector('#contact textarea');
-if(sel){[...sel.options].forEach(o=>{if(o.text===OPT)o.selected=true})}if(ta){const line=MSG.replace("{n}",n).replace("{t}",geld(n*P));ta.value=ta.value?line+"\n"+ta.value.replace(/^.*one-take reels.*\n?/,""):line;}});
+const ask=()=>{const n=+sl.value,sel=document.querySelector('#contact select[name="service"]'),ta=document.querySelector('#contact textarea');
+if(sel){[...sel.options].forEach(o=>{if(o.text===OPT)o.selected=true})}if(ta){const line=MSG.replace("{n}",n).replace("{t}",geld(n*P));ta.value=ta.value?line+"\n"+ta.value.replace(/^.*one-take reels.*\n?/,""):line;}};
+$("rxCta").addEventListener("click",ask);
+const cents=v=>Math.round(v);const money=c=>C+(c/100).toLocaleString(C=="$"?"en-US":"nl-BE",{minimumFractionDigits:2,maximumFractionDigits:2});
+const sums=()=>{const n=+sl.value,sub=n*P*100,tot=cents(sub*(1+CFG.VAT)),dep=cents(tot*.3);$("rxSum").innerHTML=CFG.SUM.replace("{n}",n).replace("{t}",money(tot)).replace("{d}",money(dep));};
+sl.addEventListener("input",sums);$("rxDown").addEventListener("click",sums);$("rxUp").addEventListener("click",sums);sums();
+const d=$("rxDate");const t=new Date();t.setDate(t.getDate()+2);d.min=t.toISOString().slice(0,10);
+$("rxBook").addEventListener("click",e=>{if(!CFG.EP){ask();document.getElementById("contact").scrollIntoView({behavior:"smooth"});return}const f=$("rxForm");f.hidden=!f.hidden;if(!f.hidden)setTimeout(()=>$("rxDate").focus(),50)});
+$("rxForm").addEventListener("submit",async e=>{e.preventDefault();const msg=$("rxMsg"),btn=$("rxPay");msg.textContent="";
+const v=id=>$(id).value.trim();const email=v("rxEmail"),name=v("rxName"),date=v("rxDate");
+if(!name||!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)||!date||date<d.min){msg.textContent=CFG.T.err_fields;return}
+if(!$("rxTerms").checked){msg.textContent=CFG.T.err_terms;return}
+btn.disabled=true;const old=btn.textContent;btn.textContent=CFG.T.sending;
+try{const res=await fetch(CFG.EP,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({type:"reels",market:CFG.MK,count:+sl.value,date,name,email,phone:v("rxPhone"),business:v("rxBiz"),location:v("rxLoc"),notes:v("rxNotes"),website:v("rxHp"),page:location.pathname,preview:location.pathname.indexOf("/preview/")===0})});
+const out=await res.json().catch(()=>({}));if(!out.ok||!out.url)throw new Error(out.error||"server");location.href=out.url;}
+catch(err){msg.textContent=CFG.T.err_server;btn.disabled=false;btn.textContent=old}});
 const rail=$("rxRail");if(!rail)return;const shots=[...rail.querySelectorAll(".rx-shot")];
 const play=f=>{shots.forEach(o=>{if(o!==f){o.querySelector("video").pause();o.classList.add("paused")}});const v=f.querySelector("video");if(f.dataset.stop==="1")return;v.play().then(()=>f.classList.remove("paused")).catch(()=>f.classList.add("paused"))};
 const io=new IntersectionObserver(es=>{const vis=es.filter(e=>e.isIntersecting&&e.intersectionRatio>=.6).map(e=>e.target);if(vis.length)play(vis[0])},{root:rail,threshold:[.6]});
