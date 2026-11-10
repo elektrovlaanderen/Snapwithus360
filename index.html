@@ -4,6 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SNAP360 – Real Estate · Sport · Social Media Production</title>
+<link rel="canonical" href="https://snapwithus360.com/">
+<link rel="alternate" hreflang="nl-BE" href="https://snapwithus360.com/be/">
+<link rel="alternate" hreflang="en-US" href="https://snapwithus360.com/us/">
+<link rel="alternate" hreflang="x-default" href="https://snapwithus360.com/">
 <meta name="description" content="Premium real estate visuals, sport portraits and social media production. Active in Belgium and the USA.">
 <meta property="og:title" content="SNAP360 – Real Estate Visuals & Sport Portraits">
 <meta property="og:description" content="Premium real estate visuals, sport portraits and social media production. Belgium & USA.">
@@ -124,6 +128,7 @@ body{background:var(--black);color:var(--white);font-family:'Outfit',sans-serif;
 </style>
 </head>
 <body>
+<h1 style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0">SNAP360 – real estate visuals, sports portraits and social media production in Belgium and the USA</h1>
 
 <!-- TOP LOGO -->
 <div class="top-bar">
@@ -173,7 +178,7 @@ body{background:var(--black);color:var(--white);font-family:'Outfit',sans-serif;
       <div class="panel-country">België</div>
       <div class="panel-tagline">Antwerpen &nbsp;·&nbsp; Gent &nbsp;·&nbsp; Sint-Niklaas</div>
       <p style="font-size:12px;color:rgba(255,255,255,.4);margin-top:12px;letter-spacing:.1em;text-transform:uppercase;border:1px solid rgba(255,255,255,.15);padding:6px 14px;border-radius:20px;display:inline-block">👆 Klik hier voor België</p>
-      <a href="#" class="panel-cta" onclick="event.stopPropagation();goTo('be')">
+      <a href="/be/" hreflang="nl-BE" class="panel-cta" onclick="event.preventDefault();event.stopPropagation();goTo('be')">
         Ga naar België
         <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
       </a>
@@ -187,9 +192,9 @@ body{background:var(--black);color:var(--white);font-family:'Outfit',sans-serif;
     <div class="panel-inner">
       <span class="panel-flag">🇺🇸</span>
       <div class="panel-country">United States</div>
-      <div class="panel-tagline">Los Angeles, California &nbsp;·&nbsp; Las Vegas, Nevada</div>
+      <div class="panel-tagline">Las Vegas, Nevada &nbsp;·&nbsp; Inland Empire, California</div>
       <p style="font-size:12px;color:rgba(255,255,255,.4);margin-top:12px;letter-spacing:.1em;text-transform:uppercase;border:1px solid rgba(255,255,255,.15);padding:6px 14px;border-radius:20px;display:inline-block">👆 Click here for USA</p>
-      <a href="#" class="panel-cta" onclick="event.stopPropagation();goTo('us')">
+      <a href="/us/" hreflang="en-US" class="panel-cta" onclick="event.preventDefault();event.stopPropagation();goTo('us')">
         Go to USA
         <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
       </a>
@@ -215,7 +220,7 @@ window.addEventListener('pageshow', function(e) {
 })
 
 function goTo(region) {
-  const urls = { be: 'snapwithus360_v5.html', us: 'snapwithus360_us.html' }
+  const urls = { be: '/be/', us: '/us/' }
   const labels = { be: 'België', us: 'United States' }
   const overlay = document.getElementById('pg-transition')
   document.getElementById('pg-transition-text').textContent = labels[region]
