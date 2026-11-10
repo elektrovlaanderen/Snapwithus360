@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://snapwithus360.com/</loc>
+    <lastmod>2026-11-10</lastmod>
+    <xhtml:link rel="alternate" hreflang="nl-BE" href="https://snapwithus360.com/be/"/>
+    <xhtml:link rel="alternate" hreflang="en-US" href="https://snapwithus360.com/us/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://snapwithus360.com/"/>
+  </url>
+  <url>
+    <loc>https://snapwithus360.com/be/</loc>
+    <lastmod>2026-11-10</lastmod>
+    <xhtml:link rel="alternate" hreflang="nl-BE" href="https://snapwithus360.com/be/"/>
+    <xhtml:link rel="alternate" hreflang="en-US" href="https://snapwithus360.com/us/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://snapwithus360.com/"/>
+  </url>
+  <url>
+    <loc>https://snapwithus360.com/us/</loc>
+    <lastmod>2026-11-10</lastmod>
+    <xhtml:link rel="alternate" hreflang="nl-BE" href="https://snapwithus360.com/be/"/>
+    <xhtml:link rel="alternate" hreflang="en-US" href="https://snapwithus360.com/us/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://snapwithus360.com/"/>
+  </url>
+  <url><loc>https://snapwithus360.com/reels/</loc><lastmod>2026-11-10</lastmod></url>
+  <url><loc>https://snapwithus360.com/job-photographer.html</loc><lastmod>2026-11-10</lastmod></url>
+  <url><loc>https://snapwithus360.com/job-editor.html</loc><lastmod>2026-11-10</lastmod></url>
+  <url><loc>https://snapwithus360.com/job-caller.html</loc><lastmod>2026-11-10</lastmod></url>
+</urlset>
