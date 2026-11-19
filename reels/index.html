@@ -6,12 +6,12 @@
 <title>SNAP360 One-take reels US</title>
 <link rel="canonical" href="https://snapwithus360.com/reels/">
 <meta name="claude:viewport-fit-sides" content="cover">
-<meta name="description" content="Short reels filmed in one continuous take, on location at your business. $50 per reel, from 8 reels per shoot day.">
+<meta name="description" content="Short reels filmed in one continuous take, on location at your business. Black Friday deal: $99 per reel, from 5 reels per shoot day.">
 <!-- voorbeeld bij het delen van de link (iMessage, WhatsApp, Facebook, LinkedIn) -->
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="SNAP360">
 <meta property="og:title" content="One-take reels for your business | SNAP360">
-<meta property="og:description" content="Short reels filmed in one continuous take, right where you work. $50 per reel, from 8 reels per shoot day.">
+<meta property="og:description" content="Short reels filmed in one continuous take, right where you work. Black Friday deal: $99 per reel, from 5 reels per shoot day.">
 <meta property="og:url" content="https://snapwithus360.com/reels/">
 <meta property="og:image" content="https://snapwithus360.com/reels/og-reels.jpg">
 <meta property="og:image:width" content="1200">
@@ -101,6 +101,27 @@
     font-variant-numeric: tabular-nums;
   }
   .runtime .rec { width: 7px; height: 7px; border-radius: 50%; background: var(--gold); }
+  /* Black Friday-stempel: schuin, dubbele rand, licht verweerd */
+  .price-pane { position: relative; }
+  .stamp {
+    position: absolute; top: 1.6rem; left: 42%; z-index: 3;
+    width: 7.2rem; height: 7.2rem; border-radius: 50%;
+    display: grid; place-content: center; justify-items: center; gap: 0.1rem;
+    color: #e2402f; background: rgba(11, 10, 9, 0.92);
+    border: 3px solid currentColor;
+    box-shadow: 0 0 0 3px rgba(11, 10, 9, 0.92), 0 0 0 4.5px currentColor;
+    transform: rotate(-14deg);
+    font-family: var(--font-display); text-transform: uppercase; text-align: center; line-height: 1;
+    pointer-events: none;
+    -webkit-mask-image: radial-gradient(circle at 70% 30%, #000 60%, rgba(0,0,0,.82) 100%);
+    mask-image: radial-gradient(circle at 70% 30%, #000 60%, rgba(0,0,0,.82) 100%);
+  }
+  .stamp small { font-family: var(--font-mono); font-size: 0.56rem; font-weight: 500; letter-spacing: 0.2em; }
+  .stamp b { font-size: 1.05rem; font-weight: 700; letter-spacing: 0.02em; }
+  .stamp strong { font-size: 1.9rem; font-weight: 700; letter-spacing: -0.03em; margin-top: 0.1rem; }
+  .was { color: var(--faint); text-decoration: line-through; text-decoration-color: #e2402f; text-decoration-thickness: 2px; }
+  .was-total { font-family: var(--font-display); font-size: 1.4rem; line-height: 1; }
+  .pick .was { font-size: 0.8em; margin-right: 0.15em; }
   .runtime b { color: var(--text); font-weight: 500; }
 
   /* ---------- panelen ---------- */
@@ -309,6 +330,7 @@
   .contact b { font-weight: 500; color: var(--text); user-select: all; }
   .privacy { margin-top: 1rem; font-size: 0.8rem; line-height: 1.55; color: var(--faint); }
 
+  @media (max-width: 40rem) { .stamp { top: -1.6rem; right: 1rem; left: auto; } }
   @media (max-width: 40rem) {
     .head { padding-top: 2.8rem; }
     .pane { padding: 1.35rem; }
@@ -336,25 +358,29 @@
     <p class="intro">
       Short reels filmed in one continuous shot, right where you work: your restaurant, your shop
       or your studio. Affordable, ready to use and easy to post. Choose how many you want,
-      from <span id="intro-min">8</span> reels per shoot day.
+      from <span id="intro-min">5</span> reels per shoot day.
     </p>
-    <p class="runtime"><span class="rec" aria-hidden="true"></span>Total runtime up to <b id="runtime">00:01:20:00</b> · 1 shoot day</p>
+    <p class="runtime"><span class="rec" aria-hidden="true"></span>Total runtime up to <b id="runtime">00:00:50:00</b> · 1 shoot day</p>
   </header>
 
-  <section class="pane" aria-label="Choose the number of reels">
+  <section class="pane price-pane" aria-label="Choose the number of reels">
+    <div class="stamp" id="stamp" role="img" aria-label="Black Friday deal">
+      <small>Black</small><b>Friday</b><strong id="stamp-off">−21%</strong>
+    </div>
     <div class="figures" aria-live="polite">
       <div class="figure">
-        <span class="big" id="count">8</span>
+        <span class="big" id="count">5</span>
         <span class="label">Reels</span>
       </div>
       <div class="figure money">
-        <span class="big" id="total">$400</span>
-        <span class="rate"><b id="rate">$50</b> per reel · <span id="vat">plus tax</span></span>
+        <s class="was was-total" id="was-total">$625</s>
+        <span class="big" id="total">$495</span>
+        <span class="rate"><s class="was" id="was-rate">$125</s> <b id="rate">$99</b> per reel · <span id="vat">plus tax</span></span>
       </div>
     </div>
 
     <div class="strip-wrap">
-      <input type="range" id="slider" min="8" max="16" step="1" value="8" aria-label="Number of reels">
+      <input type="range" id="slider" min="5" max="16" step="1" value="5" aria-label="Number of reels">
       <div class="strip" id="strip" aria-hidden="true"></div>
       <div class="playhead" id="playhead" aria-hidden="true"></div>
     </div>
@@ -392,7 +418,7 @@
   </section>
 
   <section class="pane" id="aanvraag">
-    <p class="pick">Your selection: <em id="pick-count">8</em> reels for <em id="pick-total">$400</em> <span class="rate">plus tax</span></p>
+    <p class="pick">Your selection: <em id="pick-count">5</em> reels for <s class="was" id="pick-was">$625</s> <em id="pick-total">$495</em> <span class="rate">plus tax</span></p>
     <p class="lede" id="lede">Tell us which day you would like us to film. We will get in touch to confirm the shoot day.</p>
 
     <form class="form" id="form" novalidate>
@@ -454,13 +480,15 @@
 <script>
 /* Alles wat je wil aanpassen staat hier. */
 const CONFIG = {
-  prijsPerReel: 50,
+  prijsPerReel: 99,
+  oudePrijs: 125,       // doorstreepte prijs per reel; 0 = geen actie (stempel en doorstreping weg)
   valuta: "$",
   btw: "plus tax",
-  minReels: 8,          // = 1 draaidag
+  minReels: 5,          // = 1 draaidag
   maxReels: 16,         // hoogste aantal op de strook
   secPerReel: 10,       // max. lengte per reel
-  voorbeelden: { map: "examples/", aantal: 8, ext: ".mp4" },
+  // tot 24 voorbeelden: 1.mp4 t.e.m. 24.mp4 in examples/; ontbrekende nummers verdwijnen vanzelf
+  voorbeelden: { map: "examples/", aantal: 24, ext: ".mp4" },
   // De web-app-URL van je Apps Script (eindigt op /exec)
   endpoint: "https://script.google.com/macros/s/AKfycbwwkoczlZpNYCs9J_yzjkEhiYg8JSr9NCBldkayITUTAdSXBgGfD0dsRP4wfF7Ib7Dy/exec",
   vroegsteDag: 1,       // aantal dagen vanaf vandaag
@@ -482,6 +510,9 @@ slider.max = CONFIG.maxReels;
 slider.value = CONFIG.minReels;
 $("intro-min").textContent = CONFIG.minReels;
 $("vat").textContent = CONFIG.btw;
+const actie = CONFIG.oudePrijs > CONFIG.prijsPerReel;
+["stamp", "was-total", "was-rate", "pick-was"].forEach((id) => { $(id).hidden = !actie; });
+if (actie) $("stamp-off").textContent = "−" + Math.round((1 - CONFIG.prijsPerReel / CONFIG.oudePrijs) * 100) + "%";
 
 const AANTALLEN = [];
 for (let n = CONFIG.minReels; n <= CONFIG.maxReels; n++) AANTALLEN.push(n);
@@ -514,6 +545,9 @@ function teken() {
   $("runtime").textContent = timecode(n);
   $("pick-count").textContent = n;
   $("pick-total").textContent = geld(totaal);
+  $("was-rate").textContent = geld(CONFIG.oudePrijs);
+  $("was-total").textContent = geld(n * CONFIG.oudePrijs);
+  $("pick-was").textContent = geld(n * CONFIG.oudePrijs);
 
   frames.forEach((f, i) => f.classList.toggle("on", i <= op));
   ticks.forEach((t, i) => t.classList.toggle("now", i === op));
