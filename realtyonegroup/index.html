@@ -480,11 +480,11 @@ let CONFIG = {
    ================================================================ */
   paketten: {
     /* ---------- verhaal ---------- */
-    story: { id:"the-story", naam:"The Story", prijs:1000, basis:true, voorbeelden:["interview"],
+    story: { id:"the-story", naam:"The Story", prijs:985, basis:true, voorbeelden:["interview"],
       omschrijving:"You tell the story of the home. We bring it to life.",
       levert:["30-minute video call to prepare your script","Personal guidance on the shoot day, so you feel at ease on camera","1 main cinematic film: your interview combined with cinematic footage of the home","3 social media reels cut from the same shoot","1 short teaser to announce the listing"],
       opties:["matterport","aerialPhotos","aerialVideoAdd","twilight","detached","plan2d","plan2dKleur","plan3d"] },
-    storyComplete: { id:"the-story-complete", naam:"The Story Complete", prijs:1399, basis:true, voorbeelden:["interview","film1","film2"],
+    storyComplete: { id:"the-story-complete", naam:"The Story Complete", prijs:1385, basis:true, voorbeelden:["interview","film1","film2"],
       sqftToeslag:{ vanaf:3000, per:500, prijs:150 },
       omschrijving:"Everything for the listing in one production.",
       levert:["Everything in The Story, including the script call and guidance on the shoot day","Professional photo reportage of the property, delivered within 24 hours","Aerial drone video of the property and its surroundings"],
@@ -507,7 +507,7 @@ let CONFIG = {
       omschrijving:"For homes up to 1,500 sq ft.",
       levert:["Up to 15 professional photos","Interior and exterior","Professional post-processing","Same day delivery","Ready for portals and brochures"],
       opties:["droneUpgrade","shortReel","matterport","detached","plan2d","plan2dKleur","plan3d"] },
-    photoBasic: { id:"photo-basic", naam:"Basic", prijs:299, basis:true, maxSqft:2000,
+    photoBasic: { id:"photo-basic", naam:"Basic", prijs:285, basis:true, maxSqft:2000,
       upgrade:{ naar:"photoSignature" },
       omschrijving:"For homes up to 2,000 sq ft.",
       levert:["Up to 30 professional photos","Interior and exterior","Professional post-processing","Same day delivery","Ready for portals and brochures"],
@@ -543,7 +543,7 @@ let CONFIG = {
       opties:["matterport","aerialPhotos","aerialVideoAdd","twilight","detached","plan2d","plan2dKleur","plan3d"] },
 
     /* ---------- het kantoor ---------- */
-    officePromo: { id:"office-promo", naam:"Office Promo", prijs:2500, vanaf:true, geenRetainer:true,
+    officePromo: { id:"office-promo", naam:"Office Promo", prijs:2485, vanaf:true, geenRetainer:true,
       omschrijving:"A promo film that puts your Realty ONE Group office in the spotlight.",
       levert:["2-minute promo film of your Realty ONE Group office","Bonus: 25% off every other SNAP360 package your office books in the same month"],
       opties:[] }
@@ -559,7 +559,7 @@ let CONFIG = {
    vastePrijs: bundelprijs, krijgt geen add-on- of retainerkorting
    ================================================================ */
   opties: {
-    shortReel: { naam:"Short reel (20 sec)", prijs:100, vastePrijs:true,
+    shortReel: { naam:"Short reel (20 sec)", prijs:95, vastePrijs:true,
       uitleg:"A 20-second vertical reel of the property for social media, at a bundle price with your photo package." },
     droneUpgrade: { naam:"Add drone photos", upgradeOptie:true,
       uitleg:"Drone photos come with a bigger package. We move you up automatically." },
@@ -577,11 +577,11 @@ let CONFIG = {
       uitleg:"Aerial photos turned into a twilight scene. Price per image." },
     detached: { naam:"Detached scan", prijs:50, vereist:"matterport", aantal:4, aantalLabel:"Number of structures",
       uitleg:"An extra scan of a detached structure, like an ADU or a garage. Price per structure." },
-    plan2d: { naam:"2D floor plan", prijs:100, vanaf:true, vereist:"matterport",
+    plan2d: { naam:"2D floor plan", prijs:95, vanaf:true, vereist:"matterport",
       uitleg:"A floor plan drawn from the 3D scan." },
     plan2dKleur: { naam:"2D color floor plan", prijs:150, vanaf:true, vereist:"matterport",
       uitleg:"A color floor plan drawn from the 3D scan." },
-    plan3d: { naam:"3D floor plan", prijs:200, vanaf:true, vereist:"matterport",
+    plan3d: { naam:"3D floor plan", prijs:195, vanaf:true, vereist:"matterport",
       uitleg:"A 3D floor plan built from the scan." }
   },
 
