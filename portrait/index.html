@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>SNAP360 Portrait Package</title>
+<meta name="description" content="One video showing who you are and what you do. 30 to 90 seconds, filmed on location, delivered within 7 business days. Black Friday deal: $1,185 instead of $1,485.">
+<!-- voorbeeld bij het delen van de link (iMessage, WhatsApp, Facebook, LinkedIn) -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="SNAP360">
+<meta property="og:title" content="Portrait Package for entrepreneurs | SNAP360">
+<meta property="og:description" content="One video showing who you are and what you do. Filmed on location, delivered within 7 business days. Black Friday deal: $1,185.">
+<meta property="og:url" content="https://snapwithus360.com/portrait/">
+<meta property="og:image" content="https://snapwithus360.com/portrait/og-portrait.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="SNAP360 Portrait Package: your story in 90 seconds.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://snapwithus360.com/portrait/og-portrait.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Hanken+Grotesk:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  /* Zelfde huisstijl als de one-take reels pagina: donkere panelen, goud alleen voor wat telt. */
+  :root {
+    --bg: #0b0a09;
+    --pane: #141210;
+    --well: #0e0d0b;
+    --edge: #2a2621;
+    --edge-soft: #1f1c19;
+    --text: #f3eee7;
+    --dim: #a59d92;
+    --faint: #6e675e;
+    --gold: #dd9a3e;
+    --gold-soft: rgba(221, 154, 62, 0.16);
+    --on-gold: #1a1208;
+    --font-display: "Bricolage Grotesque", "Arial Narrow", system-ui, sans-serif;
+    --font-body: "Hanken Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-padding-top: env(safe-area-inset-top, 0px); scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    touch-action: manipulation;
+  }
+  [hidden] { display: none !important; }
+  p, h1, h2, h3, ul, ol { margin: 0; }
+
+  .wrap {
+    max-width: 48rem;
+    margin: 0 auto;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+    padding-block: 0 4.5rem;
+    display: grid;
+    gap: 1rem;
+  }
+
+  .label {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--faint);
+  }
+
+  /* ---------- kop ---------- */
+  .head { padding-block: 4rem 2rem; display: grid; gap: 1.2rem; }
+  .brand { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
+  .brand b { font-family: var(--font-display); font-weight: 700; font-size: 1rem; letter-spacing: 0.04em; color: var(--text); }
+  .brand b span { color: var(--gold); }
+  .tag {
+    margin-left: auto;
+    padding: 0.3rem 0.8rem; border: 1px solid var(--edge); border-radius: 999px;
+    font-family: var(--font-mono); font-size: 0.64rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--dim);
+  }
+  .title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(2.3rem, 7vw, 4.2rem);
+    line-height: 0.98;
+    letter-spacing: -0.035em;
+    text-wrap: balance;
+  }
+  .title em { font-style: normal; color: var(--gold); }
+  .intro { max-width: 46ch; color: var(--dim); font-size: 1.02rem; line-height: 1.7; }
+  .head-cta { display: flex; gap: 1rem 1.4rem; align-items: center; flex-wrap: wrap; }
+  .runtime {
+    display: inline-flex; gap: 0.7rem; align-items: center;
+    padding: 0.45rem 0.9rem;
+    border: 1px solid var(--edge);
+    border-radius: 6px;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    color: var(--dim);
+    font-variant-numeric: tabular-nums;
+  }
+  .runtime .rec { width: 7px; height: 7px; border-radius: 50%; background: var(--gold); animation: rec 1.6s ease-in-out infinite; }
+  .runtime b { color: var(--text); font-weight: 500; }
+  @keyframes rec { 50% { opacity: 0.25; } }
+
+  /* ---------- panelen ---------- */
+  .pane {
+    background: var(--pane);
+    border: 1px solid var(--edge-soft);
+    border-radius: 14px;
+    padding: 1.8rem;
+    min-width: 0;
+  }
+
+  /* ---------- prijs ---------- */
+  .price-pane { position: relative; }
+  .figures { display: flex; justify-content: space-between; align-items: flex-end; gap: 1.5rem; flex-wrap: wrap; }
+  .big {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(3.6rem, 12vw, 5.6rem);
+    line-height: 0.85;
+    letter-spacing: -0.04em;
+    font-variant-numeric: tabular-nums;
+  }
+  .figure { display: grid; gap: 0.6rem; }
+  .money { text-align: right; justify-items: end; }
+  .money .big { font-size: clamp(2.7rem, 8.5vw, 4.2rem); }
+  .rate { font-size: 0.9rem; color: var(--dim); }
+  .rate b { color: var(--text); font-weight: 600; }
+
+  /* tijdlijn: 2 uur op locatie → montage → levering binnen 7 werkdagen */
+  .track { margin-top: 2.2rem; display: grid; grid-template-columns: 2fr 5fr 1fr; gap: 4px; }
+  .seg {
+    position: relative; height: 3.4rem; border-radius: 6px;
+    background: var(--well); border: 1px solid var(--edge);
+    display: flex; align-items: flex-end; padding: 0.5rem 0.65rem;
+    font-family: var(--font-mono); font-size: 0.66rem; letter-spacing: 0.08em; color: var(--dim);
+    overflow: hidden; white-space: nowrap;
+  }
+  .seg.shoot { background: var(--gold-soft); border-color: rgba(221, 154, 62, 0.4); color: var(--text); }
+  .seg.edit { background: repeating-linear-gradient(90deg, rgba(243,238,231,.04) 0 10px, transparent 10px 14px), var(--well); }
+  .seg.out { justify-content: center; color: var(--gold); border-color: rgba(221, 154, 62, 0.4); }
+  .track-ticks { display: grid; grid-template-columns: 2fr 5fr 1fr; gap: 4px; margin-top: 0.7rem; font-family: var(--font-mono); font-size: 0.66rem; color: var(--faint); }
+  .track-ticks span:last-child { text-align: center; }
+
+  /* optionele actie-stempel (zie CONFIG.oudePrijs) */
+  .stamp {
+    position: absolute; top: 1.6rem; left: 42%; z-index: 3;
+    width: 7.2rem; height: 7.2rem; border-radius: 50%;
+    display: grid; place-content: center; justify-items: center; gap: 0.1rem;
+    color: #e2402f; background: rgba(11, 10, 9, 0.92);
+    border: 3px solid currentColor;
+    box-shadow: 0 0 0 3px rgba(11, 10, 9, 0.92), 0 0 0 4.5px currentColor;
+    transform: rotate(-14deg);
+    font-family: var(--font-display); text-transform: uppercase; text-align: center; line-height: 1;
+    pointer-events: none;
+    -webkit-mask-image: radial-gradient(circle at 70% 30%, #000 60%, rgba(0,0,0,.82) 100%);
+    mask-image: radial-gradient(circle at 70% 30%, #000 60%, rgba(0,0,0,.82) 100%);
+  }
+  .stamp small { font-family: var(--font-mono); font-size: 0.56rem; font-weight: 500; letter-spacing: 0.2em; }
+  .stamp b { font-size: 1.05rem; font-weight: 700; }
+  .stamp strong { font-size: 1.9rem; font-weight: 700; letter-spacing: -0.03em; margin-top: 0.1rem; }
+  .was { color: var(--faint); text-decoration: line-through; text-decoration-color: #e2402f; text-decoration-thickness: 2px; }
+  .was-total { font-family: var(--font-display); font-size: 1.4rem; line-height: 1; }
+
+  /* ---------- waarom ---------- */
+  .rhythm { display: flex; gap: 1.2rem 1.6rem; align-items: baseline; flex-wrap: wrap; }
+  .rhythm h2 { font-family: var(--font-display); font-weight: 500; font-size: 1.5rem; letter-spacing: -0.02em; }
+  .rhythm p { flex: 1 1 18rem; min-width: 0; color: var(--dim); font-size: 0.95rem; }
+
+  .uses { list-style: none; padding: 0; margin-top: 1.2rem; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+  .uses li { padding: 1rem; border: 1px solid var(--edge-soft); border-radius: 10px; background: var(--well); display: grid; gap: 0.3rem; }
+  .uses b { font-weight: 600; font-size: 0.98rem; }
+  .uses span { color: var(--dim); font-size: 0.88rem; line-height: 1.5; }
+
+  /* ---------- voorbeelden ---------- */
+  .shots {
+    display: flex; gap: 10px; margin-top: 1.2rem; align-items: center;
+    overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none;
+    -webkit-overflow-scrolling: touch; overscroll-behavior-x: contain;
+  }
+  .shots::-webkit-scrollbar { display: none; }
+  .shot {
+    position: relative; flex: 0 0 auto; scroll-snap-align: start;
+    width: 8rem; aspect-ratio: 9 / 16; max-width: 100%;
+    padding: 0; border: 1px solid var(--edge); border-radius: 10px;
+    background: var(--well); overflow: hidden; cursor: pointer; color: var(--text);
+  }
+  .shot video { display: block; width: 100%; height: 100%; object-fit: cover; }
+  .shot .no {
+    position: absolute; left: 0.55rem; top: 0.45rem;
+    font-family: var(--font-mono); font-size: 0.66rem; letter-spacing: 0.1em;
+    color: rgba(243, 238, 231, 0.8); text-shadow: 0 1px 6px rgba(0, 0, 0, 0.7);
+  }
+  .shot .state {
+    position: absolute; inset: 0; display: grid; place-items: center;
+    font-size: 1.1rem; text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+    transition: opacity 0.15s;
+    border: 0; background: none; color: inherit; padding: 0; width: 100%; height: 100%; cursor: pointer; font-family: inherit;
+  }
+  .shot.playing .state { opacity: 0; }
+  .geluid {
+    position: absolute; right: 0.45rem; top: 0.4rem; z-index: 2;
+    display: grid; place-items: center; width: 2.1rem; height: 2.1rem; padding: 0;
+    border: 1px solid rgba(243, 238, 231, 0.22); border-radius: 50%;
+    background: rgba(11, 10, 9, 0.55); color: var(--text); cursor: pointer;
+    -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px);
+  }
+  .geluid[aria-pressed="true"] { background: var(--gold); border-color: var(--gold); color: var(--on-gold); }
+  .geluid:focus-visible, .shot .state:focus-visible { outline: 2px solid var(--gold); outline-offset: -2px; }
+  .shot.empty, .shot.empty .state { cursor: default; } .shot.empty { border-style: dashed; }
+  .shot.empty .state { font-family: var(--font-mono); font-size: 0.7rem; color: var(--faint); text-shadow: none; }
+  .shots-nav { display: flex; gap: 0.5rem; margin-top: 0.9rem; }
+  .note { margin-top: 0.9rem; font-size: 0.85rem; color: var(--faint); }
+  .note code { font-family: var(--font-mono); font-size: 0.8rem; color: var(--dim); }
+
+  .btn {
+    min-width: 4.4rem; min-height: 2.6rem; padding: 0.55rem 1rem;
+    border: 1px solid var(--edge); border-radius: 999px;
+    background: rgba(243, 238, 231, 0.05); color: var(--text);
+    font-family: var(--font-mono); font-size: 0.8rem; cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .btn:hover:not(:disabled) { background: rgba(243, 238, 231, 0.1); border-color: #3a352f; }
+  .btn:disabled { opacity: 0.35; cursor: not-allowed; }
+  .btn:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+
+  /* ---------- inbegrepen ---------- */
+  .inc { list-style: none; padding: 0; margin-top: 1.1rem; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 2rem; }
+  .inc li { padding: 0.9rem 0; border-top: 1px solid var(--edge-soft); display: grid; grid-template-columns: 0.9rem 1fr; gap: 0.7rem; align-items: baseline; }
+  .inc li::before { content: ""; width: 7px; height: 7px; border-radius: 50%; border: 1px solid var(--gold); transform: translateY(-1px); }
+
+  /* ---------- zo werkt het ---------- */
+  .how { list-style: none; padding: 0; margin-top: 1.2rem; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; counter-reset: stap; }
+  .how li { counter-increment: stap; padding: 1.1rem; border-radius: 10px; border: 1px solid var(--edge-soft); background: var(--well); display: grid; gap: 0.35rem; align-content: start; }
+  .how li::before { content: counter(stap, decimal-leading-zero); font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.12em; color: var(--gold); }
+  .how b { font-family: var(--font-display); font-weight: 500; font-size: 1.15rem; letter-spacing: -0.01em; }
+  .how span { color: var(--dim); font-size: 0.9rem; line-height: 1.55; }
+
+  /* ---------- aanvraag ---------- */
+  .pick { font-family: var(--font-display); font-weight: 500; font-size: clamp(1.35rem, 3.6vw, 2rem); line-height: 1.2; letter-spacing: -0.02em; text-wrap: balance; }
+  .pick em { font-style: normal; color: var(--gold); font-variant-numeric: tabular-nums; }
+  .lede { margin-top: 0.8rem; color: var(--dim); font-size: 0.95rem; }
+
+  .form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin-top: 1.6rem; }
+  .field { display: grid; gap: 0.45rem; min-width: 0; }
+  .field span { font-family: var(--font-mono); font-size: 0.66rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--dim); }
+  .field input, .field textarea {
+    width: 100%; padding: 0.85rem 1rem;
+    font: inherit; font-size: 1rem; color: var(--text);
+    background: var(--well); border: 1px solid var(--edge); border-radius: 10px;
+  }
+  .field textarea { resize: vertical; min-height: 5.5rem; }
+  .field input::placeholder, .field textarea::placeholder { color: var(--faint); }
+  .field input:focus, .field textarea:focus { outline: none; border-color: var(--gold); }
+  .wide { grid-column: 1 / -1; }
+  .hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+  .field input[readonly] { color: var(--dim); }
+  .field input[aria-invalid="true"] { border-color: #d4664f; }
+  .field input[data-status="ok"] { border-color: #5f9e6e; }
+  .addr-hint { min-height: 1.2rem; margin: 0; font-size: 0.85rem; line-height: 1.4; color: var(--dim); }
+  .addr-hint[data-status="ok"] { color: #7fc08f; }
+  .addr-hint[data-status="fout"] { color: #e5826d; }
+  .addr-skip { margin-left: 0.25rem; padding: 0; border: 0; background: none; font: inherit; color: var(--gold); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+
+  .ac { position: relative; }
+  .ac-list {
+    position: absolute; left: 0; right: 0; top: calc(100% + 6px); z-index: 20;
+    list-style: none; margin: 0; padding: 6px;
+    background: var(--pane); border: 1px solid var(--edge); border-radius: 10px;
+    box-shadow: 0 14px 32px rgba(0, 0, 0, 0.55);
+    max-height: 19rem; overflow-y: auto;
+  }
+  .ac-list li[role="option"] { display: grid; gap: 0.1rem; padding: 0.65rem 0.75rem; border-radius: 6px; cursor: pointer; line-height: 1.35; }
+  .ac-list li[role="option"][aria-selected="true"], .ac-list li[role="option"]:hover { background: rgba(243, 238, 231, 0.07); }
+  .ac-list b { font-weight: 500; color: var(--text); }
+  .ac-list small { font-size: 0.82rem; color: var(--dim); }
+  .ac-list .ac-skip { margin-top: 4px; padding: 0.65rem 0.75rem; border-top: 1px solid var(--edge-soft); color: var(--gold); font-size: 0.88rem; cursor: pointer; }
+  .ac-credit { padding: 0.45rem 0.75rem 0.15rem; font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.06em; }
+  .ac-credit a { color: var(--faint); text-decoration: none; }
+  .check { display: flex; gap: 0.65rem; align-items: center; color: var(--dim); font-size: 0.95rem; cursor: pointer; }
+  .check input { width: 1.15rem; height: 1.15rem; margin: 0; accent-color: var(--gold); }
+
+  .send { display: flex; align-items: center; gap: 1.2rem; flex-wrap: wrap; margin-top: 0.4rem; }
+  .btn-send {
+    display: inline-block; text-decoration: none;
+    padding: 1rem 1.6rem; border: 0; border-radius: 999px;
+    background: var(--gold); color: var(--on-gold);
+    font-family: var(--font-mono); font-weight: 500; font-size: 0.8rem; letter-spacing: 0.14em; text-transform: uppercase;
+    cursor: pointer; transition: filter 0.2s;
+  }
+  .btn-send:hover:not(:disabled) { filter: brightness(1.08); }
+  .btn-send:disabled { opacity: 0.6; cursor: wait; }
+  .btn-send:focus-visible { outline: 2px solid var(--text); outline-offset: 3px; }
+  .msg { font-size: 0.9rem; color: var(--dim); min-height: 1.4rem; }
+  .done { margin-top: 1.4rem; font-size: 1rem; line-height: 1.7; }
+
+  .contact { margin-top: 1.4rem; display: flex; gap: 0.4rem 1.6rem; flex-wrap: wrap; font-size: 0.88rem; color: var(--dim); }
+  .contact b { font-weight: 500; color: var(--text); user-select: all; }
+  .privacy { margin-top: 1rem; font-size: 0.8rem; line-height: 1.55; color: var(--faint); }
+
+  @media (max-width: 40rem) {
+    .head { padding-top: 2.8rem; }
+    .pane { padding: 1.35rem; }
+    .figures { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1.4rem; }
+    .money { text-align: left; justify-items: start; }
+    .stamp { top: -1.6rem; right: 1rem; left: auto; }
+    .seg { font-size: 0.6rem; padding: 0.45rem; }
+    .inc, .form, .uses, .how { grid-template-columns: minmax(0, 1fr); }
+    .shots-nav .btn { flex: 1; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .shot .state { transition: none; }
+    .runtime .rec { animation: none; }
+  }
+</style>
+</head>
+<body>
+
+<main class="wrap">
+
+  <header class="head">
+    <div class="brand"><b>SNAP<span>360</span></b><span class="label">Portrait Package</span><span class="tag">Entrepreneurs</span></div>
+    <h1 class="title">Who you are. What you do. <em>In 90 seconds.</em></h1>
+    <p class="intro">
+      One video that tells your story the way you would tell it in person. We film you on location,
+      at your business. You get a finished film for your website and a vertical version for
+      social media, ready to post within 7 business days.
+    </p>
+    <div class="head-cta">
+      <a class="btn-send" href="#aanvraag">Book a call</a>
+      <p class="runtime"><span class="rec" aria-hidden="true"></span>Runtime <b>00:00:30 – 00:01:30</b> · filmed on location</p>
+    </div>
+  </header>
+
+  <section class="pane price-pane" aria-label="Price">
+    <div class="stamp" id="stamp" role="img" aria-label="Black Friday deal" hidden>
+      <small>Black</small><b>Friday</b><strong id="stamp-off"></strong>
+    </div>
+    <div class="figures">
+      <div class="figure">
+        <span class="big">1</span>
+        <span class="label">Video · 2 formats</span>
+      </div>
+      <div class="figure money">
+        <s class="was was-total" id="was-total" hidden></s>
+        <span class="big" id="total">$1,185</span>
+        <span class="rate"><b>One-time</b> · <span id="vat">plus tax</span></span>
+      </div>
+    </div>
+
+    <div class="track" aria-hidden="true">
+      <div class="seg shoot">SHOOT</div>
+      <div class="seg edit">EDIT · GRADE · MUSIC · SUBTITLES</div>
+      <div class="seg out">▶</div>
+    </div>
+    <div class="track-ticks" aria-hidden="true">
+      <span>Shoot day</span><span>Edit</span><span>≤ 7 days</span>
+    </div>
+  </section>
+
+  <section class="pane">
+    <div class="rhythm">
+      <h2>One video, everywhere</h2>
+      <p>People buy from people. A short film of you at work does what a logo and a price list can't: it lets clients meet you before they call.</p>
+    </div>
+    <ul class="uses">
+      <li><b>Your website</b><span>The first thing visitors see on your homepage or about page.</span></li>
+      <li><b>Your profile</b><span>Pinned on Instagram, TikTok or Facebook in the vertical version.</span></li>
+      <li><b>Your sales</b><span>Send it to new leads, add it to quotes and your email signature.</span></li>
+    </ul>
+  </section>
+
+  <section class="pane" id="shots-pane">
+    <p class="label">Examples</p>
+    <div class="shots" id="shots"></div>
+    <div class="shots-nav">
+      <button type="button" class="btn" id="shots-prev" aria-label="Previous example">←</button>
+      <button type="button" class="btn" id="shots-next" aria-label="Next example">→</button>
+    </div>
+    <p class="note" id="shots-note">Tap a video to pause or play it. Tap the speaker for sound.</p>
+  </section>
+
+  <section class="pane">
+    <p class="label">What you get</p>
+    <ul class="inc">
+      <li><span>A 30 to 90-second video</span></li>
+      <li><span>Vertical version for social media</span></li>
+      <li><span>Color grading, music &amp; subtitles</span></li>
+      <li><span>Delivery within 7 business days</span></li>
+      <li><span>Filmed on location, at your business</span></li>
+      <li><span>One fixed price, no surprises</span></li>
+    </ul>
+  </section>
+
+  <section class="pane">
+    <p class="label">How it works</p>
+    <ol class="how">
+      <li><b>We talk</b><span>A short call about you, your business and the story you want to tell.</span></li>
+      <li><b>We film</b><span>At your place. We guide you through it, no camera experience needed.</span></li>
+      <li><b>You post</b><span>Your finished video and vertical version within 7 business days.</span></li>
+    </ol>
+  </section>
+
+  <section class="pane" id="aanvraag">
+    <p class="pick">Portrait Package: <s class="was" id="pick-was" hidden></s> <em id="pick-total">$1,185</em> <span class="rate">one-time · plus tax</span></p>
+    <p class="lede" id="lede">Leave your details and we'll call you to talk through your story and plan the shoot day.</p>
+
+    <form class="form" id="form" novalidate>
+      <label class="field"><span>Name</span>
+        <input type="text" id="f-name" maxlength="80" autocomplete="name" placeholder="Who are we filming?" required>
+      </label>
+      <label class="field"><span>Phone</span>
+        <input type="tel" id="f-phone" maxlength="30" autocomplete="tel" placeholder="The best number to call you" required>
+      </label>
+      <label class="field"><span>Email</span>
+        <input type="email" id="f-email" maxlength="120" autocomplete="email" placeholder="So we can confirm your request" required>
+      </label>
+      <label class="field"><span>Preferred shoot day</span>
+        <input type="date" id="f-date" required>
+      </label>
+      <label class="field wide"><span>Business name</span>
+        <input type="text" id="f-biz" maxlength="100" autocomplete="organization" placeholder="Your company, shop or practice">
+      </label>
+      <div class="field wide">
+        <label for="f-bizaddr"><span>Business address</span></label>
+        <div class="ac">
+          <input type="text" id="f-bizaddr" maxlength="200" autocomplete="off" required
+            role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="f-bizaddr-list"
+            placeholder="Start typing, e.g. 2711 Main St">
+          <ul class="ac-list" id="f-bizaddr-list" role="listbox" hidden></ul>
+        </div>
+        <p class="addr-hint" id="f-bizaddr-hint" aria-live="polite"></p>
+      </div>
+      <label class="check wide"><input type="checkbox" id="f-same"> We film at the business address</label>
+      <div class="field wide">
+        <label for="f-shootaddr"><span>Shoot location address</span></label>
+        <div class="ac">
+          <input type="text" id="f-shootaddr" maxlength="200" autocomplete="off" required
+            role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="f-shootaddr-list"
+            placeholder="Where the shoot will take place">
+          <ul class="ac-list" id="f-shootaddr-list" role="listbox" hidden></ul>
+        </div>
+        <p class="addr-hint" id="f-shootaddr-hint" aria-live="polite"></p>
+      </div>
+      <label class="field wide"><span>Tell us about what you do (optional)</span>
+        <textarea id="f-note" maxlength="800" placeholder="What do you do, and what should people know about you?"></textarea>
+      </label>
+      <input type="text" id="f-gotcha" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <div class="send wide">
+        <button class="btn-send" type="submit" id="f-btn">Book a call</button>
+        <p class="msg" id="f-msg" role="status"></p>
+      </div>
+    </form>
+
+    <div class="contact">
+      <span>Email: <b id="c-mail">tom@snapwithus360.com</b></span>
+      <span>WhatsApp: <b id="c-phone">+1 (702) 881-0971</b></span>
+    </div>
+    <p class="privacy">We use your name, email and phone number only to follow up on your request.</p>
+  </section>
+
+</main>
+
+<script>
+/* Alles wat je wil aanpassen staat hier. */
+const CONFIG = {
+  prijs: 1185,          // Black Friday-prijs
+  oudePrijs: 1485,      // gewone prijs, doorstreept; zet op 0 na de actie en prijs terug op 1485
+  valuta: "$",
+  btw: "plus tax",
+  /* Dezelfde voorbeelden als de reels-pagina. Staat deze pagina op snapwithus360.com/portrait/
+     en de reels op snapwithus360.com/reels/, dan wijst "../reels/examples/" naar dezelfde map.
+     Wil je eigen portretvoorbeelden: zet ze in examples/ naast deze pagina en maak hier "examples/" van. */
+  voorbeelden: { map: "../reels/examples/", aantal: 24, ext: ".mp4" },
+  // De web-app-URL van je Apps Script (eindigt op /exec)
+  endpoint: "https://script.google.com/macros/s/AKfycbwwkoczlZpNYCs9J_yzjkEhiYg8JSr9NCBldkayITUTAdSXBgGfD0dsRP4wfF7Ib7Dy/exec",
+  vroegsteDag: 1,
+  adresKey: "b4e0359717804fc3b3c329847609e7b9",
+  adresLand: "us",
+  adresRondom: "-117.5664,33.8753"   // Corona, CA
+};
+
+const $ = (id) => document.getElementById(id);
+const pad = (n) => String(n).padStart(2, "0");
+const geld = (n) => CONFIG.valuta + n.toLocaleString("en-US");
+
+/* ---------- prijs ---------- */
+(function () {
+  $("total").textContent = geld(CONFIG.prijs);
+  $("pick-total").textContent = geld(CONFIG.prijs);
+  $("vat").textContent = CONFIG.btw;
+  const actie = CONFIG.oudePrijs > CONFIG.prijs;
+  ["stamp", "was-total", "pick-was"].forEach((id) => { $(id).hidden = !actie; });
+  if (actie) {
+    $("stamp-off").textContent = "−" + Math.round((1 - CONFIG.prijs / CONFIG.oudePrijs) * 100) + "%";
+    $("was-total").textContent = geld(CONFIG.oudePrijs);
+    $("pick-was").textContent = geld(CONFIG.oudePrijs);
+  }
+})();
+
+/* ---------- voorbeelden (zelfde werking als de reels-pagina) ----------
+   Er speelt altijd maar één video tegelijk. Nummers zonder bestand verdwijnen vanzelf. */
+(function () {
+  const rail = $("shots");
+  const pane = $("shots-pane");
+  const telefoon = () => matchMedia("(max-width: 40rem)").matches;
+  const muis = matchMedia("(hover: hover) and (pointer: fine)");
+  const stil = matchMedia("(prefers-reduced-motion: reduce)");
+  const { map, aantal, ext } = CONFIG.voorbeelden;
+  let klaar = 0, geladen = 0, actief = null;
+
+  const ICOON_UIT = '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="m22 9-6 6M16 9l6 6"/></svg>';
+  const ICOON_AAN = '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg>';
+
+  const tegels = () => [...rail.children].filter((t) => t.querySelector("video"));
+
+  function speel(tegel) {
+    if (!tegel) return;
+    actief = tegel;
+    for (const t of tegels()) {
+      const v = t.querySelector("video");
+      if (t === tegel) {
+        if (stil.matches || t.dataset.stop === "1") continue;
+        v.play().then(() => t.classList.add("playing")).catch(() => t.classList.remove("playing"));
+      } else {
+        if (!v.muted) zetGeluid(t, false);
+        v.pause();
+        t.classList.remove("playing");
+      }
+    }
+  }
+
+  function zetGeluid(tegel, aan) {
+    for (const t of rail.children) {
+      const v = t.querySelector("video"), k = t.querySelector(".geluid");
+      if (!v || !k) continue;
+      const dit = aan && t === tegel;
+      v.muted = !dit;
+      k.setAttribute("aria-pressed", dit ? "true" : "false");
+      k.setAttribute("aria-label", (dit ? "Turn sound off" : "Turn sound on") + " for this video");
+      k.innerHTML = dit ? ICOON_AAN : ICOON_UIT;
+    }
+    if (aan) { delete tegel.dataset.stop; speel(tegel); }
+  }
+
+  function vooraan() {
+    const links = rail.getBoundingClientRect().left;
+    let beste = null, afstand = Infinity;
+    for (const t of tegels()) {
+      const d = Math.abs(t.getBoundingClientRect().left - links);
+      if (d < afstand) { afstand = d; beste = t; }
+    }
+    return beste;
+  }
+
+  new IntersectionObserver((items) => {
+    if (items[0].isIntersecting) speel(actief || tegels()[0]);
+    else zetGeluid(null, false);
+  }, { threshold: 0.15 }).observe(pane);
+
+  function opruimen(ookWachtend) {
+    if (!geladen) return;
+    [...rail.children]
+      .filter((t) => {
+        if (t.classList.contains("empty")) return true;
+        const v = t.querySelector("video");
+        return ookWachtend && v && !t.dataset.ratio && v.networkState === 3;
+      })
+      .forEach((t) => t.remove());
+  }
+
+  function afgerond() {
+    klaar++;
+    opruimen(false);
+    if (klaar >= aantal && !geladen) {
+      $("shots-note").innerHTML = 'Your examples go here. They load from the <code>' + map +
+        '</code> folder, numbered <code>1' + ext + '</code>, <code>2' + ext + '</code>, ...';
+    }
+    schik();
+  }
+  setTimeout(() => { opruimen(true); schik(); }, 8000);
+
+  for (let n = 1; n <= aantal; n++) {
+    const tegel = document.createElement("div");
+    tegel.className = "shot";
+    tegel.dataset.nr = n;
+
+    const film = document.createElement("video");
+    film.muted = true; film.loop = true; film.playsInline = true;
+    film.setAttribute("muted", ""); film.setAttribute("playsinline", "");
+    film.preload = "metadata";
+
+    const nr = document.createElement("span");
+    nr.className = "no"; nr.textContent = pad(n);
+    const staat = document.createElement("button");
+    staat.type = "button"; staat.className = "state"; staat.textContent = "▶";
+    staat.setAttribute("aria-label", "Play or pause example " + n);
+
+    const geluid = document.createElement("button");
+    geluid.type = "button"; geluid.className = "geluid";
+    geluid.setAttribute("aria-pressed", "false");
+    geluid.setAttribute("aria-label", "Turn sound on for example " + n);
+    geluid.innerHTML = ICOON_UIT;
+    geluid.addEventListener("click", () => zetGeluid(tegel, film.muted));
+
+    film.addEventListener("loadedmetadata", () => {
+      tegel.dataset.ratio = film.videoWidth / film.videoHeight;
+      geladen++;
+      afgerond();
+      if (n === 1 || !actief) speel(tegels()[0]);
+    }, { once: true });
+
+    film.addEventListener("error", () => {
+      film.remove();
+      geluid.remove();
+      tegel.classList.add("empty");
+      staat.disabled = true;
+      tegel.dataset.ratio = 9 / 16;
+      staat.textContent = "Example " + pad(n);
+      afgerond();
+    }, { once: true });
+
+    staat.addEventListener("click", () => {
+      if (!film.isConnected) return;
+      const speeltEcht = !film.paused && tegel.classList.contains("playing");
+      if (!speeltEcht) { delete tegel.dataset.stop; speel(tegel); }
+      else { film.pause(); tegel.dataset.stop = "1"; tegel.classList.remove("playing"); }
+    });
+
+    film.addEventListener("playing", () => tegel.classList.add("playing"));
+    film.addEventListener("pause", () => tegel.classList.remove("playing"));
+    tegel.addEventListener("mouseenter", () => {
+      if (muis.matches && film.isConnected && tegel.dataset.stop !== "1") speel(tegel);
+    });
+
+    tegel.append(film, nr, staat, geluid);
+    rail.appendChild(tegel);
+    film.src = map + n + ext + "#t=0.1";
+  }
+  requestAnimationFrame(() => schik());
+
+  function schik() {
+    const lijst = [...rail.children];
+    const breedte = rail.clientWidth;
+    if (!lijst.length || !breedte) return;
+    const hoog = telefoon() ? Math.min(innerHeight * 0.55, 440) : 460;
+    for (const t of lijst) {
+      const r = Number(t.dataset.ratio) || 9 / 16;
+      const h = Math.round(Math.min(hoog, (breedte * 0.92) / r));
+      Object.assign(t.style, { height: h + "px", width: Math.round(r * h) + "px", aspectRatio: "auto" });
+    }
+    pijlen();
+  }
+
+  const nav = document.querySelector(".shots-nav");
+  const vorige = $("shots-prev"), volgende = $("shots-next");
+  function pijlen() {
+    const ruimte = rail.scrollWidth - rail.clientWidth;
+    nav.hidden = ruimte <= 8;
+    vorige.disabled = rail.scrollLeft < 8;
+    volgende.disabled = rail.scrollLeft > ruimte - 8;
+  }
+  function verschuif(richting) {
+    const links = rail.getBoundingClientRect().left;
+    const lijst = tegels();
+    const pos = (t) => t.getBoundingClientRect().left - links;
+    const doel = richting > 0 ? lijst.find((t) => pos(t) > 8) : [...lijst].reverse().find((t) => pos(t) < -8);
+    if (doel) glijd(rail.scrollLeft + pos(doel));
+  }
+  function glijd(naar) {
+    const van = rail.scrollLeft, weg = naar - van;
+    if (!weg) return;
+    rail.style.scrollSnapType = "none";
+    const klaar = () => { rail.scrollLeft = naar; rail.style.scrollSnapType = ""; pijlen(); speel(vooraan()); };
+    if (stil.matches) { klaar(); return; }
+    const begin = performance.now(), duur = 320;
+    const vangnet = setTimeout(klaar, duur + 200);
+    const stap = (nu) => {
+      const d = Math.min(1, (nu - begin) / duur);
+      const e = d < 0.5 ? 2 * d * d : 1 - Math.pow(-2 * d + 2, 2) / 2;
+      rail.scrollLeft = van + weg * e;
+      if (d < 1) requestAnimationFrame(stap); else { clearTimeout(vangnet); klaar(); }
+    };
+    requestAnimationFrame(stap);
+  }
+  vorige.addEventListener("click", () => verschuif(-1));
+  volgende.addEventListener("click", () => verschuif(1));
+
+  let rust;
+  rail.addEventListener("scroll", () => {
+    pijlen();
+    clearTimeout(rust);
+    rust = setTimeout(() => speel(vooraan()), 140);
+  }, { passive: true });
+
+  const opnieuw = () => {
+    if (!actief || actief.dataset.stop === "1") return;
+    const v = actief.querySelector("video");
+    if (v && v.paused) speel(actief);
+  };
+  document.addEventListener("touchend", (e) => { if (!e.target.closest(".shot")) opnieuw(); }, { passive: true });
+  let wacht;
+  addEventListener("resize", () => { clearTimeout(wacht); wacht = setTimeout(schik, 120); });
+  document.addEventListener("visibilitychange", () => { if (!document.hidden) opnieuw(); });
+})();
+
+/* ---------- adressuggesties (Geoapify) ---------- */
+(function () {
+  const sleutel = () => CONFIG.adresKey && CONFIG.adresKey.indexOf("PLAK_HIER") !== 0;
+
+  function adresVeld(input) {
+    const lijst = $(input.getAttribute("aria-controls"));
+    let items = [], actief = -1, timer = null, ctrl = null;
+
+    const sluit = () => {
+      lijst.hidden = true;
+      input.setAttribute("aria-expanded", "false");
+      input.removeAttribute("aria-activedescendant");
+      actief = -1;
+    };
+    const markeer = (i) => {
+      actief = i;
+      lijst.querySelectorAll('li[role="option"]').forEach((li, j) => li.setAttribute("aria-selected", j === i ? "true" : "false"));
+      if (i >= 0) input.setAttribute("aria-activedescendant", lijst.id + "-" + i);
+    };
+    const kies = (i) => {
+      const it = items[i];
+      if (!it) return;
+      input.value = it.formatted;
+      input.dataset.gekozen = it.formatted;
+      delete input.dataset.vrij;
+      status(input, "ok");
+      sluit();
+      input.dispatchEvent(new Event("change", { bubbles: true }));
+    };
+
+    function toon() {
+      if (!items.length) { sluit(); return; }
+      lijst.innerHTML = "";
+      items.forEach((it, i) => {
+        const li = document.createElement("li");
+        li.id = lijst.id + "-" + i;
+        li.setAttribute("role", "option");
+        li.setAttribute("aria-selected", "false");
+        const een = document.createElement("b");
+        een.textContent = it.address_line1 || it.formatted;
+        const twee = document.createElement("small");
+        twee.textContent = it.address_line2 || "";
+        li.append(een, twee);
+        li.addEventListener("mousedown", (e) => { e.preventDefault(); kies(i); });
+        lijst.appendChild(li);
+      });
+      const eigen = document.createElement("li");
+      eigen.className = "ac-skip";
+      eigen.setAttribute("role", "presentation");
+      eigen.textContent = "My address isn't listed, use what I typed";
+      eigen.addEventListener("mousedown", (e) => {
+        e.preventDefault();
+        input.dataset.vrij = "1";
+        status(input, "vrij");
+        sluit();
+        input.dispatchEvent(new Event("change", { bubbles: true }));
+      });
+      lijst.appendChild(eigen);
+      const bron = document.createElement("li");
+      bron.className = "ac-credit";
+      bron.setAttribute("role", "presentation");
+      bron.innerHTML = '<a href="https://www.geoapify.com/" target="_blank" rel="noopener">Powered by Geoapify</a>';
+      lijst.appendChild(bron);
+      lijst.hidden = false;
+      input.setAttribute("aria-expanded", "true");
+      actief = -1;
+    }
+
+    async function zoek(q) {
+      if (ctrl) ctrl.abort();
+      ctrl = new AbortController();
+      const url = "https://api.geoapify.com/v1/geocode/autocomplete?text=" + encodeURIComponent(q) +
+        "&filter=countrycode:" + CONFIG.adresLand + "&bias=proximity:" + CONFIG.adresRondom +
+        "&format=json&limit=7&lang=en&apiKey=" + encodeURIComponent(CONFIG.adresKey);
+      try {
+        const res = await fetch(url, { signal: ctrl.signal });
+        if (!res.ok) throw new Error("geoapify " + res.status);
+        const data = await res.json();
+        if (document.activeElement !== input) return;
+        items = (data.results || []).filter((r) => r.formatted);
+        if (!items.length && q.length >= 6) input.dataset.vrij = "1";
+        else delete input.dataset.vrij;
+        if (!input.dataset.gekozen) status(input, items.length ? "kies" : (input.dataset.vrij ? "vrij" : "typ"));
+        toon();
+      } catch (err) {
+        if (err.name !== "AbortError") {
+          console.error(err);
+          input.dataset.vrij = "1";
+          status(input, "");
+          sluit();
+        }
+      }
+    }
+
+    input.addEventListener("input", () => {
+      clearTimeout(timer);
+      delete input.dataset.gekozen;
+      input.removeAttribute("aria-invalid");
+      const q = input.value.trim();
+      if (sleutel() && !input.readOnly) status(input, !q ? "" : q.length < 3 ? "typ" : "zoekt");
+      if (input.readOnly || q.length < 3 || !sleutel()) { sluit(); return; }
+      timer = setTimeout(() => zoek(q), 250);
+    });
+    input.addEventListener("keydown", (e) => {
+      if (lijst.hidden) return;
+      if (e.key === "ArrowDown") { e.preventDefault(); markeer(Math.min(items.length - 1, actief + 1)); }
+      else if (e.key === "ArrowUp") { e.preventDefault(); markeer(Math.max(0, actief - 1)); }
+      else if (e.key === "Enter" && actief >= 0) { e.preventDefault(); kies(actief); }
+      else if (e.key === "Escape") { sluit(); }
+    });
+    input.addEventListener("blur", () => setTimeout(sluit, 150));
+
+    const bevestigBestaand = () => {
+      const q = input.value.trim();
+      if (!sleutel() || input.readOnly || input.dataset.gekozen === q || q.length < 3) return;
+      clearTimeout(timer);
+      timer = setTimeout(() => zoek(q), 50);
+    };
+    input.addEventListener("focus", bevestigBestaand);
+    input.addEventListener("change", () => { if (document.activeElement === input) bevestigBestaand(); });
+  }
+
+  const TEKST = {
+    typ: "Type at least 3 characters to see matching addresses.",
+    zoekt: "Looking up addresses…",
+    kies: "Pick your address from the list to continue.",
+    ok: "✓ Address confirmed",
+    vrij: "We'll use the address as you typed it. Please make sure it's complete.",
+    fout: "Choose your address from the list below the field. Don't see it? Keep typing the full address.",
+    zelfde: "Same as the business address."
+  };
+  function status(input, s) {
+    const hint = $(input.id + "-hint");
+    if (!hint) return;
+    hint.textContent = TEKST[s] || "";
+    hint.dataset.status = s;
+    if (s === "kies" || s === "fout") {
+      const knop = document.createElement("button");
+      knop.type = "button";
+      knop.className = "addr-skip";
+      knop.textContent = "My address isn't listed";
+      knop.addEventListener("mousedown", (e) => e.preventDefault());
+      knop.addEventListener("click", () => {
+        input.dataset.vrij = "1";
+        status(input, "vrij");
+        $(input.getAttribute("aria-controls")).hidden = true;
+        input.setAttribute("aria-expanded", "false");
+        input.dispatchEvent(new Event("change", { bubbles: true }));
+      });
+      hint.append(" ", knop);
+    }
+    if (s === "ok") input.dataset.status = "ok"; else delete input.dataset.status;
+    if (s === "fout") input.setAttribute("aria-invalid", "true"); else input.removeAttribute("aria-invalid");
+  }
+  window.snapAdresStatus = status;
+
+  const biz = $("f-bizaddr"), shoot = $("f-shootaddr"), zelfde = $("f-same");
+  adresVeld(biz);
+  adresVeld(shoot);
+
+  const geldig = (input) => !sleutel() || input.dataset.vrij === "1" ||
+    (!!input.dataset.gekozen && input.dataset.gekozen === input.value.trim());
+  window.snapAdresGeldig = (welk) => welk === "shoot"
+    ? (zelfde.checked ? geldig(biz) : geldig(shoot))
+    : geldig(biz);
+
+  const volg = () => {
+    if (zelfde.checked) { shoot.value = biz.value; shoot.readOnly = true; status(shoot, "zelfde"); }
+    else { shoot.readOnly = false; if ($("f-shootaddr-hint").dataset.status === "zelfde") status(shoot, ""); }
+  };
+  zelfde.addEventListener("change", () => { if (!zelfde.checked) shoot.value = ""; volg(); if (!zelfde.checked) shoot.focus(); });
+  biz.addEventListener("input", volg);
+  biz.addEventListener("change", volg);
+})();
+
+/* ---------- aanvraag via Google Apps Script ---------- */
+(function () {
+  const form = $("form"), datum = $("f-date");
+  const iso = (d) => d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate());
+  const vroegst = new Date();
+  vroegst.setDate(vroegst.getDate() + CONFIG.vroegsteDag);
+  datum.min = iso(vroegst);
+
+  const langeDatum = (v) => {
+    const d = new Date(v + "T12:00:00");
+    return isNaN(d) ? v : d.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric" });
+  };
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const msg = $("f-msg"), knop = $("f-btn");
+    const naam = $("f-name").value.trim();
+    const mail = $("f-email").value.trim();
+    const tel = $("f-phone").value.trim();
+
+    if (!naam) { msg.textContent = "Please add your name."; $("f-name").focus(); return; }
+    if (!/^[+(\d][\d\s()./-]{5,}$/.test(tel)) { msg.textContent = "Please add a phone number where we can call you."; $("f-phone").focus(); return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(mail)) { msg.textContent = "Please add a valid email address."; $("f-email").focus(); return; }
+    if (!datum.value) { msg.textContent = "Pick the day you would like us to film."; datum.focus(); return; }
+    if (datum.value < datum.min) { msg.textContent = "Pick a shoot day from tomorrow onward."; datum.focus(); return; }
+    const bizAdres = $("f-bizaddr").value.trim();
+    const shootAdres = $("f-shootaddr").value.trim();
+    if (bizAdres.length < 5) { msg.textContent = "Please add your business address."; $("f-bizaddr").focus(); return; }
+    if (!window.snapAdresGeldig("biz")) {
+      msg.textContent = "Please confirm your business address (see the note under that field).";
+      window.snapAdresStatus($("f-bizaddr"), "fout");
+      $("f-bizaddr").scrollIntoView({ block: "center" }); $("f-bizaddr").focus(); return;
+    }
+    if (shootAdres.length < 5) { msg.textContent = "Please add the address where the shoot will take place."; $("f-shootaddr").focus(); return; }
+    if (!window.snapAdresGeldig("shoot")) {
+      msg.textContent = "Please confirm the shoot location (see the note under that field).";
+      window.snapAdresStatus($("f-shootaddr"), "fout");
+      $("f-shootaddr").scrollIntoView({ block: "center" }); $("f-shootaddr").focus(); return;
+    }
+
+    knop.disabled = true;
+    msg.textContent = "Sending...";
+
+    const gegevens = {
+      page: "portrait-us",
+      package: "Portrait Package",
+      price: CONFIG.prijs,
+      shootDate: datum.value,
+      shootDay: langeDatum(datum.value),
+      name: naam, email: mail, phone: tel,
+      business: $("f-biz").value.trim(),
+      businessAddress: bizAdres,
+      shootAddress: shootAdres,
+      notes: $("f-note").value.trim(),
+      website: $("f-gotcha").value
+    };
+
+    try {
+      const res = await fetch(CONFIG.endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify(gegevens)
+      });
+      const antwoord = await res.json().catch(() => ({}));
+      if (!res.ok || !antwoord.ok) throw new Error("apps script " + res.status);
+      const klaar = document.createElement("p");
+      klaar.className = "done";
+      klaar.textContent = "Thanks, " + naam.split(" ")[0] + ". Your Portrait Package request for " +
+        langeDatum(datum.value) + " is in. We will call you to talk through your story and confirm the shoot day. Our confirmation comes from " +
+        $("c-mail").textContent + ": if you don't see it, check your spam folder.";
+      form.replaceWith(klaar);
+      $("lede").textContent = "Your request has been sent.";
+    } catch (err) {
+      console.error(err);
+      msg.textContent = "Your request could not be sent right now. Try again in a moment, or email " + $("c-mail").textContent + ".";
+      knop.disabled = false;
+    }
+  });
+})();
+</script>
+
+</body>
+</html>
