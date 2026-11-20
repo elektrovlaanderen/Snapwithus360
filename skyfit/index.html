@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>SNAP360 for SkyFit</title>
+<meta name="description" content="A first introduction from SNAP360 for SkyFit: who we are, a few ideas and our Portrait Package.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="SNAP360">
+<meta property="og:title" content="SNAP360 for SkyFit">
+<meta property="og:description" content="Good to meet you, Dennis. Here's who we are, with a few first ideas for a SkyFit film.">
+<meta property="og:url" content="https://snapwithus360.com/skyfit/">
+<meta property="og:image" content="https://snapwithus360.com/portrait/og-portrait.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://snapwithus360.com/portrait/og-portrait.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Hanken+Grotesk:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  /* Zelfde huisstijl als de one-take reels pagina: donkere panelen, goud alleen voor wat telt. */
+  :root {
+    --bg: #0b0a09;
+    --pane: #141210;
+    --well: #0e0d0b;
+    --edge: #2a2621;
+    --edge-soft: #1f1c19;
+    --text: #f3eee7;
+    --dim: #a59d92;
+    --faint: #6e675e;
+    --gold: #dd9a3e;
+    --gold-soft: rgba(221, 154, 62, 0.16);
+    --on-gold: #1a1208;
+    --font-display: "Bricolage Grotesque", "Arial Narrow", system-ui, sans-serif;
+    --font-body: "Hanken Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-padding-top: env(safe-area-inset-top, 0px); scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    touch-action: manipulation;
+  }
+  [hidden] { display: none !important; }
+  p, h1, h2, h3, ul, ol { margin: 0; }
+
+  .wrap {
+    max-width: 48rem;
+    margin: 0 auto;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+    padding-block: 0 4.5rem;
+    display: grid;
+    gap: 1rem;
+  }
+
+  .label {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--faint);
+  }
+
+  /* ---------- kop ---------- */
+  .head { padding-block: 4rem 2rem; display: grid; gap: 1.2rem; }
+  .brand { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
+  .brand b { font-family: var(--font-display); font-weight: 700; font-size: 1rem; letter-spacing: 0.04em; color: var(--text); }
+  .brand b span { color: var(--gold); }
+  .tag {
+    margin-left: auto;
+    padding: 0.3rem 0.8rem; border: 1px solid var(--edge); border-radius: 999px;
+    font-family: var(--font-mono); font-size: 0.64rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--dim);
+  }
+  .title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(2.3rem, 7vw, 4.2rem);
+    line-height: 0.98;
+    letter-spacing: -0.035em;
+    text-wrap: balance;
+  }
+  .title em { font-style: normal; color: var(--gold); }
+  .intro { max-width: 46ch; color: var(--dim); font-size: 1.02rem; line-height: 1.7; }
+  .head-cta { display: flex; gap: 1rem 1.4rem; align-items: center; flex-wrap: wrap; }
+  .runtime {
+    display: inline-flex; gap: 0.7rem; align-items: center;
+    padding: 0.45rem 0.9rem;
+    border: 1px solid var(--edge);
+    border-radius: 6px;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    color: var(--dim);
+    font-variant-numeric: tabular-nums;
+  }
+  .runtime .rec { width: 7px; height: 7px; border-radius: 50%; background: var(--gold); animation: rec 1.6s ease-in-out infinite; }
+  .runtime b { color: var(--text); font-weight: 500; }
+  @keyframes rec { 50% { opacity: 0.25; } }
+
+  /* ---------- panelen ---------- */
+  .pane {
+    background: var(--pane);
+    border: 1px solid var(--edge-soft);
+    border-radius: 14px;
+    padding: 1.8rem;
+    min-width: 0;
+  }
+
+  /* ---------- prijs ---------- */
+  .price-pane { position: relative; }
+  .figures { display: flex; justify-content: space-between; align-items: flex-end; gap: 1.5rem; flex-wrap: wrap; }
+  .big {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(3.6rem, 12vw, 5.6rem);
+    line-height: 0.85;
+    letter-spacing: -0.04em;
+    font-variant-numeric: tabular-nums;
+  }
+  .figure { display: grid; gap: 0.6rem; }
+  .money { text-align: right; justify-items: end; }
+  .money .big { font-size: clamp(2.7rem, 8.5vw, 4.2rem); }
+  .rate { font-size: 0.9rem; color: var(--dim); }
+  .rate b { color: var(--text); font-weight: 600; }
+
+  /* tijdlijn: 2 uur op locatie → montage → levering binnen 7 werkdagen */
+  .track { margin-top: 2.2rem; display: grid; grid-template-columns: 2fr 5fr 1fr; gap: 4px; }
+  .seg {
+    position: relative; height: 3.4rem; border-radius: 6px;
+    background: var(--well); border: 1px solid var(--edge);
+    display: flex; align-items: flex-end; padding: 0.5rem 0.65rem;
+    font-family: var(--font-mono); font-size: 0.66rem; letter-spacing: 0.08em; color: var(--dim);
+    overflow: hidden; white-space: nowrap;
+  }
+  .seg.shoot { background: var(--gold-soft); border-color: rgba(221, 154, 62, 0.4); color: var(--text); }
+  .seg.edit { background: repeating-linear-gradient(90deg, rgba(243,238,231,.04) 0 10px, transparent 10px 14px), var(--well); }
+  .seg.out { justify-content: center; color: var(--gold); border-color: rgba(221, 154, 62, 0.4); }
+  .track-ticks { display: grid; grid-template-columns: 2fr 5fr 1fr; gap: 4px; margin-top: 0.7rem; font-family: var(--font-mono); font-size: 0.66rem; color: var(--faint); }
+  .track-ticks span:last-child { text-align: center; }
+
+  /* optionele actie-stempel (zie CONFIG.oudePrijs) */
+  .stamp {
+    position: absolute; top: 1.6rem; left: 42%; z-index: 3;
+    width: 7.2rem; height: 7.2rem; border-radius: 50%;
+    display: grid; place-content: center; justify-items: center; gap: 0.1rem;
+    color: #e2402f; background: rgba(11, 10, 9, 0.92);
+    border: 3px solid currentColor;
+    box-shadow: 0 0 0 3px rgba(11, 10, 9, 0.92), 0 0 0 4.5px currentColor;
+    transform: rotate(-14deg);
+    font-family: var(--font-display); text-transform: uppercase; text-align: center; line-height: 1;
+    pointer-events: none;
+    -webkit-mask-image: radial-gradient(circle at 70% 30%, #000 60%, rgba(0,0,0,.82) 100%);
+    mask-image: radial-gradient(circle at 70% 30%, #000 60%, rgba(0,0,0,.82) 100%);
+  }
+  .stamp small { font-family: var(--font-mono); font-size: 0.56rem; font-weight: 500; letter-spacing: 0.2em; }
+  .stamp b { font-size: 1.05rem; font-weight: 700; }
+  .stamp strong { font-size: 1.9rem; font-weight: 700; letter-spacing: -0.03em; margin-top: 0.1rem; }
+  .was { color: var(--faint); text-decoration: line-through; text-decoration-color: #e2402f; text-decoration-thickness: 2px; }
+  .was-total { font-family: var(--font-display); font-size: 1.4rem; line-height: 1; }
+
+  /* ---------- waarom ---------- */
+  .rhythm { display: flex; gap: 1.2rem 1.6rem; align-items: baseline; flex-wrap: wrap; }
+  .rhythm h2 { font-family: var(--font-display); font-weight: 500; font-size: 1.5rem; letter-spacing: -0.02em; }
+  .rhythm p { flex: 1 1 18rem; min-width: 0; color: var(--dim); font-size: 0.95rem; }
+
+  .uses { list-style: none; padding: 0; margin-top: 1.2rem; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+  .uses li { padding: 1rem; border: 1px solid var(--edge-soft); border-radius: 10px; background: var(--well); display: grid; gap: 0.3rem; }
+  .uses b { font-weight: 600; font-size: 0.98rem; }
+  .uses span { color: var(--dim); font-size: 0.88rem; line-height: 1.5; }
+
+  /* ---------- voorbeelden ---------- */
+  .shots {
+    display: flex; gap: 10px; margin-top: 1.2rem; align-items: center;
+    overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none;
+    -webkit-overflow-scrolling: touch; overscroll-behavior-x: contain;
+  }
+  .shots::-webkit-scrollbar { display: none; }
+  .shot {
+    position: relative; flex: 0 0 auto; scroll-snap-align: start;
+    width: 8rem; aspect-ratio: 9 / 16; max-width: 100%;
+    padding: 0; border: 1px solid var(--edge); border-radius: 10px;
+    background: var(--well); overflow: hidden; cursor: pointer; color: var(--text);
+  }
+  .shot video { display: block; width: 100%; height: 100%; object-fit: cover; }
+  .shot .no {
+    position: absolute; left: 0.55rem; top: 0.45rem;
+    font-family: var(--font-mono); font-size: 0.66rem; letter-spacing: 0.1em;
+    color: rgba(243, 238, 231, 0.8); text-shadow: 0 1px 6px rgba(0, 0, 0, 0.7);
+  }
+  .shot .state {
+    position: absolute; inset: 0; display: grid; place-items: center;
+    font-size: 1.1rem; text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+    transition: opacity 0.15s;
+    border: 0; background: none; color: inherit; padding: 0; width: 100%; height: 100%; cursor: pointer; font-family: inherit;
+  }
+  .shot.playing .state { opacity: 0; }
+  .geluid {
+    position: absolute; right: 0.45rem; top: 0.4rem; z-index: 2;
+    display: grid; place-items: center; width: 2.1rem; height: 2.1rem; padding: 0;
+    border: 1px solid rgba(243, 238, 231, 0.22); border-radius: 50%;
+    background: rgba(11, 10, 9, 0.55); color: var(--text); cursor: pointer;
+    -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px);
+  }
+  .geluid[aria-pressed="true"] { background: var(--gold); border-color: var(--gold); color: var(--on-gold); }
+  .geluid:focus-visible, .shot .state:focus-visible { outline: 2px solid var(--gold); outline-offset: -2px; }
+  .shot.empty, .shot.empty .state { cursor: default; } .shot.empty { border-style: dashed; }
+  .shot.empty .state { font-family: var(--font-mono); font-size: 0.7rem; color: var(--faint); text-shadow: none; }
+  .shots-nav { display: flex; gap: 0.5rem; margin-top: 0.9rem; }
+  .note { margin-top: 0.9rem; font-size: 0.85rem; color: var(--faint); }
+  .note code { font-family: var(--font-mono); font-size: 0.8rem; color: var(--dim); }
+
+  .btn {
+    min-width: 4.4rem; min-height: 2.6rem; padding: 0.55rem 1rem;
+    border: 1px solid var(--edge); border-radius: 999px;
+    background: rgba(243, 238, 231, 0.05); color: var(--text);
+    font-family: var(--font-mono); font-size: 0.8rem; cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .btn:hover:not(:disabled) { background: rgba(243, 238, 231, 0.1); border-color: #3a352f; }
+  .btn:disabled { opacity: 0.35; cursor: not-allowed; }
+  .btn:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+
+  /* ---------- inbegrepen ---------- */
+  .inc { list-style: none; padding: 0; margin-top: 1.1rem; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 2rem; }
+  .inc li { padding: 0.9rem 0; border-top: 1px solid var(--edge-soft); display: grid; grid-template-columns: 0.9rem 1fr; gap: 0.7rem; align-items: baseline; }
+  .inc li::before { content: ""; width: 7px; height: 7px; border-radius: 50%; border: 1px solid var(--gold); transform: translateY(-1px); }
+
+  /* ---------- zo werkt het ---------- */
+  .how { list-style: none; padding: 0; margin-top: 1.2rem; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; counter-reset: stap; }
+  .how li { counter-increment: stap; padding: 1.1rem; border-radius: 10px; border: 1px solid var(--edge-soft); background: var(--well); display: grid; gap: 0.35rem; align-content: start; }
+  .how li::before { content: counter(stap, decimal-leading-zero); font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.12em; color: var(--gold); }
+  .how b { font-family: var(--font-display); font-weight: 500; font-size: 1.15rem; letter-spacing: -0.01em; }
+  .how span { color: var(--dim); font-size: 0.9rem; line-height: 1.55; }
+
+  /* ---------- aanvraag ---------- */
+  .pick { font-family: var(--font-display); font-weight: 500; font-size: clamp(1.35rem, 3.6vw, 2rem); line-height: 1.2; letter-spacing: -0.02em; text-wrap: balance; }
+  .pick em { font-style: normal; color: var(--gold); font-variant-numeric: tabular-nums; }
+  .lede { margin-top: 0.8rem; color: var(--dim); font-size: 0.95rem; }
+
+  .form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin-top: 1.6rem; }
+  .field { display: grid; gap: 0.45rem; min-width: 0; }
+  .field span { font-family: var(--font-mono); font-size: 0.66rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--dim); }
+  .field input, .field textarea {
+    width: 100%; padding: 0.85rem 1rem;
+    font: inherit; font-size: 1rem; color: var(--text);
+    background: var(--well); border: 1px solid var(--edge); border-radius: 10px;
+  }
+  .field textarea { resize: vertical; min-height: 5.5rem; }
+  .field input::placeholder, .field textarea::placeholder { color: var(--faint); }
+  .field input:focus, .field textarea:focus { outline: none; border-color: var(--gold); }
+  .wide { grid-column: 1 / -1; }
+  .hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+  .field input[readonly] { color: var(--dim); }
+  .field input[aria-invalid="true"] { border-color: #d4664f; }
+  .field input[data-status="ok"] { border-color: #5f9e6e; }
+  .addr-hint { min-height: 1.2rem; margin: 0; font-size: 0.85rem; line-height: 1.4; color: var(--dim); }
+  .addr-hint[data-status="ok"] { color: #7fc08f; }
+  .addr-hint[data-status="fout"] { color: #e5826d; }
+  .addr-skip { margin-left: 0.25rem; padding: 0; border: 0; background: none; font: inherit; color: var(--gold); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+
+  .ac { position: relative; }
+  .ac-list {
+    position: absolute; left: 0; right: 0; top: calc(100% + 6px); z-index: 20;
+    list-style: none; margin: 0; padding: 6px;
+    background: var(--pane); border: 1px solid var(--edge); border-radius: 10px;
+    box-shadow: 0 14px 32px rgba(0, 0, 0, 0.55);
+    max-height: 19rem; overflow-y: auto;
+  }
+  .ac-list li[role="option"] { display: grid; gap: 0.1rem; padding: 0.65rem 0.75rem; border-radius: 6px; cursor: pointer; line-height: 1.35; }
+  .ac-list li[role="option"][aria-selected="true"], .ac-list li[role="option"]:hover { background: rgba(243, 238, 231, 0.07); }
+  .ac-list b { font-weight: 500; color: var(--text); }
+  .ac-list small { font-size: 0.82rem; color: var(--dim); }
+  .ac-list .ac-skip { margin-top: 4px; padding: 0.65rem 0.75rem; border-top: 1px solid var(--edge-soft); color: var(--gold); font-size: 0.88rem; cursor: pointer; }
+  .ac-credit { padding: 0.45rem 0.75rem 0.15rem; font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.06em; }
+  .ac-credit a { color: var(--faint); text-decoration: none; }
+  .check { display: flex; gap: 0.65rem; align-items: center; color: var(--dim); font-size: 0.95rem; cursor: pointer; }
+  .check input { width: 1.15rem; height: 1.15rem; margin: 0; accent-color: var(--gold); }
+
+  .send { display: flex; align-items: center; gap: 1.2rem; flex-wrap: wrap; margin-top: 0.4rem; }
+  .btn-send {
+    display: inline-block; text-decoration: none;
+    padding: 1rem 1.6rem; border: 0; border-radius: 999px;
+    background: var(--gold); color: var(--on-gold);
+    font-family: var(--font-mono); font-weight: 500; font-size: 0.8rem; letter-spacing: 0.14em; text-transform: uppercase;
+    cursor: pointer; transition: filter 0.2s;
+  }
+  .btn-send:hover:not(:disabled) { filter: brightness(1.08); }
+  .btn-send:disabled { opacity: 0.6; cursor: wait; }
+  .btn-send:focus-visible { outline: 2px solid var(--text); outline-offset: 3px; }
+  .msg { font-size: 0.9rem; color: var(--dim); min-height: 1.4rem; }
+  .done { margin-top: 1.4rem; font-size: 1rem; line-height: 1.7; }
+
+  .contact { margin-top: 1.4rem; display: flex; gap: 0.4rem 1.6rem; flex-wrap: wrap; font-size: 0.88rem; color: var(--dim); }
+  .contact b { font-weight: 500; color: var(--text); user-select: all; }
+  .privacy { margin-top: 1rem; font-size: 0.8rem; line-height: 1.55; color: var(--faint); }
+
+  @media (max-width: 40rem) {
+    .head { padding-top: 2.8rem; }
+    .pane { padding: 1.35rem; }
+    .figures { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1.4rem; }
+    .money { text-align: left; justify-items: start; }
+    .stamp { top: -1.6rem; right: 1rem; left: auto; }
+    .seg { font-size: 0.6rem; padding: 0.45rem; }
+    .inc, .form, .uses, .how { grid-template-columns: minmax(0, 1fr); }
+    .shots-nav .btn { flex: 1; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .shot .state { transition: none; }
+    .runtime .rec { animation: none; }
+  }
+
+/* ---------- SkyFit kennismaking: extra's bovenop de portrait-huisstijl ---------- */
+.for { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--dim); }
+.for b { color: var(--text); font-weight: 500; }
+.was { text-decoration-color: var(--gold); }
+.soft-cta { color: var(--dim); font-size: 0.92rem; text-decoration: none; border-bottom: 1px solid var(--edge); padding-bottom: 2px; }
+.soft-cta:hover { color: var(--text); border-color: var(--gold); }
+.prose { margin-top: 0.9rem; color: var(--dim); font-size: 0.98rem; line-height: 1.7; max-width: 60ch; }
+.prose + .prose { margin-top: 0.7rem; }
+.prose b { color: var(--text); font-weight: 500; }
+.ideas { list-style: none; padding: 0; margin-top: 1.2rem; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.ideas li { padding: 1.2rem; border-radius: 10px; border: 1px solid var(--edge-soft); background: var(--well); display: grid; gap: 0.45rem; align-content: start; }
+.ideas b { font-family: var(--font-display); font-weight: 500; font-size: 1.2rem; letter-spacing: -0.015em; line-height: 1.2; }
+.ideas span { color: var(--dim); font-size: 0.9rem; line-height: 1.55; }
+.one { margin-top: 1rem; font-size: 0.88rem; color: var(--faint); }
+.cap { margin-top: 0.4rem; font-size: 0.88rem; color: var(--dim); }
+.offer-note { margin-top: 1.4rem; padding-top: 1.1rem; border-top: 1px solid var(--edge-soft); color: var(--dim); font-size: 0.92rem; line-height: 1.6; }
+.talk { display: flex; gap: 0.8rem 1rem; flex-wrap: wrap; align-items: center; margin-top: 1.4rem; }
+.btn-line {
+  display: inline-block; text-decoration: none;
+  padding: 1rem 1.4rem; border: 1px solid var(--edge); border-radius: 999px; color: var(--text);
+  font-family: var(--font-mono); font-size: 0.8rem; letter-spacing: 0.14em; text-transform: uppercase;
+}
+.btn-line:hover { border-color: var(--gold); }
+.choice { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.choice label { cursor: pointer; position: relative; }
+.field .choice input { position: absolute; left: 0; top: 0; width: 1px; height: 1px; padding: 0; opacity: 0; pointer-events: none; }
+.choice span {
+  display: inline-block; padding: 0.7rem 1.1rem; border: 1px solid var(--edge); border-radius: 999px;
+  font-family: var(--font-body); font-size: 0.92rem; letter-spacing: 0; text-transform: none; color: var(--dim); background: var(--well);
+}
+.choice input:checked + span { border-color: var(--gold); color: var(--text); background: var(--gold-soft); }
+.choice input:focus-visible + span { outline: 2px solid var(--gold); outline-offset: 2px; }
+@media (max-width: 40rem) { .ideas { grid-template-columns: minmax(0, 1fr); } }
+</style>
+</head>
+<body>
+
+<main class="wrap">
+
+  <header class="head">
+    <div class="brand"><b>SNAP<span>360</span></b><span class="label">Visual media company</span><span class="tag">For SkyFit</span></div>
+    <p class="for">Prepared for <b>Dennis Vega</b> · SkyFit</p>
+    <h1 class="title">Good to meet you, Dennis. <em>Here's who we are.</em></h1>
+    <p class="intro">
+      Thanks for taking the time this week. You mentioned SkyFit might be thinking about a short film,
+      with a new location coming up and brands you're proud to represent.
+      We put together a few thoughts, no strings attached.
+    </p>
+    <div class="head-cta">
+      <a class="soft-cta" href="#ideas">A few first ideas ↓</a>
+    </div>
+  </header>
+
+  <section class="pane">
+    <p class="label">About SNAP360</p>
+    <p class="prose">
+      SNAP360 is an international visual media company. From our bases in Las Vegas,
+      Southern California and Belgium, we work across the US and Europe, and we go
+      wherever the story is.
+    </p>
+    <p class="prose">
+      We make films for brands built on quality. Our job is to make that quality visible:
+      the materials, the space and <b>the details that make the difference</b>.
+    </p>
+  </section>
+
+  <section class="pane" id="ideas">
+    <p class="label">A few first ideas</p>
+    <ul class="ideas">
+      <li><b>The new location</b><span>Your new space as the setting: Pavigym floors and Technogym equipment shown where clients will experience them. Could also work toward the grand opening.</span></li>
+      <li><b>The craft</b><span>Technogym and Pavigym up close: the materials, the details and why SkyFit chose to represent them.</span></li>
+      <li><b>The process</b><span>One SkyFit project from start to finish: from the first design to the final installation, in a client's home or facility.</span></li>
+    </ul>
+    <p class="one">Just starting points, and nobody needs to be on camera: the space and the products tell the story. If a film makes sense for you, we'd rather hear what you have in mind and shape it together.</p>
+  </section>
+
+  <section class="pane" id="shots-pane">
+    <p class="label">Our work</p>
+    <p class="cap">A selection of our work, including Sākas, an exclusive omakase restaurant in Belgium.</p>
+    <div class="shots" id="shots"></div>
+    <div class="shots-nav">
+      <button type="button" class="btn" id="shots-prev" aria-label="Previous example">←</button>
+      <button type="button" class="btn" id="shots-next" aria-label="Next example">→</button>
+    </div>
+    <p class="note" id="shots-note">Tap a video to pause or play it. Tap the speaker for sound.</p>
+  </section>
+
+  <section class="pane">
+    <p class="label">How we'd do it: the Portrait Package</p>
+    <p class="prose">One short film about SkyFit, with your space and your products as the story.</p>
+    <ul class="inc">
+      <li><span>A 30 to 90-second video</span></li>
+      <li><span>Short reels cut from the film, for Instagram</span></li>
+      <li><span>Color grading, music &amp; subtitles</span></li>
+      <li><span>Delivery within 7 business days</span></li>
+      <li><span>Filmed on location, travel costs included</span></li>
+      <li><span>One fixed price, no surprises</span></li>
+    </ul>
+  </section>
+
+  <section class="pane">
+    <p class="label">How it works</p>
+    <ol class="how">
+      <li><b>We talk</b><span>A short conversation about SkyFit and what you'd want a film to do.</span></li>
+      <li><b>We film</b><span>Wherever you need us, when it suits you. We take care of everything on set.</span></li>
+      <li><b>You share it</b><span>Your finished film and short reels within 7 business days.</span></li>
+    </ol>
+  </section>
+
+  <section class="pane price-pane" aria-label="Price">
+    <div class="figures">
+      <div class="figure">
+        <span class="label">Portrait Package</span>
+        <span class="rate">1 film · short reels from the film</span>
+      </div>
+      <div class="figure money">
+        <s class="was was-total" id="was-total" hidden></s>
+        <span class="big" id="total">$1,185</span>
+        <span class="rate"><b>Introductory price for SkyFit</b> · <span id="vat">plus tax</span></span>
+      </div>
+    </div>
+    <p class="offer-note">As a first collaboration, we'd like to offer SkyFit the Portrait Package at an introductory price.</p>
+  </section>
+
+  <section class="pane" id="aanvraag">
+    <p class="pick">Curious? <em>Let's talk.</em></p>
+    <p class="lede" id="lede">No commitment. Leave your details and we'll call you to see if a film fits your plans.</p>
+
+    <form class="form" id="form" novalidate>
+      <div class="field wide"><span>Which idea speaks to you?</span>
+        <div class="choice" role="radiogroup" aria-label="Which idea speaks to you">
+          <label><input type="radio" name="idea" value="The new location"><span>The new location</span></label>
+          <label><input type="radio" name="idea" value="The craft"><span>The craft</span></label>
+          <label><input type="radio" name="idea" value="The process"><span>The process</span></label>
+          <label><input type="radio" name="idea" value="Not sure yet" checked><span>Not sure yet</span></label>
+        </div>
+      </div>
+      <label class="field"><span>Name</span>
+        <input type="text" id="f-name" maxlength="80" autocomplete="name" value="Dennis Vega" required>
+      </label>
+      <label class="field"><span>Phone</span>
+        <input type="tel" id="f-phone" maxlength="30" autocomplete="tel" placeholder="The best number to call you" required>
+      </label>
+      <label class="field"><span>Email</span>
+        <input type="email" id="f-email" maxlength="120" autocomplete="email" placeholder="So we can confirm your request" required>
+      </label>
+      <label class="field"><span>Preferred shoot day</span>
+        <input type="date" id="f-date" required>
+      </label>
+      <label class="field wide"><span>Shoot location</span>
+        <input type="text" id="f-shootaddr" maxlength="200" value="SkyFit, 5142 Clareton Dr, Ste 160, Agoura Hills, CA 91301" required>
+      </label>
+      <label class="field wide"><span>Anything we should know? (optional)</span>
+        <textarea id="f-note" maxlength="800" placeholder="Timing around the opening, products to feature, spaces to show..."></textarea>
+      </label>
+      <input type="text" id="f-gotcha" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <div class="send wide">
+        <button class="btn-send" type="submit" id="f-btn">Send</button>
+        <p class="msg" id="f-msg" role="status"></p>
+      </div>
+    </form>
+
+    <div class="contact">
+      <span>Email: <b id="c-mail">tom@snapwithus360.com</b></span>
+      <span>WhatsApp: <b id="c-phone">+1 (702) 881-0971</b></span>
+    </div>
+    <p class="privacy">We use your name, email and phone number only to follow up on your request.</p>
+  </section>
+
+</main>
+
+<script>
+/* Alles wat je wil aanpassen staat hier. */
+const CONFIG = {
+  prijs: 1185,          // introductieprijs voor SkyFit
+  oudePrijs: 1485,      // gewone prijs, klein doorstreept; zet op 0 om die te verbergen
+  valuta: "$",
+  btw: "plus tax",
+  /* Dezelfde voorbeelden als de reels- en portrait-pagina (snapwithus360.com/reels/examples/1.mp4, 2.mp4, ...). */
+  /* Dropbox: plak hier de gedeelde links van je video's (Dropbox > Delen > Link kopiëren), elk tussen "".
+     Staat er minstens één link, dan toont de pagina alleen die video's, in deze volgorde.
+     Laat de lijst leeg [] om de standaardvoorbeelden uit ../reels/examples/ te tonen. */
+  dropbox: [
+    "https://www.dropbox.com/scl/fi/vwl0shiaqnisziarzds9f/test.mov?rlkey=dahkso3lb3da6g6oa1mztypxk&st=ahbrmgdt&dl=0",
+    "https://www.dropbox.com/scl/fi/xtulv302le9ote41enr2y/INFINITY-Preview-1.mp4?rlkey=3o1oyg7yaatbjcl643gx9tsrg&st=m5ih3cpf&dl=0",
+  ],
+  voorbeelden: { map: "../reels/examples/", aantal: 12, ext: ".mp4" },
+  /* Welke Sākas-voorbeelden uit ../reels/examples/ er na de Dropbox-video's komen (nummers van de bestanden). */
+  sakas: [1, 3, 5],
+  // De web-app-URL van je Apps Script (eindigt op /exec), dezelfde als de portrait-pagina
+  endpoint: "https://script.google.com/macros/s/AKfycbwwkoczlZpNYCs9J_yzjkEhiYg8JSr9NCBldkayITUTAdSXBgGfD0dsRP4wfF7Ib7Dy/exec",
+  bedrijf: "SkyFit",
+  bedrijfsadres: "5142 Clareton Dr, Ste 160, Agoura Hills, CA 91301",
+  vroegsteDag: 1
+};
+
+const $ = (id) => document.getElementById(id);
+const pad = (n) => String(n).padStart(2, "0");
+const geld = (n) => CONFIG.valuta + n.toLocaleString("en-US");
+
+/* ---------- prijs ---------- */
+(function () {
+  $("total").textContent = geld(CONFIG.prijs);
+  $("vat").textContent = CONFIG.btw;
+  const actie = CONFIG.oudePrijs > CONFIG.prijs;
+  $("was-total").hidden = !actie;
+  if (actie) $("was-total").textContent = geld(CONFIG.oudePrijs);
+})();
+
+/* ---------- voorbeelden (zelfde werking als de reels-pagina) ----------
+   Er speelt altijd maar één video tegelijk. Nummers zonder bestand verdwijnen vanzelf. */
+(function () {
+  const rail = $("shots");
+  const pane = $("shots-pane");
+  const telefoon = () => matchMedia("(max-width: 40rem)").matches;
+  const muis = matchMedia("(hover: hover) and (pointer: fine)");
+  const stil = matchMedia("(prefers-reduced-motion: reduce)");
+  const { map, ext } = CONFIG.voorbeelden;
+  /* Dropbox-deellinks omzetten naar een link die rechtstreeks in de pagina afspeelt (raw=1). */
+  const direct = (link) => {
+    try {
+      const u = new URL(link.trim());
+      if (/(^|\.)dropbox\.com$/.test(u.hostname)) { u.searchParams.delete("dl"); u.searchParams.set("raw", "1"); }
+      return u.toString();
+    } catch (e) { return link; }
+  };
+  const links = (CONFIG.dropbox || []).filter((l) => l && l.trim());
+  const extra = (CONFIG.sakas || []).map((n) => map + n + ext);
+  const bronnen = links.length
+    ? links.map(direct).concat(extra)
+    : Array.from({ length: CONFIG.voorbeelden.aantal }, (_, i) => map + (i + 1) + ext);
+  const aantal = bronnen.length;
+  let klaar = 0, geladen = 0, actief = null;
+
+  const ICOON_UIT = '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="m22 9-6 6M16 9l6 6"/></svg>';
+  const ICOON_AAN = '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg>';
+
+  const tegels = () => [...rail.children].filter((t) => t.querySelector("video"));
+
+  function speel(tegel) {
+    if (!tegel) return;
+    actief = tegel;
+    for (const t of tegels()) {
+      const v = t.querySelector("video");
+      if (t === tegel) {
+        if (stil.matches || t.dataset.stop === "1") continue;
+        v.play().then(() => t.classList.add("playing")).catch(() => t.classList.remove("playing"));
+      } else {
+        if (!v.muted) zetGeluid(t, false);
+        v.pause();
+        t.classList.remove("playing");
+      }
+    }
+  }
+
+  function zetGeluid(tegel, aan) {
+    for (const t of rail.children) {
+      const v = t.querySelector("video"), k = t.querySelector(".geluid");
+      if (!v || !k) continue;
+      const dit = aan && t === tegel;
+      v.muted = !dit;
+      k.setAttribute("aria-pressed", dit ? "true" : "false");
+      k.setAttribute("aria-label", (dit ? "Turn sound off" : "Turn sound on") + " for this video");
+      k.innerHTML = dit ? ICOON_AAN : ICOON_UIT;
+    }
+    if (aan) { delete tegel.dataset.stop; speel(tegel); }
+  }
+
+  function vooraan() {
+    const links = rail.getBoundingClientRect().left;
+    let beste = null, afstand = Infinity;
+    for (const t of tegels()) {
+      const d = Math.abs(t.getBoundingClientRect().left - links);
+      if (d < afstand) { afstand = d; beste = t; }
+    }
+    return beste;
+  }
+
+  new IntersectionObserver((items) => {
+    if (items[0].isIntersecting) speel(actief || tegels()[0]);
+    else zetGeluid(null, false);
+  }, { threshold: 0.15 }).observe(pane);
+
+  function opruimen(ookWachtend) {
+    if (!geladen) return;
+    [...rail.children]
+      .filter((t) => {
+        if (t.classList.contains("empty")) return true;
+        const v = t.querySelector("video");
+        return ookWachtend && v && !t.dataset.ratio && v.networkState === 3;
+      })
+      .forEach((t) => t.remove());
+  }
+
+  function afgerond() {
+    klaar++;
+    opruimen(false);
+    if (klaar >= aantal && !geladen) {
+      $("shots-note").innerHTML = 'Your examples go here. They load from the <code>' + map +
+        '</code> folder, numbered <code>1' + ext + '</code>, <code>2' + ext + '</code>, ...';
+    }
+    schik();
+  }
+  setTimeout(() => { opruimen(true); schik(); }, 8000);
+
+  for (let n = 1; n <= aantal; n++) {
+    const tegel = document.createElement("div");
+    tegel.className = "shot";
+    tegel.dataset.nr = n;
+
+    const film = document.createElement("video");
+    film.muted = true; film.loop = true; film.playsInline = true;
+    film.setAttribute("muted", ""); film.setAttribute("playsinline", "");
+    film.preload = "metadata";
+
+    const nr = document.createElement("span");
+    nr.className = "no"; nr.textContent = pad(n);
+    const staat = document.createElement("button");
+    staat.type = "button"; staat.className = "state"; staat.textContent = "▶";
+    staat.setAttribute("aria-label", "Play or pause example " + n);
+
+    const geluid = document.createElement("button");
+    geluid.type = "button"; geluid.className = "geluid";
+    geluid.setAttribute("aria-pressed", "false");
+    geluid.setAttribute("aria-label", "Turn sound on for example " + n);
+    geluid.innerHTML = ICOON_UIT;
+    geluid.addEventListener("click", () => zetGeluid(tegel, film.muted));
+
+    film.addEventListener("loadedmetadata", () => {
+      tegel.dataset.ratio = film.videoWidth / film.videoHeight;
+      geladen++;
+      afgerond();
+      if (n === 1 || !actief) speel(tegels()[0]);
+    }, { once: true });
+
+    film.addEventListener("error", () => {
+      film.remove();
+      geluid.remove();
+      tegel.classList.add("empty");
+      staat.disabled = true;
+      tegel.dataset.ratio = 9 / 16;
+      staat.textContent = "Example " + pad(n);
+      afgerond();
+    }, { once: true });
+
+    staat.addEventListener("click", () => {
+      if (!film.isConnected) return;
+      const speeltEcht = !film.paused && tegel.classList.contains("playing");
+      if (!speeltEcht) { delete tegel.dataset.stop; speel(tegel); }
+      else { film.pause(); tegel.dataset.stop = "1"; tegel.classList.remove("playing"); }
+    });
+
+    film.addEventListener("playing", () => tegel.classList.add("playing"));
+    film.addEventListener("pause", () => tegel.classList.remove("playing"));
+    tegel.addEventListener("mouseenter", () => {
+      if (muis.matches && film.isConnected && tegel.dataset.stop !== "1") speel(tegel);
+    });
+
+    tegel.append(film, nr, staat, geluid);
+    rail.appendChild(tegel);
+    film.src = bronnen[n - 1] + "#t=0.1";
+  }
+  requestAnimationFrame(() => schik());
+
+  function schik() {
+    const lijst = [...rail.children];
+    const breedte = rail.clientWidth;
+    if (!lijst.length || !breedte) return;
+    const hoog = telefoon() ? Math.min(innerHeight * 0.55, 440) : 460;
+    for (const t of lijst) {
+      const r = Number(t.dataset.ratio) || 9 / 16;
+      const h = Math.round(Math.min(hoog, (breedte * 0.92) / r));
+      Object.assign(t.style, { height: h + "px", width: Math.round(r * h) + "px", aspectRatio: "auto" });
+    }
+    pijlen();
+  }
+
+  const nav = document.querySelector(".shots-nav");
+  const vorige = $("shots-prev"), volgende = $("shots-next");
+  function pijlen() {
+    const ruimte = rail.scrollWidth - rail.clientWidth;
+    nav.hidden = ruimte <= 8;
+    vorige.disabled = rail.scrollLeft < 8;
+    volgende.disabled = rail.scrollLeft > ruimte - 8;
+  }
+  function verschuif(richting) {
+    const links = rail.getBoundingClientRect().left;
+    const lijst = tegels();
+    const pos = (t) => t.getBoundingClientRect().left - links;
+    const doel = richting > 0 ? lijst.find((t) => pos(t) > 8) : [...lijst].reverse().find((t) => pos(t) < -8);
+    if (doel) glijd(rail.scrollLeft + pos(doel));
+  }
+  function glijd(naar) {
+    const van = rail.scrollLeft, weg = naar - van;
+    if (!weg) return;
+    rail.style.scrollSnapType = "none";
+    const klaar = () => { rail.scrollLeft = naar; rail.style.scrollSnapType = ""; pijlen(); speel(vooraan()); };
+    if (stil.matches) { klaar(); return; }
+    const begin = performance.now(), duur = 320;
+    const vangnet = setTimeout(klaar, duur + 200);
+    const stap = (nu) => {
+      const d = Math.min(1, (nu - begin) / duur);
+      const e = d < 0.5 ? 2 * d * d : 1 - Math.pow(-2 * d + 2, 2) / 2;
+      rail.scrollLeft = van + weg * e;
+      if (d < 1) requestAnimationFrame(stap); else { clearTimeout(vangnet); klaar(); }
+    };
+    requestAnimationFrame(stap);
+  }
+  vorige.addEventListener("click", () => verschuif(-1));
+  volgende.addEventListener("click", () => verschuif(1));
+
+  let rust;
+  rail.addEventListener("scroll", () => {
+    pijlen();
+    clearTimeout(rust);
+    rust = setTimeout(() => speel(vooraan()), 140);
+  }, { passive: true });
+
+  const opnieuw = () => {
+    if (!actief || actief.dataset.stop === "1") return;
+    const v = actief.querySelector("video");
+    if (v && v.paused) speel(actief);
+  };
+  document.addEventListener("touchend", (e) => { if (!e.target.closest(".shot")) opnieuw(); }, { passive: true });
+  let wacht;
+  addEventListener("resize", () => { clearTimeout(wacht); wacht = setTimeout(schik, 120); });
+  document.addEventListener("visibilitychange", () => { if (!document.hidden) opnieuw(); });
+})();
+
+/* ---------- aanvraag via Google Apps Script ---------- */
+(function () {
+  const form = $("form"), datum = $("f-date");
+  const iso = (d) => d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate());
+  const vroegst = new Date();
+  vroegst.setDate(vroegst.getDate() + CONFIG.vroegsteDag);
+  datum.min = iso(vroegst);
+
+  const langeDatum = (v) => {
+    const d = new Date(v + "T12:00:00");
+    return isNaN(d) ? v : d.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric" });
+  };
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const msg = $("f-msg"), knop = $("f-btn");
+    const naam = $("f-name").value.trim();
+    const mail = $("f-email").value.trim();
+    const tel = $("f-phone").value.trim();
+    const plek = $("f-shootaddr").value.trim();
+    const verhaal = (form.querySelector('input[name="idea"]:checked') || {}).value || "Not sure yet";
+
+    if (!naam) { msg.textContent = "Please add your name."; $("f-name").focus(); return; }
+    if (!/^[+(\d][\d\s()./-]{5,}$/.test(tel)) { msg.textContent = "Please add a phone number where we can call you."; $("f-phone").focus(); return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(mail)) { msg.textContent = "Please add a valid email address."; $("f-email").focus(); return; }
+    if (!datum.value) { msg.textContent = "Pick the day you would like us to film."; datum.focus(); return; }
+    if (datum.value < datum.min) { msg.textContent = "Pick a shoot day from tomorrow onward."; datum.focus(); return; }
+    if (plek.length < 5) { msg.textContent = "Please add the address where we will film."; $("f-shootaddr").focus(); return; }
+
+    knop.disabled = true;
+    msg.textContent = "Sending...";
+
+    const notitie = $("f-note").value.trim();
+    const gegevens = {
+      page: "portrait-skyfit",
+      package: "Portrait Package (SkyFit intro)",
+      price: CONFIG.prijs,
+      shootDate: datum.value,
+      shootDay: langeDatum(datum.value),
+      name: naam, email: mail, phone: tel,
+      business: CONFIG.bedrijf,
+      businessAddress: CONFIG.bedrijfsadres,
+      shootAddress: plek,
+      notes: "Idea: " + verhaal + (notitie ? "\n" + notitie : ""),
+      website: $("f-gotcha").value
+    };
+
+    try {
+      const res = await fetch(CONFIG.endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify(gegevens)
+      });
+      const antwoord = await res.json().catch(() => ({}));
+      if (!res.ok || !antwoord.ok) throw new Error("apps script " + res.status);
+      const klaar = document.createElement("p");
+      klaar.className = "done";
+      klaar.textContent = "Thanks, " + naam.split(" ")[0] + ". Your request for " + langeDatum(datum.value) +
+        " is in. We will call you to talk it through and confirm the shoot day. Our confirmation comes from " +
+        $("c-mail").textContent + ": if you don't see it, check your spam folder.";
+      form.replaceWith(klaar);
+      $("lede").textContent = "Your request has been sent.";
+    } catch (err) {
+      console.error(err);
+      msg.textContent = "Your request could not be sent right now. Try again in a moment, or email " + $("c-mail").textContent + ".";
+      knop.disabled = false;
+    }
+  });
+})();
+</script>
+
+</body>
+</html>
